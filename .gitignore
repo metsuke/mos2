@@ -1,0 +1,94 @@
+# ========================================================
+# 1. CORE PYTHON (Específico para moslib y scripts)
+# ========================================================
+# El entorno virtual se genera vía install.sh, no se sube
+moslib/.venv/
+.venv/
+virtualenvs/
+
+# Basura de ejecución de Python (en cualquier carpeta de la estructura)
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Carpetas de construcción de paquetes
+moslib/dist/
+moslib/build/
+moslib/*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ========================================================
+# 2. ESTRUCTURA DE SISTEMA (Linux Mirror)
+# ========================================================
+# Ignorar contenido de carpetas personales en home/
+# (Recuerda crear home/.gitignore para mantener la carpeta)
+home/*
+!home/.gitignore
+
+# ========================================================
+# 3. NODE.JS, FRONTEND & LOGS
+# ========================================================
+node_modules/
+.next/
+.nuxt/
+out/
+dist/
+.eslintcache/
+.yarn-integrity/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log
+
+# Entornos y Secretos
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# ========================================================
+# 4. EDITORES E IDEs
+# ========================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings
+.classpath
+.buildpath
+
+# ========================================================
+# 5. ARCHIVOS DE SISTEMA (SO)
+# ========================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+__MACOSX/
+
+# ========================================================
+# 6. PAQUETES Y COMPRESIÓN
+# ========================================================
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.tgz
+*.zip
