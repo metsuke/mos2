@@ -1,8 +1,3 @@
-Aquí tienes el **Manual Técnico de MOS2** consolidado. Este documento incluye todas las decisiones de arquitectura, la paleta de colores final para accesibilidad universal y la estructura de archivos que hemos construido.
-
-Te recomiendo guardar este contenido en `docs/system_manual.md`.
-
------
 
 # 📘 Manual Técnico de MOS2 (MetsuOS System Core)
 
