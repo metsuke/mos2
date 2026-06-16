@@ -21,11 +21,7 @@ def main():
     C_RESET = "\033[0m"
 
     print(C_MAGENTA + "="*40)
-    print(r"      __  _______  _____ ___ ")
-    print(r"     /  |/  / __ \/ ___|__ \\")
-    print(r"    / /|_/ / / / /\___ \__/ /")
-    print(r"   / /  / / /_/ /___/ / __/ ")
-    print(r"  /_/  /_/\____/|____/____/  CORE")
+    print("MetsuOS 2 CORE".center(40))
     print("="*40 + C_RESET)
     
     kernel = Kernel(BASE_DIR)

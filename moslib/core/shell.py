@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 class MOSShell:
     def __init__(self, kernel):
@@ -47,6 +48,8 @@ class MOSShell:
         elif cmd == "pwd":
             # Mostramos la ruta relativa a la raíz de MOS2 para mantener la ilusión
             print(f"/{os.path.relpath(os.getcwd(), self.kernel.project_root)}")
+            # Tambien la ruta real
+            os.system(cmd_line)
         else:
             # Los comandos externos siguen funcionando pero sobre los archivos de MOS2
             os.system(cmd_line)
@@ -57,7 +60,7 @@ class MOSShell:
                 target = self.kernel.virtual_home
             else:
                 target = os.path.abspath(args[0])
-            
+
             os.chdir(target)
             self.kernel.cwd = Path(os.getcwd())
         except Exception as e:
