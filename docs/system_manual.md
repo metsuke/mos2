@@ -2,7 +2,7 @@
 # 📘 Manual Técnico de MOS2 (MetsuOS System Core)
 
 **Versión:** 1.0.0-beta  
-**Autor:** Metsuke ([enlace sospechoso eliminado])  
+**Autor:** Metsuke 
 **Licencia:** GNU GPL v3  
 **Propiedad:** MetsuOS Plugin Reference
 
