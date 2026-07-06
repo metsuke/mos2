@@ -50,6 +50,8 @@ class MOSShell:
             print(f"/{os.path.relpath(os.getcwd(), self.kernel.project_root)}")
             # Tambien la ruta real
             os.system(cmd_line)
+        elif cmd == "unidades":
+            self._unidades(args)
         else:
             # Los comandos externos siguen funcionando pero sobre los archivos de MOS2
             os.system(cmd_line)
@@ -86,3 +88,11 @@ class MOSShell:
 
         except Exception as e:
             print(f"cd: {e}")
+
+    def _unidades(self, args):
+        try:
+            print ("DEV lista los puntos de montaje")
+            print (self.kernel.mounts)
+        except Exception as e:
+            print(f"unidades: {e}")
+        
