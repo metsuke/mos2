@@ -18,7 +18,7 @@ class MOSh:
 
     def run(self):
         print("Iniciando MOSh para MetsuOS...")
-        print("Usa 'exit' para salir.")
+        print("Usa 'exit' para salir, 'help' para ayuda")
         while self.running:
             try:
                 line = input("mosh/metsuke@metsuos:~$ ").strip()
@@ -41,6 +41,6 @@ class MOSh:
                     print(f"mosh: comando no encontrado: {cmd_name}")
 
             except KeyboardInterrupt:
-                print("Usa 'exit' para salir.")
+                print("Usa 'exit' para salir, 'help' para ayuda")
             except Exception as e:
                 print(f"Error de ejecución: {e}")

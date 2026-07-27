@@ -26,6 +26,8 @@ def execute(args):
     
     # CASO 1: Sin parámetros -> Mostrar todos los comandos
     if len(args) == 0:
+        print()
+        print("-" * 50)
         print("Comandos disponibles en MetsuOS:")
         print("-" * 50)
         
@@ -37,6 +39,8 @@ def execute(args):
                 
                 # Formateamos la salida para que quede alineada
                 print(f"  {cmd_name.ljust(12)} - {help_text}")
+        print("-" * 50)
+        print()
                 
     # CASO 2: Con parámetros -> Mostrar ayuda de un comando específico
     else:
