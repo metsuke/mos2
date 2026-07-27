@@ -12,7 +12,7 @@ from mos2.moslib.core.cmd_loader import CommandManager
 class MOSh:
     def __init__(self):
         # La ruta base para los comandos asume que se lanza dentro del proyecto
-        base_cmd_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../commands")
+        base_cmd_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../commands")
         self.cmd_manager = CommandManager(commands_dir=base_cmd_path)
         self.running = True
 
@@ -21,7 +21,7 @@ class MOSh:
         print("Usa 'exit' para salir.")
         while self.running:
             try:
-                line = input("MOS2 - metsuke@metsuos:~$ ").strip()
+                line = input("mosh/metsuke@metsuos:~$ ").strip()
                 if not line:
                     continue
                 
