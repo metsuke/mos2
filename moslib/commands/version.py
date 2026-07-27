@@ -12,21 +12,20 @@ def get_git_version():
         return "Desconocida"
 
 def get_version_history(n):
-    """Obtiene el historial de las últimas 'n' versiones (tags) o commits."""
+    """Obtiene el historial de las últimas 'n' versiones (tags) o commits con fecha."""
     try:
-        # Intentamos obtener los últimos N tags ordenados por fecha de creación
-        # %(refname:short) extrae el nombre del tag (ej. v1.0)
-        # %(subject) extrae la primera línea del mensaje de anotación del tag o commit
+        # Añadimos %(creatordate:short) para obtener la fecha de creación del tag en formato aaaa-mm-dd
         result = subprocess.check_output(
             ["git", "for-each-ref", "--sort=-creatordate", f"--count={n}", 
-             "--format=  %(refname:short)  |  %(subject)", "refs/tags"],
+             "--format=  %(creatordate:short)  |  %(refname:short)  |  %(subject)", "refs/tags"],
             stderr=subprocess.STDOUT, text=True
         ).strip()
         
-        # Si la consulta devuelve vacío (no hay tags en el repo), mostramos los últimos N commits
+        # Si no hay tags, hacemos el fallback a commits
         if not result:
+            # Usamos %cd (commit date) y --date=short para forzar el formato aaaa-mm-dd
             result = subprocess.check_output(
-                ["git", "log", f"-n{n}", "--pretty=format:  %h  |  %s"],
+                ["git", "log", f"-n{n}", "--date=short", "--pretty=format:  %cd  |  %h  |  %s"],
                 stderr=subprocess.STDOUT, text=True
             ).strip()
             
@@ -38,14 +37,14 @@ def execute(args):
     # Verificamos si se ha pasado el parámetro de historial
     if "-h" in args:
         idx = args.index("-h")
-        n = 1 # Valor por defecto
+        n = 10 # Valor por defecto
         
         # Comprobamos si hay un argumento después de -h y si es un número válido
         if len(args) > idx + 1 and args[idx + 1].isdigit():
             n = int(args[idx + 1])
             
         print(f"Historial de las últimas {n} versiones en MetsuOS:")
-        print("-" * 55)
+        print("-" * 75)
         
         history = get_version_history(n)
         if history:
@@ -58,4 +57,4 @@ def execute(args):
         print(f"MetsuOS v{version}")
 
 def help():
-    return "Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (1 por defecto)."
+    return "Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (con fecha)."
