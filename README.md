@@ -24,25 +24,26 @@ Fácil extensibilidad: añadir un nuevo comando es tan simple como crear un arch
 
 Estructura del proyecto
 
-mos2/
-├── moslib/                     # Núcleo del sistema
-│   ├── core/
-│   │   ├── shell.py            # Shell principal (MOSh)
-│   │   └── cmd_loader.py       # Cargador dinámico de comandos
-│   └── commands/               # Comandos del sistema
-│       ├── clear.py
-│       ├── echo.py
-│       ├── help.py
-│       ├── sysinfo.py
-│       ├── uptime.py
-│       └── version.py
-├── rootfs/
-│   └── bin/
-│       └── mos.py              # Punto de entrada del sistema
-├── install.sh                  # Script de instalación y configuración de aliases
-├── mos2.sh                     # Lanzador principal
-├── pyproject.toml              # Configuración de Poetry
-└── poetry.lock
+| Nivel 1     | Nivel 2       | Nivel 3          | Descripción                              |
+|-------------|---------------|------------------|------------------------------------------|
+| moslib/     |               |                  | Núcleo del sistema                       |
+|             | core/         |                  | Componentes principales del shell        |
+|             |               | shell.py         | Shell principal (MOSh)                   |
+|             |               | cmd_loader.py    | Cargador dinámico de comandos            |
+|             | commands/     |                  | Comandos del sistema                     |
+|             |               | clear.py         | Limpia la pantalla                       |
+|             |               | echo.py          | Imprime texto                            |
+|             |               | help.py          | Sistema de ayuda                         |
+|             |               | sysinfo.py       | Información del sistema                  |
+|             |               | uptime.py        | Tiempo de actividad                      |
+|             |               | version.py       | Versión e historial                      |
+| rootfs/     |               |                  | Estructura estilo Linux                  |
+|             | bin/          |                  | Ejecutables del sistema                  |
+|             |               | mos.py           | Punto de entrada del sistema             |
+| install.sh  |               |                  | Script de instalación y aliases          |
+| mos2.sh     |               |                  | Lanzador principal                       |
+| pyproject.toml |            |                  | Configuración de Poetry                  |
+| poetry.lock |               |                  | Lock de dependencias                     |
 
 Requisitos
 
