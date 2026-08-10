@@ -1,35 +1,142 @@
-# MOS2 - MetsuOS System Core
+MetsuOS (MOS2)
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Poetry](https://img.shields.io/badge/Package%20Manager-Poetry-60A5FA?logo=poetry&logoColor=white)](https://python-poetry.org/)
+Sistema Operativo simulado y modular basado en Python
 
-> **Estado:** ⚠️ En desarrollo (No funcional actualmente).
+Estado
+Python
+Licencia
+Poetry
 
-**MOS2** es un proyecto de arquitectura de sistema diseñado por **Metsuke**. Implementa una estructura "espejo" de Linux donde la lógica de sistema es gestionada por scripts de Python que consumen un núcleo de servicios centralizado.
+MetsuOS (también conocido como MOS2) es un sistema operativo simulado y modular escrito en Python.  
+Implementa un shell interactivo llamado MOSh que carga dinámicamente comandos desde módulos Python independientes, inspirado en la estructura de un sistema Linux.
 
-## 🏗 Arquitectura del Sistema
+Proyecto personal de Metsuke. Actualmente en fase Alpha (funcional pero en desarrollo activo).
 
-El proyecto replica la jerarquía de un sistema operativo Linux para facilitar su despliegue y organización:
+Características principales
 
-* **/moslib/**: El corazón del proyecto. Contiene las librerías base, utilidades y la lógica de negocio que consumen el resto de scripts.
-* **/bin, /etc, /usr**: Carpetas de sistema que contienen scripts ejecutables y configuraciones que importan la lógica de `moslib`.
-* **/home**: Estructura de directorios de usuario. Está protegida mediante reglas de Git para que la carpeta exista en el despliegue pero no se suban datos privados de los usuarios locales.
-* **Gestión de Dependencias**: El proyecto utiliza **Poetry**. Aunque la lógica reside en `moslib`, el entorno virtual (`.venv`) y las dependencias se gestionan desde la raíz para unificar el contexto de ejecución.
+Shell interactivo propio (MOSh) con prompt personalizado
+Carga dinámica de comandos (hot-reload automático al modificar un comando)
+Estructura de directorios inspirada en Linux (rootfs/)
+Gestión de dependencias y entorno virtual con Poetry
+Scripts de instalación y lanzamiento multiplataforma (Linux, macOS y Windows/Git Bash)
+Comandos nativos para información del sistema, uptime, versión, etc.
+Fácil extensibilidad: añadir un nuevo comando es tan simple como crear un archivo .py
 
-## 🚀 Instalación y Despliegue
+Estructura del proyecto
 
-Este proyecto está diseñado para ser desplegado mediante un script de instalación automatizado que prepara el entorno de Python.
+mos2/
+├── moslib/                     # Núcleo del sistema
+│   ├── core/
+│   │   ├── shell.py            # Shell principal (MOSh)
+│   │   └── cmd_loader.py       # Cargador dinámico de comandos
+│   └── commands/               # Comandos del sistema
+│       ├── clear.py
+│       ├── echo.py
+│       ├── help.py
+│       ├── sysinfo.py
+│       ├── uptime.py
+│       └── version.py
+├── rootfs/
+│   └── bin/
+│       └── mos.py              # Punto de entrada del sistema
+├── install.sh                  # Script de instalación y configuración de aliases
+├── mos2.sh                     # Lanzador principal
+├── pyproject.toml              # Configuración de Poetry
+└── poetry.lock
 
-### Requisitos previos
-- Python 3.10 o superior
-- Poetry instalado en el sistema
+Requisitos
 
-### Despliegue rápido
-Clona el repositorio y ejecuta el script de instalación:
+Python 3.10 o superior
+Poetry instalado
 
-```bash
-git clone git@github.com:metsuke/mos2.git
+Instalación
+
+Clonar el repositorio
+git clone https://github.com/metsuke/mos2.git
 cd mos2
+
+Ejecutar el instalador
 chmod +x install.sh
 ./install.sh
+
+El script install.sh:
+Configura Poetry para usar un entorno virtual local (.venv)
+Instala las dependencias
+Ofrece instalar aliases útiles en tu shell (mos2, mos2f, mos2u, etc.)
+
+Aliases disponibles (opcionales)
+
+| Alias   | Descripción                              |
+|---------|------------------------------------------|
+| mos2  | Lanza MetsuOS                            |
+| mos2f | Cambia al directorio raíz del proyecto   |
+| mos2u | Ejecuta de nuevo el instalador           |
+
+Uso
+
+Una vez instalado, puedes iniciar el sistema de varias formas:
+
+Usando el script de lanzamiento
+./mos2.sh
+
+O con el alias (si lo instalaste)
+mos2
+
+Se abrirá el shell MOSh:
+
+Iniciando MOSh para MetsuOS...
+Usa 'exit' para salir, 'help' para ayuda
+mosh/metsuke@metsuos:~$ 
+
+Comandos disponibles
+
+| Comando     | Descripción                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| help      | Muestra la lista de comandos o la ayuda de uno específico                   |
+| version   | Muestra la versión actual (basada en Git). Usa -h [n] para historial     |
+| sysinfo   | Información del hardware y estado del sistema anfitrión                     |
+| uptime    | Tiempo de actividad del sistema operativo anfitrión                         |
+| echo      | Imprime texto en la salida estándar                                         |
+| clear     | Limpia la pantalla                                                          |
+| exit      | Sale del shell                                                              |
+
+Cómo añadir un nuevo comando
+
+Crea un archivo en moslib/commands/ (ejemplo: hola.py):
+
+def execute(args):
+    print("¡Hola desde MetsuOS!")
+
+def help():
+    return "Uso: hola - Saluda al usuario"
+
+¡Listo! El comando estará disponible inmediatamente (el cargador detecta cambios automáticamente).
+
+No es necesario reiniciar el shell ni registrar el comando en ningún sitio.
+
+Desarrollo
+
+Activar el entorno virtual de Poetry
+poetry shell
+
+O ejecutar comandos directamente
+poetry run python rootfs/bin/mos.py
+
+El proyecto está diseñado para crecer de forma modular. La lógica de negocio y utilidades se concentran en moslib/.
+
+Licencia
+
+Este proyecto está licenciado bajo la GNU General Public License v3.0.  
+Consulta el archivo LICENSE para más detalles.
+
+Copyright (C) 2026 Metsuke
+
+Autor
+
+Metsuke  
+Sitio web: https://metsuke.com  
+Repositorio: https://github.com/metsuke/mos2
+
+Nota: MetsuOS es un proyecto experimental en fase Alpha.  
+Aunque ya es funcional como shell, todavía no pretende ser un sistema operativo completo. ¡Las contribuciones e ideas son bienvenidas!
+`
