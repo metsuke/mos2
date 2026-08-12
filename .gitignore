@@ -23,10 +23,9 @@ moslib/*.egg-info/
 # ========================================================
 # 2. ESTRUCTURA DE SISTEMA (Linux Mirror)
 # ========================================================
-# Ignorar contenido de carpetas personales en home/
-# (Recuerda crear home/.gitignore para mantener la carpeta)
-home/*
-!home/.gitignore
+# Ignorar contenido de carpetas personales de usuario
+rootfs/home/*
+!rootfs/home/.gitignore
 
 # ========================================================
 # 3. NODE.JS, FRONTEND & LOGS

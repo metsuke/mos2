@@ -1,0 +1,4 @@
+# Mantener la carpeta home/ dentro de rootfs
+# pero ignorar TODO el contenido de los usuarios
+*
+!.gitignore
