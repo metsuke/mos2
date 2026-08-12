@@ -2,10 +2,12 @@
 moslib.core.cmd_loader
 Cargador dinámico de comandos con soporte de espacio de usuario.
 
-Reglas estrictas:
+Reglas:
 - Los comandos del sistema tienen prioridad absoluta.
-- Los comandos de usuario SOLO se cargan si empiezan por 'user_'.
-- El usuario NUNCA puede sobrescribir un comando del sistema.
+- Los archivos de usuario DEBEN llamarse user_*.py
+- Un comando de usuario se puede invocar de dos formas:
+    1. Con el prefijo completo:   user_hola
+    2. Sin el prefijo (hola) SOLO si no existe un comando del sistema con ese nombre.
 """
 
 import os
@@ -26,6 +28,7 @@ class CommandManager:
         self.mtimes = {}
 
     def _load_module(self, cmd_name: str, file_path: Path):
+        """Carga o recarga un módulo desde disco (hot-reload)."""
         current_mtime = os.path.getmtime(file_path)
 
         if cmd_name in self.cache and self.mtimes.get(cmd_name) == current_mtime:
@@ -43,15 +46,34 @@ class CommandManager:
         return module
 
     def get_command(self, cmd_name: str):
-        # 1. Comandos del sistema (prioridad absoluta)
+        # -------------------------------------------------
+        # 1. Prioridad absoluta: comandos del sistema
+        # -------------------------------------------------
         system_file = self.system_commands_dir / f"{cmd_name}.py"
         if system_file.is_file():
             return self._load_module(cmd_name, system_file)
 
-        # 2. Comandos de usuario (solo con prefijo user_)
-        if self.user_commands_dir and cmd_name.startswith("user_"):
+        if not self.user_commands_dir:
+            return None
+
+        # -------------------------------------------------
+        # 2. El usuario escribió el nombre completo con prefijo
+        #    Ejemplo: user_hola  →  busca user_hola.py
+        # -------------------------------------------------
+        if cmd_name.startswith("user_"):
             user_file = self.user_commands_dir / f"{cmd_name}.py"
             if user_file.is_file():
                 return self._load_module(cmd_name, user_file)
+            return None
+
+        # -------------------------------------------------
+        # 3. El usuario escribió el nombre corto (sin prefijo)
+        #    Solo se permite si NO existe un comando del sistema
+        #    con ese nombre (ya lo comprobamos arriba).
+        #    Ejemplo: hola  →  busca user_hola.py
+        # -------------------------------------------------
+        user_file = self.user_commands_dir / f"user_{cmd_name}.py"
+        if user_file.is_file():
+            return self._load_module(f"user_{cmd_name}", user_file)
 
         return None
