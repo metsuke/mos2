@@ -1,30 +1,51 @@
-import os
+"""
+moslib.core.shell
+Shell principal de MetsuOS (MOSh)
+"""
+
 import sys
+from pathlib import Path
 
-# Ajustar el path dinámicamente para que encuentre moslib
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "../../.."))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+current_dir = Path(__file__).resolve().parent
+project_root = current_dir.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
-from mos2.moslib.core.cmd_loader import CommandManager
+from moslib.core.cmd_loader import CommandManager
+from moslib.core.user import get_username, ensure_user_space
+
 
 class MOSh:
     def __init__(self):
-        # La ruta base para los comandos asume que se lanza dentro del proyecto
-        base_cmd_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../commands")
-        self.cmd_manager = CommandManager(commands_dir=base_cmd_path)
+        self.username = get_username()
+
+        # Crear automáticamente el espacio personal en rootfs/home/<user>/.mos
+        self.mos_dir = ensure_user_space(self.username)
+
+        system_commands_dir = current_dir.parent / "commands"
+        user_commands_dir = self.mos_dir / "commands"
+
+        self.cmd_manager = CommandManager(
+            system_commands_dir=system_commands_dir,
+            user_commands_dir=user_commands_dir,
+        )
+
         self.running = True
+        self.prompt = f"mosh/{self.username}@metsuos:~$ "
 
     def run(self):
         print("Iniciando MOSh para MetsuOS...")
+        print(f"Usuario: {self.username}")
+        print(f"Espacio personal: {self.mos_dir}")
         print("Usa 'exit' para salir, 'help' para ayuda")
+        print()
+
         while self.running:
             try:
-                line = input("mosh/metsuke@metsuos:~$ ").strip()
+                line = input(self.prompt).strip()
                 if not line:
                     continue
-                
+
                 parts = line.split()
                 cmd_name = parts[0]
                 args = parts[1:]
@@ -34,13 +55,13 @@ class MOSh:
                     continue
 
                 command_module = self.cmd_manager.get_command(cmd_name)
-                
-                if command_module and hasattr(command_module, 'execute'):
+
+                if command_module and hasattr(command_module, "execute"):
                     command_module.execute(args)
                 else:
                     print(f"mosh: comando no encontrado: {cmd_name}")
 
             except KeyboardInterrupt:
-                print("Usa 'exit' para salir, 'help' para ayuda")
+                print("\nUsa 'exit' para salir, 'help' para ayuda")
             except Exception as e:
                 print(f"Error de ejecución: {e}")
