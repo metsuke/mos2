@@ -31,41 +31,42 @@ Proyecto personal de Metsuke.
 
 ## Estructura del proyecto
 
-mos2/
-├── moslib/                     # Núcleo del sistema
-│   ├── core/
-│   │   ├── shell.py            # Shell principal (MOSh)
-│   │   ├── cmd_loader.py       # Cargador dinámico + seguridad
-│   │   ├── user.py             # Usuario anfitrión + espacio personal + migración
-│   │   └── security.py         # Validación de imports (AST)
-│   └── commands/               # Comandos oficiales del sistema
-│       ├── clear.py
-│       ├── echo.py
-│       ├── help.py
-│       ├── sysinfo.py
-│       ├── test.py             # Ejecuta la batería de tests
-│       ├── uptime.py
-│       └── version.py
-├── rootfs/                     # Sistema de archivos simulado
-│   ├── bin/
-│   │   └── mos.py              # Punto de entrada
-│   └── home/                   # Carpetas personales de los usuarios
-│       └── <usuario>/
-│           └── .mos/
-│               ├── commands/   # Comandos personales (user_*.py)
-│               ├── data/
-│               ├── config/
-│               ├── packages/
-│               └── repos/
-├── tests/                      # Tests unitarios y de seguridad
-│   ├── conftest.py
-│   ├── test_security.py
-│   ├── test_user.py
-│   └── test_cmd_loader.py
-├── install.sh
-├── mos2.sh
-├── pyproject.toml
-└── poetry.lock
+| Nivel 1     | Nivel 2       | Nivel 3          | Nivel 4        | Descripción                                      |
+|-------------|---------------|------------------|----------------|--------------------------------------------------|
+| moslib/     |               |                  |                | Núcleo del sistema                               |
+|             | core/         |                  |                | Componentes principales                          |
+|             |               | shell.py         |                | Shell principal (MOSh)                           |
+|             |               | cmd_loader.py    |                | Cargador dinámico de comandos + seguridad        |
+|             |               | user.py          |                | Usuario anfitrión + espacio personal + migración |
+|             |               | security.py      |                | Validación de imports (AST)                      |
+|             | commands/     |                  |                | Comandos oficiales del sistema                   |
+|             |               | clear.py         |                | Limpia la pantalla                               |
+|             |               | echo.py          |                | Imprime texto                                    |
+|             |               | help.py          |                | Sistema de ayuda                                 |
+|             |               | sysinfo.py       |                | Información del sistema                          |
+|             |               | test.py          |                | Ejecuta la batería de tests                      |
+|             |               | uptime.py        |                | Tiempo de actividad                              |
+|             |               | version.py       |                | Versión e historial                              |
+| rootfs/     |               |                  |                | Sistema de archivos simulado                     |
+|             | bin/          |                  |                | Ejecutables del sistema                          |
+|             |               | mos.py           |                | Punto de entrada del sistema                     |
+|             | home/         |                  |                | Carpetas personales de los usuarios              |
+|             |               | `<usuario>/`     |                | Carpeta del usuario del sistema anfitrión        |
+|             |               |                  | .mos/          | Espacio privado del usuario                      |
+|             |               |                  | commands/      | Comandos personales (`user_*.py`)                |
+|             |               |                  | data/          | Datos persistentes del usuario                   |
+|             |               |                  | config/        | Configuración del usuario                        |
+|             |               |                  | packages/      | Metadatos de paquetes de usuario                 |
+|             |               |                  | repos/         | Repositorios personales                          |
+| tests/      |               |                  |                | Tests unitarios y de seguridad                   |
+|             | conftest.py   |                  |                | Configuración compartida de pytest               |
+|             | test_security.py |               |                | Tests de validación de imports                   |
+|             | test_user.py  |                  |                | Tests del módulo de usuario                      |
+|             | test_cmd_loader.py |            |                | Tests del cargador de comandos                   |
+| install.sh  |               |                  |                | Script de instalación y aliases                  |
+| mos2.sh     |               |                  |                | Lanzador principal                               |
+| pyproject.toml |            |                  |                | Configuración de Poetry                          |
+| poetry.lock |               |                  |                | Lock de dependencias                             |
 
 > **Nota:** El contenido de `rootfs/home/` nunca se sube al repositorio (protegido por `.gitignore`).
 
