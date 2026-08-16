@@ -11,8 +11,6 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-
-[tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
 pytest-cov = "^5.0.0"
 
