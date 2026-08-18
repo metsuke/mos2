@@ -78,7 +78,7 @@ def execute(args):
             print("  No se encontraron versiones en el repositorio.")
     else:
         version = get_git_version()
-        print(f"MetsuOS v{version}")
+        print(f"MetsuOS versión {version}")
 
 def help():
     return "Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (tags + commits)."
