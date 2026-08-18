@@ -19,8 +19,6 @@ from moslib.core.user import get_username, ensure_user_space
 class MOSh:
     def __init__(self):
         self.username = get_username()
-
-        # Crear automáticamente el espacio personal
         self.mos_dir = ensure_user_space(self.username)
 
         system_commands_dir = current_dir.parent / "commands"
@@ -29,18 +27,16 @@ class MOSh:
         self.cmd_manager = CommandManager(
             system_commands_dir=system_commands_dir,
             user_commands_dir=user_commands_dir,
+            enforce_security=True,
         )
 
         self.running = True
         self.prompt = f"mosh/{self.username}@metsuos:~$ "
 
     def _run_startup_tests(self) -> bool:
-        """
-        Ejecuta la batería de tests al arranque.
-        Devuelve True si todos pasan, False si hay fallos.
-        """
-        print("[MetsuOS] Ejecutando tests de arranque...")
-        print("-" * 50)
+        """Ejecuta la batería de tests. Si falla alguno, el sistema no arranca."""
+        print("[MetsuOS] Ejecutando tests de arranque (unitarios + seguridad)...")
+        print("-" * 60)
 
         result = subprocess.run(
             [sys.executable, "-m", "pytest", "-q", "--tb=line"],
@@ -51,24 +47,22 @@ class MOSh:
 
         if result.returncode == 0:
             print("[MetsuOS] ✅ Todos los tests pasaron correctamente.")
-            print("-" * 50)
+            print("-" * 60)
             print()
             return True
 
-        # Fallo
         print("[MetsuOS] ❌ FALLO EN LOS TESTS DE ARRANQUE")
-        print("-" * 50)
+        print("-" * 60)
         if result.stdout:
             print(result.stdout)
         if result.stderr:
             print(result.stderr)
-        print("-" * 50)
+        print("-" * 60)
         print("El sistema NO arrancará hasta que todos los tests pasen.")
-        print("Ejecuta 'poetry run pytest' para ver el detalle.")
+        print("Revisa los comandos con imports ilegales o ejecuta: poetry run pytest")
         return False
 
     def run(self):
-        # Bloqueo de arranque si los tests fallan
         if not self._run_startup_tests():
             sys.exit(1)
 
