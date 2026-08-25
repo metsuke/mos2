@@ -123,6 +123,7 @@ mosh/tu_usuario_real@metsuos:~$
 | Comando    | Descripción                                                                 |
 |------------|-----------------------------------------------------------------------------|
 | `help`     | Muestra la lista de comandos (sistema + usuario) o la ayuda de uno específico |
+| `man`      | Muestra el manual extendido de un comando |
 | `version`  | Muestra la versión actual (basada en Git). Usa `-h [n]` para historial     |
 | `sysinfo`  | Información del hardware y estado del sistema anfitrión                     |
 | `uptime`   | Tiempo de actividad del sistema operativo anfitrión                         |
@@ -204,6 +205,24 @@ poetry run python rootfs/bin/mos.py
 poetry run pytest
 
 La lógica de negocio y utilidades se concentran en `moslib/`.
+
+---
+
+## Documentación
+
+| Documento | Contenido |
+|-----------|-----------|
+| docs/USER_MANUAL.md | Manual de usuario formal |
+| docs/METHODOLOGY.md | Método de trabajo y evolución del proyecto |
+| docs/STYLE_GUIDE.md | Normas de estilo de código |
+| docs/specs/ | Especificaciones ECSS-light |
+| docs/man/ | Páginas de manual por comando |
+
+Dentro del shell:
+
+help
+man
+man update
 
 ---
 
