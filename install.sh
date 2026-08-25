@@ -1,15 +1,88 @@
 #!/bin/bash
-echo "🚀 Iniciando despliegue de entorno mos2..."
+# =============================================
+# install.sh - Instalación cross-platform de MetsuOS
+# =============================================
 
-# Asegurar entorno local estanco
-poetry config virtualenvs.in-project true
-# Instalación silenciosa
-poetry install
+set -e
 
-# 1. Obtener la ruta absoluta del script actual
+echo "Iniciando despliegue de entorno mos2..."
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$SCRIPT_DIR" || {
+    echo "Error: No se pudo cambiar al directorio del script: $SCRIPT_DIR"
+    exit 1
+}
 
-# 2. Definir los alias para Bash
+OS_NAME="$(uname -s 2>/dev/null || echo unknown)"
+case "$OS_NAME" in
+    Linux*)   ENV_LABEL="linux/native-or-wsl" ;;
+    Darwin*)  ENV_LABEL="macos/native" ;;
+    MINGW*|MSYS*|CYGWIN*) ENV_LABEL="windows/git-bash" ;;
+    *)        ENV_LABEL="$OS_NAME" ;;
+esac
+echo "Entorno detectado: $ENV_LABEL"
+
+# --- Resolver Poetry (misma política que mos2.sh) ---
+resolve_poetry() {
+    local is_windows=0
+    case "$(uname -s 2>/dev/null || echo unknown)" in
+        MINGW*|MSYS*|CYGWIN*) is_windows=1 ;;
+    esac
+
+    if [[ "$is_windows" -eq 1 ]]; then
+        if command -v poetry.exe >/dev/null 2>&1; then
+            echo "poetry.exe"
+            return 0
+        fi
+        if command -v py >/dev/null 2>&1 && py -m poetry --version >/dev/null 2>&1; then
+            echo "py -m poetry"
+            return 0
+        fi
+        if command -v python >/dev/null 2>&1 && python -m poetry --version >/dev/null 2>&1; then
+            echo "python -m poetry"
+            return 0
+        fi
+        if command -v python3 >/dev/null 2>&1 && python3 -m poetry --version >/dev/null 2>&1; then
+            echo "python3 -m poetry"
+            return 0
+        fi
+        if command -v poetry >/dev/null 2>&1; then
+            echo "poetry"
+            return 0
+        fi
+        return 1
+    fi
+
+    if command -v poetry >/dev/null 2>&1; then
+        echo "poetry"
+        return 0
+    fi
+    if command -v python3 >/dev/null 2>&1 && python3 -m poetry --version >/dev/null 2>&1; then
+        echo "python3 -m poetry"
+        return 0
+    fi
+    if command -v python >/dev/null 2>&1 && python -m poetry --version >/dev/null 2>&1; then
+        echo "python -m poetry"
+        return 0
+    fi
+    return 1
+}
+
+POETRY_CMD="$(resolve_poetry || true)"
+if [[ -z "$POETRY_CMD" ]]; then
+    echo "Error: No se pudo encontrar Poetry ($ENV_LABEL)."
+    echo "Se probaron: poetry, poetry.exe, python -m poetry, python3 -m poetry, py -m poetry"
+    echo "Instálalo con: curl -sSL https://install.python-poetry.org | python3 -"
+    exit 1
+fi
+
+echo "Poetry resuelto como: $POETRY_CMD"
+
+# Asegurar entorno local estanco e instalar dependencias
+eval "$POETRY_CMD config virtualenvs.in-project true"
+eval "$POETRY_CMD install"
+
+# Alias para Bash/Zsh
 ALIAS_NAMES=(
     "python-is-python3"
     "mos2"
@@ -29,80 +102,66 @@ ALIAS_DESCS=(
     "Ejecuta install.sh (actualizar)"
 )
 
-# 3. Mostrar la información al usuario
 echo "================================================="
-echo "🛠️  Configuración de alias de uso rápido (Opcional)"
+echo "Configuración de alias de uso rápido (Opcional)"
 echo "================================================="
 echo "Se pueden instalar los siguientes alias en tu sistema para facilitar el uso:"
 echo ""
 
 for i in "${!ALIAS_NAMES[@]}"; do
-    echo "  👉 ${ALIAS_NAMES[$i]}"
+    echo "  -> ${ALIAS_NAMES[$i]}"
     echo "     ${ALIAS_DESCS[$i]}"
     echo "     ${ALIAS_CMDS[$i]}"
     echo ""
 done
 
-# 4. Preguntar al usuario
 read -p "¿Deseas añadir estos alias a tu perfil? (s/N): " user_response
 
-case "$user_response" in 
+case "$user_response" in
     [sS]|[sS][iI]|[yY]|[yY][eE][sS])
-        
-        # 5. Determinar entorno
-        OS_NAME=$(uname -s)
         TARGET_FILES=()
         CMD_TO_COPY=""
 
         case "$OS_NAME" in
-            Darwin*)    
-                TARGET_FILES+=("$HOME/.bash_profile") 
+            Darwin*)
+                TARGET_FILES+=("$HOME/.bash_profile")
                 CMD_TO_COPY="source ~/.bash_profile"
                 ;;
-            MINGW*|CYGWIN*|MSYS*) 
-                # Entorno Windows detectado
+            MINGW*|CYGWIN*|MSYS*)
                 TARGET_FILES+=("$HOME/.bash_profile" "$HOME/.bashrc")
                 CMD_TO_COPY="source ~/.bash_profile"
-                
-                # INTEGRACIÓN CON POWERSHELL
+
                 if command -v powershell.exe >/dev/null 2>&1; then
                     echo ""
-                    echo "⚙️  Entorno Windows detectado. Configurando PowerShell..."
-                    
-                    # Extraer la ruta nativa de Windows
+                    echo "Entorno Windows/Git-Bash: configurando PowerShell (opcional)..."
                     WIN_SCRIPT_DIR=$(pwd -W 2>/dev/null || pwd)
-                    
-                    # Preguntar a PowerShell dónde está el $PROFILE
                     PS_PROFILE=$(powershell.exe -NoProfile -NonInteractive -Command 'Write-Host $PROFILE' | tr -d '\r')
-                    
+
                     if [ -n "$PS_PROFILE" ]; then
                         BASH_PS_PROFILE=$(cygpath -u "$PS_PROFILE" 2>/dev/null || echo "$PS_PROFILE")
-                        
                         mkdir -p "$(dirname "$BASH_PS_PROFILE")"
                         touch "$BASH_PS_PROFILE"
-                        
+
                         echo "" >> "$BASH_PS_PROFILE"
-                        echo "# Alias instalados por install.sh" >> "$BASH_PS_PROFILE"
-                        
-                        # Escribir funciones nativas de PowerShell apuntando a Git Bash
+                        echo "# Alias instalados por install.sh (MetsuOS)" >> "$BASH_PS_PROFILE"
+
                         if ! grep -q "function mos2 " "$BASH_PS_PROFILE"; then
                             echo "function mos2 { & \"C:\Program Files\Git\bin\bash.exe\" \"$WIN_SCRIPT_DIR/mos2.sh\" }" >> "$BASH_PS_PROFILE"
                             echo "function mos2u { & \"C:\Program Files\Git\bin\bash.exe\" \"$WIN_SCRIPT_DIR/install.sh\" }" >> "$BASH_PS_PROFILE"
                             echo "function mos2f { Set-Location \"$WIN_SCRIPT_DIR\" }" >> "$BASH_PS_PROFILE"
-                            echo "  ✅ Funciones instaladas en PowerShell ($PS_PROFILE)."
+                            echo "  Funciones instaladas en PowerShell."
                         else
-                            echo "  ⚠️  Las funciones de PowerShell ya existen. Se omiten."
+                            echo "  Las funciones de PowerShell ya existen. Se omiten."
                         fi
                     fi
                 fi
                 ;;
-            *)          
-                TARGET_FILES+=("$HOME/.bashrc") 
+            *)
+                TARGET_FILES+=("$HOME/.bashrc")
                 CMD_TO_COPY="source ~/.bashrc"
                 ;;
         esac
 
-        # Añadir soporte para Zsh si existe
         if command -v zsh >/dev/null 2>&1 || [ -f "$HOME/.zshrc" ]; then
             TARGET_FILES+=("$HOME/.zshrc")
             if [[ "$SHELL" == *"zsh"* ]]; then
@@ -110,46 +169,43 @@ case "$user_response" in
             fi
         fi
 
-        # 6. Bucle de instalación para Bash/Zsh
         for RC_FILE in "${TARGET_FILES[@]}"; do
-            if [ ! -f "$RC_FILE" ]; then 
-                touch "$RC_FILE" 
+            if [ ! -f "$RC_FILE" ]; then
+                touch "$RC_FILE"
             fi
 
             echo ""
             echo "Instalando alias en $RC_FILE..."
             echo "" >> "$RC_FILE"
-            echo "# Alias instalados por install.sh" >> "$RC_FILE"
+            echo "# Alias instalados por install.sh (MetsuOS)" >> "$RC_FILE"
 
             for i in "${!ALIAS_NAMES[@]}"; do
-                if grep -q "alias ${ALIAS_NAMES[$i]}=" "$RC_FILE"; then
-                    echo "  ⚠️  El alias '${ALIAS_NAMES[$i]}' ya existe. Se omite."
+                if grep -q "alias ${ALIAS_NAMES[$i]}=" "$RC_FILE" 2>/dev/null; then
+                    echo "  El alias '${ALIAS_NAMES[$i]}' ya existe. Se omite."
                 else
                     echo "${ALIAS_CMDS[$i]}" >> "$RC_FILE"
-                    echo "  ✅ Alias '${ALIAS_NAMES[$i]}' instalado correctamente."
+                    echo "  Alias '${ALIAS_NAMES[$i]}' instalado."
                 fi
             done
         done
-        
+
         echo ""
-        echo "✅ Alias instalados correctamente en todos los perfiles detectados."
+        echo "Alias instalados en los perfiles detectados."
         echo ""
-        
+
         if [[ "$OS_NAME" == MINGW* ]] || [[ "$OS_NAME" == CYGWIN* ]] || [[ "$OS_NAME" == MSYS* ]]; then
-            echo "💡 Para usar en PowerShell, ejecuta:  . \$PROFILE"
-            echo "💡 Para usar en esta terminal (Bash), ejecuta:  $CMD_TO_COPY"
+            echo "Para usar en PowerShell:  . \$PROFILE"
+            echo "Para usar en esta terminal (Bash):  $CMD_TO_COPY"
         else
-            echo "💡 Para empezar a usarlos INMEDIATAMENTE, ejecuta:"
-            echo "    $CMD_TO_COPY"
+            echo "Para usarlos ahora:  $CMD_TO_COPY"
         fi
-        
-        echo "(O alternativamente, cierra y abre una nueva terminal)."
+        echo "(O cierra y abre una nueva terminal)."
         echo "================================================="
         ;;
     *)
-        echo "Saltando la instalación de alias. ¡Continuamos!"
+        echo "Saltando la instalación de alias."
         ;;
 esac
-  
+
 echo ""
-echo "✅ Entorno mos2 (MetsuOS) listo para su uso."
+echo "Entorno mos2 (MetsuOS) listo para su uso."
