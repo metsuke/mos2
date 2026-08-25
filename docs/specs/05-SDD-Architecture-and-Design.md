@@ -1,13 +1,13 @@
 # 05 – SDD · Arquitectura y diseño
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Baseline de referencia:** v0.2.1  
 **Estado:** Normativo descriptivo alineado con el código actual  
-**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md
+**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md
 
 ---
 
-## 1. Propósito
+## Propósito
 
 Este documento describe la arquitectura y el diseño de MetsuOS tal como existen en la baseline de referencia.
 
@@ -19,23 +19,23 @@ Sirve para:
 
 ---
 
-## 2. Vista general de arquitectura
+## Vista general de arquitectura
 
 MetsuOS se organiza en capas:
 
-1. **Lanzamiento** · scripts y punto de entrada
+1. **Lanzamiento** · scripts anfitrión y punto de entrada
 2. **Shell** · interacción con el usuario
 3. **Núcleo** · usuario, seguridad, carga de comandos
 4. **Comandos** · funciones de sistema y de usuario
 5. **Persistencia local de usuario** · espacio `.mos`
 6. **Verificación** · tests de arranque y de desarrollo
-7. **Documentación** · metodología, specs, manual y man
+7. **Documentación** · metodología, entornos, specs, manual y man
 
 Principio rector: el shell coordina; el núcleo decide; los comandos ejecutan acciones concretas bajo contrato y seguridad.
 
 ---
 
-## 3. Estructura estática del producto
+## Estructura estática del producto
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción de diseño |
 |---------|---------|---------|---------|------------------------|
@@ -48,18 +48,18 @@ Principio rector: el shell coordina; el núcleo decide; los comandos ejecutan ac
 | | commands/ | | | Comandos oficiales de sistema |
 | rootfs/ | | | | Árbol simulado tipo Unix |
 | | bin/ | mos.py | | Entrada del sistema |
-| | home/ | `<usuario>/.mos/` | | Espacio personal no versionado |
+| | home/ | usuario/.mos/ | | Espacio personal no versionado |
 | tests/ | | | | Verificación automatizada |
-| docs/ | | | | Metodología, specs, manual y man |
-| install.sh | | | | Instalación y aliases en anfitrión |
-| mos2.sh | | | | Lanzador principal |
+| docs/ | | | | Metodología, ENVIRONMENTS, specs, manual y man |
+| install.sh | | | | Instalación, aliases y Poetry portable |
+| mos2.sh | | | | Lanzador principal con Poetry portable |
 | pyproject.toml | | | | Dependencias y metadata Poetry |
 
 ---
 
-## 4. Responsabilidades por componente
+## Responsabilidades por componente
 
-### 4.1 shell.py · MOSh
+### shell.py · MOSh
 
 Responsabilidades:
 
@@ -76,8 +76,9 @@ No responsabilidades:
 - implementar la lógica de cada comando
 - validar AST por sí mismo
 - gestionar git update
+- resolver el ejecutable de Poetry del anfitrión
 
-### 4.2 cmd_loader.py · CommandManager
+### cmd_loader.py · CommandManager
 
 Responsabilidades:
 
@@ -93,7 +94,7 @@ No responsabilidades:
 - decidir política de imports
 - imprimir el prompt
 
-### 4.3 security.py
+### security.py
 
 Responsabilidades:
 
@@ -108,7 +109,7 @@ No responsabilidades:
 - conocer el prompt
 - gestionar homes de usuario
 
-### 4.4 user.py
+### user.py
 
 Responsabilidades:
 
@@ -123,7 +124,7 @@ No responsabilidades:
 - validar imports
 - ejecutar tests
 
-### 4.5 commands/*
+### commands/*
 
 Responsabilidades:
 
@@ -136,32 +137,52 @@ No responsabilidades:
 - descubrir otros comandos
 - administrar el ciclo de vida del shell
 
+### mos2.sh e install.sh
+
+Responsabilidades:
+
+- ubicarse respecto a la raíz del clone (`SCRIPT_DIR`)
+- detectar perfil de entorno (unix vs windows/git-bash)
+- resolver Poetry de forma portable (`docs/ENVIRONMENTS.md`)
+- lanzar MOSh o instalar dependencias con el comando resuelto
+
+No responsabilidades:
+
+- lógica de negocio de comandos
+- hardcodear rutas home de un usuario concreto
+
 ---
 
-## 5. Flujo de arranque
+## Diseño de lanzamiento y Poetry
+
+`mos2.sh` e `install.sh` comparten la misma política de resolución:
+
+- **windows/git-bash:** priorizar `poetry.exe`, luego `py -m poetry` / `python -m poetry`; evitar el script `poetry` sin extensión cuando provoca Permission denied
+- **linux/native, macos/native, windows/wsl:** priorizar `poetry`, luego `python3 -m poetry` / `python -m poetry`
+
+Tras resolver, todas las invocaciones de ese script usan el mismo comando. Detalle normativo: `docs/ENVIRONMENTS.md`.
+
+---
+
+## Flujo de arranque
 
 1. El usuario lanza `mos2`, `./mos2.sh` o `python rootfs/bin/mos.py`
-2. `mos.py` prepara el path e instancia `MOSh`
-3. `MOSh.__init__`:
-   - obtiene username
-   - asegura espacio `.mos`
-   - crea `CommandManager` con dirs de sistema y usuario
-4. `MOSh.run()` ejecuta tests de arranque
-5. Si fallan → mensaje de error y `sys.exit(1)`
-6. Si pasan → muestra banner, usuario, espacio personal y entra en bucle REPL
+2. Si usa `mos2.sh`, el script resuelve Poetry y ejecuta `... run python rootfs/bin/mos.py`
+3. `mos.py` prepara el path e instancia `MOSh`
+4. `MOSh.__init__`: username, espacio `.mos`, `CommandManager`
+5. `MOSh.run()` ejecuta tests de arranque
+6. Si fallan → mensaje de error y `sys.exit(1)`
+7. Si pasan → banner, usuario, espacio personal y bucle REPL
 
 ---
 
-## 6. Flujo de ejecución de un comando
+## Flujo de ejecución de un comando
 
 1. El usuario escribe una línea
 2. El shell separa `cmd_name` y `args`
 3. Si `cmd_name == exit` → termina
 4. El shell pide el módulo a `CommandManager.get_command(cmd_name)`
-5. El loader busca:
-   - sistema
-   - user_ completo
-   - user_ por nombre corto
+5. El loader busca sistema, user_ completo y user_ por nombre corto
 6. Antes de cargar, valida seguridad del archivo
 7. Si es ilegal → rechazo y no ejecución
 8. Si es legal → carga/recarga módulo
@@ -169,141 +190,119 @@ No responsabilidades:
 
 ---
 
-## 7. Diseño de seguridad
+## Diseño de seguridad
 
-### 7.1 Enfoque
+### Enfoque
 
-La seguridad de extensión se implementa por validación estática, no por sandbox completo del intérprete.
+Validación estática por AST, no sandbox completo del intérprete.
 
-### 7.2 Punto de enforcement runtime
+### Enforcement runtime
 
-`CommandManager._load_module()` llama a `validate_command_file()` antes de ejecutar el loader de importlib.
+`CommandManager._load_module()` llama a `validate_command_file()` antes de importlib.
 
-### 7.3 Punto de enforcement de arranque
+### Enforcement de arranque
 
-`MOSh._run_startup_tests()` lanza pytest. Los tests de inventario de seguridad deben fallar si existe cualquier comando ilegal de sistema o del usuario actual.
+`MOSh._run_startup_tests()` lanza pytest; el inventario de seguridad debe fallar si hay comandos ilegales de sistema o del usuario actual.
 
-### 7.4 Ventaja de diseño
+### Ventaja
 
 - no ejecuta el comando para detectar el problema
-- produce errores explícitos
-- se aplica por igual a sistema y usuario
+- errores explícitos
+- aplica a sistema y usuario
 
 ---
 
-## 8. Diseño del espacio de usuario
+## Diseño del espacio de usuario
 
-### 8.1 Identidad
+### Identidad
 
 El usuario de MetsuOS es el usuario del sistema anfitrión.
 
-### 8.2 Ruta canónica
+### Ruta canónica
 
+```text
 rootfs/home/<usuario>/.mos/
+```
 
-### 8.3 Subestructura
+### Subestructura
 
 | Subdir | Uso de diseño |
 |--------|----------------|
 | commands/ | extensión personal por comandos |
 | data/ | datos persistentes del usuario |
 | config/ | configuración personal |
-| packages/ | reserva para metadatos de empaquetado personal |
-| repos/ | reserva para repos personales |
+| packages/ | reserva de empaquetado personal |
+| repos/ | reserva de repos personales |
 
-### 8.4 Migración
+### Migración
 
-Si existe una ruta legacy de home de usuario y no existe la canónica, `user.py` migra el directorio para no romper instalaciones alpha previas.
-
----
-
-## 9. Diseño de comandos de sistema de la baseline
-
-| Comando | Rol de diseño |
-|---------|---------------|
-| help | descubrimiento y ayuda corta |
-| version | identidad de versión e historial git |
-| sysinfo | inspección del anfitrión |
-| uptime | tiempo de actividad del anfitrión |
-| echo | utilidad básica de salida |
-| clear | higiene de terminal |
-| test | acceso explícito a la batería de tests |
-| update | sincronización controlada con el repositorio remoto |
-| man | consulta de documentación extendida en docs/man |
-
-Nota de diseño: `man` forma parte de la evolución documental/funcional iniciada sobre v0.2.1 y debe implementarse conforme al ICD y al SRS.
+Si existe home legacy y no la canónica, `user.py` migra el directorio.
 
 ---
 
-## 10. Diseño de hot-reload
+## Diseño de comandos de sistema de la baseline
 
-CommandManager guarda:
-
-- cache de módulos
-- mtime del archivo fuente
-
-Si el archivo cambió, se recarga.  
-Si no cambió, se reutiliza el módulo cacheado.
-
-La seguridad se reevalúa en el camino de carga según el diseño actual del loader.
+| Tipo | Comando | Rol de diseño |
+|------|---------|---------------|
+| ayuda | help | descubrimiento y ayuda corta |
+| ayuda | man | documentación extendida en docs/man |
+| calidad | test | batería de tests |
+| calidad | update | sincronización controlada con el remoto |
+| host | sysinfo | inspección del anfitrión |
+| host | uptime | tiempo de actividad del anfitrión |
+| host | version | versión e historial git |
+| utilidad | clear | higiene de terminal |
+| utilidad | echo | salida de texto |
 
 ---
 
-## 11. Diseño de actualización
+## Diseño de hot-reload
 
-El comando `update` encapsula una política operativa:
+CommandManager guarda cache de módulos y mtime del archivo. Si cambió, recarga; si no, reutiliza. La seguridad se reevalúa en la carga.
+
+---
+
+## Diseño de actualización
+
+El comando `update`:
 
 1. detectar working tree sucio
 2. crear rama `backup/timestamp` si hay cambios
-3. commit de preservación en esa rama si procede
+3. commit de preservación si procede
 4. volver a main
 5. fetch + reset hard a origin/main
 6. podar backups antiguos
 
-Diseño intencional:
-
-- prioriza no perder trabajo local
-- prioriza que main quede idéntico al remoto
-- no publica backups como release
+Prioriza no perder trabajo local y dejar main idéntico al remoto; no publica backups como release.
 
 ---
 
-## 12. Diseño de verificación
+## Diseño de verificación
 
-### 12.1 tests/
+### tests/
 
-Los tests validan:
+Validan seguridad, usuario, loader, contrato de comandos, estilo crítico e inventario.
 
-- seguridad
-- usuario
-- loader
-- contrato de comandos
-- estilo crítico
-- inventario de comandos
+### Arranque bloqueante
 
-### 12.2 Arranque bloqueante
-
-La verificación no es solo de desarrollo: es puerta de entrada a la sesión interactiva.
-
-Esto convierte la calidad en propiedad de runtime del sistema.
+La verificación es puerta de entrada a la sesión interactiva.
 
 ---
 
-## 13. Diseño documental
+## Diseño documental
 
-| Nivel 1 | Nivel 2 | Papel en la arquitectura de información |
-|---------|---------|------------------------------------------|
+| Nivel 1 | Nivel 2 | Papel |
+|---------|---------|-------|
 | docs/ | METHODOLOGY.md | proceso de evolución |
+| docs/ | ENVIRONMENTS.md | perfiles de entorno y Poetry |
 | docs/ | STYLE_GUIDE.md | normas de implementación |
 | docs/ | specs/ | requisitos y diseño controlados |
 | docs/ | USER_MANUAL.md | visión de usuario |
 | docs/ | man/ | ayuda extendida por comando |
 
-La documentación no es accesoria: forma parte del sistema de control de cambios.
-
 ---
 
-## 14. Decisiones de diseño relevantes
+## Decisiones de diseño relevantes
 
 | Decisión | Motivo |
 |----------|--------|
@@ -314,10 +313,11 @@ La documentación no es accesoria: forma parte del sistema de control de cambios
 | Tests al arranque | no operar sobre base rota |
 | update con backup local | reducir riesgo de pérdida de trabajo |
 | docs/man + comando man | ayuda extendida estilo Unix |
+| Poetry resuelto en shell scripts | portabilidad git-bash / wsl / native |
 
 ---
 
-## 15. Límites actuales de diseño
+## Límites actuales de diseño
 
 En esta baseline el diseño no incluye todavía:
 
@@ -331,7 +331,7 @@ Las reservas `packages/` y `repos/` existen para no cerrar esas líneas de evolu
 
 ---
 
-## 16. Guía práctica para modificar el sistema
+## Guía práctica para modificar el sistema
 
 | Si necesitas... | Toca principalmente... | No olvides... |
 |-----------------|------------------------|---------------|
@@ -339,13 +339,14 @@ Las reservas `packages/` y `repos/` existen para no cerrar esas líneas de evolu
 | Cambiar resolución de comandos | cmd_loader.py | ICD + tests loader |
 | Cambiar política de imports | security.py | SEC + tests security |
 | Cambiar homes/migración | user.py | USER reqs + tests user |
-| Añadir comando de sistema | moslib/commands/<cmd>.py | contrato, man, tests, help |
+| Añadir comando de sistema | moslib/commands/cmd.py | contrato, man, tests, help |
 | Añadir comando de usuario | rootfs/home/.../user_*.py | prefijo user_ y seguridad |
+| Cambiar resolución de Poetry | mos2.sh / install.sh | ENVIRONMENTS + REQ-PLAT |
 | Cambiar normas de producto | docs/specs/ | luego código y tests |
 
 ---
 
-## 17. Autoridad
+## Autoridad
 
 Este SDD describe el diseño de la baseline actual.
 

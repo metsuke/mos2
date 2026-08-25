@@ -1,25 +1,25 @@
 # 07 – SRelD · Baseline de release
 
-**Versión del documento:** 1.0  
-**Baseline descrita:** v0.2.1  
+**Versión del documento:** 1.1  
+**Baseline descrita:** v0.2.1 (más evolución posterior documentada)  
 **Estado:** Normativo de referencia  
-**Documentos relacionados:** docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md
+**Documentos relacionados:** docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md
 
 ---
 
-## 1. Propósito
+## Propósito
 
-Este documento congela y describe la baseline de producto **v0.2.1**.
+Este documento congela y describe la baseline de producto **v0.2.1** y registra evoluciones controladas posteriores.
 
 Sirve para:
 
-- saber qué contiene exactamente esta versión de referencia
+- saber qué contiene exactamente la versión de referencia
 - comparar releases futuras sin ambigüedad
 - evitar regresiones respecto a capacidades ya aceptadas
 
 ---
 
-## 2. Identificación de la baseline
+## Identificación de la baseline
 
 | Campo | Valor |
 |-------|-------|
@@ -33,13 +33,13 @@ Sirve para:
 Notas:
 
 - Sobre esta baseline se inicia el marco documental completo en `docs/`.
-- Algunas piezas documentales/funcionales (manual, man, comando `man`) pueden integrarse inmediatamente después como evolución controlada sin reescribir el significado de v0.2.1.
+- Piezas posteriores (man, entornos, Poetry portable) se listan como evolución sin reescribir el significado de v0.2.1.
 
 ---
 
-## 3. Capacidades incluidas en v0.2.1
+## Capacidades incluidas en v0.2.1
 
-### 3.1 Núcleo
+### Núcleo
 
 | Capacidad | Estado en baseline |
 |-----------|--------------------|
@@ -52,7 +52,7 @@ Notas:
 | Espacio de usuario por usuario anfitrión | Incluida |
 | Migración automática de home legacy | Incluida |
 
-### 3.2 Comandos de sistema
+### Comandos de sistema
 
 | Comando | Estado en baseline |
 |---------|--------------------|
@@ -66,7 +66,7 @@ Notas:
 | update | Incluido |
 | exit | Incluido (builtin del shell) |
 
-### 3.3 Comandos de usuario
+### Comandos de usuario
 
 | Capacidad | Estado en baseline |
 |-----------|--------------------|
@@ -75,7 +75,7 @@ Notas:
 | Invocación corta sin conflicto | Incluida |
 | Rechazo por imports ilegales | Incluida |
 
-### 3.4 Actualización
+### Actualización
 
 | Capacidad | Estado en baseline |
 |-----------|--------------------|
@@ -86,7 +86,7 @@ Notas:
 
 ---
 
-## 4. Estructura de producto de la baseline
+## Estructura de producto de la baseline
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Incluido en baseline |
 |---------|---------|---------|----------------------|
@@ -111,7 +111,7 @@ Notas:
 
 ---
 
-## 5. Dependencias de la baseline
+## Dependencias de la baseline
 
 | Dependencia | Alcance | Notas |
 |-------------|---------|-------|
@@ -124,43 +124,42 @@ No forman parte del modelo de comandos las dependencias arbitrarias de terceros.
 
 ---
 
-## 6. Verificación asociada a la baseline
+## Verificación asociada a la baseline
 
 La baseline se considera coherente cuando:
 
-1. `poetry run pytest` pasa
+1. la batería de tests pasa
 2. el arranque de MOSh pasa los tests de arranque
-3. los comandos de sistema de la tabla 3.2 están disponibles
+3. los comandos de sistema de la baseline están disponibles
 4. un comando de usuario con import ilegal es rechazado
 5. un comando ilegal presente en el usuario actual bloquea arranque
 6. `update` puede sincronizar con origin/main preservando cambios locales en backup
 
 ---
 
-## 7. Limitaciones conocidas de v0.2.1
+## Limitaciones conocidas de v0.2.1
 
 1. Fase Alpha: no es un sistema operativo completo.
 2. No hay empaquetado multi-repo de usuario todavía operativo.
 3. No hay CI externa obligatoria.
 4. No hay métrica mínima obligatoria de cobertura.
-5. El manual formal y el comando `man` se consolidan como evolución documental/funcional inmediata sobre esta baseline.
-6. help puede requerir alineación continua con el loader y los comandos de usuario según evolucione la documentación.
+5. El manual formal y el comando `man` se consolidan como evolución inmediata sobre esta baseline.
+6. help puede requerir alineación continua con el loader y los comandos de usuario.
 
 ---
 
-## 8. Tags y referencias
+## Tags y referencias
 
 | Referencia | Uso |
 |------------|-----|
 | v0.2.1 | Baseline funcional principal |
 | v0.2.0-alpha-user-space | Baseline previa de espacio de usuario |
+| v0.2.2 | Prevista: Poetry portable + docs/ENVIRONMENTS (fix de producto) |
 | main | Línea activa de integración |
 
 ---
 
-## 9. Evolución posterior a esta baseline
-
-Los siguientes elementos se tratan como continuación controlada del marco de calidad y documentación:
+## Evolución posterior a esta baseline
 
 | Elemento | Tipo | Destino |
 |----------|------|---------|
@@ -169,16 +168,19 @@ Los siguientes elementos se tratan como continuación controlada del marco de ca
 | docs/specs/* | ECSS-light | Obligatorio |
 | docs/USER_MANUAL.md | usuario | Obligatorio |
 | docs/man/* | ayuda extendida | Obligatorio |
-| moslib/commands/man.py | comando | Obligatorio en la fase documental/funcional en curso |
+| moslib/commands/man.py | comando | Obligatorio |
 | tests de estilo | calidad | Obligatorio |
+| docs/ENVIRONMENTS.md | entornos | Obligatorio en evolución post-0.2.1 |
+| mos2.sh / install.sh Poetry portable | fix plataforma | Obligatorio en evolución hacia v0.2.2 |
+| Contexto de sesión genérico | proceso | Obligatorio (sin datos personales de máquina) |
 
-Cuando esta evolución se integre en main, la siguiente baseline de release deberá actualizar este SRelD o crear una entrada de versión nueva.
+Cuando la evolución de entornos/Poetry se integre en main con bump de producto, la release **v0.2.2** debe reflejarse en `pyproject.toml` y en este SRelD (o entrada de versión nueva).
 
 ---
 
-## 10. Criterio de no regresión respecto a v0.2.1
+## Criterio de no regresión respecto a v0.2.1
 
-Se considerará regresión respecto a esta baseline cualquier pérdida de:
+Se considerará regresión cualquier pérdida de:
 
 1. arranque bloqueante por tests
 2. seguridad de imports
@@ -187,10 +189,12 @@ Se considerará regresión respecto a esta baseline cualquier pérdida de:
 5. comando update con backup
 6. disponibilidad de pytest en el producto
 
+Tras v0.2.2, también: resolución portable de Poetry en lanzador/instalador según perfiles documentados.
+
 ---
 
-## 11. Autoridad
+## Autoridad
 
-Este SRelD fija el significado de la baseline v0.2.1.
+Este SRelD fija el significado de la baseline v0.2.1 y el registro de evoluciones posteriores.
 
 Las releases futuras deben declarar qué mantienen, qué añaden y qué cambian respecto a esta referencia.

@@ -1,13 +1,13 @@
 # Manual de usuario de MetsuOS (MOS2)
 
-**Versión del documento:** 1.0  
-**Baseline de referencia:** v0.2.1  
+**Versión del documento:** 1.1  
+**Baseline de referencia:** v0.2.1 (evolución entornos)  
 **Estado:** Manual formal de usuario  
-**Documentos relacionados:** docs/man/, docs/METHODOLOGY.md, docs/specs/01-SSS-System-Specification.md
+**Documentos relacionados:** docs/man/, docs/ENVIRONMENTS.md, docs/METHODOLOGY.md, docs/specs/01-SSS-System-Specification.md
 
 ---
 
-## 1. Introducción
+## Introducción
 
 MetsuOS (también llamado MOS2) es un sistema operativo simulado y modular escrito en Python.
 
@@ -19,38 +19,45 @@ Su interfaz principal es el shell **MOSh**, donde puedes ejecutar:
 
 Este manual explica cómo instalar, arrancar y usar MetsuOS en la práctica.
 
-Para ayuda extendida de un comando concreto, usa:
+Para ayuda extendida de un comando concreto:
 
+```text
 man <comando>
+```
 
 ---
 
-## 2. Qué necesitas
+## Qué necesitas
 
 - Python 3.10 o superior
 - Poetry
 - Git
-- Terminal en Linux, macOS o Windows con Git Bash
+- Terminal en Linux, macOS o Windows (Git Bash o WSL)
 
 ---
 
-## 3. Instalación
+## Instalación
 
 1. Clona el repositorio:
 
+```text
 git clone https://github.com/metsuke/mos2.git
 cd mos2
+```
 
 2. Ejecuta el instalador:
 
+```text
 chmod +x install.sh
 ./install.sh
+```
 
 El instalador:
 
 - prepara el entorno virtual local
 - instala dependencias
 - puede configurar aliases útiles
+- resuelve Poetry según el perfil de entorno (ver sección Entornos de ejecución)
 
 ### Aliases opcionales
 
@@ -62,15 +69,33 @@ El instalador:
 
 ---
 
-## 4. Arranque
+## Entornos de ejecución
 
-Puedes iniciar el sistema así:
+| Sistema | Entorno | Notas |
+|---------|----------|-------|
+| linux | native | Poetry habitual en PATH |
+| macos | native | Igual |
+| windows | git-bash | Lanzador prioriza poetry.exe / python -m poetry |
+| windows | wsl | Clone en filesystem Linux; comportamiento tipo Linux |
 
+Usa siempre `./install.sh` y `./mos2.sh` desde la **raíz del clone**.  
+Normativa: `docs/ENVIRONMENTS.md`.
+
+Si en Git Bash aparece *Permission denied* con el script `poetry` sin extensión, usa `./mos2.sh` (no invoques a mano `Scripts/poetry`).
+
+---
+
+## Arranque
+
+```text
 ./mos2.sh
+```
 
 o, si tienes el alias:
 
+```text
 mos2
+```
 
 ### Qué ocurre al arrancar
 
@@ -78,32 +103,32 @@ mos2
 2. Si algún test falla, el sistema no entra en modo interactivo.
 3. Si todo pasa, verás algo similar a:
 
+```text
 Iniciando MOSh para MetsuOS...
 Usuario: tu_usuario
 Espacio personal: .../rootfs/home/tu_usuario/.mos
 Usa 'exit' para salir, 'help' para ayuda
 
 mosh/tu_usuario@metsuos:~$
+```
 
 ---
 
-## 5. Conceptos básicos
+## Conceptos básicos
 
-### 5.1 MOSh
+### MOSh
 
 Es el shell de MetsuOS. Lees comandos, los ejecutas y ves el resultado.
 
-### 5.2 Usuario
+### Usuario
 
 MetsuOS usa el nombre de usuario real de tu sistema anfitrión.
 
-### 5.3 Espacio personal
-
-Cada usuario tiene un espacio propio:
+### Espacio personal
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Nivel 5 | Uso |
 |---------|---------|---------|---------|---------|-----|
-| rootfs/ | home/ | `<usuario>/` | .mos/ | | Raíz personal |
+| rootfs/ | home/ | usuario/ | .mos/ | | Raíz personal |
 | | | | | commands/ | Tus comandos |
 | | | | | data/ | Tus datos |
 | | | | | config/ | Tu configuración |
@@ -112,30 +137,33 @@ Cada usuario tiene un espacio propio:
 
 Este contenido no se sube al repositorio principal.
 
-### 5.4 Comandos de sistema y de usuario
+### Comandos de sistema y de usuario
 
 - **Sistema:** los trae MetsuOS, protegidos.
 - **Usuario:** los creas tú en tu espacio personal.
 
 ---
 
-## 6. Comandos de sistema
+## Comandos de sistema
 
-| Comando | Para qué sirve |
-|---------|----------------|
-| help | Ayuda corta de comandos |
-| man | Manual extendido de un comando |
-| version | Versión e historial |
-| sysinfo | Información del equipo anfitrión |
-| uptime | Tiempo activo del anfitrión |
-| echo | Imprime texto |
-| clear | Limpia la pantalla |
-| test | Ejecuta la batería de tests |
-| update | Actualiza MetsuOS desde el repositorio |
-| exit | Sale del shell |
+| Tipo | Comando | Descripción |
+|------|---------|-------------|
+| ayuda | help | Lista de comandos o ayuda de uno concreto |
+| ayuda | man | Manual extendido (docs/man/) |
+| calidad | test | Batería de tests |
+| calidad | update | Sincroniza con origin/main (backup si hay cambios) |
+| host | sysinfo | Información del anfitrión |
+| host | uptime | Tiempo activo del anfitrión |
+| host | version | Versión e historial Git |
+| sesion | exit | Sale del shell |
+| utilidad | clear | Limpia la pantalla |
+| utilidad | echo | Imprime texto |
+
+Norma de tablas: tipos en orden alfabético; dentro de cada tipo, comandos en orden alfabético.
 
 Ejemplos:
 
+```text
 help
 help version
 man update
@@ -144,118 +172,113 @@ version -h 20
 sysinfo
 test
 update
+```
 
 ---
 
-## 7. Ayuda: help y man
+## Ayuda: help y man
 
-### 7.1 help
+### help
 
 - `help` lista comandos y ayuda corta
 - `help <comando>` muestra la ayuda específica
 
-### 7.2 man
+### man
 
 - `man` lista páginas de manual disponibles
-- `man <comando>` muestra el manual extendido de ese comando
+- `man <comando>` muestra el manual extendido
 
-Los manuales viven en docs/man/ y están pensados para explicación más completa que help.
+Los manuales viven en `docs/man/`.
 
 ---
 
-## 8. Crear tus propios comandos
+## Crear tus propios comandos
 
-### 8.1 Dónde crearlos
+### Dónde crearlos
 
+```text
 rootfs/home/<tu_usuario>/.mos/commands/
+```
 
-### 8.2 Nombre obligatorio
+### Nombre obligatorio
 
-El archivo debe empezar por `user_`
+El archivo debe empezar por `user_` (ejemplo: `user_hola.py`).
 
-Ejemplo:
+### Contenido mínimo
 
-user_hola.py
-
-### 8.3 Contenido mínimo
-
+```text
 def execute(args):
     print("Hola desde mi comando personal")
 
 def help():
     return "Uso: user_hola - Saluda desde el espacio de usuario"
+```
 
-### 8.4 Cómo invocarlo
+### Cómo invocarlo
 
 - Siempre: `user_hola`
 - También: `hola` si no existe un comando de sistema llamado `hola`
 
-### 8.5 Regla importante
+### Regla importante
 
 Tu comando **no puede** sustituir un comando oficial del sistema.
 
 ---
 
-## 9. Seguridad de comandos
+## Seguridad de comandos
 
-MetsuOS solo permite que un comando importe:
+Solo se permiten imports de:
 
 - biblioteca estándar de Python
 - moslib
 
-Si escribes, por ejemplo:
-
-import jander
-
-el comando será rechazado.
-
-También:
-
-- si intentas ejecutarlo, verás un error de seguridad
-- si ese comando ilegal sigue presente, el sistema puede negarse a arrancar hasta que lo corrijas
-
-Esto protege el modelo modular de MetsuOS.
+Un import ilegal hace que el comando se rechace; si sigue presente, el arranque puede bloquearse.
 
 ---
 
-## 10. Tests
+## Tests
 
-### 10.1 Desde fuera del shell
+### Desde fuera del shell
 
+Con Poetry operativo en el PATH:
+
+```text
 poetry run pytest
+```
 
-### 10.2 Desde dentro del shell
+Preferible usar el flujo del proyecto (`./mos2.sh` y luego `test`), que respeta la resolución de Poetry del entorno.
 
+### Desde dentro del shell
+
+```text
 test
+```
 
-### 10.3 Al arrancar
+### Al arrancar
 
-Los tests se ejecutan solos.  
-Si fallan, MetsuOS no abre la sesión interactiva.
+Los tests se ejecutan solos. Si fallan, MetsuOS no abre la sesión interactiva.
 
 ---
 
-## 11. Actualizar MetsuOS
+## Actualizar MetsuOS
 
 Dentro del shell:
 
+```text
 update
+```
 
 Qué hace:
 
-1. Si tienes cambios locales pendientes, los guarda en una rama backup con fecha y hora
+1. Si hay cambios locales, los guarda en una rama backup con fecha y hora
 2. Sincroniza main con origin/main de forma forzada
 3. Limpia backups antiguos dejando un máximo controlado
 
-Si solo quieres un reset de emergencia desde fuera del shell, existe el script:
-
-mos2_forced_update.sh
-
-Úsalo solo si sabes lo que implica.
+Emergencia desde fuera del shell: `mos2_forced_update.sh` (solo si sabes lo que implica).
 
 ---
 
-## 12. Flujo de trabajo recomendado
+## Flujo de trabajo recomendado
 
 1. Arranca MetsuOS
 2. Consulta `help` o `man`
@@ -266,41 +289,41 @@ mos2_forced_update.sh
 
 ---
 
-## 13. Problemas frecuentes
+## Problemas frecuentes
 
 ### El sistema no arranca
 
 Causa habitual: tests en rojo o un comando de usuario con import ilegal.
 
-Qué hacer:
-
-1. poetry run pytest
-2. Revisar rootfs/home/<usuario>/.mos/commands/
+1. Revisar tests (`test` o `poetry run pytest` si aplica)
+2. Revisar `rootfs/home/<usuario>/.mos/commands/`
 3. Corregir o quitar el comando ilegal
 4. Volver a arrancar
 
+### Permission denied con Poetry en Git Bash
+
+Usa `./mos2.sh` o `./install.sh`. No ejecutes a mano el script `poetry` sin extensión del directorio Scripts de Python.
+
 ### Mi comando de usuario no aparece
 
-Comprueba:
+1. Archivo en `commands/`
+2. Nombre `user_algo.py`
+3. Define `execute` y `help`
+4. Sin imports ilegales
 
-1. que el archivo esté en commands/
-2. que se llame user_algo.py
-3. que defina execute y help
-4. que no tenga imports ilegales
+### Quiero un nombre corto y no funciona
 
-### Quiero usar un nombre corto y no funciona
-
-Si existe un comando de sistema con ese nombre, el sistema siempre gana.  
-Usa el nombre completo user_...
+Si existe un comando de sistema con ese nombre, el sistema gana. Usa `user_...`.
 
 ---
 
-## 14. Dónde encontrar más documentación
+## Dónde encontrar más documentación
 
 | Documento | Contenido |
 |-----------|-----------|
 | docs/USER_MANUAL.md | Este manual |
-| docs/man/<comando>.md | Manual extendido de cada comando |
+| docs/ENVIRONMENTS.md | Perfiles de entorno y Poetry |
+| docs/man/ | Manual extendido por comando |
 | docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |
 | docs/STYLE_GUIDE.md | Normas de código |
 | docs/specs/ | Especificaciones técnicas |
@@ -308,23 +331,21 @@ Usa el nombre completo user_...
 
 ---
 
-## 15. Limitaciones de la fase Alpha
+## Limitaciones de la fase Alpha
 
 MetsuOS todavía no es un sistema operativo completo.
 
-En esta fase:
-
 - no sustituye tu sistema anfitrión
 - no es un kernel real
-- no permite instalar paquetes Python arbitrarios dentro de comandos
+- no permite paquetes Python arbitrarios dentro de comandos
 - está en evolución activa
 
-Aun así, ya es usable como shell modular con seguridad, espacio personal, tests y actualización controlada.
+Aun así es usable como shell modular con seguridad, espacio personal, tests y actualización controlada.
 
 ---
 
-## 16. Salir
+## Salir
 
-Para cerrar MOSh:
-
+```text
 exit
+```

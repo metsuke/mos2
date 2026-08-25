@@ -1,13 +1,13 @@
 # 00 – Overview de especificaciones (ECSS-light)
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Baseline de referencia:** v0.2.1  
 **Estado:** Normativo  
-**Documento relacionado:** docs/METHODOLOGY.md
+**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md
 
 ---
 
-## 1. Propósito
+## Propósito
 
 Este documento es el mapa de las especificaciones de MetsuOS.
 
@@ -22,7 +22,7 @@ No describe el diseño detallado ni los requisitos individuales: solo organiza e
 
 ---
 
-## 2. Conjunto de especificaciones
+## Conjunto de especificaciones
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Documento | Función |
 |---------|---------|---------|-----------|---------|
@@ -40,13 +40,14 @@ Documentos de soporte fuera de `specs/`:
 | Nivel 1 | Nivel 2 | Función |
 |---------|---------|---------|
 | docs/ | METHODOLOGY.md | Método de trabajo y proceso |
+| docs/ | ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |
 | docs/ | STYLE_GUIDE.md | Normas de estilo de código |
 | docs/ | USER_MANUAL.md | Manual de usuario formal |
 | docs/ | man/ | Páginas man por comando |
 
 ---
 
-## 3. Precedencia normativa
+## Precedencia normativa
 
 De mayor a menor autoridad técnica:
 
@@ -65,7 +66,7 @@ Regla:
 
 ---
 
-## 4. Relación con ECSS
+## Relación con ECSS
 
 Este conjunto es una adaptación ligera de ECSS-E-ST-40:
 
@@ -82,18 +83,18 @@ Adicionalmente, MetsuOS eleva la seguridad a documento propio (`04-SEC`) por ser
 
 ---
 
-## 5. Cómo se usa este set en el desarrollo
+## Cómo se usa este set en el desarrollo
 
-### 5.1 Para implementar una feature
+### Para implementar una feature
 
-1. Comprobar impacto en SSS / SEC / ICD / SRS.
+1. Comprobar impacto en SSS / SEC / ICD / SRS (y ENVIRONMENTS si afecta a perfiles o Poetry).
 2. Si cambia arquitectura, actualizar SDD.
 3. Implementar en rama `feature/...`.
 4. Añadir o ajustar tests según 06-TEST y STYLE_GUIDE.
-5. Actualizar manual/man si afecta a uso.
+5. Actualizar manual/man/README si afecta a uso.
 6. Merge solo con tests en verde.
 
-### 5.2 Para revisar un cambio
+### Para revisar un cambio
 
 Preguntas mínimas:
 
@@ -105,11 +106,13 @@ Preguntas mínimas:
 
 ---
 
-## 6. Identificación de requisitos
+## Identificación de requisitos
 
 En `02-SRS` los requisitos se numeran así:
 
+```text
 REQ-<AREA>-<NNN>
+```
 
 Áreas habituales:
 
@@ -123,6 +126,7 @@ REQ-<AREA>-<NNN>
 | TEST | Pruebas |
 | DOC | Documentación |
 | UPD | Actualización |
+| PLAT | Plataforma / entornos |
 
 Ejemplo: `REQ-SEC-001`
 
@@ -130,19 +134,17 @@ Cada requisito debe ser verificable por test, inspección o demostración.
 
 ---
 
-## 7. Baseline
+## Baseline
 
 La baseline documental y funcional de partida de este marco es **v0.2.1**.
 
-`07-SRelD` describe qué contiene esa baseline y servirá para registrar evoluciones posteriores.
+`07-SRelD` describe qué contiene esa baseline y registra evoluciones posteriores (incluidos entornos/Poetry portable).
 
 ---
 
-## 8. Norma de representación de directorios
+## Norma de representación de directorios
 
 En todos los documentos de `docs/specs/` las estructuras de directorios se escriben como tablas, con una columna por nivel.
-
-Ejemplo:
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Descripción |
 |---------|---------|---------|-------------|
@@ -152,8 +154,8 @@ Ejemplo:
 
 ---
 
-## 9. Estado de este overview
+## Estado de este overview
 
 Este overview es normativo para la organización de las especificaciones.
 
-Cualquier alta, baja o renombrado de documentos del set ECSS-light debe reflejarse aquí.
+Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS) debe reflejarse aquí.

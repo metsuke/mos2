@@ -31,44 +31,48 @@ Proyecto personal de Metsuke.
 
 ## Estructura del proyecto
 
-| Nivel 1     | Nivel 2       | Nivel 3          | Nivel 4        | Descripción                                      |
-|-------------|---------------|------------------|----------------|--------------------------------------------------|
-| moslib/     |               |                  |                | Núcleo del sistema                               |
-|             | core/         |                  |                | Componentes principales                          |
-|             |               | shell.py         |                | Shell principal (MOSh)                           |
-|             |               | cmd_loader.py    |                | Cargador dinámico de comandos + seguridad        |
-|             |               | user.py          |                | Usuario anfitrión + espacio personal + migración |
-|             |               | security.py      |                | Validación de imports (AST)                      |
-|             | commands/     |                  |                | Comandos oficiales del sistema                   |
-|             |               | clear.py         |                | Limpia la pantalla                               |
-|             |               | echo.py          |                | Imprime texto                                    |
-|             |               | help.py          |                | Sistema de ayuda                                 |
-|             |               | sysinfo.py       |                | Información del sistema                          |
-|             |               | test.py          |                | Ejecuta la batería de tests                      |
-|             |               | uptime.py        |                | Tiempo de actividad                              |
-|             |               | version.py       |                | Versión e historial                              |
-| rootfs/     |               |                  |                | Sistema de archivos simulado                     |
-|             | bin/          |                  |                | Ejecutables del sistema                          |
-|             |               | mos.py           |                | Punto de entrada del sistema                     |
-|             | home/         |                  |                | Carpetas personales de los usuarios              |
-|             |               | `<usuario>/`     |                | Carpeta del usuario del sistema anfitrión        |
-|             |               |                  | .mos/          | Espacio privado del usuario                      |
-|             |               |                  | commands/      | Comandos personales (`user_*.py`)                |
-|             |               |                  | data/          | Datos persistentes del usuario                   |
-|             |               |                  | config/        | Configuración del usuario                        |
-|             |               |                  | packages/      | Metadatos de paquetes de usuario                 |
-|             |               |                  | repos/         | Repositorios personales                          |
-| tests/      |               |                  |                | Tests unitarios y de seguridad                   |
-|             | conftest.py   |                  |                | Configuración compartida de pytest               |
-|             | test_security.py |               |                | Tests de validación de imports                   |
-|             | test_user.py  |                  |                | Tests del módulo de usuario                      |
-|             | test_cmd_loader.py |            |                | Tests del cargador de comandos                   |
-| install.sh  |               |                  |                | Script de instalación y aliases                  |
-| mos2.sh     |               |                  |                | Lanzador principal                               |
-| pyproject.toml |            |                  |                | Configuración de Poetry                          |
-| poetry.lock |               |                  |                | Lock de dependencias                             |
+| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción |
+|---------|---------|---------|---------|-------------|
+| moslib/ | | | | Núcleo del sistema |
+| | core/ | | | Componentes principales |
+| | | shell.py | | Shell principal (MOSh) |
+| | | cmd_loader.py | | Cargador dinámico de comandos + seguridad |
+| | | user.py | | Usuario anfitrión + espacio personal + migración |
+| | | security.py | | Validación de imports (AST) |
+| | commands/ | | | Comandos oficiales del sistema |
+| | | clear.py | | Limpia la pantalla |
+| | | echo.py | | Imprime texto |
+| | | help.py | | Sistema de ayuda |
+| | | man.py | | Manual extendido (docs/man/) |
+| | | sysinfo.py | | Información del sistema |
+| | | test.py | | Ejecuta la batería de tests |
+| | | update.py | | Actualiza desde origin/main con backup |
+| | | uptime.py | | Tiempo de actividad |
+| | | version.py | | Versión e historial |
+| rootfs/ | | | | Sistema de archivos simulado |
+| | bin/ | | | Ejecutables del sistema |
+| | | mos.py | | Punto de entrada del sistema |
+| | home/ | | | Carpetas personales de los usuarios |
+| | | usuario/ | | Carpeta del usuario del sistema anfitrión |
+| | | | .mos/ | Espacio privado del usuario |
+| docs/ | | | | Documentación del proyecto |
+| | ENVIRONMENTS.md | | | Perfiles de entorno y Poetry |
+| | METHODOLOGY.md | | | Método de trabajo |
+| | STYLE_GUIDE.md | | | Normas de código |
+| | USER_MANUAL.md | | | Manual de usuario |
+| | specs/ | | | Especificaciones ECSS-light |
+| | man/ | | | Páginas man por comando |
+| tests/ | | | | Tests unitarios, seguridad y estilo |
+| | conftest.py | | | Configuración compartida de pytest |
+| | test_security.py | | | Validación de imports |
+| | test_user.py | | | Módulo de usuario |
+| | test_cmd_loader.py | | | Cargador de comandos |
+| install.sh | | | | Instalación y aliases |
+| mos2.sh | | | | Lanzador principal (Poetry portable) |
+| pyproject.toml | | | | Configuración de Poetry |
+| poetry.lock | | | | Lock de dependencias |
 
-> **Nota:** El contenido de `rootfs/home/` nunca se sube al repositorio (protegido por `.gitignore`).
+> **Nota:** El contenido de `rootfs/home/` no se versiona (`.gitignore`). Las rutas de usuario son siempre relativas al clone; no se documentan paths personales.
 
 ---
 
@@ -120,17 +124,18 @@ mosh/tu_usuario_real@metsuos:~$
 
 ## Comandos del sistema
 
-| Comando    | Descripción                                                                 |
-|------------|-----------------------------------------------------------------------------|
-| `help`     | Muestra la lista de comandos (sistema + usuario) o la ayuda de uno específico |
-| `man`      | Muestra el manual extendido de un comando |
-| `version`  | Muestra la versión actual (basada en Git). Usa `-h [n]` para historial     |
-| `sysinfo`  | Información del hardware y estado del sistema anfitrión                     |
-| `uptime`   | Tiempo de actividad del sistema operativo anfitrión                         |
-| `echo`     | Imprime texto en la salida estándar                                         |
-| `clear`    | Limpia la pantalla                                                          |
-| `test`     | Ejecuta la batería de tests unitarios y de seguridad                        |
-| `exit`     | Sale del shell                                                              |
+| Tipo | Comando | Descripción |
+|------|---------|-------------|
+| ayuda | help | Lista de comandos (sistema + usuario) o ayuda de uno concreto |
+| ayuda | man | Manual extendido de un comando (docs/man/) |
+| calidad | test | Ejecuta la batería de tests unitarios y de seguridad |
+| calidad | update | Sincroniza con origin/main (backup local si hay cambios) |
+| host | sysinfo | Información del hardware y estado del anfitrión |
+| host | uptime | Tiempo de actividad del sistema anfitrión |
+| host | version | Versión actual (Git). Con -h [n] muestra historial |
+| sesion | exit | Sale del shell |
+| utilidad | clear | Limpia la pantalla |
+| utilidad | echo | Imprime texto en la salida estándar |                                                    |
 
 ---
 
@@ -195,16 +200,46 @@ Los tests cubren:
 
 ## Desarrollo
 
-# Activar entorno
+Activar entorno:
+
+```text
 poetry shell
+```
 
-# Ejecutar el sistema
+Ejecutar el sistema:
+
+```text
 poetry run python rootfs/bin/mos.py
+```
 
-# Ejecutar tests
+Alternativa recomendada: ./mos2.sh (resuelve Poetry según el perfil de entorno).
+
+La lógica de negocio y utilidades se concentran en moslib/.
+
+---
+
+## Tests
+
+Los scripts ./install.sh y ./mos2.sh resuelven Poetry según el perfil de entorno.
+Ver docs/ENVIRONMENTS.md.
+
+Desde la raíz del clone:
+
+```text
+./mos2.sh
+```
+
+Dentro del shell:
+
+```text
+test
+```
+
+Si Poetry ya funciona en tu PATH:
+
+```text
 poetry run pytest
-
-La lógica de negocio y utilidades se concentran en `moslib/`.
+```
 
 ---
 
@@ -213,16 +248,16 @@ La lógica de negocio y utilidades se concentran en `moslib/`.
 | Documento | Contenido |
 |-----------|-----------|
 | docs/USER_MANUAL.md | Manual de usuario formal |
-| docs/METHODOLOGY.md | Método de trabajo y evolución del proyecto |
+| docs/ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |
+| docs/METHODOLOGY.md | Método de trabajo |
 | docs/STYLE_GUIDE.md | Normas de estilo de código |
 | docs/specs/ | Especificaciones ECSS-light |
-| docs/man/ | Páginas de manual por comando |
+| docs/man/ | Páginas man por comando |
 
-Dentro del shell:
+Perfiles genéricos: linux/native, macos/native, windows/git-bash, windows/wsl.  
+Sin rutas personales en el repo; todo relativo al clone. Detalle: docs/ENVIRONMENTS.md.
 
-help
-man
-man update
+Tablas de comandos del sistema: columna Tipo (A–Z) y, dentro de cada tipo, comandos A–Z.
 
 ---
 
