@@ -5,6 +5,39 @@
 
 set -e
 
+# --- Guard WSL: no ejecutar desde /mnt/<letra>/ (disco Windows) ---
+is_wsl() {
+    if [ -n "${WSL_DISTRO_NAME:-}" ]; then
+        return 0
+    fi
+    if [ -r /proc/version ] && grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
+        return 0
+    fi
+    return 1
+}
+
+path_on_windows_mount() {
+    case "$1" in
+        /mnt/[a-zA-Z]/*|/mnt/[a-zA-Z]) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+if is_wsl && path_on_windows_mount "$SCRIPT_DIR"; then
+    echo "Error: MetsuOS en WSL no debe ejecutarse desde un clone bajo /mnt/..."
+    echo "  Ruta actual: $SCRIPT_DIR"
+    echo ""
+    echo "Eso provoca venv rotos, CRLF en scripts y confusión entre clones."
+    echo "Usa un clone en el filesystem Linux, por ejemplo:"
+    echo "  git clone <url-del-repo> \"\$HOME/mos2\""
+    echo "  cd \"\$HOME/mos2\""
+    echo "  ./install.sh"
+    echo "  ./mos2.sh"
+    echo ""
+    echo "Detalle: docs/ENVIRONMENTS.md (perfil windows/wsl)."
+    exit 1
+fi
+
 echo "Iniciando despliegue de entorno mos2..."
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"

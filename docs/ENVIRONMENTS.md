@@ -1,12 +1,12 @@
 # Entornos de ejecución de MetsuOS
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/USER_MANUAL.md, docs/specs/01-SSS-System-Specification.md
 
 ---
 
-## 1. Propósito
+## Propósito
 
 Este documento describe los perfiles de entorno soportados por MetsuOS y cómo se comportan el lanzador y el instalador respecto a Poetry y al sistema anfitrión.
 
@@ -18,13 +18,15 @@ Normas:
 
 ---
 
-## 2. Contexto de sesión (protocolo)
+## Contexto de sesión (protocolo)
 
 Formato obligatorio cuando se trabaja por fases (humano o IA):
 
+```text
 Contexto: <sistema> / <entorno> / <rol>
+```
 
-### 2.1 Sistema
+### Sistema
 
 | Valor | Significado |
 |-------|-------------|
@@ -32,7 +34,7 @@ Contexto: <sistema> / <entorno> / <rol>
 | macos | macOS |
 | windows | Windows |
 
-### 2.2 Entorno
+### Entorno
 
 | Valor | Significado |
 |-------|-------------|
@@ -40,7 +42,7 @@ Contexto: <sistema> / <entorno> / <rol>
 | git-bash | Git Bash / MSYS / MinGW sobre Windows |
 | wsl | Windows Subsystem for Linux (clone en filesystem Linux) |
 
-### 2.3 Rol
+### Rol
 
 | Valor | Significado |
 |-------|-------------|
@@ -48,20 +50,24 @@ Contexto: <sistema> / <entorno> / <rol>
 | prueba | Validar comportamiento; no asumir que se publica desde aquí |
 | ambos | Desarrollo y prueba en el mismo perfil |
 
-### 2.4 Ejemplos válidos
+### Ejemplos válidos
 
+```text
 Contexto: macos / native / desarrollo
 Contexto: windows / git-bash / prueba
 Contexto: windows / wsl / desarrollo
 Contexto: linux / native / ambos
+```
 
-### 2.5 Cambio de contexto
+### Cambio de contexto
 
+```text
 Cambio de contexto: windows / git-bash / prueba
+```
 
 La asistencia por IA debe adaptar comandos al contexto declarado y preguntar si falta.
 
-### 2.6 Qué no va en el repositorio
+### Qué no va en el repositorio
 
 - Nombres de host o de equipos personales
 - Rutas home absolutas de un usuario concreto
@@ -69,10 +75,10 @@ La asistencia por IA debe adaptar comandos al contexto declarado y preguntar si 
 
 ---
 
-## 3. Perfiles soportados
+## Perfiles soportados
 
 | Sistema | Entorno | Poetry típico | Notas |
-|---------|---------|---------------|-------|
+|---------|----------|---------------|-------|
 | linux | native | poetry o python3 -m poetry | Referencia Unix |
 | macos | native | poetry o python3 -m poetry | zsh/bash nativos |
 | windows | git-bash | poetry.exe, py -m poetry, python -m poetry | Evitar el script poetry sin extensión (Permission denied) |
@@ -80,11 +86,11 @@ La asistencia por IA debe adaptar comandos al contexto declarado y preguntar si 
 
 ---
 
-## 4. Resolución de Poetry (launcher e installer)
+## Resolución de Poetry (launcher e installer)
 
 Los scripts mos2.sh e install.sh detectan el entorno y resuelven Poetry así:
 
-### 4.1 windows / git-bash (MINGW, MSYS, CYGWIN)
+### windows / git-bash (MINGW, MSYS, CYGWIN)
 
 Orden:
 
@@ -94,7 +100,7 @@ Orden:
 4. python3 -m poetry
 5. poetry (último recurso; puede fallar)
 
-### 4.2 linux / macos / windows+wsl (comportamiento Unix)
+### linux / macos / windows+wsl (comportamiento Unix)
 
 Orden:
 
@@ -102,7 +108,7 @@ Orden:
 2. python3 -m poetry
 3. python -m poetry
 
-### 4.3 Principio de diseño
+### Principio de diseño
 
 - No hardcodear rutas de instalación de Poetry ni de Python del usuario.
 - Fallar con mensaje claro si no hay candidato viable.
@@ -110,7 +116,7 @@ Orden:
 
 ---
 
-## 5. Rutas del repositorio
+## Rutas del repositorio
 
 | Regla | Descripción |
 |-------|-------------|
@@ -123,7 +129,30 @@ En windows/wsl el clone objetivo está en el filesystem Linux, no como único mo
 
 ---
 
-## 6. Lanzamiento e instalación
+## windows/wsl y rutas /mnt/
+
+En WSL el clone debe vivir en el filesystem Linux (por ejemplo bajo $HOME), no bajo /mnt/c/... ni otros montajes del disco Windows.
+
+Motivos:
+
+- venvs distintos o rotos entre clones
+- finales de línea CRLF en scripts .sh
+- confusión entre alias que apuntan a otra ruta
+
+mos2.sh e install.sh, si detectan WSL y que la raíz del proyecto está bajo /mnt/<letra>/, terminan con error y un mensaje guiado. No reubican ni copian el repositorio automáticamente.
+
+Flujo recomendado:
+
+```text
+git clone <url-del-repo> "$HOME/mos2"
+cd "$HOME/mos2"
+./install.sh
+./mos2.sh
+```
+
+---
+
+## Lanzamiento e instalación
 
 | Acción | Comando relativo al clone |
 |--------|---------------------------|
@@ -135,7 +164,7 @@ Dentro de MOSh, los tests de arranque y el comando test usan sys.executable -m p
 
 ---
 
-## 7. Diferencias prácticas entre perfiles
+## Diferencias prácticas entre perfiles
 
 | Tema | git-bash | wsl / linux / macos native |
 |------|----------|----------------------------|
@@ -143,10 +172,11 @@ Dentro de MOSh, los tests de arranque y el comando test usan sys.executable -m p
 | Fin de línea en scripts | Cuidado con CRLF en .sh | LF recomendado |
 | Aliases | bash_profile/bashrc; PowerShell opcional vía install | bashrc/zshrc |
 | Paths | Notación Git Bash si se inspecciona el FS de Windows | Paths Unix del clone Linux |
+| Clone en WSL | No aplica | No usar /mnt/<letra>/... como raíz del proyecto |
 
 ---
 
-## 8. Requisitos derivados (trazabilidad)
+## Requisitos derivados (trazabilidad)
 
 | ID orientativo | Enunciado |
 |----------------|-----------|
@@ -154,23 +184,24 @@ Dentro de MOSh, los tests de arranque y el comando test usan sys.executable -m p
 | REQ-PLAT-ENV-002 | El instalador debe usar la misma política de resolución que el lanzador |
 | REQ-PLAT-ENV-003 | La documentación no debe depender de rutas absolutas de un usuario concreto |
 | REQ-PLAT-ENV-004 | El trabajo multi-entorno se comunica con contexto de sesión genérico |
+| REQ-PLAT-ENV-005 | En WSL, lanzador e instalador deben rechazar clones bajo /mnt/<letra>/ |
 
 La formalización numerada vive en el SRS; este documento es la política operativa.
 
 ---
 
-## 9. Verificación manual por perfil
+## Verificación manual por perfil
 
 | Perfil | Comprobación mínima |
 |--------|---------------------|
 | macos/native | ./install.sh y ./mos2.sh resuelven Poetry y arrancan |
 | linux/native | Igual |
 | windows/git-bash | No debe quedarse solo en Scripts/poetry sin extensión si provoca Permission denied |
-| windows/wsl | Mismo comportamiento que Linux en el clone Linux |
+| windows/wsl | Clone en FS Linux; mismo comportamiento que Linux; rechazo si la raíz está bajo /mnt/ |
 
 ---
 
-## 10. Autoridad
+## Autoridad
 
 Este documento es normativo para perfiles de entorno, resolución de Poetry en scripts de shell y protocolo de contexto de sesión genérico.
 
