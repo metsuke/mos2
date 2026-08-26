@@ -63,12 +63,12 @@ resolve_poetry() {
     esac
 
     if [[ "$is_windows" -eq 1 ]]; then
-        if command -v poetry.exe >/dev/null 2>&1; then
-            echo "poetry.exe"
-            return 0
-        fi
         if command -v py >/dev/null 2>&1 && py -m poetry --version >/dev/null 2>&1; then
             echo "py -m poetry"
+            return 0
+        fi
+        if command -v poetry.exe >/dev/null 2>&1; then
+            echo "poetry.exe"
             return 0
         fi
         if command -v python >/dev/null 2>&1 && python -m poetry --version >/dev/null 2>&1; then
