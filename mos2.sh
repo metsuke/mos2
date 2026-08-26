@@ -5,6 +5,12 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR" || {
+    echo "Error: No se pudo cambiar al directorio del script: $SCRIPT_DIR"
+    exit 1
+}
+
 # --- Guard WSL: no ejecutar desde /mnt/<letra>/ (disco Windows) ---
 is_wsl() {
     if [ -n "${WSL_DISTRO_NAME:-}" ]; then
@@ -38,11 +44,7 @@ if is_wsl && path_on_windows_mount "$SCRIPT_DIR"; then
     exit 1
 fi
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR" || {
-    echo "Error: No se pudo cambiar al directorio del script: $SCRIPT_DIR"
-    exit 1
-}
+
 
 echo "Directorio actual: $(pwd)"
 

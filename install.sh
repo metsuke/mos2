@@ -5,6 +5,12 @@
 
 set -e
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$SCRIPT_DIR" || {
+    echo "Error: No se pudo cambiar al directorio del script: $SCRIPT_DIR"
+    exit 1
+}
+
 # --- Guard WSL: no ejecutar desde /mnt/<letra>/ (disco Windows) ---
 is_wsl() {
     if [ -n "${WSL_DISTRO_NAME:-}" ]; then
@@ -40,11 +46,6 @@ fi
 
 echo "Iniciando despliegue de entorno mos2..."
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd "$SCRIPT_DIR" || {
-    echo "Error: No se pudo cambiar al directorio del script: $SCRIPT_DIR"
-    exit 1
-}
 
 OS_NAME="$(uname -s 2>/dev/null || echo unknown)"
 case "$OS_NAME" in
