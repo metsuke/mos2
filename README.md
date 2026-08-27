@@ -3,7 +3,7 @@
 Sistema Operativo simulado y modular basado en Python
 
 **Estado:** Alpha (funcional y en desarrollo activo)  
-**Versión:** 0.2.1  
+**Versión:** 0.2.2  
 **Python** · **Licencia GPL-3.0** · **Poetry**
 
 MetsuOS (también conocido como MOS2) es un sistema operativo simulado y modular escrito en Python.  
@@ -25,7 +25,7 @@ Proyecto personal de Metsuke.
 - **Validación de seguridad obligatoria**: solo se permiten imports de la biblioteca estándar y de `moslib`
 - Tests unitarios y de seguridad con pytest
 - Gestión de dependencias y entorno virtual con Poetry
-- Scripts de instalación y lanzamiento multiplataforma (Linux, macOS y Windows/Git Bash)
+- Scripts de instalación y lanzamiento multiplataforma (linux/native, macos/native, windows/git-bash, windows/wsl)
 
 ---
 
@@ -56,6 +56,10 @@ Proyecto personal de Metsuke.
 | | | usuario/ | | Carpeta del usuario del sistema anfitrión |
 | | | | .mos/ | Espacio privado del usuario |
 | docs/ | | | | Documentación del proyecto |
+| | AI_ONBOARDING.md | | | Arranque para agentes IA |
+| | HUMAN_ONBOARDING.md | | | Arranque para humanos |
+| | DEVELOPER_GUIDE.md | | | Flujo de desarrollo |
+| | VERSIONING.md | | | Versiones, tags y Poetry |
 | | ENVIRONMENTS.md | | | Perfiles de entorno y Poetry |
 | | METHODOLOGY.md | | | Método de trabajo |
 | | STYLE_GUIDE.md | | | Normas de código |
@@ -67,6 +71,7 @@ Proyecto personal de Metsuke.
 | | test_security.py | | | Validación de imports |
 | | test_user.py | | | Módulo de usuario |
 | | test_cmd_loader.py | | | Cargador de comandos |
+| AGENTS.md | | | | Entrada corta para agentes IA |
 | install.sh | | | | Instalación y aliases |
 | mos2.sh | | | | Lanzador principal (Poetry portable) |
 | pyproject.toml | | | | Configuración de Poetry |
@@ -85,40 +90,52 @@ Proyecto personal de Metsuke.
 
 ## Instalación
 
+```text
 git clone https://github.com/metsuke/mos2.git
 cd mos2
 chmod +x install.sh
 ./install.sh
+```
 
 El script `install.sh`:
+
 - Configura Poetry para usar un entorno virtual local (`.venv`)
 - Instala las dependencias
 - Ofrece instalar aliases útiles (`mos2`, `mos2f`, `mos2u`, etc.)
+- Resuelve Poetry según el perfil de entorno
 
 ### Aliases disponibles (opcionales)
 
-| Alias   | Descripción                              |
-|---------|------------------------------------------|
-| `mos2`  | Lanza MetsuOS                            |
-| `mos2f` | Cambia al directorio raíz del proyecto   |
-| `mos2u` | Ejecuta de nuevo el instalador           |
+| Alias | Descripción |
+|-------|-------------|
+| mos2 | Lanza MetsuOS |
+| mos2f | Cambia al directorio raíz del proyecto |
+| mos2u | Ejecuta de nuevo el instalador |
 
 ---
 
 ## Uso
 
+```text
 ./mos2.sh
-# o
+```
+
+o, si tienes el alias:
+
+```text
 mos2
+```
 
 Se abrirá el shell:
 
+```text
 Iniciando MOSh para MetsuOS...
 Usuario: tu_usuario_real
 Espacio personal: .../rootfs/home/tu_usuario_real/.mos
 Usa 'exit' para salir, 'help' para ayuda
 
 mosh/tu_usuario_real@metsuos:~$
+```
 
 ---
 
@@ -135,7 +152,7 @@ mosh/tu_usuario_real@metsuos:~$
 | host | version | Versión actual (Git). Con -h [n] muestra historial |
 | sesion | exit | Sale del shell |
 | utilidad | clear | Limpia la pantalla |
-| utilidad | echo | Imprime texto en la salida estándar |                                                    |
+| utilidad | echo | Imprime texto en la salida estándar |
 
 ---
 
@@ -145,83 +162,48 @@ mosh/tu_usuario_real@metsuos:~$
 
 Crea un archivo en `moslib/commands/` (ejemplo `hola.py`):
 
+```text
 def execute(args):
     print("¡Hola desde MetsuOS!")
 
 def help():
     return "Uso: hola - Saluda al usuario"
+```
 
 ### Comandos de usuario (personales)
 
-1. El sistema crea automáticamente la carpeta:
-   rootfs/home/<tu_usuario>/.mos/commands/
+1. El sistema crea automáticamente `rootfs/home/<tu_usuario>/.mos/commands/`
+2. Crea un archivo cuyo nombre **debe** empezar por `user_`
 
-2. Crea un archivo cuyo nombre **debe** empezar por `user_`:
-
-# rootfs/home/tu_usuario/.mos/commands/user_hola.py
+```text
 def execute(args):
     print("¡Hola desde mi espacio personal!")
 
 def help():
     return "Uso: user_hola - Saluda desde el espacio de usuario"
+```
 
 #### Reglas de invocación de comandos de usuario
 
 - Siempre se puede invocar con el nombre completo: `user_hola`
-- También se puede invocar **sin el prefijo** (`hola`) **solo si** no existe un comando del sistema con ese mismo nombre
-- El usuario **nunca** puede sobrescribir un comando del sistema
+- También se puede invocar sin el prefijo (`hola`) solo si no existe un comando del sistema con ese mismo nombre
+- El usuario nunca puede sobrescribir un comando del sistema
 
 #### Regla de seguridad obligatoria
 
-Todo comando (sistema o usuario) **solo puede importar**:
-- Módulos de la biblioteca estándar de Python
-- Módulos de `moslib` (y submódulos)
+Todo comando (sistema o usuario) solo puede importar:
 
-Cualquier otro import (por ejemplo `requests`, `numpy`, etc.) hace que el comando sea **rechazado** automáticamente.
+- módulos de la biblioteca estándar de Python
+- módulos de `moslib` (y submódulos)
 
----
-
-## Tests
-
-Ejecutar la batería de tests:
-
-poetry run pytest
-
-O desde dentro del shell de MetsuOS:
-
-test
-
-Los tests cubren:
-- Validación de seguridad de imports
-- Módulo de usuario y espacio personal
-- Cargador de comandos (incluyendo rechazo de comandos inseguros)
-
----
-
-## Desarrollo
-
-Activar entorno:
-
-```text
-poetry shell
-```
-
-Ejecutar el sistema:
-
-```text
-poetry run python rootfs/bin/mos.py
-```
-
-Alternativa recomendada: ./mos2.sh (resuelve Poetry según el perfil de entorno).
-
-La lógica de negocio y utilidades se concentran en moslib/.
+Cualquier otro import hace que el comando sea rechazado automáticamente.
 
 ---
 
 ## Tests
 
-Los scripts ./install.sh y ./mos2.sh resuelven Poetry según el perfil de entorno.
-Ver docs/ENVIRONMENTS.md.
+Los scripts `./install.sh` y `./mos2.sh` resuelven Poetry según el perfil de entorno.  
+Ver `docs/ENVIRONMENTS.md`.
 
 Desde la raíz del clone:
 
@@ -241,12 +223,38 @@ Si Poetry ya funciona en tu PATH:
 poetry run pytest
 ```
 
+Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos y estilo crítico.
+
+---
+
+## Desarrollo
+
+Activar entorno:
+
+```text
+poetry shell
+```
+
+Ejecutar el sistema (alternativa recomendada: `./mos2.sh`):
+
+```text
+poetry run python rootfs/bin/mos.py
+```
+
+La lógica de negocio y utilidades se concentran en `moslib/`.  
+Guía: `docs/DEVELOPER_GUIDE.md`.
+
 ---
 
 ## Documentación
 
 | Documento | Contenido |
 |-----------|-----------|
+| AGENTS.md | Entrada corta para agentes IA |
+| docs/AI_ONBOARDING.md | Protocolo completo para IA |
+| docs/HUMAN_ONBOARDING.md | Arranque para personas |
+| docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |
+| docs/VERSIONING.md | Versiones, tags y Poetry |
 | docs/USER_MANUAL.md | Manual de usuario formal |
 | docs/ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |
 | docs/METHODOLOGY.md | Método de trabajo |
@@ -254,10 +262,11 @@ poetry run pytest
 | docs/specs/ | Especificaciones ECSS-light |
 | docs/man/ | Páginas man por comando |
 
-Perfiles genéricos: linux/native, macos/native, windows/git-bash, windows/wsl.  
-Sin rutas personales en el repo; todo relativo al clone. Detalle: docs/ENVIRONMENTS.md.
+Estudiar el repo desde cero (IA): `AGENTS.md` → `docs/AI_ONBOARDING.md`.  
+Estudiar el repo (humano): `docs/HUMAN_ONBOARDING.md`.
 
-Tablas de comandos del sistema: columna Tipo (A–Z) y, dentro de cada tipo, comandos A–Z.
+Perfiles: linux/native, macos/native, windows/git-bash, windows/wsl.  
+Sin rutas personales en el repo. Tablas de comandos: Tipo A–Z y comando A–Z dentro del tipo.
 
 ---
 
@@ -277,4 +286,4 @@ Sitio web: https://metsuke.com
 Repositorio: https://github.com/metsuke/mos2
 
 > **Nota:** MetsuOS es un proyecto experimental en fase Alpha.  
-> Aunque ya es funcional como shell con espacio de usuario, seguridad de imports y tests, todavía no pretende ser un sistema operativo completo. ¡Las contribuciones e ideas son bienvenidas!
+> Aunque ya es funcional como shell con espacio de usuario, seguridad de imports y tests, todavía no pretende ser un sistema operativo completo. Las contribuciones e ideas son bienvenidas.
