@@ -1,8 +1,8 @@
 # Guía del desarrollador de MetsuOS
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Normativo de proceso  
-**Documentos relacionados:** docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/specs/00-OVERVIEW.md
+**Documentos relacionados:** docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, CHANGELOG.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/specs/00-OVERVIEW.md
 
 ---
 
@@ -49,7 +49,7 @@ Detalle: docs/ENVIRONMENTS.md.
 5. Tests / arranque
 6. Commit atómico
 7. Merge a main al cerrar el conjunto
-8. Aplicar docs/VERSIONING.md (bump y tag si es producto)
+8. Aplicar docs/VERSIONING.md y actualizar CHANGELOG.md
 
 ---
 
@@ -65,6 +65,7 @@ Detalle: docs/ENVIRONMENTS.md.
 | Comando de usuario | rootfs/home/usuario/.mos/commands/user_*.py | prefijo user_ y seguridad |
 | Poetry / WSL / Git Bash | mos2.sh, install.sh | ENVIRONMENTS |
 | Normas de producto | docs/specs/ | luego código |
+| Relato de una release | CHANGELOG.md | VERSIONING.md |
 
 ---
 
@@ -112,12 +113,12 @@ Normas en docs/STYLE_GUIDE.md. Hay tests que comprueban contrato y patrones proh
 
 ## Versionado (resumen)
 
-| Cambio | pyproject.toml | Tag |
-|--------|----------------|-----|
-| Runtime / scripts / comandos / seguridad | Bump X.Y.Z | vX.Y.Z |
-| Solo docs / onboarding | No bump | vX.Y.Z-docs opcional |
+| Cambio | pyproject.toml | Tag | CHANGELOG |
+|--------|----------------|-----|-----------|
+| Runtime / scripts / comandos / seguridad | Bump X.Y.Z | vX.Y.Z | Entrada de producto |
+| Solo docs / onboarding | No bump | vX.Y.Z-docs opcional | Entrada -docs |
 
-Al cerrar producto: actualizar README y 07-SRelD si aplica.
+Al cerrar producto: README, 07-SRelD y CHANGELOG si aplica.
 
 Detalle: docs/VERSIONING.md.
 
@@ -130,6 +131,7 @@ Detalle: docs/VERSIONING.md.
 - Comandos de sistema: columna Tipo A–Z y comandos A–Z dentro del tipo
 - Página man para comando de sistema nuevo
 - Si el doc nuevo es más corto que el del repo, verificar que no se pierde norma
+- Entregar archivos completos listos para pegar; un paso cada vez
 
 ---
 
@@ -150,8 +152,9 @@ La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:
 2. Arranque de MOSh OK
 3. SEC / SSS / ICD respetados
 4. Docs tocadas si cambió comportamiento o proceso
-5. VERSIONING aplicado (bump o explícitamente no)
-6. Commit claro
+5. CHANGELOG actualizado si la fase cierra una release
+6. VERSIONING aplicado (bump o explícitamente no)
+7. Commit claro
 
 ---
 
