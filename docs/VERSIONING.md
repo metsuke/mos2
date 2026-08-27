@@ -1,8 +1,8 @@
 # Política de versionado de MetsuOS
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Normativo  
-**Documentos relacionados:** docs/METHODOLOGY.md, docs/specs/07-SRelD-Release-Baseline.md, pyproject.toml
+**Documentos relacionados:** docs/METHODOLOGY.md, docs/specs/07-SRelD-Release-Baseline.md, CHANGELOG.md, pyproject.toml
 
 ---
 
@@ -18,6 +18,7 @@ Define cómo se asignan versiones de producto, tags Git y la relación con Poetr
 |----------|-----|
 | pyproject.toml → version | Versión de producto (Poetry) |
 | Tag Git vX.Y.Z | Marca de release alineada con esa versión |
+| CHANGELOG.md | Relato humano de lo que cambió en cada release |
 | Comando version en MOSh | Muestra info basada en Git (tags/historial) |
 | docs/specs/07-SRelD | Describe baselines y evolución |
 
@@ -35,7 +36,7 @@ Formato: `MAJOR.MINOR.PATCH` (ejemplo actual: `0.2.2`).
 | MINOR | Nueva capacidad usable (comandos, espacio de usuario, guards de plataforma, etc.) |
 | PATCH | Correcciones, ajustes menores de scripts, hardening sin feature nueva |
 
-En fase Alpha (`0.x.y`) la incompatibilidad ocasional es aceptable si queda documentada en SRelD y en el mensaje de release.
+En fase Alpha (`0.x.y`) la incompatibilidad ocasional es aceptable si queda documentada en SRelD, CHANGELOG y en el mensaje de release.
 
 ---
 
@@ -67,7 +68,7 @@ No actualizar Poetry cuando:
 - Solo hay docs, onboarding, STYLE, METHODOLOGY, man pages sin comando nuevo.
 - Solo hay commits `docs:` o `chore:` de mantenimiento documental.
 
-La IA y el desarrollador deben, al cerrar una fase de producto, **incluir el bump** en el plan de merge y verificar que README/SRelD no queden con una versión incorrecta o falsa.
+La IA y el desarrollador deben, al cerrar una fase de producto, **incluir el bump** en el plan de merge y verificar que README/SRelD/CHANGELOG no queden con una versión mentira.
 
 ---
 
@@ -76,20 +77,22 @@ La IA y el desarrollador deben, al cerrar una fase de producto, **incluir el bum
 1. Trabajar en `feature/...`.
 2. Tests en verde; arranque de MOSh OK.
 3. Actualizar docs/specs afectadas **antes o en el mismo merge**.
-4. Bump en `pyproject.toml` al valor de la release.
-5. Merge a `main`.
-6. Tag anotado: `git tag -a vX.Y.Z -m "..."`.
-7. `git push origin main` y `git push origin vX.Y.Z`.
-8. Anotar la baseline en `07-SRelD` si el cambio lo merece.
+4. Añadir entrada en `CHANGELOG.md` (arriba, bajo la versión nueva; vaciar o dejar “Sin publicar” vacío).
+5. Bump en `pyproject.toml` al valor de la release.
+6. Merge a `main`.
+7. Tag anotado: `git tag -a vX.Y.Z -m "..."`.
+8. `git push origin main` y `git push origin vX.Y.Z`.
+9. Anotar la baseline en `07-SRelD` si el cambio lo merece.
 
 ---
 
 ## Flujo de release solo documentación
 
 1. Rama `feature/...` solo docs.
-2. Merge a `main` **sin** cambiar `pyproject.toml`.
-3. Tag opcional: `vX.Y.Z-docs` (Z o el sufijo que deje claro que no es producto).
-4. No exigir bump de Poetry.
+2. Entrada en `CHANGELOG.md` con el sufijo `-docs` si se etiqueta.
+3. Merge a `main` **sin** cambiar `pyproject.toml`.
+4. Tag opcional: `vX.Y.Z-docs`.
+5. No exigir bump de Poetry.
 
 ---
 
@@ -99,12 +102,13 @@ Al asignar un tag de producto, revisar y actualizar si aplica:
 
 | Documento | Qué alinear |
 |-----------|-------------|
+| CHANGELOG.md | Entrada de la versión |
 | README.md | Línea de versión / estado |
 | docs/specs/07-SRelD | Capacidades y tags de la release |
 | docs/USER_MANUAL.md | Baseline de referencia del manual |
 | docs/ENVIRONMENTS.md | Solo si el comportamiento de entorno cambió |
 
-Al tag solo-docs, basta con que el contenido nuevo exista; no hace falta subir la versión de Poetry.
+Al tag solo-docs, CHANGELOG + contenido nuevo; no hace falta subir Poetry.
 
 ---
 
@@ -113,11 +117,11 @@ Al tag solo-docs, basta con que el contenido nuevo exista; no hace falta subir l
 Cuando el plan cierre una capacidad de producto, la IA debe:
 
 1. Decir explícitamente si hay **bump Poetry** y a qué versión.
-2. Listar docs a tocar (SRelD, README, etc.).
+2. Listar docs a tocar (SRelD, README, CHANGELOG, etc.).
 3. Proponer el texto del tag.
 4. No dejar `pyproject.toml` en una versión antigua tras mergear features de runtime.
 
-Si la fase es solo documentación, debe decir: **sin bump Poetry** y sugerir tag `-docs` si se etiqueta.
+Si la fase es solo documentación, debe decir: **sin bump Poetry**, actualizar CHANGELOG y sugerir tag `-docs` si se etiqueta.
 
 ---
 
@@ -127,9 +131,9 @@ Si la fase es solo documentación, debe decir: **sin bump Poetry** y sugerir tag
 |-------|----------------------------------------|
 | Versión Poetry | 0.2.2 |
 | Último tag de producto | v0.2.2 |
-| Siguiente trabajo típico | Onboarding (candidato a tag -docs sin bump) |
+| Último tag de docs | v0.2.3-docs |
 
-Comprobar siempre el repo (`pyproject.toml` y `git tag`) antes de decidir el siguiente número.
+Comprobar siempre el repo (`pyproject.toml`, `git tag`, `CHANGELOG.md`) antes de decidir el siguiente número.
 
 ---
 
