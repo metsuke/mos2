@@ -1,7 +1,7 @@
 # Metodología de MetsuOS (MOS2)
 
-**Versión del documento:** 1.1  
-**Baseline de referencia:** v0.2.1  
+**Versión del documento:** 1.2  
+**Baseline de referencia:** v0.2.2  
 **Estado:** Normativo
 
 ---
@@ -66,7 +66,12 @@ El resultado se denomina **ECSS-light** y vive en `docs/specs/`.
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Descripción |
 |---------|---------|---------|-------------|
+| AGENTS.md | | | Entrada corta para agentes IA |
 | docs/ | | | Documentación del proyecto |
+| | AI_ONBOARDING.md | | Protocolo de trabajo para IA |
+| | HUMAN_ONBOARDING.md | | Arranque para personas |
+| | DEVELOPER_GUIDE.md | | Flujo práctico de desarrollo |
+| | VERSIONING.md | | Versiones, tags y Poetry |
 | | METHODOLOGY.md | | Este documento (normativo de proceso) |
 | | ENVIRONMENTS.md | | Perfiles de entorno, Poetry y contexto de sesión |
 | | STYLE_GUIDE.md | | Normas de código |
@@ -92,6 +97,8 @@ El resultado se denomina **ECSS-light** y vive en `docs/specs/`.
 6. README y textos auxiliares.
 
 El código debe cumplir las especificaciones. Si una mejora exige cambiar una norma, **primero se actualiza la spec** y después el código.
+
+Versionado de producto y tags: `docs/VERSIONING.md`.
 
 ---
 
@@ -128,8 +135,13 @@ Normas:
 - Explicar en pocas líneas **qué ha cambiado** para validar leyendo.
 - Evitar pedir al humano que reescriba tablas o párrafos largos a mano.
 - Si una fase toca varias piezas, entregar **un paso cada vez**.
-- **Encabezados sin numeración** (`## Título`, no `## 1. Título`). Motivo: insertar o reordenar secciones no obliga a renumerar. Si un documento del repo aún tiene números, la IA entrega la versión completa ya sin números.
+- **Encabezados sin numeración** (`## Título`, no `## 1. Título`).
+- Si el archivo del repo aún tiene números, entregar el documento completo ya sin números.
+- Si la versión nueva es más corta que la del repo, comprobar que no se pierde norma e informarlo.
 - Tablas de comandos del sistema: columna **Tipo** en orden alfabético; dentro de cada tipo, comandos en orden alfabético.
+- Estructuras de directorios: tablas, una columna por nivel.
+
+Detalle operativo para agentes: `AGENTS.md` y `docs/AI_ONBOARDING.md`.
 
 ### Flujo estándar de una fase
 
@@ -140,7 +152,7 @@ Normas:
 5. Ejecutar tests (`./mos2.sh` / `test`, o Poetry según entorno) y/o arranque de MOSh.
 6. Commit atómico.
 7. Pasar a la siguiente fase.
-8. Al terminar el conjunto: merge a `main`.
+8. Al terminar el conjunto: merge a `main` y aplicar `docs/VERSIONING.md`.
 
 ### Ramas
 
@@ -166,7 +178,7 @@ La IA debe:
 - Analizar el estado real del repositorio antes de proponer cambios.
 - Entregar planes por fases con código/docs listos para pegar.
 - Respetar normas férreas (seguridad, contrato de comandos, mosLib).
-- Respetar `docs/ENVIRONMENTS.md` y el contexto de sesión.
+- Respetar `docs/ENVIRONMENTS.md`, `docs/VERSIONING.md` y el contexto de sesión.
 - Entregar documentos en un solo bloque copiable; resumir el diff.
 - No inventar features como si ya existieran.
 - Advertir riesgos de regresión.
@@ -199,7 +211,7 @@ Antes de mergear a `main`:
 
 ## Ciclo de vida de una funcionalidad
 
-Idea → impacto en SSS / SRS / SEC / ICD (si aplica) → diseño breve (SDD si cambia arquitectura) → implementación en rama feature → tests → documentación (USER_MANUAL / man / README / ENVIRONMENTS si aplica) → merge a main → mención en SRelD en la siguiente baseline.
+Idea → impacto en SSS / SRS / SEC / ICD (si aplica) → diseño breve (SDD si cambia arquitectura) → implementación en rama feature → tests → documentación (USER_MANUAL / man / README / ENVIRONMENTS / onboarding si aplica) → merge a main → VERSIONING (bump/tag si es producto) → mención en SRelD si la baseline lo requiere.
 
 No se implementa una feature solo en código si rompe una norma documentada.
 
@@ -213,10 +225,14 @@ No se implementa una feature solo en código si rompe una norma documentada.
 
 ---
 
-## Documentos de usuario y páginas man
+## Documentos de usuario, desarrollador e IA
 
 - Manual: `docs/USER_MANUAL.md`
+- Humano: `docs/HUMAN_ONBOARDING.md`
+- Desarrollador: `docs/DEVELOPER_GUIDE.md`
+- IA: `AGENTS.md` y `docs/AI_ONBOARDING.md`
 - Entornos: `docs/ENVIRONMENTS.md`
+- Versionado: `docs/VERSIONING.md`
 - Páginas man: `docs/man/<comando>.md`
 - Comando `man`: muestra esas páginas en el shell.
 
@@ -243,7 +259,8 @@ Está prohibido usar árboles ASCII como forma principal en documentos normativo
 ## Baseline y evolución
 
 - Baseline funcional de partida de este marco: v0.2.1.
-- Evolución de entornos/Poetry portable se documenta sin reescribir la historia del producto.
+- Producto actual de referencia: v0.2.2.
+- Evolución de entornos/Poetry portable y onboarding se documenta sin reescribir la historia del producto.
 - Cada release relevante actualiza `docs/specs/07-SRelD-Release-Baseline.md`.
 
 ---
@@ -257,9 +274,10 @@ Está prohibido usar árboles ASCII como forma principal en documentos normativo
 5. ¿Hay tests?
 6. ¿El arranque sigue pasando?
 7. ¿Documenté lo necesario?
-8. ¿Commit claro y atómico?
-9. ¿Estructuras de directorios en tabla?
-10. ¿Encabezados de docs sin numeración?
+8. ¿VERSIONING aplicado (bump o explícitamente no)?
+9. ¿Commit claro y atómico?
+10. ¿Estructuras de directorios en tabla?
+11. ¿Encabezados de docs sin numeración?
 
 Si alguna respuesta es no y el cambio es relevante, no se mergea.
 
