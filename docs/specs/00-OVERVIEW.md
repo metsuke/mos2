@@ -1,9 +1,9 @@
 # 00 – Overview de especificaciones (ECSS-light)
 
-**Versión del documento:** 1.1  
-**Baseline de referencia:** v0.2.1  
+**Versión del documento:** 1.2  
+**Baseline de referencia:** v0.2.2  
 **Estado:** Normativo  
-**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md
+**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, AGENTS.md
 
 ---
 
@@ -39,6 +39,11 @@ Documentos de soporte fuera de `specs/`:
 
 | Nivel 1 | Nivel 2 | Función |
 |---------|---------|---------|
+| AGENTS.md | | Entrada corta para agentes IA |
+| docs/ | AI_ONBOARDING.md | Protocolo de trabajo para IA |
+| docs/ | HUMAN_ONBOARDING.md | Arranque para personas |
+| docs/ | DEVELOPER_GUIDE.md | Flujo práctico de desarrollo |
+| docs/ | VERSIONING.md | Versiones, tags y Poetry |
 | docs/ | METHODOLOGY.md | Método de trabajo y proceso |
 | docs/ | ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |
 | docs/ | STYLE_GUIDE.md | Normas de estilo de código |
@@ -63,6 +68,7 @@ Regla:
 - El código debe cumplir SEC, SSS, ICD y SRS.
 - Si un cambio de código exige alterar una norma, primero se actualiza la spec y después el código.
 - No se aceptan excepciones silenciosas.
+- Tags y bump de Poetry: `docs/VERSIONING.md`.
 
 ---
 
@@ -91,8 +97,9 @@ Adicionalmente, MetsuOS eleva la seguridad a documento propio (`04-SEC`) por ser
 2. Si cambia arquitectura, actualizar SDD.
 3. Implementar en rama `feature/...`.
 4. Añadir o ajustar tests según 06-TEST y STYLE_GUIDE.
-5. Actualizar manual/man/README si afecta a uso.
+5. Actualizar manual/man/README/onboarding si afecta a uso o proceso.
 6. Merge solo con tests en verde.
+7. Aplicar VERSIONING (bump/tag si es producto).
 
 ### Para revisar un cambio
 
@@ -103,6 +110,7 @@ Preguntas mínimas:
 3. ¿Queda trazado a algún requisito (SRS) o es solo refactor?
 4. ¿Los tests lo cubren?
 5. ¿Hay que tocar SRelD en la siguiente baseline?
+6. ¿Hay que bump de Poetry o es solo docs?
 
 ---
 
@@ -136,9 +144,10 @@ Cada requisito debe ser verificable por test, inspección o demostración.
 
 ## Baseline
 
-La baseline documental y funcional de partida de este marco es **v0.2.1**.
+La baseline documental y funcional de partida de este marco es **v0.2.1**.  
+Producto de referencia actual: **v0.2.2**.
 
-`07-SRelD` describe qué contiene esa baseline y registra evoluciones posteriores (incluidos entornos/Poetry portable).
+`07-SRelD` describe la baseline y registra evoluciones posteriores (entornos, Poetry portable, onboarding).
 
 ---
 
@@ -158,4 +167,4 @@ En todos los documentos de `docs/specs/` las estructuras de directorios se escri
 
 Este overview es normativo para la organización de las especificaciones.
 
-Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS) debe reflejarse aquí.
+Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING u onboarding) debe reflejarse aquí.
