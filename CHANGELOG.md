@@ -2,6 +2,10 @@
 
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
+## Notas de etiquetas
+
+Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.2-docs.3` (docs sobre el producto 0.2.2). El producto actual es `v0.2.3`.
+
 ## 0.2.3 — 2026-08-28
 
 ### Corregido
