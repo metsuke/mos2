@@ -1,9 +1,9 @@
 # 00 – Overview de especificaciones (ECSS-light)
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.2  
 **Estado:** Normativo  
-**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, AGENTS.md
+**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, CHANGELOG.md, AGENTS.md
 
 ---
 
@@ -40,6 +40,7 @@ Documentos de soporte fuera de `specs/`:
 | Nivel 1 | Nivel 2 | Función |
 |---------|---------|---------|
 | AGENTS.md | | Entrada corta para agentes IA |
+| CHANGELOG.md | | Historial de cambios por release |
 | docs/ | AI_ONBOARDING.md | Protocolo de trabajo para IA |
 | docs/ | HUMAN_ONBOARDING.md | Arranque para personas |
 | docs/ | DEVELOPER_GUIDE.md | Flujo práctico de desarrollo |
@@ -69,6 +70,7 @@ Regla:
 - Si un cambio de código exige alterar una norma, primero se actualiza la spec y después el código.
 - No se aceptan excepciones silenciosas.
 - Tags y bump de Poetry: `docs/VERSIONING.md`.
+- Relato de releases: `CHANGELOG.md`.
 
 ---
 
@@ -97,7 +99,7 @@ Adicionalmente, MetsuOS eleva la seguridad a documento propio (`04-SEC`) por ser
 2. Si cambia arquitectura, actualizar SDD.
 3. Implementar en rama `feature/...`.
 4. Añadir o ajustar tests según 06-TEST y STYLE_GUIDE.
-5. Actualizar manual/man/README/onboarding si afecta a uso o proceso.
+5. Actualizar manual/man/README/onboarding/CHANGELOG si afecta a uso, proceso o release.
 6. Merge solo con tests en verde.
 7. Aplicar VERSIONING (bump/tag si es producto).
 
@@ -111,6 +113,7 @@ Preguntas mínimas:
 4. ¿Los tests lo cubren?
 5. ¿Hay que tocar SRelD en la siguiente baseline?
 6. ¿Hay que bump de Poetry o es solo docs?
+7. ¿Hay que anotar CHANGELOG?
 
 ---
 
@@ -147,7 +150,8 @@ Cada requisito debe ser verificable por test, inspección o demostración.
 La baseline documental y funcional de partida de este marco es **v0.2.1**.  
 Producto de referencia actual: **v0.2.2**.
 
-`07-SRelD` describe la baseline y registra evoluciones posteriores (entornos, Poetry portable, onboarding).
+`07-SRelD` describe la baseline y registra evoluciones posteriores (entornos, Poetry portable, onboarding).  
+`CHANGELOG.md` resume esas evoluciones para lectura humana.
 
 ---
 
@@ -167,4 +171,4 @@ En todos los documentos de `docs/specs/` las estructuras de directorios se escri
 
 Este overview es normativo para la organización de las especificaciones.
 
-Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING u onboarding) debe reflejarse aquí.
+Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING, CHANGELOG u onboarding) debe reflejarse aquí.
