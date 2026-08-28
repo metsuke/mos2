@@ -71,7 +71,9 @@ Proyecto personal de Metsuke.
 | | test_security.py | | | Validación de imports |
 | | test_user.py | | | Módulo de usuario |
 | | test_cmd_loader.py | | | Cargador de comandos |
+| | test_version_metadata.py | | | Formato SemVer de Poetry |
 | AGENTS.md | | | | Entrada corta para agentes IA |
+| CHANGELOG.md | | | | Historial de cambios por release |
 | install.sh | | | | Instalación y aliases |
 | mos2.sh | | | | Lanzador principal (Poetry portable) |
 | pyproject.toml | | | | Configuración de Poetry |
@@ -223,7 +225,7 @@ Si Poetry ya funciona en tu PATH:
 poetry run pytest
 ```
 
-Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos y estilo crítico.
+Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos, estilo crítico y formato de versión Poetry.
 
 ---
 
@@ -242,7 +244,8 @@ poetry run python rootfs/bin/mos.py
 ```
 
 La lógica de negocio y utilidades se concentran en `moslib/`.  
-Guía: `docs/DEVELOPER_GUIDE.md`.
+Guía: `docs/DEVELOPER_GUIDE.md`.  
+Historial de releases: `CHANGELOG.md`.
 
 ---
 
@@ -251,6 +254,7 @@ Guía: `docs/DEVELOPER_GUIDE.md`.
 | Documento | Contenido |
 |-----------|-----------|
 | AGENTS.md | Entrada corta para agentes IA |
+| CHANGELOG.md | Historial de cambios por release |
 | docs/AI_ONBOARDING.md | Protocolo completo para IA |
 | docs/HUMAN_ONBOARDING.md | Arranque para personas |
 | docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |
