@@ -2,6 +2,18 @@
 
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
+## 0.2.3 — 2026-08-28
+
+### Corregido
+
+- Poetry en Git Bash / Unix: un candidato solo se usa si `--version` se puede ejecutar
+- `.gitattributes`: LF en scripts y textos (función de Git, no de un forge)
+
+### Documentación
+
+- ENVIRONMENTS alineado con el orden real de resolución
+- Planes de campaña en docs/plans/
+
 ## 0.2.4-docs — 2026-08-28
 
 ### Documentación
@@ -9,10 +21,6 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - CHANGELOG.md como relato de releases
 - VERSIONING y DEVELOPER_GUIDE alineados con CHANGELOG
 - Test de formato SemVer de la versión Poetry
-
-## Sin publicar
-
-(Vacío hasta el siguiente cambio en main.)
 
 ## 0.2.3-docs — 2026-08-27
 
