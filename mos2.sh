@@ -44,8 +44,6 @@ if is_wsl && path_on_windows_mount "$SCRIPT_DIR"; then
     exit 1
 fi
 
-
-
 echo "Directorio actual: $(pwd)"
 
 # --- Detección de entorno (informativa) ---
@@ -59,8 +57,7 @@ esac
 echo "Entorno detectado: $ENV_LABEL"
 
 # --- Resolver Poetry de forma portable ---
-# En Windows/Git Bash: priorizar poetry.exe y "python -m poetry"
-# (el script "poetry" sin extensión suele dar Permission denied)
+# Git Bash: py -m poetry primero. poetry.exe solo si --version funciona.
 resolve_poetry() {
     local is_windows=0
     case "$(uname -s 2>/dev/null || echo unknown)" in
@@ -72,10 +69,6 @@ resolve_poetry() {
             echo "py -m poetry"
             return 0
         fi
-        if command -v poetry.exe >/dev/null 2>&1; then
-            echo "poetry.exe"
-            return 0
-        fi
         if command -v python >/dev/null 2>&1 && python -m poetry --version >/dev/null 2>&1; then
             echo "python -m poetry"
             return 0
@@ -84,16 +77,19 @@ resolve_poetry() {
             echo "python3 -m poetry"
             return 0
         fi
-        # Último recurso en Windows (puede fallar con Permission denied)
-        if command -v poetry >/dev/null 2>&1; then
+        if command -v poetry.exe >/dev/null 2>&1 && poetry.exe --version >/dev/null 2>&1; then
+            echo "poetry.exe"
+            return 0
+        fi
+        if command -v poetry >/dev/null 2>&1 && poetry --version >/dev/null 2>&1; then
             echo "poetry"
             return 0
         fi
         return 1
     fi
 
-    # Linux / macOS
-    if command -v poetry >/dev/null 2>&1; then
+    # Linux / macOS / WSL
+    if command -v poetry >/dev/null 2>&1 && poetry --version >/dev/null 2>&1; then
         echo "poetry"
         return 0
     fi
@@ -111,7 +107,7 @@ resolve_poetry() {
 POETRY_CMD="$(resolve_poetry || true)"
 if [[ -z "$POETRY_CMD" ]]; then
     echo "Error: No se pudo encontrar Poetry en este entorno ($ENV_LABEL)."
-    echo "Se probaron: poetry, poetry.exe, python -m poetry, python3 -m poetry, py -m poetry"
+    echo "Se probaron: py -m poetry, python -m poetry, python3 -m poetry, poetry.exe, poetry"
     echo "Instálalo con: curl -sSL https://install.python-poetry.org | python3 -"
     echo "En Windows/Git Bash, cierra y abre la terminal tras instalar, o añade Poetry al PATH."
     exit 1
@@ -126,5 +122,4 @@ if [[ ! -f "rootfs/bin/mos.py" ]]; then
 fi
 
 echo "Lanzando MetsuOS a través de Poetry..."
-# Eval seguro del comando resuelto (puede ser "poetry.exe" o "py -m poetry")
 eval "$POETRY_CMD run python rootfs/bin/mos.py \"\$@\""

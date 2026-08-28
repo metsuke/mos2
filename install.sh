@@ -46,7 +46,6 @@ fi
 
 echo "Iniciando despliegue de entorno mos2..."
 
-
 OS_NAME="$(uname -s 2>/dev/null || echo unknown)"
 case "$OS_NAME" in
     Linux*)   ENV_LABEL="linux/native-or-wsl" ;;
@@ -68,10 +67,6 @@ resolve_poetry() {
             echo "py -m poetry"
             return 0
         fi
-        if command -v poetry.exe >/dev/null 2>&1; then
-            echo "poetry.exe"
-            return 0
-        fi
         if command -v python >/dev/null 2>&1 && python -m poetry --version >/dev/null 2>&1; then
             echo "python -m poetry"
             return 0
@@ -80,14 +75,18 @@ resolve_poetry() {
             echo "python3 -m poetry"
             return 0
         fi
-        if command -v poetry >/dev/null 2>&1; then
+        if command -v poetry.exe >/dev/null 2>&1 && poetry.exe --version >/dev/null 2>&1; then
+            echo "poetry.exe"
+            return 0
+        fi
+        if command -v poetry >/dev/null 2>&1 && poetry --version >/dev/null 2>&1; then
             echo "poetry"
             return 0
         fi
         return 1
     fi
 
-    if command -v poetry >/dev/null 2>&1; then
+    if command -v poetry >/dev/null 2>&1 && poetry --version >/dev/null 2>&1; then
         echo "poetry"
         return 0
     fi
@@ -105,18 +104,16 @@ resolve_poetry() {
 POETRY_CMD="$(resolve_poetry || true)"
 if [[ -z "$POETRY_CMD" ]]; then
     echo "Error: No se pudo encontrar Poetry ($ENV_LABEL)."
-    echo "Se probaron: poetry, poetry.exe, python -m poetry, python3 -m poetry, py -m poetry"
+    echo "Se probaron: py -m poetry, python -m poetry, python3 -m poetry, poetry.exe, poetry"
     echo "Instálalo con: curl -sSL https://install.python-poetry.org | python3 -"
     exit 1
 fi
 
 echo "Poetry resuelto como: $POETRY_CMD"
 
-# Asegurar entorno local estanco e instalar dependencias
 eval "$POETRY_CMD config virtualenvs.in-project true"
 eval "$POETRY_CMD install"
 
-# Alias para Bash/Zsh
 ALIAS_NAMES=(
     "python-is-python3"
     "mos2"
