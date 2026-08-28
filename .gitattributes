@@ -1,0 +1,25 @@
+# Fin de línea: scripts Unix siempre LF (evita /bin/bash^M en WSL y Linux).
+*.sh text eol=lf
+
+# Documentación y fuentes de texto: LF en el repo.
+*.md text eol=lf
+*.py text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Git interno
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Lock de Poetry: texto, sin forzar conversión rara
+poetry.lock text
+
+# Binarios explícitos (por si aparecen)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
