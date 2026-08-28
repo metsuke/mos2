@@ -2,9 +2,17 @@
 
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
+## 0.2.4-docs — 2026-08-28
+
+### Documentación
+
+- CHANGELOG.md como relato de releases
+- VERSIONING y DEVELOPER_GUIDE alineados con CHANGELOG
+- Test de formato SemVer de la versión Poetry
+
 ## Sin publicar
 
-Cambios en `main` posteriores al último tag, si los hay.
+(Vacío hasta el siguiente cambio en main.)
 
 ## 0.2.3-docs — 2026-08-27
 
