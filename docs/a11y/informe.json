@@ -1,0 +1,19 @@
+{
+  "schema": "metsuos-a11y-informe-1",
+  "generated_by": null,
+  "generated_at": null,
+  "first_run_done": false,
+  "compliance": "parcialmente conforme",
+  "reason": "Plantilla previa a la primera ejecucion automatica. Rige docs/a11y/DECLARACION.md.",
+  "tests": {
+    "ran": 0,
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0
+  },
+  "findings": [],
+  "refs": [
+    "docs/A11Y.md",
+    "docs/a11y/DECLARACION.md"
+  ]
+}

@@ -1,9 +1,9 @@
 # 02 – SRS · Requisitos software
 
-**Versión del documento:** 1.1  
-**Baseline de referencia:** v0.2.1  
+**Versión del documento:** 1.2  
+**Baseline de referencia:** v0.2.4  
 **Estado:** Normativo  
-**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/06-TEST-Verification-and-Validation.md
+**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/06-TEST-Verification-and-Validation.md
 
 ---
 
@@ -37,6 +37,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | DOC | Documentación |
 | UPD | Actualización |
 | PLAT | Plataforma / entornos |
+| A11Y | Accesibilidad |
 
 ### Prioridad
 
@@ -84,6 +85,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-008 | La baseline debe incluir al menos: help, man, version, sysinfo, uptime, echo, clear, test, update | Must | Inspection / Demo |
 | REQ-CMD-009 | El sistema debe proporcionar un comando man para mostrar documentación extendida desde docs/man/ | Must | Demo / Test |
 | REQ-CMD-010 | Un comando de usuario no puede sobrescribir un comando de sistema | Must | Test |
+| REQ-CMD-015 | Al cerrar la baseline 0.2.5 deben existir los comandos de sistema a11y y docs | Must | Inspection / Demo |
 
 ---
 
@@ -162,6 +164,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
 | REQ-UPD-004 | update debe mantener un número máximo controlado de ramas backup locales | Must | Demo / Inspection |
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
+| REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must | Demo / Inspection |
 
 ---
 
@@ -177,6 +180,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-006 | Las estructuras de directorios en documentación normativa deben representarse como tablas por niveles | Must | Inspection |
 | REQ-DOC-007 | Todo comando de sistema nuevo debe documentarse en man en el mismo cambio o en el inmediato de la misma fase | Should | Inspection |
 | REQ-DOC-008 | Debe existir docs/ENVIRONMENTS.md con perfiles de entorno y política de Poetry | Must | Inspection |
+| REQ-DOC-009 | Debe existir docs/A11Y.md | Must | Inspection |
+| REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
+| REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
 
 ---
 
@@ -190,6 +196,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-004 | El arranque básico no debe requerir red | Must | Demo |
 | REQ-PLAT-005 | mos2.sh e install.sh deben resolver Poetry según el perfil de entorno (docs/ENVIRONMENTS.md) | Must | Demo |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
+| REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must | Demo / Inspection |
 
 ---
 
@@ -204,16 +211,46 @@ Formato: `REQ-<AREA>-<NNN>`
 
 ---
 
+## Requisitos de accesibilidad
+
+| ID | Requisito | Prioridad | Verificación |
+|----|-----------|-----------|--------------|
+| REQ-A11Y-001 | La accesibilidad de MOSh, launchers y docs consultables es mandatoria | Must | Inspection |
+| REQ-A11Y-002 | Si A11Y y SEC chocan, no se excluye un perfil soportado; el recorte de SEC se documenta | Must | Inspection |
+| REQ-A11Y-003 | Los perfiles mínimos son: teclado, lector de terminal, baja visión, daltonismo, carga cognitiva, sordera/sin audio | Must | Inspection |
+| REQ-A11Y-004 | help() no vacío es requisito de accesibilidad además de contrato de comando | Must | Test |
+| REQ-A11Y-005 | Los mensajes de error y de seguridad deben llevar prefijo estable y pista de acción | Must | Test / Demo |
+| REQ-A11Y-006 | El color o el ANSI no pueden ser la única señal de ok, error o aviso | Must | Inspection / Test |
+| REQ-A11Y-007 | Debe existir un comando de sistema a11y que ejecute solo los tests marcados a11y y regenere el informe | Must | Demo / Test |
+| REQ-A11Y-008 | Debe existir un comando de sistema docs que liste y muestre ficheros bajo docs/ | Must | Demo / Test |
+| REQ-A11Y-009 | El informe docs/a11y/informe.md e informe.json debe actualizarse al ejecutar a11y o la batería que incluya tests a11y | Must | Demo / Test |
+| REQ-A11Y-010 | El informe debe declarar situación: plenamente conforme, parcialmente conforme o no conforme | Must | Test / Inspection |
+| REQ-A11Y-011 | La declaración docs/a11y/DECLARACION.md debe seguir el modelo UE/ES adaptado a CLI y no afirmar obligación RD 1112/2018 | Must | Inspection |
+| REQ-A11Y-012 | El comando test (batería completa) debe regenerar el informe A11Y si corre tests marcados a11y | Must | Demo |
+| REQ-A11Y-013 | GUI, laboratorio de lectores de pantalla y sello WCAG web quedan fuera de esta baseline y deben listarse como fuera de ámbito | Must | Inspection |
+
+---
+
+## Requisitos de pruebas A11Y
+
+| ID | Requisito | Prioridad | Verificación |
+|----|-----------|-----------|--------------|
+| REQ-TEST-008 | Debe existir marca pytest a11y para aislar la validación de accesibilidad | Must | Test |
+| REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de “solo CI” | Must | Inspection |
+
+---
+
 ## Trazabilidad mínima
 
 | Spec de origen | Requisitos principales |
 |----------------|------------------------|
-| SSS | REQ-SYS-*, REQ-USER-*, REQ-PLAT-*, REQ-CMD-010 |
+| SSS | REQ-SYS-*, REQ-USER-*, REQ-PLAT-*, REQ-CMD-010, REQ-A11Y-001 |
 | SEC | REQ-SEC-* |
-| ICD | REQ-CMD-001 a REQ-CMD-014 |
+| ICD | REQ-CMD-001 a REQ-CMD-015 |
+| A11Y | REQ-A11Y-*, REQ-DOC-009 a REQ-DOC-011, REQ-TEST-008, REQ-TEST-009 |
 | Metodología / calidad | REQ-BOOT-*, REQ-TEST-*, REQ-DOC-* |
 | Operación | REQ-UPD-* |
-| Entornos | REQ-PLAT-005, REQ-PLAT-006, REQ-DOC-008 |
+| Entornos | REQ-PLAT-005, REQ-PLAT-006, REQ-PLAT-007, REQ-DOC-008 |
 
 ---
 

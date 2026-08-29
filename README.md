@@ -23,6 +23,7 @@ Proyecto personal de Metsuke.
 - Comandos del sistema protegidos (el usuario no puede sobrescribirlos)
 - Comandos de usuario con prefijo `user_` (invocables también sin prefijo si no hay conflicto)
 - **Validación de seguridad obligatoria**: solo se permiten imports de la biblioteca estándar y de `moslib`
+- **Accesibilidad mandatoria** de la interfaz CLI (`docs/A11Y.md` y declaración en `docs/a11y/`)
 - Tests unitarios y de seguridad con pytest
 - Gestión de dependencias y entorno virtual con Poetry
 - Scripts de instalación y lanzamiento multiplataforma (linux/native, macos/native, windows/git-bash, windows/wsl)
@@ -46,7 +47,7 @@ Proyecto personal de Metsuke.
 | | | man.py | | Manual extendido (docs/man/) |
 | | | sysinfo.py | | Información del sistema |
 | | | test.py | | Ejecuta la batería de tests |
-| | | update.py | | Actualiza desde origin/main con backup |
+| | | update.py | | Actualiza desde origin/main con backup y tags |
 | | | uptime.py | | Tiempo de actividad |
 | | | version.py | | Versión e historial |
 | rootfs/ | | | | Sistema de archivos simulado |
@@ -56,6 +57,8 @@ Proyecto personal de Metsuke.
 | | | usuario/ | | Carpeta del usuario del sistema anfitrión |
 | | | | .mos/ | Espacio privado del usuario |
 | docs/ | | | | Documentación del proyecto |
+| | A11Y.md | | | Política de accesibilidad |
+| | a11y/ | | | Declaración e informe A11Y |
 | | AI_ONBOARDING.md | | | Arranque para agentes IA |
 | | HUMAN_ONBOARDING.md | | | Arranque para humanos |
 | | DEVELOPER_GUIDE.md | | | Flujo de desarrollo |
@@ -64,6 +67,7 @@ Proyecto personal de Metsuke.
 | | METHODOLOGY.md | | | Método de trabajo |
 | | STYLE_GUIDE.md | | | Normas de código |
 | | USER_MANUAL.md | | | Manual de usuario |
+| | plans/ | | | Planes de campaña |
 | | specs/ | | | Especificaciones ECSS-light |
 | | man/ | | | Páginas man por comando |
 | tests/ | | | | Tests unitarios, seguridad y estilo |
@@ -145,10 +149,12 @@ mosh/tu_usuario_real@metsuos:~$
 
 | Tipo | Comando | Descripción |
 |------|---------|-------------|
+| accesibilidad | a11y | Validación A11Y e informe (previsto en 0.2.5) |
+| ayuda | docs | Lista y muestra documentación de docs/ (previsto en 0.2.5) |
 | ayuda | help | Lista de comandos (sistema + usuario) o ayuda de uno concreto |
 | ayuda | man | Manual extendido de un comando (docs/man/) |
 | calidad | test | Ejecuta la batería de tests unitarios y de seguridad |
-| calidad | update | Sincroniza con origin/main (backup local si hay cambios) |
+| calidad | update | Sincroniza con origin/main (backup local y tags) |
 | host | sysinfo | Información del hardware y estado del anfitrión |
 | host | uptime | Tiempo de actividad del sistema anfitrión |
 | host | version | Versión actual (Git). Con -h [n] muestra historial |
@@ -225,7 +231,17 @@ Si Poetry ya funciona en tu PATH:
 poetry run pytest
 ```
 
-Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos, estilo crítico y formato de versión Poetry.
+Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos, estilo crítico y formato de versión Poetry. Los tests A11Y se añaden en la baseline 0.2.5.
+
+---
+
+## Accesibilidad
+
+Política: `docs/A11Y.md`  
+Declaración (modelo UE/ES adaptado a CLI): `docs/a11y/DECLARACION.md`  
+Informe automático: `docs/a11y/informe.md`
+
+MetsuOS no declara conformidad legal con el RD 1112/2018; adopta la estructura de esa declaración para un producto CLI.
 
 ---
 
@@ -245,7 +261,8 @@ poetry run python rootfs/bin/mos.py
 
 La lógica de negocio y utilidades se concentran en `moslib/`.  
 Guía: `docs/DEVELOPER_GUIDE.md`.  
-Historial de releases: `CHANGELOG.md`.
+Historial de releases: `CHANGELOG.md`.  
+Planes de campaña: `docs/plans/`.
 
 ---
 
@@ -255,6 +272,8 @@ Historial de releases: `CHANGELOG.md`.
 |-----------|-----------|
 | AGENTS.md | Entrada corta para agentes IA |
 | CHANGELOG.md | Historial de cambios por release |
+| docs/A11Y.md | Política de accesibilidad |
+| docs/a11y/DECLARACION.md | Declaración de accesibilidad |
 | docs/AI_ONBOARDING.md | Protocolo completo para IA |
 | docs/HUMAN_ONBOARDING.md | Arranque para personas |
 | docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |
@@ -263,6 +282,7 @@ Historial de releases: `CHANGELOG.md`.
 | docs/ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |
 | docs/METHODOLOGY.md | Método de trabajo |
 | docs/STYLE_GUIDE.md | Normas de estilo de código |
+| docs/plans/ | Planes de campaña |
 | docs/specs/ | Especificaciones ECSS-light |
 | docs/man/ | Páginas man por comando |
 

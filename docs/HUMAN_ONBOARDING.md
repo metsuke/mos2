@@ -1,8 +1,8 @@
 # Onboarding humano de MetsuOS
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Guía de entrada  
-**Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md
+**Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md
 
 ---
 
@@ -29,6 +29,8 @@ Desde la raíz del clone:
 
 Dentro del shell: `help`, `man`, `exit`.
 
+Cuando existan en 0.2.5: `docs` (leer documentación) y `a11y` (validar accesibilidad).
+
 Detalle de uso cotidiano: docs/USER_MANUAL.md.
 
 ---
@@ -51,7 +53,7 @@ Contexto: <sistema> / <entorno> / <rol>
 ```
 
 | Sistema | Entorno | Notas |
-|---------|----------|-------|
+|---------|---------|-------|
 | linux | native | Poetry habitual |
 | macos | native | Igual |
 | windows | git-bash | Preferir py -m poetry; poetry.exe puede dar Permission denied |
@@ -67,14 +69,20 @@ Normativa: docs/ENVIRONMENTS.md.
 |-----------|----------|
 | README.md | Visión del repo |
 | docs/USER_MANUAL.md | Uso de MOSh |
+| docs/A11Y.md | Política de accesibilidad |
+| docs/a11y/DECLARACION.md | Declaración de accesibilidad |
+| docs/a11y/informe.md | Última validación A11Y automática |
 | docs/ENVIRONMENTS.md | Plataformas y Poetry |
 | docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |
 | docs/STYLE_GUIDE.md | Cómo se escribe el código |
 | docs/VERSIONING.md | Versiones, tags y Poetry |
 | docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |
+| docs/plans/ | Planes de campaña |
 | docs/AI_ONBOARDING.md / AGENTS.md | Si colaboras con una IA |
 | docs/specs/ | Requisitos y diseño (ECSS-light) |
 | docs/man/ | Manual extendido por comando |
+
+Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo es largo, cacho 1 reemplaza el fichero y lo demás se pega debajo.
 
 ---
 
@@ -84,6 +92,7 @@ Normativa: docs/ENVIRONMENTS.md.
 - Invocarlos como `user_algo` o `algo` si no choca con un comando de sistema
 - No puedes pisar comandos oficiales
 - No puedes importar librerías Python de terceros en comandos (solo stdlib y moslib)
+- Consultar accesibilidad en docs/A11Y.md y la declaración en docs/a11y/
 
 ---
 
@@ -101,5 +110,6 @@ Normativa: docs/ENVIRONMENTS.md.
 ## Siguiente lectura
 
 1. docs/USER_MANUAL.md
-2. Si vas a programar: docs/DEVELOPER_GUIDE.md y docs/STYLE_GUIDE.md
-3. Si vas a cambiar el producto: docs/METHODOLOGY.md y docs/VERSIONING.md
+2. docs/A11Y.md si te interesa accesibilidad
+3. Si vas a programar: docs/DEVELOPER_GUIDE.md y docs/STYLE_GUIDE.md
+4. Si vas a cambiar el producto: docs/METHODOLOGY.md y docs/VERSIONING.md

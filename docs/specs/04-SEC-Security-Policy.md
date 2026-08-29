@@ -1,13 +1,13 @@
 # 04 – SEC · Política de seguridad
 
-**Versión del documento:** 1.0  
-**Baseline de referencia:** v0.2.1  
+**Versión del documento:** 1.1  
+**Baseline de referencia:** v0.2.4  
 **Estado:** Normativo  
-**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/STYLE_GUIDE.md
+**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/STYLE_GUIDE.md
 
 ---
 
-## 1. Propósito
+## Propósito
 
 Este documento define la política de seguridad de MetsuOS relativa a la carga y ejecución de comandos.
 
@@ -17,7 +17,7 @@ La seguridad aquí no pretende cubrir todo el espectro de ciberseguridad de un s
 
 ---
 
-## 2. Alcance
+## Alcance
 
 Aplica a:
 
@@ -31,19 +31,36 @@ Aplica a:
 
 ---
 
-## 3. Objetivos de seguridad
+## Objetivos de seguridad
 
 1. Impedir que un comando cargue dependencias Python arbitrarias.
 2. Mantener el modelo de extensión bajo control de mosLib.
 3. Detectar violaciones antes de ejecutar el comando.
 4. Detectar violaciones existentes en el arranque del sistema.
-5. Dar mensajes de rechazo claros y auditables.
+5. Dar mensajes de rechazo claros, auditables y usables (prefijo estable y pista de acción).
 
 ---
 
-## 4. Política de imports
+## Relación con accesibilidad
 
-### 4.1 Permitido
+La accesibilidad de interfaz es mandatoria (`docs/A11Y.md`, SSS).
+
+Si un control de esta política y un perfil A11Y soportado chocan:
+
+1. No se excluye el perfil.
+2. No se desactiva la validación AST ni se permite un import ilegal “por A11Y”.
+3. Se busca una mitigación que conserve el control (mensaje más claro, mismo rechazo).
+4. Si aun así hay que recortar SEC, el recorte se escribe aquí, en A11Y y en SRelD. Nunca en silencio.
+
+### Excepciones A11Y vigentes
+
+Ninguna. Rechazar imports ilegales no impide usar teclado ni lector de terminal. El mensaje `[SEGURIDAD]` debe ser texto lineal comprensible.
+
+---
+
+## Política de imports
+
+### Permitido
 
 Un comando puede importar únicamente:
 
@@ -58,7 +75,7 @@ Ejemplos permitidos:
 - import moslib
 - from moslib.core.user import get_username
 
-### 4.2 Prohibido
+### Prohibido
 
 Está prohibido:
 
@@ -74,7 +91,7 @@ Ejemplos prohibidos:
 - from flask import Flask
 - from . import utils
 
-### 4.3 Criterio de decisión
+### Criterio de decisión
 
 La validación se basa en análisis estático del código fuente mediante AST, sin ejecutar el comando.
 
@@ -87,9 +104,9 @@ Para un nombre de módulo:
 
 ---
 
-## 5. Momentos de validación
+## Momentos de validación
 
-### 5.1 Validación en runtime (carga de comando)
+### Validación en runtime (carga de comando)
 
 Cada vez que el sistema va a cargar un comando, debe validar el archivo antes de ejecutarlo.
 
@@ -100,7 +117,7 @@ Si la validación falla:
 3. Se listan los errores detectados
 4. El shell no ejecuta `execute()`
 
-### 5.2 Validación en arranque
+### Validación en arranque
 
 Al iniciar MOSh, la batería de tests debe incluir comprobaciones de seguridad sobre:
 
@@ -109,7 +126,7 @@ Al iniciar MOSh, la batería de tests debe incluir comprobaciones de seguridad s
 
 Si cualquier comando existente viola la política, el arranque debe fallar y el sistema no iniciará la sesión interactiva.
 
-### 5.3 Relación entre ambas
+### Relación entre ambas
 
 | Momento | Qué cubre | Efecto si falla |
 |---------|-----------|-----------------|
@@ -120,12 +137,16 @@ Ambas capas son obligatorias. Una no sustituye a la otra.
 
 ---
 
-## 6. Comportamiento de rechazo
+## Comportamiento de rechazo
 
 Mensaje mínimo esperado en runtime:
 
+```text
 [SEGURIDAD] Comando '<nombre>' rechazado:
   - Import prohibido: import <modulo>
+```
+
+El texto debe indicar qué ha pasado. No debe basarse solo en color ANSI.
 
 Después, el shell puede indicar que el comando no está disponible o no fue encontrado.
 
@@ -133,7 +154,7 @@ El rechazo debe ser determinista: el mismo archivo ilegal produce el mismo resul
 
 ---
 
-## 7. Responsabilidades por componente
+## Responsabilidades por componente
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Responsabilidad de seguridad |
 |---------|---------|---------|------------------------------|
@@ -146,7 +167,7 @@ El rechazo debe ser determinista: el mismo archivo ilegal produce el mismo resul
 
 ---
 
-## 8. Espacio de usuario y confianza
+## Espacio de usuario y confianza
 
 El espacio de usuario es controlado por el propio usuario del sistema anfitrión.
 
@@ -160,7 +181,7 @@ Esto es intencional: protege el modelo de seguridad del sistema frente a extensi
 
 ---
 
-## 9. Límites de esta política
+## Límites de esta política
 
 Esta política NO cubre por sí sola:
 
@@ -169,12 +190,13 @@ Esta política NO cubre por sí sola:
 3. Ataques con capacidad de modificar `moslib/` sin pasar por el proceso de desarrollo
 4. Ejecución de binarios externos invocados por wrappers no contemplados
 5. Vulnerabilidades de la stdlib o del intérprete Python
+6. Protección de datos personales (RGPD / LOPDGDD): campaña futura, no este documento
 
 Su alcance es el control de extensión por comandos dentro del modelo MetsuOS.
 
 ---
 
-## 10. Requisitos de seguridad derivados
+## Requisitos de seguridad derivados
 
 Los siguientes requisitos son normativos y deben aparecer también en el SRS:
 
@@ -184,10 +206,11 @@ Los siguientes requisitos son normativos y deben aparecer también en el SRS:
 - REQ-SEC-004: El rechazo debe mostrar motivo claro
 - REQ-SEC-005: El arranque debe fallar si existe cualquier comando ilegal en sistema o en el usuario actual
 - REQ-SEC-006: No se permite desactivar la seguridad en modo normal de operación
+- REQ-A11Y-002: Conflicto A11Y/SEC documentado; no exclusión de perfil
 
 ---
 
-## 11. Verificación
+## Verificación
 
 La política se verifica por:
 
@@ -196,24 +219,27 @@ La política se verifica por:
 3. Pruebas manuales de rechazo con un comando de usuario ilegal
 4. Arranque bloqueado mientras exista el comando ilegal
 5. Arranque correcto tras eliminar o corregir el comando ilegal
+6. Inspección de que el mensaje de rechazo es texto usable
 
 ---
 
-## 12. Cambios de política
+## Cambios de política
 
 Cualquier relajación o ampliación de esta política requiere:
 
 1. Actualización de este documento
 2. Actualización de tests
 3. Justificación en metodología o release notes de la baseline
-4. Revisión de impacto sobre SSS e ICD
+4. Revisión de impacto sobre SSS, ICD y A11Y
 
 No se admiten flags ocultos para “saltar seguridad” en operación normal.
 
 ---
 
-## 13. Autoridad
+## Autoridad
 
-`04-SEC` es documento de máxima prioridad técnica junto con las normas no negociables del SSS.
+`04-SEC` es documento de máxima prioridad técnica junto con las normas no negociables del SSS y la política A11Y.
 
 En caso de conflicto con conveniencia de implementación, prevalece esta política.
+
+En caso de conflicto con un perfil A11Y soportado, se aplica la sección «Relación con accesibilidad» de este mismo documento.

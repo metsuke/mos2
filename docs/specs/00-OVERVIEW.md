@@ -1,9 +1,9 @@
 # 00 – Overview de especificaciones (ECSS-light)
 
-**Versión del documento:** 1.3  
-**Baseline de referencia:** v0.2.2  
+**Versión del documento:** 1.4  
+**Baseline de referencia:** v0.2.4  
 **Estado:** Normativo  
-**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, CHANGELOG.md, AGENTS.md
+**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, AGENTS.md
 
 ---
 
@@ -33,7 +33,7 @@ No describe el diseño detallado ni los requisitos individuales: solo organiza e
 | docs/ | specs/ | 04-SEC-Security-Policy.md | SEC | Política de seguridad de imports y validaciones |
 | docs/ | specs/ | 05-SDD-Architecture-and-Design.md | SDD | Arquitectura y diseño alineados con el código |
 | docs/ | specs/ | 06-TEST-Verification-and-Validation.md | TEST | Estrategia de verificación y validación |
-| docs/ | specs/ | 07-SRelD-Release-Baseline.md | SRelD | Baseline de release (v0.2.1 y siguientes) |
+| docs/ | specs/ | 07-SRelD-Release-Baseline.md | SRelD | Baseline de release |
 
 Documentos de soporte fuera de `specs/`:
 
@@ -41,6 +41,8 @@ Documentos de soporte fuera de `specs/`:
 |---------|---------|---------|
 | AGENTS.md | | Entrada corta para agentes IA |
 | CHANGELOG.md | | Historial de cambios por release |
+| docs/ | A11Y.md | Política de accesibilidad |
+| docs/ | a11y/ | Declaración e informe A11Y |
 | docs/ | AI_ONBOARDING.md | Protocolo de trabajo para IA |
 | docs/ | HUMAN_ONBOARDING.md | Arranque para personas |
 | docs/ | DEVELOPER_GUIDE.md | Flujo práctico de desarrollo |
@@ -50,6 +52,7 @@ Documentos de soporte fuera de `specs/`:
 | docs/ | STYLE_GUIDE.md | Normas de estilo de código |
 | docs/ | USER_MANUAL.md | Manual de usuario formal |
 | docs/ | man/ | Páginas man por comando |
+| docs/ | plans/ | Planes de campaña |
 
 ---
 
@@ -57,7 +60,7 @@ Documentos de soporte fuera de `specs/`:
 
 De mayor a menor autoridad técnica:
 
-1. `04-SEC` y `01-SSS` (seguridad y normas de sistema)
+1. A11Y de interfaz (perfiles soportados) junto con `04-SEC` y `01-SSS`
 2. `03-ICD` (contratos e interfaces)
 3. `02-SRS` (requisitos software)
 4. `05-SDD` (diseño)
@@ -66,9 +69,9 @@ De mayor a menor autoridad técnica:
 
 Regla:
 
-- El código debe cumplir SEC, SSS, ICD y SRS.
+- El código debe cumplir SEC, SSS, ICD, SRS y A11Y.
+- Si A11Y y SEC chocan, se aplica el procedimiento de SEC y A11Y.md. No hay excepción silenciosa.
 - Si un cambio de código exige alterar una norma, primero se actualiza la spec y después el código.
-- No se aceptan excepciones silenciosas.
 - Tags y bump de Poetry: `docs/VERSIONING.md`.
 - Relato de releases: `CHANGELOG.md`.
 
@@ -87,7 +90,7 @@ Este conjunto es una adaptación ligera de ECSS-E-ST-40:
 | V&V / test planning | 06-TEST |
 | SRelD | 07-SRelD |
 
-Adicionalmente, MetsuOS eleva la seguridad a documento propio (`04-SEC`) por ser norma férrea del sistema.
+La seguridad tiene documento propio (`04-SEC`). La accesibilidad tiene política y declaración propias (`docs/A11Y.md`, `docs/a11y/`).
 
 ---
 
@@ -95,11 +98,11 @@ Adicionalmente, MetsuOS eleva la seguridad a documento propio (`04-SEC`) por ser
 
 ### Para implementar una feature
 
-1. Comprobar impacto en SSS / SEC / ICD / SRS (y ENVIRONMENTS si afecta a perfiles o Poetry).
+1. Comprobar impacto en SSS / SEC / ICD / SRS / A11Y (y ENVIRONMENTS si afecta a perfiles o Poetry).
 2. Si cambia arquitectura, actualizar SDD.
 3. Implementar en rama `feature/...`.
 4. Añadir o ajustar tests según 06-TEST y STYLE_GUIDE.
-5. Actualizar manual/man/README/onboarding/CHANGELOG si afecta a uso, proceso o release.
+5. Actualizar manual/man/README/onboarding/CHANGELOG/declaración si afecta a uso, proceso, release o cumplimiento A11Y.
 6. Merge solo con tests en verde.
 7. Aplicar VERSIONING (bump/tag si es producto).
 
@@ -108,12 +111,13 @@ Adicionalmente, MetsuOS eleva la seguridad a documento propio (`04-SEC`) por ser
 Preguntas mínimas:
 
 1. ¿Rompe SEC?
-2. ¿Rompe el contrato de comando (ICD)?
-3. ¿Queda trazado a algún requisito (SRS) o es solo refactor?
-4. ¿Los tests lo cubren?
-5. ¿Hay que tocar SRelD en la siguiente baseline?
-6. ¿Hay que bump de Poetry o es solo docs?
-7. ¿Hay que anotar CHANGELOG?
+2. ¿Excluye un perfil A11Y?
+3. ¿Rompe el contrato de comando (ICD)?
+4. ¿Queda trazado a algún requisito (SRS) o es solo refactor?
+5. ¿Los tests lo cubren?
+6. ¿Hay que tocar SRelD en la siguiente baseline?
+7. ¿Hay que bump de Poetry o es solo docs?
+8. ¿Hay que anotar CHANGELOG?
 
 ---
 
@@ -124,8 +128,6 @@ En `02-SRS` los requisitos se numeran así:
 ```text
 REQ-<AREA>-<NNN>
 ```
-
-Áreas habituales:
 
 | Área | Significado |
 |------|-------------|
@@ -138,6 +140,7 @@ REQ-<AREA>-<NNN>
 | DOC | Documentación |
 | UPD | Actualización |
 | PLAT | Plataforma / entornos |
+| A11Y | Accesibilidad |
 
 Ejemplo: `REQ-SEC-001`
 
@@ -147,11 +150,13 @@ Cada requisito debe ser verificable por test, inspección o demostración.
 
 ## Baseline
 
-La baseline documental y funcional de partida de este marco es **v0.2.1**.  
-Producto de referencia actual: **v0.2.2**.
+La baseline documental de partida de este marco es **v0.2.1**.  
+Producto de referencia actual: **v0.2.4**.  
+Siguiente cierre de producto de esta campaña (A11Y runtime + tests + docs CLI): **v0.2.5**.
 
-`07-SRelD` describe la baseline y registra evoluciones posteriores (entornos, Poetry portable, onboarding).  
-`CHANGELOG.md` resume esas evoluciones para lectura humana.
+`07-SRelD` describe la baseline.  
+`CHANGELOG.md` resume las evoluciones.  
+`docs/a11y/DECLARACION.md` e `informe.md` describen el cumplimiento A11Y adaptado a CLI.
 
 ---
 
@@ -171,4 +176,4 @@ En todos los documentos de `docs/specs/` las estructuras de directorios se escri
 
 Este overview es normativo para la organización de las especificaciones.
 
-Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING, CHANGELOG u onboarding) debe reflejarse aquí.
+Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING, CHANGELOG, A11Y, planes u onboarding) debe reflejarse aquí.

@@ -1,9 +1,9 @@
 # 01 – SSS · Especificación de sistema
 
-**Versión del documento:** 1.1  
-**Baseline de referencia:** v0.2.1  
+**Versión del documento:** 1.2  
+**Baseline de referencia:** v0.2.4  
 **Estado:** Normativo  
-**Documentos relacionados:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/specs/00-OVERVIEW.md, docs/specs/04-SEC-Security-Policy.md
+**Documentos relacionados:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/specs/00-OVERVIEW.md, docs/specs/04-SEC-Security-Policy.md
 
 ---
 
@@ -26,7 +26,7 @@ Todo diseño, requisito software e implementación debe ser compatible con esta 
 | Lenguaje principal | Python 3.10+ |
 | Licencia | GPL-3.0 |
 | Estado | Alpha |
-| Baseline actual | v0.2.1 |
+| Baseline actual | v0.2.4 |
 
 ---
 
@@ -41,6 +41,8 @@ MetsuOS es un entorno operativo simulado que proporciona:
 - Comandos implementados como módulos Python independientes
 - Validación de seguridad de imports
 - Tests de arranque obligatorios
+- Política y declaración de accesibilidad (CLI)
+- Consulta de documentación y validación A11Y desde el propio sistema (cuando estén implantados en esta campaña)
 
 MetsuOS se ejecuta sobre un sistema operativo anfitrión y no reemplaza su kernel.
 
@@ -54,6 +56,7 @@ MetsuOS se ejecuta sobre un sistema operativo anfitrión y no reemplaza su kerne
 4. Impedir que comandos carguen código fuera de la política de seguridad.
 5. Ser agnóstico de plataforma en los entornos soportados.
 6. Evolucionar sin romper funcionalidad existente mediante specs, tests y proceso controlado.
+7. No excluir los perfiles de discapacidad declarados en `docs/A11Y.md`.
 
 ---
 
@@ -68,12 +71,24 @@ MetsuOS, en esta baseline, **no** pretende:
 5. Ofrecer compatibilidad POSIX completa.
 6. Multiplexar procesos reales como un sistema operativo nativo.
 7. Garantizar seguridad frente a un atacante con acceso de escritura al código del núcleo fuera de las validaciones definidas.
+8. Ser un sitio web o app del sector público ni declarar conformidad legal con el RD 1112/2018.
+9. Ofrecer GUI, laboratorio de lectores de pantalla o certificación WCAG de página web en esta baseline.
 
 ---
 
 ## Normas no negociables
 
 Las siguientes normas son férreas. No se pueden debilitar por comodidad.
+
+### Accesibilidad
+
+La accesibilidad de la interfaz (MOSh, launchers y documentación consultable) es mandatoria.
+
+Si accesibilidad y seguridad chocan, prevalece no excluir un perfil soportado. El recorte de SEC no es silencioso: se documenta en SEC + A11Y + SRelD.
+
+Referentes: `docs/A11Y.md`, `docs/a11y/DECLARACION.md`, informe en `docs/a11y/informe.md`.
+
+Perfiles mínimos soportados: solo teclado, lector de pantalla de terminal, baja visión, daltonismo, carga cognitiva, sordera/sin audio (N/A de sonido).
 
 ### Todo pasa por mosLib
 
@@ -118,9 +133,7 @@ El sistema debe poder instalarse y ejecutarse en los perfiles:
 | windows | git-bash |
 | windows | wsl |
 
-Sin asumir una única plataforma. La política operativa de Poetry, rutas relativas al clone y contexto de sesión genérico está en `docs/ENVIRONMENTS.md`. El lanzador (`mos2.sh`) y el instalador (`install.sh`) deben resolver Poetry de forma portable según el perfil.
-
----
+Sin asumir una única plataforma. La política operativa de Poetry, rutas relativas al clone y contexto de sesión genérico está en `docs/ENVIRONMENTS.md`. El lanzador (`mos2.sh`) y el instalador (`install.sh`) deben resolver Poetry de forma portable según el perfil. Un candidato Poetry solo se usa si `--version` se puede ejecutar.
 
 ## Contexto operativo
 
@@ -150,7 +163,8 @@ MetsuOS usa el usuario real del sistema anfitrión para:
 | | | usuario/ | | Home del usuario anfitrión |
 | | | | .mos/ | Espacio privado MetsuOS |
 | tests/ | | | | Batería de tests |
-| docs/ | | | | Metodología, specs, manual, entornos y man |
+| docs/ | | | | Metodología, specs, manual, entornos, A11Y y man |
+| | a11y/ | | | Declaración e informe de accesibilidad |
 | mos2.sh | | | | Lanzador con resolución portable de Poetry |
 | install.sh | | | | Instalador con la misma política |
 
@@ -183,14 +197,16 @@ El sistema debe proporcionar un shell con:
 
 ### Comandos de sistema
 
-Como mínimo en esta baseline (tabla por tipo A–Z y comando A–Z dentro del tipo):
+Como mínimo en esta baseline (tabla por tipo A–Z y comando A–Z dentro del tipo). `a11y` y `docs` entran al cerrar el Grupo II de la campaña 05; hasta entonces son capacidad requerida en curso.
 
 | Tipo | Comando | Función general |
 |------|---------|-----------------|
+| accesibilidad | a11y | Validación A11Y e informe automático |
+| ayuda | docs | Listar y mostrar documentación del clone |
 | ayuda | help | Ayuda de comandos |
 | ayuda | man | Manual extendido desde docs/man/ |
 | calidad | test | Ejecución de la batería de tests |
-| calidad | update | Actualización desde origin/main con backup local |
+| calidad | update | Actualización desde origin/main con backup local y tags |
 | host | sysinfo | Información del anfitrión |
 | host | uptime | Tiempo de actividad del anfitrión |
 | host | version | Versión e historial |
@@ -213,7 +229,7 @@ El sistema debe validar comandos:
 
 ### Actualización
 
-El sistema debe poder sincronizarse con el repositorio remoto de forma controlada, preservando trabajo local en ramas de backup cuando existan cambios pendientes.
+El sistema debe poder sincronizarse con el repositorio remoto de forma controlada, preservando trabajo local en ramas de backup cuando existan cambios pendientes, y alineando tags locales con origin.
 
 ### Documentación
 
@@ -224,8 +240,21 @@ El sistema debe disponer de:
 - guía de estilo
 - manual de usuario
 - política de entornos (`docs/ENVIRONMENTS.md`)
+- política y declaración de accesibilidad
+- informe automático de accesibilidad
 - páginas man por comando
-- comando `man` para consultarlas
+- comando `man` para consultar man
+- comando `docs` para listar y leer `docs/` (cuando esté implantado)
+
+### Accesibilidad
+
+El sistema debe:
+
+- publicar declaración al modelo europeo/español adaptado a CLI
+- poder ejecutar solo la validación A11Y
+- regenerar el informe al ejecutar esa validación o la batería que incluya tests A11Y
+- no usar el color como única señal
+- ofrecer help/man y mensajes con pista de acción
 
 ---
 
@@ -237,6 +266,8 @@ El sistema debe disponer de:
 4. No depender de servicios de red para el arranque básico.
 5. No debilitar los tests de arranque para facilitar un cambio puntual.
 6. No documentar en el repo público rutas absolutas personales ni inventarios de máquinas privadas.
+7. No excluir un perfil A11Y declarado por comodidad de implementación.
+8. No invocar APIs exclusivas de un forge; solo Git.
 
 ---
 
@@ -248,7 +279,7 @@ Los comandos deben poder añadirse como archivos independientes sin reescribir e
 
 ### Auditabilidad
 
-Las reglas críticas de seguridad deben estar centralizadas y ser verificables por tests.
+Las reglas críticas de seguridad y de accesibilidad deben estar centralizadas y ser verificables por tests.
 
 ### Robustez de evolución
 
@@ -257,6 +288,10 @@ Los cambios se introducen por fases, con commits atómicos, ramas feature y veri
 ### Claridad de uso
 
 Los mensajes orientados a usuario final deben estar en español y ser accionables.
+
+### Accesibilidad de interfaz
+
+La salida debe ser texto lineal usable con teclado y con lector de terminal, sin significado solo-color.
 
 ---
 
@@ -288,6 +323,14 @@ El producto puede actualizarse desde `origin/main` mediante mecanismos controlad
 
 El lanzador y el instalador resuelven Poetry según el perfil de entorno, sin hardcodear rutas de usuario.
 
+### Interfaz producto-documentación
+
+El sistema debe poder listar y mostrar ficheros de `docs/` sin salir a un navegador.
+
+### Interfaz producto-accesibilidad
+
+El sistema debe poder emitir una situación de cumplimiento a partir de tests y dejarla en `docs/a11y/informe.md` e `informe.json`.
+
 ---
 
 ## Criterios de aceptación de sistema
@@ -295,13 +338,15 @@ El lanzador y el instalador resuelven Poetry según el perfil de entorno, sin ha
 Se considera que una versión del sistema es aceptable para uso alpha cuando:
 
 1. Arranca solo si los tests de arranque pasan.
-2. Ejecuta los comandos de sistema de la baseline.
+2. Ejecuta los comandos de sistema de la baseline (incluidos `a11y` y `docs` al cerrar 0.2.5).
 3. Rechaza comandos con imports ilegales.
 4. Mantiene el espacio de usuario fuera del versionado de producto.
 5. No permite sobrescritura de comandos de sistema por comandos de usuario.
-6. Conserva capacidad de actualización controlada.
+6. Conserva capacidad de actualización controlada y alineación de tags.
 7. Documenta sus normas en `docs/`.
 8. Puede instalarse y lanzarse en los perfiles de entorno declarados.
+9. Publica declaración de accesibilidad y política A11Y.
+10. No usa el color como única señal en los mensajes de sistema revisados en esta campaña.
 
 ---
 
@@ -316,6 +361,8 @@ Se considera que una versión del sistema es aceptable para uso alpha cuando:
 | Baseline | Estado de referencia versionado del producto |
 | ECSS-light | Conjunto de specs adaptado de ECSS-E-ST-40 |
 | Perfil de entorno | Par sistema/entorno (p. ej. windows/git-bash) |
+| Declaración de accesibilidad | Texto público al modelo UE/ES adaptado a CLI |
+| Informe A11Y | Resultado automático de la última ejecución de tests A11Y |
 
 ---
 

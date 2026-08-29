@@ -1,8 +1,8 @@
 # Guía del desarrollador de MetsuOS
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.2  
 **Estado:** Normativo de proceso  
-**Documentos relacionados:** docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, CHANGELOG.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/specs/00-OVERVIEW.md
+**Documentos relacionados:** docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/specs/00-OVERVIEW.md, docs/plans/README.md
 
 ---
 
@@ -44,7 +44,7 @@ Detalle: docs/ENVIRONMENTS.md.
 
 1. git checkout main && git pull origin main
 2. git checkout -b feature/nombre-descriptivo
-3. Acordar plan por fases (humano + IA)
+3. Acordar plan por fases (humano + IA); si es campaña, docs/plans/
 4. Una fase cada vez
 5. Tests / arranque
 6. Commit atómico
@@ -64,8 +64,10 @@ Detalle: docs/ENVIRONMENTS.md.
 | Comando de sistema | moslib/commands/nombre.py | contrato, man, help, tests |
 | Comando de usuario | rootfs/home/usuario/.mos/commands/user_*.py | prefijo user_ y seguridad |
 | Poetry / WSL / Git Bash | mos2.sh, install.sh | ENVIRONMENTS |
+| Accesibilidad | docs/A11Y.md, docs/a11y/, tests a11y | declaración e informe |
 | Normas de producto | docs/specs/ | luego código |
 | Relato de una release | CHANGELOG.md | VERSIONING.md |
+| Plan de campaña | docs/plans/ | README de planes |
 
 ---
 
@@ -103,6 +105,8 @@ poetry run pytest
 
 Si fallan los tests de arranque, el sistema no abre sesión.
 
+En 0.2.5: `a11y` solo corre tests de accesibilidad y regenera docs/a11y/informe.md.
+
 ---
 
 ## Estilo
@@ -116,7 +120,7 @@ Normas en docs/STYLE_GUIDE.md. Hay tests que comprueban contrato y patrones proh
 | Cambio | pyproject.toml | Tag | CHANGELOG |
 |--------|----------------|-----|-----------|
 | Runtime / scripts / comandos / seguridad | Bump X.Y.Z | vX.Y.Z | Entrada de producto |
-| Solo docs / onboarding | No bump | vX.Y.Z-docs opcional | Entrada -docs |
+| Solo docs / onboarding | No bump | vX.Y.Z-docs o vX.Y.Z-docs.N | Entrada -docs |
 
 Al cerrar producto: README, 07-SRelD y CHANGELOG si aplica.
 
@@ -130,8 +134,10 @@ Detalle: docs/VERSIONING.md.
 - Directorios en tablas (una columna por nivel)
 - Comandos de sistema: columna Tipo A–Z y comandos A–Z dentro del tipo
 - Página man para comando de sistema nuevo
-- Si el doc nuevo es más corto que el del repo, verificar que no se pierde norma
+- Si el doc o el código nuevo es más corto que el del repo, verificar que no se pierde contenido
 - Entregar archivos completos listos para pegar; un paso cada vez
+- Cacho 1 = sustituye todo el fichero; cachos siguientes = pegar debajo
+- Breadcrumb de campaña en cada paso de trabajo con IA
 
 ---
 
@@ -143,6 +149,8 @@ La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:
 - un paso cada vez
 - leer el repo antes de afirmar el estado de un fichero
 - no inventar features
+- no resumir sin consultar
+- Git, no el forge
 
 ---
 
@@ -150,7 +158,7 @@ La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:
 
 1. Tests en verde
 2. Arranque de MOSh OK
-3. SEC / SSS / ICD respetados
+3. SEC / SSS / ICD / A11Y respetados
 4. Docs tocadas si cambió comportamiento o proceso
 5. CHANGELOG actualizado si la fase cierra una release
 6. VERSIONING aplicado (bump o explícitamente no)
@@ -160,4 +168,4 @@ La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:
 
 ## Autoridad
 
-Esta guía no sustituye a SEC, SSS ni STYLE_GUIDE. Si hay conflicto, prevalecen las specs de seguridad y sistema.
+Esta guía no sustituye a SEC, SSS, A11Y ni STYLE_GUIDE. Si hay conflicto, prevalecen las specs de seguridad, sistema y accesibilidad.
