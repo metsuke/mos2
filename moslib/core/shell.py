@@ -46,20 +46,21 @@ class MOSh:
         )
 
         if result.returncode == 0:
-            print("[MetsuOS] ✅ Todos los tests pasaron correctamente.")
+            print("[MetsuOS] Tests de arranque: OK")
             print("-" * 60)
             print()
             return True
 
-        print("[MetsuOS] ❌ FALLO EN LOS TESTS DE ARRANQUE")
+        print("[MetsuOS] Error: fallo en los tests de arranque.")
         print("-" * 60)
         if result.stdout:
             print(result.stdout)
         if result.stderr:
             print(result.stderr)
         print("-" * 60)
-        print("El sistema NO arrancará hasta que todos los tests pasen.")
-        print("Revisa los comandos con imports ilegales o ejecuta: poetry run pytest")
+        print("El sistema no arrancará hasta que todos los tests pasen.")
+        print("Revisa comandos con imports ilegales o ejecuta: poetry run pytest")
+        print("Documentación: docs TEST.md vía 'docs specs/06-TEST-Verification-and-Validation.md'")
         return False
 
     def run(self):
@@ -69,7 +70,7 @@ class MOSh:
         print("Iniciando MOSh para MetsuOS...")
         print(f"Usuario: {self.username}")
         print(f"Espacio personal: {self.mos_dir}")
-        print("Usa 'exit' para salir, 'help' para ayuda")
+        print("Usa 'exit' para salir, 'help' para ayuda, 'docs' para documentación, 'a11y' para accesibilidad")
         print()
 
         while self.running:
@@ -92,6 +93,7 @@ class MOSh:
                     command_module.execute(args)
                 else:
                     print(f"mosh: comando no encontrado: {cmd_name}")
+                    print("Usa 'help' para la lista o 'docs' para el manual del proyecto.")
 
             except KeyboardInterrupt:
                 print("\nUsa 'exit' para salir, 'help' para ayuda")
