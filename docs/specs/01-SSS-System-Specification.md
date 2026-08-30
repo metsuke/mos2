@@ -1,7 +1,7 @@
 # 01 – SSS · Especificación de sistema
 
-**Versión del documento:** 1.2  
-**Baseline de referencia:** v0.2.4  
+**Versión del documento:** 1.3  
+**Baseline de referencia:** v0.2.5  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/specs/00-OVERVIEW.md, docs/specs/04-SEC-Security-Policy.md
 
@@ -26,7 +26,7 @@ Todo diseño, requisito software e implementación debe ser compatible con esta 
 | Lenguaje principal | Python 3.10+ |
 | Licencia | GPL-3.0 |
 | Estado | Alpha |
-| Baseline actual | v0.2.4 |
+| Baseline actual | v0.2.5 |
 
 ---
 
@@ -42,7 +42,8 @@ MetsuOS es un entorno operativo simulado que proporciona:
 - Validación de seguridad de imports
 - Tests de arranque obligatorios
 - Política y declaración de accesibilidad (CLI)
-- Consulta de documentación y validación A11Y desde el propio sistema (cuando estén implantados en esta campaña)
+- Consulta de documentación (`docs`) y validación A11Y (`a11y`)
+- Comprobación de sincronía del clone con origin/main (`synccheck`)
 
 MetsuOS se ejecuta sobre un sistema operativo anfitrión y no reemplaza su kernel.
 
@@ -135,6 +136,8 @@ El sistema debe poder instalarse y ejecutarse en los perfiles:
 
 Sin asumir una única plataforma. La política operativa de Poetry, rutas relativas al clone y contexto de sesión genérico está en `docs/ENVIRONMENTS.md`. El lanzador (`mos2.sh`) y el instalador (`install.sh`) deben resolver Poetry de forma portable según el perfil. Un candidato Poetry solo se usa si `--version` se puede ejecutar.
 
+---
+
 ## Contexto operativo
 
 ### Sistema anfitrión
@@ -197,14 +200,15 @@ El sistema debe proporcionar un shell con:
 
 ### Comandos de sistema
 
-Como mínimo en esta baseline (tabla por tipo A–Z y comando A–Z dentro del tipo). `a11y` y `docs` entran al cerrar el Grupo II de la campaña 05; hasta entonces son capacidad requerida en curso.
+Como mínimo en esta baseline (tabla por tipo A–Z y comando A–Z dentro del tipo):
 
 | Tipo | Comando | Función general |
 |------|---------|-----------------|
 | accesibilidad | a11y | Validación A11Y e informe automático |
-| ayuda | docs | Listar y mostrar documentación del clone |
+| ayuda | docs | Listar y mostrar docs/ y ficheros públicos de la raíz |
 | ayuda | help | Ayuda de comandos |
 | ayuda | man | Manual extendido desde docs/man/ |
+| calidad | synccheck | Comparar HEAD local con origin/main |
 | calidad | test | Ejecución de la batería de tests |
 | calidad | update | Actualización desde origin/main con backup local y tags |
 | host | sysinfo | Información del anfitrión |
@@ -244,7 +248,8 @@ El sistema debe disponer de:
 - informe automático de accesibilidad
 - páginas man por comando
 - comando `man` para consultar man
-- comando `docs` para listar y leer `docs/` (cuando esté implantado)
+- comando `docs` para listar y leer `docs/` y README, CHANGELOG, AGENTS, LICENSE
+- comando `synccheck` para auditar la sincronía Git
 
 ### Accesibilidad
 
@@ -263,7 +268,7 @@ El sistema debe:
 1. No introducir gestores de paquetes Python genéricos dentro del modelo de comandos.
 2. No permitir que el usuario reemplace el núcleo modificando solo su espacio personal.
 3. No acoplar el núcleo a una única distribución Linux.
-4. No depender de servicios de red para el arranque básico.
+4. No depender de servicios de red para el arranque básico (synccheck y update sí usan red cuando se invocan).
 5. No debilitar los tests de arranque para facilitar un cambio puntual.
 6. No documentar en el repo público rutas absolutas personales ni inventarios de máquinas privadas.
 7. No excluir un perfil A11Y declarado por comodidad de implementación.
@@ -317,7 +322,7 @@ El núcleo resuelve el usuario anfitrión y asegura su espacio `.mos`.
 
 ### Interfaz producto-repositorio
 
-El producto puede actualizarse desde `origin/main` mediante mecanismos controlados de sincronización.
+El producto puede actualizarse desde `origin/main` y comparar HEAD con origin/main (`update`, `synccheck`).
 
 ### Interfaz producto-entorno anfitrión
 
@@ -325,7 +330,7 @@ El lanzador y el instalador resuelven Poetry según el perfil de entorno, sin ha
 
 ### Interfaz producto-documentación
 
-El sistema debe poder listar y mostrar ficheros de `docs/` sin salir a un navegador.
+El sistema debe poder listar y mostrar ficheros de `docs/` y de la lista blanca de la raíz sin salir a un navegador.
 
 ### Interfaz producto-accesibilidad
 
@@ -338,7 +343,7 @@ El sistema debe poder emitir una situación de cumplimiento a partir de tests y 
 Se considera que una versión del sistema es aceptable para uso alpha cuando:
 
 1. Arranca solo si los tests de arranque pasan.
-2. Ejecuta los comandos de sistema de la baseline (incluidos `a11y` y `docs` al cerrar 0.2.5).
+2. Ejecuta los comandos de sistema de la baseline, incluidos `a11y`, `docs` y `synccheck`.
 3. Rechaza comandos con imports ilegales.
 4. Mantiene el espacio de usuario fuera del versionado de producto.
 5. No permite sobrescritura de comandos de sistema por comandos de usuario.
@@ -362,7 +367,8 @@ Se considera que una versión del sistema es aceptable para uso alpha cuando:
 | ECSS-light | Conjunto de specs adaptado de ECSS-E-ST-40 |
 | Perfil de entorno | Par sistema/entorno (p. ej. windows/git-bash) |
 | Declaración de accesibilidad | Texto público al modelo UE/ES adaptado a CLI |
-| Informe A11Y | Resultado automático de la última ejecución de tests A11Y |
+| Informe A11Y | docs/a11y/informe.md e informe.json |
+| synccheck | Comando que compara HEAD local con origin/main |
 
 ---
 
