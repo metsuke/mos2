@@ -1,145 +1,146 @@
 # Onboarding para agentes IA (MetsuOS)
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.2  
 **Estado:** Normativo de proceso  
-**Documentos relacionados:** AGENTS.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md, docs/plans/README.md
+**Documentos relacionados:** AGENTS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md
 
 ---
 
 ## Propósito
 
-Permitir que cualquier modelo o agente, al estudiar el repositorio desde cero, asuma el contexto real de MetsuOS sin reinventar normas ni romper lo existente.
+Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.
 
-Este documento es la guía de arranque para IA. El punto de entrada corto en la raíz es `AGENTS.md`.
+Punto de entrada corto: `AGENTS.md`.
 
 ---
 
-## Orden de lectura obligatorio
+## Orden de lectura
 
-1. AGENTS.md (raíz)
-2. Este archivo (docs/AI_ONBOARDING.md)
+1. AGENTS.md
+2. Este archivo
 3. docs/METHODOLOGY.md
-4. docs/ENVIRONMENTS.md
-5. docs/VERSIONING.md
-6. docs/A11Y.md y docs/a11y/DECLARACION.md
-7. docs/STYLE_GUIDE.md
-8. docs/specs/00-OVERVIEW.md y, según la tarea, SSS / SEC / ICD / SRS / SDD / TEST / SRelD
-9. docs/plans/ si hay campaña en curso
-10. docs/USER_MANUAL.md y docs/man/ si la tarea afecta al uso
-11. Código solo después de saber qué norma aplica
+4. docs/INTERACTION_REVIEW.md
+5. docs/ENVIRONMENTS.md
+6. docs/VERSIONING.md
+7. docs/A11Y.md y docs/a11y/DECLARACION.md
+8. docs/STYLE_GUIDE.md
+9. docs/specs/00-OVERVIEW.md y el resto de specs según la tarea
+10. docs/plans/ si hay campaña
+11. Código solo cuando se sepa qué norma aplica
 
-No inventar features que no existan en el código o en las specs.
+No inventar features que no estén en código o specs.
 
 ---
 
-## Qué es MetsuOS (recordatorio férreo)
+## Qué es MetsuOS (férreo)
 
 - SO simulado modular en Python; shell MOSh.
-- Núcleo en moslib/; rootfs/ simulado.
-- Todo comando pasa por contrato execute(args) y help() -> str.
-- Imports de comandos: solo stdlib + moslib (validación AST).
-- Espacio de usuario por usuario anfitrión; comandos user_*.py.
+- Núcleo moslib/; rootfs/ simulado.
+- Contrato: execute(args) y help() -> str no vacío.
+- Imports de comandos: solo stdlib + moslib (AST).
+- Usuario anfitrión; comandos user_*.py; nunca pisan sistema.
 - Tests de arranque bloqueantes.
-- Accesibilidad de interfaz mandatoria.
+- A11Y de interfaz mandatoria.
 - Poetry + mos2.sh / install.sh multi-entorno.
+- Git, no APIs de un forge.
+- Comandos de calidad actuales: test, update, synccheck.
 
 ---
 
-## Contexto de sesión (obligatorio)
-
-Formato:
+## Contexto de sesión
 
 ```text
 Contexto: <sistema> / <entorno> / <rol>
 ```
 
-Ejemplos: macos/native/desarrollo, windows/git-bash/prueba, windows/wsl/ambos.
-
-Si el humano no lo declara y la tarea implica paths, Poetry o git push, **preguntar** antes de asumir.
-
-No documentar ni pedir nombres de host ni rutas home personales en el repo público. Rutas siempre relativas al clone.
-
-Detalle: docs/ENVIRONMENTS.md.
+Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas home en el repo público.
 
 ---
 
 ## Cómo entregar trabajo al humano
 
-- Un archivo o sección completa en **un único bloque de texto** listo para copiar y pegar.
-- Explicar en pocas líneas **qué ha cambiado** para validar leyendo.
-- No pedir al humano que reescriba tablas o párrafos largos a mano.
-- Si una fase toca varias piezas: **un paso cada vez**.
-- Encabezados de documentación **sin numeración**.
-- Si el archivo del repo aún tiene números, entregar el documento completo ya sin números.
-- Si la versión nueva es más corta que la del repo (docs **o** código), comprobar que no se pierde contenido e **informarlo**. Prohibido resumir sin consultar.
-- Documentos largos: **cacho 1 sustituye todo el fichero**; los siguientes se pegan **debajo**.
-- Estructuras de directorios: tablas markdown, una columna por nivel.
-- Tablas de comandos del sistema: columna Tipo (A–Z) y, dentro de cada tipo, comandos A–Z.
-- Crear carpetas o ficheros: secuencia bash (`mkdir -p`, `touch`, editor).
-- Cada paso de campaña: breadcrumb (campaña, grupo, bloque x/y, paso, progreso aproximado).
-- Git, no funciones exclusivas de un forge.
-- No usar «corrida»; usar «ejecución» o «pasada de tests».
-- CHANGELOG: no dejar «Sin publicar» a criterio del humano.
+- Un paso / un fichero por mensaje, salvo pareja inseparable avisada.
+- Fichero **entero**. Prohibido “añade esta fila”: las tablas van montadas.
+- Prohibido “usa lo que te di antes”: volver a pegar el documento.
+- Cachos solo si no cabe: cacho 1 sustituye todo; no dejar un spec inválido a mitad.
+- Completo: primero mkdir / touch / code, luego el texto.
+- Parcial (avisando “no sustituyas el fichero”): primero el recorte, luego code.
+- Encabezados sin numeración.
+- Directorios en tablas (una columna por nivel).
+- Comandos: Tipo A–Z, comando A–Z dentro del tipo.
+- Si el nuevo texto es más corto que el del repo: avisar. No resumir sin consultar.
+- Breadcrumb: campaña, grupo, bloque x/y, paso, %, contexto.
+- Si se salta un número de paso: explicar por qué en el mismo mensaje.
+- No usar «corrida». CHANGELOG: no dejar «Sin publicar» al humano.
+- Psicología: acompañar; prohibido dañar, desestabilizar o engañar.
 
 ---
 
-## Antes de proponer cambios de código
+## Estado real del repositorio
 
-1. Leer el estado real del repo (ficheros, no solo memoria de chat).
-2. Comprobar impacto en SEC / SSS / ICD / SRS / A11Y.
-3. Respetar STYLE_GUIDE y seguridad de imports.
-4. Plan por fases con commits atómicos; campaña → `docs/plans/`.
-5. No desactivar tests de arranque ni la seguridad para “hacer pasar” un cambio.
-6. Si es cambio de producto: aplicar docs/VERSIONING.md (¿bump Poetry? ¿tag?).
-7. Tags solo-docs: `vX.Y.Z-docs` o `vX.Y.Z-docs.N` con la Poetry vigente; nunca un parche mayor que el producto.
+1. Pedir `synccheck` cuando haya duda.
+2. Leer por SHA (`git show origin/main:archivo` o raw con SHA).
+3. No diagnosticar solo con `.../main/` en CDN.
+4. Si Poetry, README, CHANGELOG y comandos no cuadran: hotfix antes del siguiente bloque.
 
----
-
-## Versionado (resumen operativo)
-
-| Tipo de cambio | Poetry pyproject.toml | Tag típico |
-|----------------|----------------------|------------|
-| Runtime / scripts / comandos / seguridad | Bump X.Y.Z | vX.Y.Z |
-| Solo documentación / onboarding | No bump | vX.Y.Z-docs o vX.Y.Z-docs.N |
-
-Detalle: docs/VERSIONING.md (ajuste fino de nomenclatura: deuda de cierre).
+Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `synccheck`.
 
 ---
 
-## Plataforma y Poetry
+## Antes de tocar código
 
-- mos2.sh e install.sh resuelven Poetry según perfil.
-- Un candidato solo cuenta si `--version` se puede ejecutar.
-- windows/git-bash: priorizar `py -m poetry`.
-- windows/wsl: clone en filesystem Linux; rechazo si la raíz está bajo `/mnt/<letra>/` (SCRIPT_DIR antes del check).
+1. Leer el repo real (SHA).
+2. Impacto SEC / SSS / ICD / SRS / A11Y.
+3. STYLE_GUIDE e imports.
+4. Plan por fases; campaña en docs/plans/.
+5. No desactivar tests ni seguridad.
+6. VERSIONING (¿bump? ¿tag?).
+7. Comando nuevo: código + help + man + README + SSS + CHANGELOG.
+
+---
+
+## Versionado
+
+| Cambio | Poetry | Tag |
+|--------|--------|-----|
+| Runtime / comandos / scripts | Bump X.Y.Z | vX.Y.Z |
+| Solo docs | No bump | vX.Y.Z-docs o vX.Y.Z-docs.N |
+
+---
+
+## Plataforma
+
+- Poetry: un candidato solo si `--version` se puede ejecutar.
+- windows/git-bash: `py -m poetry`.
+- windows/wsl: clone en FS Linux; rechazo bajo `/mnt/<letra>/`.
 
 ---
 
 ## Accesibilidad
 
-- Política: docs/A11Y.md
-- Declaración: docs/a11y/DECLARACION.md
-- Informe: docs/a11y/informe.md
-- Si A11Y y SEC chocan: procedimiento en A11Y.md y 04-SEC. No excepción silenciosa.
-- Comandos `a11y` y `docs`: previstos en producto 0.2.5.
+docs/A11Y.md es mandatoria. Conflicto con SEC: procedimiento escrito.
 
 ---
 
-## Checklist rápido antes de cerrar una fase
+## Cierre de grupo
 
-1. ¿Contexto de sesión claro?
-2. ¿Normas SEC/SSS/ICD/A11Y respetadas?
-3. ¿Tests y arranque contemplados?
-4. ¿Docs actualizados si cambió comportamiento o proceso?
-5. ¿VERSIONING aplicado (bump o explícitamente no)?
-6. ¿Entrega en un bloque / un paso / cachos sin pérdida?
-7. ¿Encabezados sin números?
-8. ¿Breadcrumb de campaña?
+docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditoría.
+
+---
+
+## Checklist de cada mensaje de trabajo
+
+1. ¿Breadcrumb?
+2. ¿Un paso / un fichero?
+3. ¿Fichero entero?
+4. ¿Tablas ya hechas?
+5. ¿He vuelto a pegar en vez de remitir?
+6. ¿SHA o synccheck si hablo del remoto?
+7. ¿A11Y / SEC / contrato intactos?
 
 ---
 
 ## Autoridad
 
-Este documento es normativo para el comportamiento de asistencia por IA en MetsuOS.
-
-Si entra en conflicto con SEC, SSS o A11Y, prevalecen esas normas; luego hay que actualizar este onboarding.
+Este documento manda sobre el estilo de asistencia.
+Si choca con SEC, SSS o A11Y, prevalecen esas normas y luego se actualiza este archivo.
