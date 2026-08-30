@@ -8,8 +8,10 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 
 - Comando a11y (tests marcados a11y + informe en docs/a11y/)
 - Comando docs (docs/ y README, CHANGELOG, AGENTS, LICENSE)
+- Comando synccheck (HEAD local vs origin/main)
 - Política A11Y, declaración estilo UE/ES adaptada a CLI
 - test regenera el informe A11Y
+- docs/INTERACTION_REVIEW.md
 
 ### Cambiado
 
@@ -28,7 +30,7 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 
 ## Notas de etiquetas
 
-Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.2-docs.3` (docs sobre el producto 0.2.2). El producto actual es `v0.2.3`.
+Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.2-docs.3` (docs sobre el producto 0.2.2). El producto actual es `v0.2.5`.
 
 ## 0.2.3 — 2026-08-28
 
