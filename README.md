@@ -3,7 +3,7 @@
 Sistema Operativo simulado y modular basado en Python
 
 **Estado:** Alpha (funcional y en desarrollo activo)  
-**Versión:** 0.2.4  
+**Versión:** 0.2.5  
 **Python** · **Licencia GPL-3.0** · **Poetry**
 
 MetsuOS (también conocido como MOS2) es un sistema operativo simulado y modular escrito en Python.  

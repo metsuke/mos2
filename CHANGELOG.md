@@ -2,6 +2,19 @@
 
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
+## 0.2.5 — 2026-08-30
+
+### Añadido
+
+- Comando a11y (tests marcados a11y + informe en docs/a11y/)
+- Comando docs (docs/ y README, CHANGELOG, AGENTS, LICENSE)
+- Política A11Y, declaración estilo UE/ES adaptada a CLI
+- test regenera el informe A11Y
+
+### Cambiado
+
+- Mensajes de arranque y de test en texto, sin emoji como única señal
+
 ## 0.2.4 — 2026-08-28
 
 ### Añadido

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "metsuos"
-version = "0.2.4"
+version = "0.2.5"
 description = "MetsuOS: Sistema Operativo simulado y modular"
 authors = ["Metsuke"]
 homepage = "https://metsuke.com"
