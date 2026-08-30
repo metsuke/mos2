@@ -41,7 +41,9 @@ Proyecto personal de Metsuke.
 | | | user.py | | Usuario anfitrión + espacio personal + migración |
 | | | security.py | | Validación de imports (AST) |
 | | commands/ | | | Comandos oficiales del sistema |
+| | | a11y.py | | Validación A11Y e informe |
 | | | clear.py | | Limpia la pantalla |
+| | | docs.py | | Consulta documentación del clone |
 | | | echo.py | | Imprime texto |
 | | | help.py | | Sistema de ayuda |
 | | | man.py | | Manual extendido (docs/man/) |
@@ -149,8 +151,8 @@ mosh/tu_usuario_real@metsuos:~$
 
 | Tipo | Comando | Descripción |
 |------|---------|-------------|
-| accesibilidad | a11y | Validación A11Y e informe (previsto en 0.2.5) |
-| ayuda | docs | Lista y muestra documentación de docs/ (previsto en 0.2.5) |
+| accesibilidad | a11y | Validación A11Y e informe |
+| ayuda | docs | Lista y muestra documentación de docs/ y de la raíz pública |
 | ayuda | help | Lista de comandos (sistema + usuario) o ayuda de uno concreto |
 | ayuda | man | Manual extendido de un comando (docs/man/) |
 | calidad | test | Ejecuta la batería de tests unitarios y de seguridad |
@@ -231,7 +233,7 @@ Si Poetry ya funciona en tu PATH:
 poetry run pytest
 ```
 
-Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos, estilo crítico y formato de versión Poetry. Los tests A11Y se añaden en la baseline 0.2.5.
+Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos, estilo crítico y formato de versión Poetry. Los tests A11Y usan la marca pytest `a11y`.
 
 ---
 
