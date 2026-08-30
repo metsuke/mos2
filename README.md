@@ -47,6 +47,7 @@ Proyecto personal de Metsuke.
 | | | echo.py | | Imprime texto |
 | | | help.py | | Sistema de ayuda |
 | | | man.py | | Manual extendido (docs/man/) |
+| | | synccheck.py | | Compara HEAD local con origin/main |
 | | | sysinfo.py | | Información del sistema |
 | | | test.py | | Ejecuta la batería de tests |
 | | | update.py | | Actualiza desde origin/main con backup y tags |
@@ -63,6 +64,7 @@ Proyecto personal de Metsuke.
 | | a11y/ | | | Declaración e informe A11Y |
 | | AI_ONBOARDING.md | | | Arranque para agentes IA |
 | | HUMAN_ONBOARDING.md | | | Arranque para humanos |
+| | INTERACTION_REVIEW.md | | | Cierre de interacción y deuda |
 | | DEVELOPER_GUIDE.md | | | Flujo de desarrollo |
 | | VERSIONING.md | | | Versiones, tags y Poetry |
 | | ENVIRONMENTS.md | | | Perfiles de entorno y Poetry |
@@ -155,6 +157,7 @@ mosh/tu_usuario_real@metsuos:~$
 | ayuda | docs | Lista y muestra documentación de docs/ y de la raíz pública |
 | ayuda | help | Lista de comandos (sistema + usuario) o ayuda de uno concreto |
 | ayuda | man | Manual extendido de un comando (docs/man/) |
+| calidad | synccheck | Compara HEAD local con origin/main |
 | calidad | test | Ejecuta la batería de tests unitarios y de seguridad |
 | calidad | update | Sincroniza con origin/main (backup local y tags) |
 | host | sysinfo | Información del hardware y estado del anfitrión |
@@ -278,6 +281,7 @@ Planes de campaña: `docs/plans/`.
 | docs/a11y/DECLARACION.md | Declaración de accesibilidad |
 | docs/AI_ONBOARDING.md | Protocolo completo para IA |
 | docs/HUMAN_ONBOARDING.md | Arranque para personas |
+| docs/INTERACTION_REVIEW.md | Cierre de interacción y deuda |
 | docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |
 | docs/VERSIONING.md | Versiones, tags y Poetry |
 | docs/USER_MANUAL.md | Manual de usuario formal |
