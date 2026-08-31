@@ -64,6 +64,7 @@ Proyecto personal de Metsuke.
 | | a11y/ | | | Declaración e informe A11Y |
 | | AI_ONBOARDING.md | | | Arranque para agentes IA |
 | | HUMAN_ONBOARDING.md | | | Arranque para humanos |
+| | INCENTIVOS.md | | | Dirección de trabajo (vectores y roles) |
 | | INTERACTION_REVIEW.md | | | Cierre de interacción y deuda |
 | | DEVELOPER_GUIDE.md | | | Flujo de desarrollo |
 | | VERSIONING.md | | | Versiones, tags y Poetry |
@@ -71,6 +72,7 @@ Proyecto personal de Metsuke.
 | | METHODOLOGY.md | | | Método de trabajo |
 | | STYLE_GUIDE.md | | | Normas de código |
 | | USER_MANUAL.md | | | Manual de usuario |
+| | DEUDA_Y_CAMPANAS.md | | | Deuda y campañas previstas |
 | | plans/ | | | Planes de campaña |
 | | specs/ | | | Especificaciones ECSS-light |
 | | man/ | | | Páginas man por comando |
@@ -267,7 +269,8 @@ poetry run python rootfs/bin/mos.py
 La lógica de negocio y utilidades se concentran en `moslib/`.  
 Guía: `docs/DEVELOPER_GUIDE.md`.  
 Historial de releases: `CHANGELOG.md`.  
-Planes de campaña: `docs/plans/`.
+Planes de campaña: `docs/plans/`.  
+Dirección de trabajo: `docs/INCENTIVOS.md`.
 
 ---
 
@@ -281,7 +284,9 @@ Planes de campaña: `docs/plans/`.
 | docs/a11y/DECLARACION.md | Declaración de accesibilidad |
 | docs/AI_ONBOARDING.md | Protocolo completo para IA |
 | docs/HUMAN_ONBOARDING.md | Arranque para personas |
+| docs/INCENTIVOS.md | Vectores y actuaciones por rol |
 | docs/INTERACTION_REVIEW.md | Cierre de interacción y deuda |
+| docs/DEUDA_Y_CAMPANAS.md | Deuda y campañas previstas |
 | docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |
 | docs/VERSIONING.md | Versiones, tags y Poetry |
 | docs/USER_MANUAL.md | Manual de usuario formal |
@@ -292,7 +297,7 @@ Planes de campaña: `docs/plans/`.
 | docs/specs/ | Especificaciones ECSS-light |
 | docs/man/ | Páginas man por comando |
 
-Estudiar el repo desde cero (IA): `AGENTS.md` → `docs/AI_ONBOARDING.md`.  
+Estudiar el repo desde cero (IA): `AGENTS.md` → `docs/AI_ONBOARDING.md` → `docs/INCENTIVOS.md`.  
 Estudiar el repo (humano): `docs/HUMAN_ONBOARDING.md`.
 
 Perfiles: linux/native, macos/native, windows/git-bash, windows/wsl.  
