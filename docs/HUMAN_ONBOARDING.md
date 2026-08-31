@@ -1,8 +1,8 @@
 # Onboarding humano de MetsuOS
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.2  
 **Estado:** Guía de entrada  
-**Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md
+**Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md
 
 ---
 
@@ -27,9 +27,7 @@ Desde la raíz del clone:
 ./mos2.sh
 ```
 
-Dentro del shell: `help`, `man`, `exit`.
-
-Cuando existan en 0.2.5: `docs` (leer documentación) y `a11y` (validar accesibilidad).
+Dentro del shell: `help`, `man`, `docs`, `a11y`, `synccheck`, `exit`.
 
 Detalle de uso cotidiano: docs/USER_MANUAL.md.
 
@@ -63,6 +61,16 @@ Normativa: docs/ENVIRONMENTS.md.
 
 ---
 
+## Dirección de trabajo (sin karma)
+
+docs/INCENTIVOS.md explica hacia dónde empuja el proyecto.
+
+Para ti como persona **no es un examen ni un ranking**. El sistema intenta poner fácil lo alineado (tu carpeta `.mos`, help, no pisar comandos de sistema).
+
+Para una IA que te ayude **sí es obligatorio**.
+
+---
+
 ## Mapa corto de documentación
 
 | Documento | Para qué |
@@ -72,11 +80,13 @@ Normativa: docs/ENVIRONMENTS.md.
 | docs/A11Y.md | Política de accesibilidad |
 | docs/a11y/DECLARACION.md | Declaración de accesibilidad |
 | docs/a11y/informe.md | Última validación A11Y automática |
+| docs/INCENTIVOS.md | Vectores y roles (dirección) |
 | docs/ENVIRONMENTS.md | Plataformas y Poetry |
 | docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |
 | docs/STYLE_GUIDE.md | Cómo se escribe el código |
 | docs/VERSIONING.md | Versiones, tags y Poetry |
 | docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |
+| docs/INTERACTION_REVIEW.md | Cierre de grupo con la IA |
 | docs/plans/ | Planes de campaña |
 | docs/AI_ONBOARDING.md / AGENTS.md | Si colaboras con una IA |
 | docs/specs/ | Requisitos y diseño (ECSS-light) |
@@ -93,6 +103,7 @@ Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo e
 - No puedes pisar comandos oficiales
 - No puedes importar librerías Python de terceros en comandos (solo stdlib y moslib)
 - Consultar accesibilidad en docs/A11Y.md y la declaración en docs/a11y/
+- Comprobar si tu clone coincide con origin/main: `synccheck`
 
 ---
 
@@ -104,6 +115,7 @@ Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo e
 | Permission denied con poetry | Git Bash: usar ./mos2.sh (py -m poetry), no Scripts/poetry |
 | install.sh /bin/bash^M | Finales de línea CRLF; convertir scripts a LF |
 | WSL + /mnt/ | Mover el trabajo a un clone en home Linux |
+| Duda de si el remoto es el que cree la IA | Ejecutar synccheck y pegar la salida |
 
 ---
 
@@ -111,5 +123,6 @@ Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo e
 
 1. docs/USER_MANUAL.md
 2. docs/A11Y.md si te interesa accesibilidad
-3. Si vas a programar: docs/DEVELOPER_GUIDE.md y docs/STYLE_GUIDE.md
-4. Si vas a cambiar el producto: docs/METHODOLOGY.md y docs/VERSIONING.md
+3. docs/INCENTIVOS.md si te interesa la dirección del proyecto
+4. Si vas a programar: docs/DEVELOPER_GUIDE.md y docs/STYLE_GUIDE.md
+5. Si vas a cambiar el producto: docs/METHODOLOGY.md y docs/VERSIONING.md
