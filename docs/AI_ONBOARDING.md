@@ -1,8 +1,8 @@
 # Onboarding para agentes IA (MetsuOS)
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Estado:** Normativo de proceso  
-**Documentos relacionados:** AGENTS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md
+**Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md
 
 ---
 
@@ -10,7 +10,8 @@
 
 Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.
 
-Punto de entrada corto: `AGENTS.md`.
+Punto de entrada corto: `AGENTS.md`.  
+Dirección de trabajo: `docs/INCENTIVOS.md` (mandatorio para la IA).
 
 ---
 
@@ -18,15 +19,16 @@ Punto de entrada corto: `AGENTS.md`.
 
 1. AGENTS.md
 2. Este archivo
-3. docs/METHODOLOGY.md
-4. docs/INTERACTION_REVIEW.md
-5. docs/ENVIRONMENTS.md
-6. docs/VERSIONING.md
-7. docs/A11Y.md y docs/a11y/DECLARACION.md
-8. docs/STYLE_GUIDE.md
-9. docs/specs/00-OVERVIEW.md y el resto de specs según la tarea
-10. docs/plans/ si hay campaña
-11. Código solo cuando se sepa qué norma aplica
+3. docs/INCENTIVOS.md
+4. docs/METHODOLOGY.md
+5. docs/INTERACTION_REVIEW.md
+6. docs/ENVIRONMENTS.md
+7. docs/VERSIONING.md
+8. docs/A11Y.md y docs/a11y/DECLARACION.md
+9. docs/STYLE_GUIDE.md
+10. docs/specs/00-OVERVIEW.md y el resto de specs según la tarea
+11. docs/plans/ si hay campaña
+12. Código solo cuando se sepa qué norma aplica
 
 No inventar features que no estén en código o specs.
 
@@ -44,6 +46,7 @@ No inventar features que no estén en código o specs.
 - Poetry + mos2.sh / install.sh multi-entorno.
 - Git, no APIs de un forge.
 - Comandos de calidad actuales: test, update, synccheck.
+- Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma.
 
 ---
 
@@ -73,6 +76,7 @@ Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas hom
 - Si se salta un número de paso: explicar por qué en el mismo mensaje.
 - No usar «corrida». CHANGELOG: no dejar «Sin publicar» al humano.
 - Psicología: acompañar; prohibido dañar, desestabilizar o engañar.
+- Asimov (docs/INCENTIVOS.md): cita + nota de aplicación; no autocommit; no apagar tests.
 
 ---
 
@@ -90,12 +94,13 @@ Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `sy
 ## Antes de tocar código
 
 1. Leer el repo real (SHA).
-2. Impacto SEC / SSS / ICD / SRS / A11Y.
+2. Impacto SEC / SSS / ICD / SRS / A11Y / INCENTIVOS.
 3. STYLE_GUIDE e imports.
 4. Plan por fases; campaña en docs/plans/.
 5. No desactivar tests ni seguridad.
 6. VERSIONING (¿bump? ¿tag?).
 7. Comando nuevo: código + help + man + README + SSS + CHANGELOG.
+8. No abrir DepManager ni política geo real (solo dirección).
 
 ---
 
@@ -136,11 +141,11 @@ docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditorí
 4. ¿Tablas ya hechas?
 5. ¿He vuelto a pegar en vez de remitir?
 6. ¿SHA o synccheck si hablo del remoto?
-7. ¿A11Y / SEC / contrato intactos?
+7. ¿A11Y / SEC / INCENTIVOS / contrato intactos?
 
 ---
 
 ## Autoridad
 
 Este documento manda sobre el estilo de asistencia.
-Si choca con SEC, SSS o A11Y, prevalecen esas normas y luego se actualiza este archivo.
+Si choca con SEC, SSS, A11Y o INCENTIVOS, prevalecen esas normas y luego se actualiza este archivo.
