@@ -2,6 +2,14 @@
 
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
+## 0.2.5-docs.2 — 2026-08-31
+
+### Documentación
+
+- Plan de campaña 06 (incentivos, desarrollo en MOS2, datos)
+- docs/INCENTIVOS.md (vectores, roles, Asimov + psicología; sin karma)
+- Enlaces en AGENTS, AI_ONBOARDING, HUMAN_ONBOARDING, README, DEUDA_Y_CAMPANAS
+
 ## 0.2.5 — 2026-08-30
 
 ### Añadido
