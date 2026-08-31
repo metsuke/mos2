@@ -1,40 +1,43 @@
 # Deuda técnica y campañas futuras previstas
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Inventario  
-**Campaña de origen:** 05 (2026-08-28-01-higiene-a11y-cierre)
+**Campaña de origen:** 05; actualizado en 06
 
 ---
 
 ## Propósito
 
-No perder lo aplazado al cerrar una campaña. No es spec normativa; SEC, SSS y A11Y mandan si hay conflicto.
+No perder lo aplazado al cerrar una campaña. No es spec normativa; SEC, SSS, A11Y e INCENTIVOS mandan si hay conflicto.
 
 ---
 
-## Deuda abierta al cierre de la 05
+## Deuda abierta
 
 | Ítem | Destino |
 |------|---------|
-| Conteo fino passed/failed/skipped en a11y.py | Próxima campaña de calidad o A11Y |
+| Conteo fino passed/failed/skipped en a11y.py | Campaña de calidad o A11Y |
 | VERSIONING.md: nomenclatura exacta vX.Y.Z-docs.N | Próximo cierre de docs |
-| Reducir carga cognitiva de la IA con comandos MOS2 de desarrollo | Campaña nueva (acordada al cerrar la 05) |
+| Geoestrategia de paquetes (moslib ↔ Poetry, DepManager) | Campaña específica; ahora solo dirección en INCENTIVOS.md |
+| Laboratorio de lectores de pantalla | Campaña futura |
+| Dual Python + C | Campaña futura |
+| MOS2 sin Python 3 / Mac antiguos | Campaña futura |
 
 ---
 
-## Campañas futuras previstas
+## Campañas
 
-| Tema | Nota |
-|------|------|
-| Laboratorio de lectores de pantalla | Validación A11Y más allá del texto lineal |
-| RGPD / LOPDGDD | Protección de datos UE/ES |
-| Arquitectura de incentivos | Producto; no improvisar palancas en el chat |
-| MetsuOS en máquinas sin Python 3 (Mac antiguos) | Runtime alternativo |
-| Dual Python + C (gcc) | Desarrollo en paralelo; se discutirá aparte |
-| Carga cognitiva de la IA + comandos MOS2 de desarrollo | Integrar el flujo de campaña en el propio sistema |
+| Id | Tema | Estado |
+|----|------|--------|
+| 05 | Higiene, A11Y, cierre de interacción | Cerrada (0.2.5 / v0.2.5-docs) |
+| 06 | Incentivos (doc) → desarrollo en MOS2 + API Grok → prueba RGPD | En curso; bloque 1 |
+| — | DepManager / origen geográfico de dependencias | Prevista; delicada |
+| — | Laboratorio lectores | Prevista |
+| — | Dual C + Python | Prevista |
+| — | Runtime sin Python 3 | Prevista |
 
 ---
 
 ## Cómo se actualiza
 
-Al cierre de cada campaña se revisa esta tabla: hecho / se mantiene / se mueve a un plan en docs/plans/.
+Al cierre de cada bloque o campaña: hecho / se mantiene / se mueve a un plan en docs/plans/.
