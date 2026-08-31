@@ -6,15 +6,16 @@ Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y
 
 1. Este archivo
 2. docs/AI_ONBOARDING.md
-3. docs/METHODOLOGY.md
-4. docs/INTERACTION_REVIEW.md
-5. docs/ENVIRONMENTS.md
-6. docs/VERSIONING.md
-7. docs/A11Y.md y docs/a11y/DECLARACION.md
-8. docs/STYLE_GUIDE.md
-9. docs/specs/00-OVERVIEW.md
-10. docs/plans/ si hay campaña
-11. Código y resto de specs según la tarea
+3. docs/INCENTIVOS.md
+4. docs/METHODOLOGY.md
+5. docs/INTERACTION_REVIEW.md
+6. docs/ENVIRONMENTS.md
+7. docs/VERSIONING.md
+8. docs/A11Y.md y docs/a11y/DECLARACION.md
+9. docs/STYLE_GUIDE.md
+10. docs/specs/00-OVERVIEW.md
+11. docs/plans/ si hay campaña
+12. Código y resto de specs según la tarea
 
 ## Normas que no se improvisan
 
@@ -23,6 +24,8 @@ Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y
 - El usuario no sobrescribe comandos de sistema (prefijo user_)
 - Tests de arranque bloqueantes
 - Accesibilidad de interfaz mandatoria (docs/A11Y.md)
+- Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)
+- Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md
 - Sin rutas personales ni nombres de máquina en docs públicas
 - Encabezados de documentación sin numeración
 - Entregar archivos enteros; tablas ya montadas; un paso cada vez
@@ -60,3 +63,4 @@ Producto de referencia: 0.2.5. Comandos a11y, docs, synccheck.
 - No excluir un perfil A11Y por comodidad
 - No asumir Mac, Git Bash o WSL sin contexto declarado
 - No diagnosticar el remoto solo con raw .../main/
+- No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)
