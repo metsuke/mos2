@@ -1,70 +1,46 @@
-# Plan de campaña 06 — incentivos, desarrollo en MOS2, datos
+# Plan de campaña 06 — incentivos (cierre de rumbo)
 
 **Fecha del plan:** 2026-08-31  
+**Revisado:** 2026-09-01  
 **Orden del día:** 01  
 **Producto de partida:** 0.2.5  
-**Estado:** En curso (bloque 1)
+**Estado:** Cerrada en alcance. Bloques 2 y 3 de la redacción inicial retirados.
 
 ---
 
-## Propósito
+## Propósito (vigente)
 
-1. Documentar una filosofía de trabajo (vectores + actuaciones por rol) sin karma ni castigo.
-2. Más adelante, meter el proceso de campaña dentro de MOS2, con API Grok bajo política.
-3. Probar ese método integrando protección de datos (RGPD / LOPDGDD).
+Documentar la filosofía de trabajo: vectores, roles, Asimov + psicología para la IA, sin karma.
 
-No se implementa DepManager ni geoestrategia de paquetes en esta campaña. Eso es dirección y tendrá campaña propia (moslib ↔ Poetry).
+Cumplido: `docs/INCENTIVOS.md` 1.1 y enlaces.
 
 ---
 
-## Decisiones ya tomadas
+## Qué cambió el 2026-09-01
+
+Suite dentro de este repo, API Grok en runtime y RGPD de producto **no se hacen en la 06**.
+
+Hacen falta antes: modelo de app, colas de tareas, enrutador de IA mínimo.
+
+Sustituto: `docs/plans/2026-09-01-01-macro-apps-tareas-suite-rgpd-malla.md` (campañas 07–10).
+
+---
+
+## Decisiones que siguen vigentes
 
 | Tema | Decisión |
 |------|----------|
-| Forma | Tres bloques, no tres fases sueltas |
 | Karma / ranking | No |
 | Humanos (solo incentivos) | El sistema inclina; no es examen |
-| Normas férreas (A11Y, SEC, SSS) | Mandatorias para humano e IA |
+| Normas férreas (A11Y, SEC, SSS) | Mandatorias para humano e IA. Sin A11Y el cambio no se acepta ni el código se ejecuta |
 | IA | Férreas + INCENTIVOS |
-| Asimov | Cita de las tres leyes + nota de aplicación; solo para la IA |
-| Psicología | Acompañar; prohibido dañar, desestabilizar o engañar; iterar con cuidado |
-| Geo de paquetes | Dirección en INCENTIVOS; no código |
-| Código en bloque 1 | Ninguno |
+| Asimov | Cita + nota; solo para la IA |
+| Psicología | Acompañar; no dañar ni engañar |
+| Geo de paquetes | Dirección; campaña propia |
+| Código de suite / API en la 06 | No |
 
 ---
 
-## Bloques
+## Cierre
 
-### Bloque 1 — documento
-
-- docs/INCENTIVOS.md
-- Enlaces en AGENTS.md, AI_ONBOARDING, DEUDA_Y_CAMPANAS, README (tabla de docs)
-- Cierre I de interacción
-
-### Bloque 2 — desarrollo en MOS2
-
-- Comandos de campaña (plantillas, paso, handoff, cierre)
-- Atomizar documentos generables (plantilla, no spec fantasma)
-- API Grok: dato mínimo, sin volcar `.mos`, humano valida
-- Tag de producto solo si hay runtime
-
-### Bloque 3 — prueba con protección de datos
-
-- Usar el loop del bloque 2
-- Specs y mensajes de dato personal / espacio usuario
-- No certificación legal en esta pasada
-
----
-
-## Fuera de esta campaña
-
-- Laboratorio de lectores de pantalla
-- Dual Python + C
-- MOS2 sin Python 3
-- MetsuDepManager / política geo real sobre Poetry
-
----
-
-## Criterio de cierre del bloque 1
-
-INCENTIVOS.md en main, enlazado, sin ganchos de código nuevos, synccheck alineado.
+Trabajo nuevo = plan detallado de la **07**. Este archivo no recibe más bloques de implementación.
