@@ -47,7 +47,8 @@ Fuera de este tramo (siguen en `docs/DEUDA_Y_CAMPANAS.md`): laboratorio de lecto
 - Tareas automáticas primero **locales**. La malla no se usa como muleta de la 07.
 - Humano valida. Sin autocommit por IA salvo excepción explícita del humano.
 - Estado de campaña de producto: versionado en el repo que corresponda. Privado en `.mos`.
-- A11Y e INCENTIVOS aplican a cada app. Humanos se inclinan; IA está obligada.
+- A11Y, SEC y el resto de normas férreas del SSS son mandatorias para humano e IA. Sin A11Y el cambio no se acepta ni el código se ejecuta.
+- INCENTIVOS.md orienta (humano se inclina; IA cumple también los vectores). No convierte A11Y en opcional.
 - Diseñar listas, colas y tipos de hilo como datos estables (nombres y campos que se puedan ampliar), no como un script ad hoc.
 
 ---

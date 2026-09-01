@@ -23,8 +23,9 @@ No se implementa DepManager ni geoestrategia de paquetes en esta campaña. Eso e
 |------|----------|
 | Forma | Tres bloques, no tres fases sueltas |
 | Karma / ranking | No |
-| Humanos | El sistema inclina el contexto; no es mandatorio |
-| IA | Sí es mandatorio |
+| Humanos (solo incentivos) | El sistema inclina; no es examen |
+| Normas férreas (A11Y, SEC, SSS) | Mandatorias para humano e IA |
+| IA | Férreas + INCENTIVOS |
 | Asimov | Cita de las tres leyes + nota de aplicación; solo para la IA |
 | Psicología | Acompañar; prohibido dañar, desestabilizar o engañar; iterar con cuidado |
 | Geo de paquetes | Dirección en INCENTIVOS; no código |
