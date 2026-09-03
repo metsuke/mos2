@@ -13,7 +13,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from moslib.core.cmd_loader import CommandManager
-from moslib.core.user import get_username, ensure_user_space
+from moslib.core.user import get_username, ensure_user_space, get_user_apps_dir
 
 
 class MOSh:
@@ -28,7 +28,7 @@ class MOSh:
             system_commands_dir=system_commands_dir,
             user_commands_dir=user_commands_dir,
             apps_root=get_user_apps_dir(),
-)           enforce_security=True,
+            enforce_security=True,
         )
 
         self.running = True
