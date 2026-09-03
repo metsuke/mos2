@@ -1,7 +1,7 @@
 {
   "schema": "metsuos-a11y-informe-1",
   "generated_by": "a11y",
-  "generated_at": "2026-08-30T05:45:26Z",
+  "generated_at": "2026-09-03T15:45:40Z",
   "first_run_done": true,
   "compliance": "plenamente conforme",
   "reason": "Los tests a11y ejecutados han pasado.",
