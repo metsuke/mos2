@@ -27,7 +27,8 @@ class MOSh:
         self.cmd_manager = CommandManager(
             system_commands_dir=system_commands_dir,
             user_commands_dir=user_commands_dir,
-            enforce_security=True,
+            apps_root=get_user_apps_dir(),
+)           enforce_security=True,
         )
 
         self.running = True
