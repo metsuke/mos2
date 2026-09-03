@@ -3,7 +3,7 @@
 **Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.5  
 **Estado:** Normativo  
-**Documentos relacionados:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/specs/00-OVERVIEW.md, docs/specs/04-SEC-Security-Policy.md
+**Documentos relacionados:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/specs/00-OVERVIEW.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
 
 ---
 
@@ -369,6 +369,23 @@ Se considera que una versión del sistema es aceptable para uso alpha cuando:
 | Declaración de accesibilidad | Texto público al modelo UE/ES adaptado a CLI |
 | Informe A11Y | docs/a11y/informe.md e informe.json |
 | synccheck | Comando que compara HEAD local con origin/main |
+
+---
+
+## Capacidades en curso (campaña 07)
+
+Normativo en detalle: `docs/specs/08-APPS.md`, `09-TASKS.md`, `10-IA-ROUTER.md`.
+
+El sistema, al cerrar la 07, debe poder:
+
+- Descubrir e instalar apps locales (no son comandos sueltos en moslib/commands).
+- Cargar comandos de app con la misma puerta SEC/A11Y que el núcleo. Sin A11Y no se acepta ni se ejecuta.
+- Mantener tareas manuales (comandos) y automáticas locales (vista de hilos en texto lineal).
+- Exponer una fachada de IA en moslib, off por defecto, sin leer `.mos` salvo allowlist.
+
+No son capacidades de esta baseline 0.2.5 hasta que el código de 7.1–7.3 exista. Este apartado reserva el hueco para no romper el SSS al implementar.
+
+Malla P2P, suite de desarrollo completa y DepManager geo no entran en este apartado.
 
 ---
 
