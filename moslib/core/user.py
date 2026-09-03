@@ -90,6 +90,8 @@ def _migrate_user_home_if_needed(username: str) -> None:
     print(f"          Nueva:   {new_home}")
     print("[MetsuOS] Se usará la nueva. Puedes borrar la antigua manualmente si lo deseas.")
 
+def get_user_apps_dir(username: str | None = None) -> Path:
+    return get_user_mos_dir(username) / "apps"
 
 def ensure_user_space(username: str | None = None) -> Path:
     """
@@ -99,6 +101,7 @@ def ensure_user_space(username: str | None = None) -> Path:
     Estructura final:
     rootfs/home/<username>/
     └── .mos/
+        ├── apps/
         ├── commands/
         ├── data/
         ├── config/
@@ -115,6 +118,7 @@ def ensure_user_space(username: str | None = None) -> Path:
     mos_dir = get_user_mos_dir(username)
 
     subdirs = [
+        mos_dir / "apps",
         mos_dir / "commands",
         mos_dir / "data",
         mos_dir / "config",
