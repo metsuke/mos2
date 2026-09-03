@@ -2,6 +2,15 @@
 
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
+## 0.2.6 — 2026-09-03
+
+### Añadido
+
+- Specs 08-APPS, 09-TASKS, 10-IA-ROUTER y reserva en SSS 1.4
+- Comando apps (install/list/show/remove local, puerta SEC)
+- Comandos tareas y hilos (GTD local, tick clase sistema)
+- Comando iarouter y fachada moslib.core.ia_router (off por defecto)
+
 ## 0.2.5-docs.2 — 2026-08-31
 
 ### Documentación

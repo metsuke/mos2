@@ -3,7 +3,7 @@
 Sistema Operativo simulado y modular basado en Python
 
 **Estado:** Alpha (funcional y en desarrollo activo)  
-**Versión:** 0.2.5  
+**Versión:** 0.2.6  
 **Python** · **Licencia GPL-3.0** · **Poetry**
 
 MetsuOS (también conocido como MOS2) es un sistema operativo simulado y modular escrito en Python.  
@@ -24,6 +24,9 @@ Proyecto personal de Metsuke.
 - Comandos de usuario con prefijo `user_` (invocables también sin prefijo si no hay conflicto)
 - **Validación de seguridad obligatoria**: solo se permiten imports de la biblioteca estándar y de `moslib`
 - **Accesibilidad mandatoria** de la interfaz CLI (`docs/A11Y.md` y declaración en `docs/a11y/`)
+- Apps locales (instalar/quitar en `.mos/apps`) con la misma puerta SEC/A11Y
+- Tareas locales (manuales y automáticas) y vista de hilos
+- Fachada de enrutador de IA (off por defecto)
 - Tests unitarios y de seguridad con pytest
 - Gestión de dependencias y entorno virtual con Poetry
 - Scripts de instalación y lanzamiento multiplataforma (linux/native, macos/native, windows/git-bash, windows/wsl)
@@ -40,17 +43,24 @@ Proyecto personal de Metsuke.
 | | | cmd_loader.py | | Cargador dinámico de comandos + seguridad |
 | | | user.py | | Usuario anfitrión + espacio personal + migración |
 | | | security.py | | Validación de imports (AST) |
+| | | apps.py | | Apps locales install/list/remove |
+| | | tasks.py | | Tareas GTD locales |
+| | | ia_router.py | | Fachada de modelos (off por defecto) |
 | | commands/ | | | Comandos oficiales del sistema |
 | | | a11y.py | | Validación A11Y e informe |
+| | | apps.py | | Gestión de apps locales |
 | | | clear.py | | Limpia la pantalla |
 | | | docs.py | | Consulta documentación del clone |
 | | | echo.py | | Imprime texto |
 | | | help.py | | Sistema de ayuda |
+| | | hilos.py | | Vista de tareas por clase |
+| | | iarouter.py | | Estado del enrutador de IA |
 | | | man.py | | Manual extendido (docs/man/) |
 | | | synccheck.py | | Compara HEAD local con origin/main |
 | | | sysinfo.py | | Información del sistema |
+| | | tareas.py | | Lista y gestiona tareas |
 | | | test.py | | Ejecuta la batería de tests |
-| | | update.py | | Actualiza desde origin/main con backup y tags |
+| | | update.py | | Actualiza desde origin/main |
 | | | uptime.py | | Tiempo de actividad |
 | | | version.py | | Versión e historial |
 | rootfs/ | | | | Sistema de archivos simulado |
@@ -58,7 +68,7 @@ Proyecto personal de Metsuke.
 | | | mos.py | | Punto de entrada del sistema |
 | | home/ | | | Carpetas personales de los usuarios |
 | | | usuario/ | | Carpeta del usuario del sistema anfitrión |
-| | | | .mos/ | Espacio privado del usuario |
+| | | | .mos/ | Espacio privado (commands, apps, data, config) |
 | docs/ | | | | Documentación del proyecto |
 | | A11Y.md | | | Política de accesibilidad |
 | | a11y/ | | | Declaración e informe A11Y |
@@ -78,6 +88,9 @@ Proyecto personal de Metsuke.
 | | man/ | | | Páginas man por comando |
 | tests/ | | | | Tests unitarios, seguridad y estilo |
 | | conftest.py | | | Configuración compartida de pytest |
+| | test_apps.py | | | Apps locales |
+| | test_tasks.py | | | Tareas |
+| | test_ia_router.py | | | Enrutador IA |
 | | test_security.py | | | Validación de imports |
 | | test_user.py | | | Módulo de usuario |
 | | test_cmd_loader.py | | | Cargador de comandos |
@@ -89,7 +102,7 @@ Proyecto personal de Metsuke.
 | pyproject.toml | | | | Configuración de Poetry |
 | poetry.lock | | | | Lock de dependencias |
 
-> **Nota:** El contenido de `rootfs/home/` no se versiona (`.gitignore`). Las rutas de usuario son siempre relativas al clone; no se documentan paths personales.
+> **Nota:** El contenido de `rootfs/home/` no se versiona (`.gitignore`). Las rutas de usuario son siempre relativas al clone.
 
 ---
 
@@ -156,18 +169,22 @@ mosh/tu_usuario_real@metsuos:~$
 | Tipo | Comando | Descripción |
 |------|---------|-------------|
 | accesibilidad | a11y | Validación A11Y e informe |
-| ayuda | docs | Lista y muestra documentación de docs/ y de la raíz pública |
-| ayuda | help | Lista de comandos (sistema + usuario) o ayuda de uno concreto |
-| ayuda | man | Manual extendido de un comando (docs/man/) |
+| apps | apps | Apps locales: list/show/install/remove |
+| ayuda | docs | Lista y muestra documentación |
+| ayuda | help | Lista o ayuda de un comando |
+| ayuda | man | Manual extendido (docs/man/) |
 | calidad | synccheck | Compara HEAD local con origin/main |
-| calidad | test | Ejecuta la batería de tests unitarios y de seguridad |
-| calidad | update | Sincroniza con origin/main (backup local y tags) |
-| host | sysinfo | Información del hardware y estado del anfitrión |
-| host | uptime | Tiempo de actividad del sistema anfitrión |
-| host | version | Versión actual (Git). Con -h [n] muestra historial |
+| calidad | test | Batería de tests |
+| calidad | update | Sincroniza origin/main |
+| host | sysinfo | Hardware y estado del anfitrión |
+| host | uptime | Tiempo de actividad del anfitrión |
+| host | version | Versión e historial |
+| ia | iarouter | Estado del enrutador de modelos (off por defecto) |
 | sesion | exit | Sale del shell |
+| tareas | hilos | Vista por clase de las tareas |
+| tareas | tareas | Lista, alta, hecha, tick |
 | utilidad | clear | Limpia la pantalla |
-| utilidad | echo | Imprime texto en la salida estándar |
+| utilidad | echo | Imprime texto |
 
 ---
 
@@ -206,12 +223,12 @@ def help():
 
 #### Regla de seguridad obligatoria
 
-Todo comando (sistema o usuario) solo puede importar:
+Todo comando (sistema, usuario o de app) solo puede importar:
 
 - módulos de la biblioteca estándar de Python
 - módulos de `moslib` (y submódulos)
 
-Cualquier otro import hace que el comando sea rechazado automáticamente.
+Cualquier otro import hace que el comando sea rechazado. Sin A11Y mínima no se acepta ni se ejecuta.
 
 ---
 
@@ -238,17 +255,15 @@ Si Poetry ya funciona en tu PATH:
 poetry run pytest
 ```
 
-Los tests cubren seguridad de imports, espacio de usuario, cargador de comandos, contrato de comandos, estilo crítico y formato de versión Poetry. Los tests A11Y usan la marca pytest `a11y`.
-
 ---
 
 ## Accesibilidad
 
 Política: `docs/A11Y.md`  
-Declaración (modelo UE/ES adaptado a CLI): `docs/a11y/DECLARACION.md`  
+Declaración: `docs/a11y/DECLARACION.md`  
 Informe automático: `docs/a11y/informe.md`
 
-MetsuOS no declara conformidad legal con el RD 1112/2018; adopta la estructura de esa declaración para un producto CLI.
+A11Y es mandatoria para humano e IA. No es un incentivo opcional.
 
 ---
 
@@ -266,11 +281,11 @@ Ejecutar el sistema (alternativa recomendada: `./mos2.sh`):
 poetry run python rootfs/bin/mos.py
 ```
 
-La lógica de negocio y utilidades se concentran en `moslib/`.  
+La lógica de negocio está en `moslib/`.  
 Guía: `docs/DEVELOPER_GUIDE.md`.  
-Historial de releases: `CHANGELOG.md`.  
-Planes de campaña: `docs/plans/`.  
-Dirección de trabajo: `docs/INCENTIVOS.md`.
+Historial: `CHANGELOG.md`.  
+Planes: `docs/plans/`.  
+Dirección: `docs/INCENTIVOS.md`.
 
 ---
 
@@ -300,9 +315,6 @@ Dirección de trabajo: `docs/INCENTIVOS.md`.
 Estudiar el repo desde cero (IA): `AGENTS.md` → `docs/AI_ONBOARDING.md` → `docs/INCENTIVOS.md`.  
 Estudiar el repo (humano): `docs/HUMAN_ONBOARDING.md`.
 
-Perfiles: linux/native, macos/native, windows/git-bash, windows/wsl.  
-Sin rutas personales en el repo. Tablas de comandos: Tipo A–Z y comando A–Z dentro del tipo.
-
 ---
 
 ## Licencia
@@ -321,4 +333,4 @@ Sitio web: https://metsuke.com
 Repositorio: https://github.com/metsuke/mos2
 
 > **Nota:** MetsuOS es un proyecto experimental en fase Alpha.  
-> Aunque ya es funcional como shell con espacio de usuario, seguridad de imports y tests, todavía no pretende ser un sistema operativo completo. Las contribuciones e ideas son bienvenidas.
+> Aunque ya es funcional como shell con espacio de usuario, seguridad de imports, apps locales y tareas, todavía no pretende ser un sistema operativo completo.
