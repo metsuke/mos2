@@ -1,0 +1,10 @@
+{
+  "id": "dev",
+  "nombre": "Suite de desarrollo",
+  "version": "0.1.0",
+  "repo": "",
+  "comandos": ["app_dev_campania"],
+  "mini_moslib": false,
+  "acceso": "local-owner",
+  "docs": "man/app_dev_campania.md"
+}
