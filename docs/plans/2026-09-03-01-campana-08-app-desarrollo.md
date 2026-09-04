@@ -1,5 +1,7 @@
 # Plan detallado — campaña 08 app de desarrollo
 
+**Pausa:** 8.2+ detenido hasta docs/plans/2026-09-04-01-07-fix-apps-reales.md (F.6).
+
 **Fecha:** 2026-09-03  
 **Orden del día:** 01  
 **Producto de partida:** 0.2.6  
