@@ -3,7 +3,7 @@
   "nombre": "Suite de desarrollo",
   "version": "0.1.0",
   "repo": "",
-  "comandos": ["app_dev_campania"],
+  "comandos": ["app_dev_campania", "app_dev_paso"],
   "mini_moslib": false,
   "acceso": "local-owner",
   "docs": "man/app_dev_campania.md"
