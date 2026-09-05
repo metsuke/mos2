@@ -65,17 +65,14 @@ def _migrate_user_home_if_needed(username: str) -> None:
     old_home = get_old_user_home(username)
     new_home = get_user_home(username)
 
-    # Caso 1: no existe la antigua → no hay nada que migrar
     if not old_home.exists():
         return
 
-    # Caso 2: existe la antigua y NO existe la nueva → migrar
     if not new_home.exists():
-        print(f"[MetsuOS] Migrando espacio de usuario de:")
+        print("[MetsuOS] Migrando espacio de usuario de:")
         print(f"          {old_home}")
         print(f"          → {new_home}")
         try:
-            # Aseguramos que rootfs/home exista
             new_home.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(old_home), str(new_home))
             print("[MetsuOS] Migración completada correctamente.")
@@ -84,14 +81,22 @@ def _migrate_user_home_if_needed(username: str) -> None:
             print("[MetsuOS] Se continuará usando la ubicación antigua temporalmente.")
         return
 
-    # Caso 3: existen ambas → no tocamos nada, solo avisamos
-    print(f"[MetsuOS] Aviso: existen tanto la carpeta antigua como la nueva de usuario.")
+    print("[MetsuOS] Aviso: existen tanto la carpeta antigua como la nueva de usuario.")
     print(f"          Antigua: {old_home}")
     print(f"          Nueva:   {new_home}")
     print("[MetsuOS] Se usará la nueva. Puedes borrar la antigua manualmente si lo deseas.")
 
+
 def get_user_apps_dir(username: str | None = None) -> Path:
     return get_user_mos_dir(username) / "apps"
+
+
+def get_system_apps_dir() -> Path:
+    """Apps de sistema: rootfs/opt/apps/"""
+    d = get_rootfs() / "opt" / "apps"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
 
 def ensure_user_space(username: str | None = None) -> Path:
     """
@@ -111,10 +116,8 @@ def ensure_user_space(username: str | None = None) -> Path:
     if username is None:
         username = get_username()
 
-    # 1. Migración automática (si aplica)
     _migrate_user_home_if_needed(username)
 
-    # 2. Crear estructura en la ubicación nueva
     mos_dir = get_user_mos_dir(username)
 
     subdirs = [
