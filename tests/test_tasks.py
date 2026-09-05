@@ -1,3 +1,5 @@
+import time
+
 from moslib.core import tasks as T
 
 
@@ -29,3 +31,13 @@ def test_sistema_requeue(tmp_path, monkeypatch):
     log = T.tick()
     assert t["id"] in " ".join(log)
     assert T.get_task(t["id"])["estado"] == "pendiente"
+
+
+def test_worker_starts_and_stops(tmp_path, monkeypatch):
+    monkeypatch.setattr(T, "_store_path", lambda: tmp_path / "tareas.json")
+    T.stop_worker()
+    assert T.start_worker(5.0) is True
+    assert T.worker_running() is True
+    time.sleep(0.2)
+    T.stop_worker()
+    assert T.worker_running() is False

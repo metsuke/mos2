@@ -1,11 +1,14 @@
 """
 moslib.core.tasks
-Tareas manuales y automáticas locales (campaña 07).
+Tareas manuales y automáticas locales.
+Worker en segundo plano: hilo daemon mientras dura la sesión.
 """
 
 from __future__ import annotations
 
 import json
+import threading
+import time
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +20,10 @@ PRIV = ("root", "no-root")
 CLASES = ("realtime", "heavy", "normal", "sistema")
 ESTADOS = ("pendiente", "en_curso", "hecha", "fallida", "bloqueada_a11y_sec")
 RECUR = ("una_vez", "cada_n_minutos", "cada_n_dias")
+
+_worker_thread: threading.Thread | None = None
+_stop = threading.Event()
+_interval = 30.0
 
 
 def _now() -> str:
@@ -116,10 +123,6 @@ def can_run(task: dict) -> bool:
 
 
 def tick() -> list[str]:
-    """
-    Avanza automáticas locales.
-    Clase sistema + hecha + no una_vez → vuelve a pendiente (reencola).
-    """
     log = []
     items = load_all()
     changed = False
@@ -144,3 +147,34 @@ def format_line(task: dict) -> str:
         f"{task['id']}  {task['estado']}  {task['modo']}/{task['clase']}  "
         f"{task['privilegio']}  prio={task['prioridad']}  {task['comando']}"
     )
+
+
+def worker_running() -> bool:
+    return _worker_thread is not None and _worker_thread.is_alive()
+
+
+def _loop() -> None:
+    while not _stop.is_set():
+        try:
+            tick()
+        except Exception:
+            pass
+        _stop.wait(_interval)
+
+
+def start_worker(interval: float = 30.0) -> bool:
+    global _worker_thread, _interval
+    _interval = max(5.0, float(interval))
+    if worker_running():
+        return False
+    _stop.clear()
+    _worker_thread = threading.Thread(target=_loop, name="mos-tareas", daemon=True)
+    _worker_thread.start()
+    return True
+
+
+def stop_worker() -> None:
+    _stop.set()
+    t = _worker_thread
+    if t is not None:
+        t.join(timeout=2.0)

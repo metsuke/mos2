@@ -13,6 +13,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from moslib.core.cmd_loader import CommandManager
+from moslib.core.tasks import start_worker, stop_worker
 from moslib.core.user import (
     get_username,
     ensure_user_space,
@@ -41,7 +42,6 @@ class MOSh:
         self.prompt = f"mosh/{self.username}@metsuos:~$ "
 
     def _run_startup_tests(self) -> bool:
-        """Ejecuta la batería de tests. Si falla alguno, el sistema no arranca."""
         print("[MetsuOS] Ejecutando tests de arranque (unitarios + seguridad)...")
         print("-" * 60)
 
@@ -74,35 +74,40 @@ class MOSh:
         if not self._run_startup_tests():
             sys.exit(1)
 
+        start_worker(30.0)
         print("Iniciando MOSh para MetsuOS...")
         print(f"Usuario: {self.username}")
         print(f"Espacio personal: {self.mos_dir}")
+        print("Worker de tareas: activo mientras dure esta sesión.")
         print("Usa 'exit' para salir, 'help' para ayuda, 'docs' para documentación, 'a11y' para accesibilidad")
         print()
 
-        while self.running:
-            try:
-                line = input(self.prompt).strip()
-                if not line:
-                    continue
+        try:
+            while self.running:
+                try:
+                    line = input(self.prompt).strip()
+                    if not line:
+                        continue
 
-                parts = line.split()
-                cmd_name = parts[0]
-                args = parts[1:]
+                    parts = line.split()
+                    cmd_name = parts[0]
+                    args = parts[1:]
 
-                if cmd_name == "exit":
-                    self.running = False
-                    continue
+                    if cmd_name == "exit":
+                        self.running = False
+                        continue
 
-                command_module = self.cmd_manager.get_command(cmd_name)
+                    command_module = self.cmd_manager.get_command(cmd_name)
 
-                if command_module and hasattr(command_module, "execute"):
-                    command_module.execute(args)
-                else:
-                    print(f"mosh: comando no encontrado: {cmd_name}")
-                    print("Usa 'help' para la lista o 'docs' para el manual del proyecto.")
+                    if command_module and hasattr(command_module, "execute"):
+                        command_module.execute(args)
+                    else:
+                        print(f"mosh: comando no encontrado: {cmd_name}")
+                        print("Usa 'help' para la lista o 'docs' para el manual del proyecto.")
 
-            except KeyboardInterrupt:
-                print("\nUsa 'exit' para salir, 'help' para ayuda")
-            except Exception as e:
-                print(f"Error de ejecución: {e}")
+                except KeyboardInterrupt:
+                    print("\nUsa 'exit' para salir, 'help' para ayuda")
+                except Exception as e:
+                    print(f"Error de ejecución: {e}")
+        finally:
+            stop_worker()
