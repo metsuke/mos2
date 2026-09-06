@@ -1,17 +1,24 @@
 # 10 – Enrutador de IA
 
-**Versión del documento:** 1.0  
-**Estado:** Normativo (campaña 07, frente C)  
-**Baseline:** v0.2.5  
-**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/INCENTIVOS.md, docs/A11Y.md, docs/plans/2026-09-01-02-campana-07-soporte-apps-tareas-ia.md
+**Versión del documento:** 1.1  
+**Estado:** Normativo (campaña 07 completa, frente C)  
+**Baseline:** v0.2.6  
+**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/INCENTIVOS.md, docs/A11Y.md, docs/man/iarouter.md, docs/plans/2026-09-04-02-07-completa.md
 
 ---
 
 ## Propósito
 
-Definir la fachada de MetsuOS para llamar a modelos (Grok, OpenRouter, local, futuros) **sin** que la IA fije la política.
+Fachada única de MetsuOS para llamar a modelos **sin** que la IA fije la política.
 
-En la 07: **un** proveedor, API estable, off por defecto. El resto de proveedores se enchufa después sin cambiar el contrato.
+Proveedores de esta versión:
+
+| Id | Tipo | Disponibilidad |
+|----|------|----------------|
+| jan | local | servidor HTTP en jan_url |
+| gpt4all | local | servidor HTTP en gpt4all_url |
+| grok | remoto | variable XAI_API_KEY |
+| openrouter | remoto | variable OPENROUTER_API_KEY |
 
 ---
 
@@ -19,77 +26,85 @@ En la 07: **un** proveedor, API estable, off por defecto. El resto de proveedore
 
 - No es la suite de desarrollo (08).
 - No es un agente que commitea solo.
-- No lee `.mos` salvo whitelist explícita del humano.
-- No sustituye INCENTIVOS ni Asimov: quien responde sigue obligado.
+- No lee `.mos` salvo allowlist explícita del humano.
+- No sustituye INCENTIVOS ni A11Y/SEC.
 
 ---
 
-## Contrato de la fachada (moslib)
+## Contrato moslib.core.ia_router
 
-Operaciones mínimas:
+| Operación | Comportamiento |
+|-----------|----------------|
+| status | proveedor, enabled, lista de detectados |
+| detectar | jan/gpt4all por HTTP corto; grok/openrouter por env |
+| set_provider(id) | solo si detectar lo marca disponible; enabled=true |
+| complete(prompt, meta) | envía o error claro en español |
 
-| Operación | Comportamiento 07 |
-|-----------|-------------------|
-| status | proveedor, on/off, motivo si off |
-| complete(prompt, meta) | envía payload mínimo o error claro |
-| providers | lista; en 07 un id |
+`meta.provider` puede forzar el id de esa llamada. Si falta, usa la política.
 
-`meta` puede llevar `proyecto`, `prioridad` (stubs). No hace falta implementar todos los parámetros del diseño largo.
-
-Errores: sin clave, sin red, política off, payload que incluye ruta `.mos` no autorizada → mensaje en español, sin traza que filtre secretos. No crash del shell.
+Errores (sin clave, sin red, off, `.mos` no autorizado): mensaje usable, sin volcar secretos, shell vivo.
 
 ---
 
-## Política (la guarda el sistema)
+## Política
 
-Fichero de config (ICD fijará la ruta). Campos 07:
+Ruta: `.mos/config/ia_router.json` (espacio del usuario).
 
 | Campo | Default |
 |-------|---------|
 | enabled | false |
-| provider | un id (p. ej. grok) |
-| cost_ceiling | stub (número o null) |
-| project | stub |
-| allow_mos_paths | lista vacía |
+| provider | jan |
+| jan_url | http://127.0.0.1:1337/v1/chat/completions |
+| gpt4all_url | http://127.0.0.1:4891/v1/chat/completions |
+| grok_url | https://api.x.ai/v1/chat/completions |
+| grok_model | grok-3 |
+| openrouter_url | https://openrouter.ai/api/v1/chat/completions |
+| openrouter_model | openrouter/auto |
+| allow_mos_paths | [] |
+| cost_ceiling | null |
+| project | null |
 
-La IA **no** persiste esta tabla. La lee moslib.
+La IA no escribe este fichero. Lo escribe `iarouter usar` o el humano.
+
+Claves: solo entorno. Nunca git.
 
 ---
 
 ## Transporte
 
-Solo a través de moslib. Comandos y apps no hacen HTTP a pelo.
+Solo a través de moslib. `urllib` de la stdlib. Comandos no hacen HTTP directo.
 
-07: `urllib` de la stdlib detrás de la fachada, o la misma API devolviendo “desactivado / no implementado” si aún no hay llamada real. Las dos formas deben ser intercambiables para la 08.
-
----
-
-## Payload
-
-Incluye: texto del paso, normas citadas por referencia (rutas de docs), fichero en edición si el humano lo pide.
-
-No incluye: home anfitrión, `.mos` salvo allowlist, claves, dumps de otras apps.
+Cuerpo: chat completions (role user + content). Respuesta: `choices[0].message.content`.
 
 ---
 
-## Comando de sistema (nombre en ICD)
+## Comando de sistema
 
-Consultar status, no enviar nada por accidente. Envío = acción explícita del humano.
+| Subcomando | Efecto |
+|------------|--------|
+| status | política + detección |
+| detectar | solo detección |
+| usar ID | activa proveedor disponible |
+| preguntar TEXTO | complete explícito; imprime el texto |
 
-Salida: texto lineal, A11Y.
+Sin `preguntar` no hay envío.
+
+Salida lineal, A11Y.
 
 ---
 
-## Criterios de aceptación del frente C
+## Criterios de aceptación
 
-1. Este spec publicado.
-2. Política `enabled=false`: no hay llamada de red (test).
-3. Por defecto el cuerpo no contiene `.mos`.
-4. Fallo de red o de clave: error usable, shell vivo.
-5. Un solo proveedor en 07; el campo `providers` admite más ids después.
+1. Spec 1.1 publicado.
+2. enabled=false: no hay llamada de red (test).
+3. Payload con `.mos` no allowlist: rechazo.
+4. detectar distingue local caído y remoto sin clave.
+5. usar un id no disponible: no cambia política.
+6. preguntar con Jan/GPT4All/Grok/OpenRouter implementados en la fachada.
+7. Fallo de red o clave: error usable, shell vivo.
 
 ---
 
 ## Autoridad
 
-Normativo para llamadas a modelos. Choca con SEC/A11Y → ganan esas. Claves nunca en git.
+Normativo para llamadas a modelos. Choca con SEC/A11Y → ganan esas.
