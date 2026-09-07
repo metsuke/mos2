@@ -6,25 +6,43 @@ Enviar texto solo con 'preguntar' (acción explícita).
 from moslib.core import ia_router
 
 
+def _print_detect(items: list, titulo: str | None = None):
+    if titulo:
+        print(titulo)
+        print()
+    print("Proveedor    Tipo     ¿OK?")
+    print("------------ -------- ----")
+    for d in items:
+        marca = "SI" if d.get("disponible") else "NO"
+        print(f"{d.get('id', '-'):12} {d.get('tipo', '-'):8} {marca}")
+    print()
+    print("Detalle")
+    print("-------")
+    for d in items:
+        nombre = d.get("id", "-")
+        tipo = d.get("tipo", "-")
+        estado = "disponible" if d.get("disponible") else "no disponible"
+        motivo = d.get("motivo") or "sin detalle"
+        print()
+        print(f"{nombre} ({tipo}) está {estado}. {motivo}")
+
+
 def execute(args):
     args = list(args or [])
     if not args or args[0] in ("status",):
         st = ia_router.status()
-        print(f"proveedor: {st['provider']}")
-        print(f"enabled: {st['enabled']}")
+        print("Enrutador de IA")
+        print()
+        print(f"Proveedor activo: {st['provider']}")
+        print(f"Enabled: {st['enabled']}")
         if st.get("motivo"):
-            print(f"motivo: {st['motivo']}")
-        print("disponibles:")
-        for d in st.get("disponibles") or ia_router.detectar():
-            marca = "si" if d["disponible"] else "no"
-            print(f"  {d['id']}  ({d['tipo']})  {marca}  {d['motivo']}")
+            print(f"Motivo de política: {st['motivo']}")
+        print()
+        _print_detect(st.get("disponibles") or ia_router.detectar())
         return
 
     if args[0] in ("detectar", "detect"):
-        print("Proveedores detectados:")
-        for d in ia_router.detectar():
-            marca = "si" if d["disponible"] else "no"
-            print(f"  {d['id']}  ({d['tipo']})  {marca}  {d['motivo']}")
+        _print_detect(ia_router.detectar(), "Detección de proveedores")
         return
 
     if args[0] in ("usar", "use") and len(args) >= 2:
@@ -35,13 +53,19 @@ def execute(args):
     if args[0] in ("preguntar", "ask", "q") and len(args) >= 2:
         prompt = " ".join(args[1:])
         ok, text = ia_router.complete(prompt)
-        if ok:
-            print(text)
-        else:
-            print(text)
+        print()
+        print("Respuesta")
+        print()
+        print(text)
+        print()
         return
 
-    print("Uso: iarouter [status|detectar|usar <jan|gpt4all|grok|openrouter>|preguntar <texto>]")
+    print("Uso:")
+    print("  iarouter")
+    print("  iarouter status")
+    print("  iarouter detectar")
+    print("  iarouter usar jan|gpt4all|grok|openrouter")
+    print("  iarouter preguntar TEXTO")
 
 
 def help():
