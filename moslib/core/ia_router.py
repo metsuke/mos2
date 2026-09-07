@@ -22,9 +22,9 @@ DEFAULT_POLICY = {
     "project": None,
     "allow_mos_paths": [],
     "jan_url": "http://127.0.0.1:1337/v1/chat/completions",
-    "jan_model": "jan",
+    "jan_model": "auto",
     "gpt4all_url": "http://127.0.0.1:4891/v1/chat/completions",
-    "gpt4all_model": "gpt4all",
+    "gpt4all_model": "auto",
     "grok_url": "https://api.x.ai/v1/chat/completions",
     "grok_model": "grok-3",
     "openrouter_url": "https://openrouter.ai/api/v1/chat/completions",
@@ -36,6 +36,7 @@ ENV_KEY = {
     "grok": "XAI_API_KEY",
     "openrouter": "OPENROUTER_API_KEY",
 }
+PLACEHOLDER_MODELS = {"", "auto", "jan", "gpt4all"}
 
 
 def policy_path() -> Path:
@@ -90,23 +91,60 @@ def _mentions_mos(text: str, allow: list) -> bool:
     return True
 
 
-def _probe_http(url: str) -> tuple[bool, str]:
-    models = url.rstrip("/")
-    if models.endswith("chat/completions"):
-        models = models[: -len("chat/completions")] + "models"
-    req = Request(models, method="GET")
+def _models_url(chat_url: str) -> str:
+    base = chat_url.rstrip("/")
+    if base.endswith("chat/completions"):
+        return base[: -len("chat/completions")] + "models"
+    if base.endswith("/v1"):
+        return base + "/models"
+    return base + "/models"
+
+
+def _root_v1(chat_url: str) -> str:
+    base = chat_url.rstrip("/")
+    if base.endswith("chat/completions"):
+        return base[: -len("/chat/completions")]
+    if base.endswith("/v1"):
+        return base
+    return base
+
+
+def _primer_modelo(chat_url: str) -> str | None:
+    req = Request(_models_url(chat_url), method="GET")
     try:
-        with urlopen(req, timeout=2) as resp:
-            resp.read(64)
-        return True, "servidor local responde"
-    except HTTPError as exc:
-        if exc.code in (401, 404, 405):
-            return True, f"servidor local responde (HTTP {exc.code})"
-        return False, f"HTTP {exc.code}"
-    except URLError as exc:
-        return False, f"no alcanzable: {exc.reason}"
-    except Exception as exc:
-        return False, str(exc)
+        with urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8", errors="replace"))
+        items = data.get("data") or []
+        if items and isinstance(items[0], dict) and items[0].get("id"):
+            return str(items[0]["id"])
+    except Exception:
+        return None
+    return None
+
+
+def _probe_http(url: str) -> tuple[bool, str]:
+    root = _root_v1(url)
+    candidatos = [
+        root,
+        root + "/models",
+        root + "/chat/completions",
+    ]
+    visto = []
+    for target in candidatos:
+        req = Request(target, method="GET")
+        try:
+            with urlopen(req, timeout=3) as resp:
+                resp.read(64)
+            return True, f"responde {target}"
+        except HTTPError as exc:
+            if exc.code in (400, 401, 404, 405, 422):
+                return True, f"responde {target} (HTTP {exc.code})"
+            visto.append(f"{target} HTTP {exc.code}")
+        except URLError as exc:
+            visto.append(f"{target} {exc.reason}")
+        except Exception as exc:
+            visto.append(f"{target} {exc}")
+    return False, "; ".join(visto)
 
 
 def detectar() -> list[dict]:
@@ -141,13 +179,12 @@ def detectar() -> list[dict]:
 
 def status() -> dict:
     p = load_policy()
-    det = detectar()
     return {
         "provider": p["provider"],
         "enabled": bool(p["enabled"]),
         "motivo": "" if p["enabled"] else "política enabled=false",
         "providers": list(PROVIDERS),
-        "disponibles": det,
+        "disponibles": detectar(),
         "jan_url": p.get("jan_url"),
         "gpt4all_url": p.get("gpt4all_url"),
     }
@@ -174,7 +211,11 @@ def _complete_openai(
         with urlopen(req, timeout=60) as resp:
             raw = resp.read().decode("utf-8", errors="replace")
     except HTTPError as exc:
-        return False, f"{etiqueta} HTTP {exc.code}: {exc.reason}"
+        try:
+            detalle = exc.read().decode("utf-8", errors="replace")[:300]
+        except Exception:
+            detalle = str(exc.reason)
+        return False, f"{etiqueta} HTTP {exc.code}: {detalle}"
     except URLError as exc:
         return False, f"{etiqueta} no alcanzable ({url}): {exc.reason}"
     except Exception as exc:
@@ -196,20 +237,25 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
     if _mentions_mos(blob, list(p.get("allow_mos_paths") or [])):
         return False, "El payload menciona .mos y no está en allow_mos_paths."
     provider = (meta.get("provider") or p.get("provider") or "jan").lower()
+
     if provider == "jan":
-        return _complete_openai(
-            prompt,
-            p.get("jan_url") or DEFAULT_POLICY["jan_url"],
-            p.get("jan_model") or "jan",
-            "Jan",
-        )
+        url = p.get("jan_url") or DEFAULT_POLICY["jan_url"]
+        model = p.get("jan_model") or "auto"
+        if model in PLACEHOLDER_MODELS:
+            model = _primer_modelo(url) or model
+        if model in PLACEHOLDER_MODELS:
+            return False, "Jan no devolvió ningún modelo en /v1/models."
+        return _complete_openai(prompt, url, model, "Jan")
+
     if provider == "gpt4all":
-        return _complete_openai(
-            prompt,
-            p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"],
-            p.get("gpt4all_model") or "gpt4all",
-            "GPT4All",
-        )
+        url = p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"]
+        model = p.get("gpt4all_model") or "auto"
+        if model in PLACEHOLDER_MODELS:
+            model = _primer_modelo(url) or model
+        if model in PLACEHOLDER_MODELS:
+            return False, "GPT4All no devolvió ningún modelo en /v1/models."
+        return _complete_openai(prompt, url, model, "GPT4All")
+
     if provider == "grok":
         key = os.environ.get(ENV_KEY["grok"])
         if not key:
@@ -221,6 +267,7 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
             "Grok",
             api_key=key,
         )
+
     if provider == "openrouter":
         key = os.environ.get(ENV_KEY["openrouter"])
         if not key:
@@ -232,4 +279,5 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
             "OpenRouter",
             api_key=key,
         )
+
     return False, f"Proveedor '{provider}' desconocido."
