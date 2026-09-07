@@ -1,8 +1,8 @@
 # Deuda técnica y campañas futuras previstas
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.4  
 **Estado:** Inventario  
-**Producto:** 0.2.6
+**Producto:** 0.2.7
 
 ---
 
@@ -16,15 +16,27 @@ No perder lo aplazado. No es spec. Mandan SEC, SSS, A11Y e INCENTIVOS.
 
 | Ítem | Destino |
 |------|---------|
-| Cargar comandos de app en cmd_loader (hot-reload) | 08 o hotfix 07.x |
-| Daemon real de tareas (hoy tick) | 08 / 10 |
-| complete() con endpoint Grok real | 08 |
+| Worker de tareas solo vive con la sesión MOSh (no hay daemon sin shell) | 10 / campaña propia |
+| Laboratorio de lectores de pantalla | Futura |
 | Conteo fino passed/failed en a11y.py | Calidad |
 | VERSIONING.md docs.N | Cierre docs |
 | Geo / DepManager | Campaña propia |
-| Laboratorio lectores | Futura |
 | Dual Python + C | Futura |
 | MOS2 sin Python 3 | Futura |
+| Suite de desarrollo (aceptar/commit/handoff) | 08 |
+
+## Cerrada en 0.2.7
+
+| Ítem |
+|------|
+| Cargar comandos de app en cmd_loader |
+| Prefijos de app y prioridad sistema > app sistema > app usuario > user_ |
+| Install path relativo al clone y desde repo git |
+| Ámbito usuario / sistema |
+| minimoslib + SEC por app |
+| man y help de app |
+| Worker de sesión + tick clase sistema |
+| complete Jan, GPT4All, Grok, OpenRouter + detectar/usar/preguntar |
 
 ---
 
@@ -34,8 +46,8 @@ No perder lo aplazado. No es spec. Mandan SEC, SSS, A11Y e INCENTIVOS.
 |----|------|--------|
 | 05 | Higiene, A11Y | Cerrada |
 | 06 | INCENTIVOS | Cerrada en alcance |
-| 07 | Apps, tareas, iarouter | Cerrada (v0.2.6) |
-| 08 | App de desarrollo | Siguiente |
+| 07 | Apps, tareas, iarouter (completa) | Cerrada en producto 0.2.7 |
+| 08 | App de desarrollo | Siguiente (sigue pausada hasta tag 0.2.7 en main) |
 | 09 | Prueba RGPD con la suite | Prevista |
 | 10 | Malla de instancias | Prevista |
 

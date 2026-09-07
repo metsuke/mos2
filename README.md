@@ -3,7 +3,7 @@
 Sistema Operativo simulado y modular basado en Python
 
 **Estado:** Alpha (funcional y en desarrollo activo)  
-**Versión:** 0.2.6  
+**Versión:** 0.2.7  
 **Python** · **Licencia GPL-3.0** · **Poetry**
 
 MetsuOS (también conocido como MOS2) es un sistema operativo simulado y modular escrito en Python.  
@@ -22,11 +22,13 @@ Proyecto personal de Metsuke.
 - Migración automática del espacio de usuario desde ubicaciones legacy
 - Comandos del sistema protegidos (el usuario no puede sobrescribirlos)
 - Comandos de usuario con prefijo `user_` (invocables también sin prefijo si no hay conflicto)
-- **Validación de seguridad obligatoria**: solo se permiten imports de la biblioteca estándar y de `moslib`
+- **Validación de seguridad obligatoria**: biblioteca estándar, `moslib` y `minimoslib` de la propia app
 - **Accesibilidad mandatoria** de la interfaz CLI (`docs/A11Y.md` y declaración en `docs/a11y/`)
-- Apps locales (instalar/quitar en `.mos/apps`) con la misma puerta SEC/A11Y
-- Tareas locales (manuales y automáticas) y vista de hilos
-- Fachada de enrutador de IA (off por defecto)
+- Apps en ámbito usuario o sistema; install desde el clone o desde un repo git
+- Comandos de app invocables como `app_id_cmd`, `id_cmd` o nombre corto
+- Prioridad: sistema > app sistema > app usuario > user_
+- Tareas locales (manuales y automáticas), vista de hilos y worker de sesión
+- Enrutador de IA: Jan, GPT4All, Grok, OpenRouter (off hasta `iarouter usar`)
 - Tests unitarios y de seguridad con pytest
 - Gestión de dependencias y entorno virtual con Poetry
 - Scripts de instalación y lanzamiento multiplataforma (linux/native, macos/native, windows/git-bash, windows/wsl)
@@ -39,23 +41,23 @@ Proyecto personal de Metsuke.
 |---------|---------|---------|---------|-------------|
 | moslib/ | | | | Núcleo del sistema |
 | | core/ | | | Componentes principales |
-| | | shell.py | | Shell principal (MOSh) |
-| | | cmd_loader.py | | Cargador dinámico de comandos + seguridad |
+| | | shell.py | | Shell principal (MOSh) + worker de tareas |
+| | | cmd_loader.py | | Cargador dinámico + seguridad + prefijos de app |
 | | | user.py | | Usuario anfitrión + espacio personal + migración |
-| | | security.py | | Validación de imports (AST) |
-| | | apps.py | | Apps locales install/list/remove |
-| | | tasks.py | | Tareas GTD locales |
-| | | ia_router.py | | Fachada de modelos (off por defecto) |
+| | | security.py | | Validación de imports (AST + minimoslib) |
+| | | apps.py | | Install path/repo, ámbito usuario/sistema |
+| | | tasks.py | | Tareas GTD locales + worker |
+| | | ia_router.py | | Fachada Jan/GPT4All/Grok/OpenRouter |
 | | commands/ | | | Comandos oficiales del sistema |
 | | | a11y.py | | Validación A11Y e informe |
-| | | apps.py | | Gestión de apps locales |
+| | | apps.py | | Gestión de apps |
 | | | clear.py | | Limpia la pantalla |
 | | | docs.py | | Consulta documentación del clone |
 | | | echo.py | | Imprime texto |
-| | | help.py | | Sistema de ayuda |
+| | | help.py | | Ayuda sistema, apps y usuario |
 | | | hilos.py | | Vista de tareas por clase |
-| | | iarouter.py | | Estado del enrutador de IA |
-| | | man.py | | Manual extendido (docs/man/) |
+| | | iarouter.py | | Detectar, usar, preguntar |
+| | | man.py | | Manual de sistema o de app |
 | | | synccheck.py | | Compara HEAD local con origin/main |
 | | | sysinfo.py | | Información del sistema |
 | | | tareas.py | | Lista y gestiona tareas |
@@ -69,6 +71,9 @@ Proyecto personal de Metsuke.
 | | home/ | | | Carpetas personales de los usuarios |
 | | | usuario/ | | Carpeta del usuario del sistema anfitrión |
 | | | | .mos/ | Espacio privado (commands, apps, data, config) |
+| | opt/ | | | |
+| | | apps/ | | Apps de ámbito sistema |
+| apps/ | | | | Cunas de apps en el clone |
 | docs/ | | | | Documentación del proyecto |
 | | A11Y.md | | | Política de accesibilidad |
 | | a11y/ | | | Declaración e informe A11Y |
@@ -85,15 +90,18 @@ Proyecto personal de Metsuke.
 | | DEUDA_Y_CAMPANAS.md | | | Deuda y campañas previstas |
 | | plans/ | | | Planes de campaña |
 | | specs/ | | | Especificaciones ECSS-light |
-| | man/ | | | Páginas man por comando |
+| | man/ | | | Páginas man de comandos de sistema |
 | tests/ | | | | Tests unitarios, seguridad y estilo |
 | | conftest.py | | | Configuración compartida de pytest |
-| | test_apps.py | | | Apps locales |
+| | test_apps.py | | | Apps |
 | | test_tasks.py | | | Tareas |
 | | test_ia_router.py | | | Enrutador IA |
 | | test_security.py | | | Validación de imports |
+| | test_security_minimoslib.py | | | minimoslib por app |
 | | test_user.py | | | Módulo de usuario |
 | | test_cmd_loader.py | | | Cargador de comandos |
+| | test_cmd_loader_apps.py | | | Carga de comandos de app |
+| | test_cmd_loader_prefixes.py | | | Prefijos y prioridad |
 | | test_version_metadata.py | | | Formato SemVer de Poetry |
 | AGENTS.md | | | | Entrada corta para agentes IA |
 | CHANGELOG.md | | | | Historial de cambios por release |
@@ -157,6 +165,7 @@ Se abrirá el shell:
 Iniciando MOSh para MetsuOS...
 Usuario: tu_usuario_real
 Espacio personal: .../rootfs/home/tu_usuario_real/.mos
+Worker de tareas: activo mientras dure esta sesión.
 Usa 'exit' para salir, 'help' para ayuda
 
 mosh/tu_usuario_real@metsuos:~$
@@ -169,17 +178,17 @@ mosh/tu_usuario_real@metsuos:~$
 | Tipo | Comando | Descripción |
 |------|---------|-------------|
 | accesibilidad | a11y | Validación A11Y e informe |
-| apps | apps | Apps locales: list/show/install/remove |
+| apps | apps | list/show/install (path o repo)/remove |
 | ayuda | docs | Lista y muestra documentación |
 | ayuda | help | Lista o ayuda de un comando |
-| ayuda | man | Manual extendido (docs/man/) |
+| ayuda | man | Manual de sistema o de app |
 | calidad | synccheck | Compara HEAD local con origin/main |
 | calidad | test | Batería de tests |
 | calidad | update | Sincroniza origin/main |
 | host | sysinfo | Hardware y estado del anfitrión |
 | host | uptime | Tiempo de actividad del anfitrión |
 | host | version | Versión e historial |
-| ia | iarouter | Estado del enrutador de modelos (off por defecto) |
+| ia | iarouter | Detectar, elegir proveedor, preguntar |
 | sesion | exit | Sale del shell |
 | tareas | hilos | Vista por clase de las tareas |
 | tareas | tareas | Lista, alta, hecha, tick |
@@ -215,11 +224,13 @@ def help():
     return "Uso: user_hola - Saluda desde el espacio de usuario"
 ```
 
-#### Reglas de invocación de comandos de usuario
+#### Reglas de invocación
 
-- Siempre se puede invocar con el nombre completo: `user_hola`
-- También se puede invocar sin el prefijo (`hola`) solo si no existe un comando del sistema con ese mismo nombre
-- El usuario nunca puede sobrescribir un comando del sistema
+- Sistema: solo el nombre del fichero.
+- App `app_dev_paso`: `app_dev_paso`, `dev_paso` o `paso` si nadie con más prioridad lo tiene.
+- Usuario: `user_hola` siempre; `hola` solo si no hay sistema ni app con ese nombre.
+- Prioridad: sistema > app sistema > app usuario > user_.
+- Nadie pisa un comando de sistema.
 
 #### Regla de seguridad obligatoria
 
@@ -227,8 +238,29 @@ Todo comando (sistema, usuario o de app) solo puede importar:
 
 - módulos de la biblioteca estándar de Python
 - módulos de `moslib` (y submódulos)
+- en comandos de app: `minimoslib` de **esa** app
 
 Cualquier otro import hace que el comando sea rechazado. Sin A11Y mínima no se acepta ni se ejecuta.
+
+### Apps
+
+Estructura: `app.json`, `commands/`, `minimoslib/`, `man/`.  
+`apps install apps/foo` (ruta relativa al clone) o `apps install <url.git>`.  
+`ambito` en `app.json`: `usuario` o `sistema`.
+
+---
+
+## IA
+
+```text
+iarouter detectar
+iarouter usar jan
+iarouter preguntar hola
+```
+
+Locales: Jan (`127.0.0.1:1337`), GPT4All (`127.0.0.1:4891`).  
+Remotos: `XAI_API_KEY` (Grok), `OPENROUTER_API_KEY` (OpenRouter).  
+Off hasta `usar`. Spec: `docs/specs/10-IA-ROUTER.md`.
 
 ---
 
@@ -310,7 +342,7 @@ Dirección: `docs/INCENTIVOS.md`.
 | docs/STYLE_GUIDE.md | Normas de estilo de código |
 | docs/plans/ | Planes de campaña |
 | docs/specs/ | Especificaciones ECSS-light |
-| docs/man/ | Páginas man por comando |
+| docs/man/ | Páginas man de comandos de sistema |
 
 Estudiar el repo desde cero (IA): `AGENTS.md` → `docs/AI_ONBOARDING.md` → `docs/INCENTIVOS.md`.  
 Estudiar el repo (humano): `docs/HUMAN_ONBOARDING.md`.
@@ -333,4 +365,4 @@ Sitio web: https://metsuke.com
 Repositorio: https://github.com/metsuke/mos2
 
 > **Nota:** MetsuOS es un proyecto experimental en fase Alpha.  
-> Aunque ya es funcional como shell con espacio de usuario, seguridad de imports, apps locales y tareas, todavía no pretende ser un sistema operativo completo.
+> Aunque ya es funcional como shell con espacio de usuario, seguridad de imports, apps, tareas e iarouter, todavía no pretende ser un sistema operativo completo.

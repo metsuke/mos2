@@ -2,6 +2,22 @@
 
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
+## 0.2.7 — 2026-09-06
+
+### Añadido
+
+- Apps: mini-moslib, install desde clone o repo git, ámbito usuario o sistema
+- Invocación de comandos de app: nombre corto, `id_cmd` y `app_id_cmd`
+- Prioridad: sistema > app sistema > app usuario > user_
+- man y help de comandos de app
+- Worker de tareas en segundo plano durante la sesión MOSh
+- iarouter: detectar, usar, preguntar
+- Proveedores Jan, GPT4All, Grok y OpenRouter
+
+### Seguridad
+
+- SEC permite `minimoslib` solo con app_dir de esa app
+
 ## 0.2.6 — 2026-09-03
 
 ### Añadido
@@ -47,7 +63,7 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 
 ## Notas de etiquetas
 
-Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.2-docs.3` (docs sobre el producto 0.2.2). El producto actual es `v0.2.5`.
+Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.2-docs.3` (docs sobre el producto 0.2.2).
 
 ## 0.2.3 — 2026-08-28
 
