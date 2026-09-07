@@ -35,6 +35,8 @@ PROVIDERS = ("jan", "gpt4all", "grok", "openrouter")
 ENV_KEY = {
     "grok": "XAI_API_KEY",
     "openrouter": "OPENROUTER_API_KEY",
+    "jan": "JAN_API_KEY",
+    "gpt4all": "GPT4ALL_API_KEY",
 }
 PLACEHOLDER_MODELS = {"", "auto", "jan", "gpt4all"}
 
@@ -109,26 +111,54 @@ def _root_v1(chat_url: str) -> str:
     return base
 
 
-def _primer_modelo(chat_url: str) -> str | None:
-    req = Request(_models_url(chat_url), method="GET")
+def _auth_headers(provider: str) -> dict:
+    headers = {"Content-Type": "application/json"}
+    env = ENV_KEY.get(provider)
+    key = os.environ.get(env) if env else None
+    if key:
+        headers["Authorization"] = f"Bearer {key}"
+    return headers
+
+
+def _listar_modelos(chat_url: str, provider: str) -> tuple[list[str], str]:
+    url = _models_url(chat_url)
+    req = Request(url, method="GET", headers=_auth_headers(provider))
     try:
         with urlopen(req, timeout=5) as resp:
-            data = json.loads(resp.read().decode("utf-8", errors="replace"))
-        items = data.get("data") or []
-        if items and isinstance(items[0], dict) and items[0].get("id"):
-            return str(items[0]["id"])
-    except Exception:
-        return None
-    return None
+            raw = resp.read().decode("utf-8", errors="replace")
+    except HTTPError as exc:
+        try:
+            detalle = exc.read().decode("utf-8", errors="replace")[:300]
+        except Exception:
+            detalle = str(exc.reason)
+        return [], f"GET {url} HTTP {exc.code}: {detalle}"
+    except Exception as exc:
+        return [], f"GET {url}: {exc}"
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return [], f"GET {url} no es JSON: {raw[:200]}"
+    items = data.get("data")
+    if items is None and isinstance(data, list):
+        items = data
+    ids = []
+    if isinstance(items, list):
+        for item in items:
+            if isinstance(item, dict) and item.get("id"):
+                ids.append(str(item["id"]))
+            elif isinstance(item, str):
+                ids.append(item)
+    return ids, raw[:300]
+
+
+def _primer_modelo(chat_url: str, provider: str) -> str | None:
+    ids, _ = _listar_modelos(chat_url, provider)
+    return ids[0] if ids else None
 
 
 def _probe_http(url: str) -> tuple[bool, str]:
     root = _root_v1(url)
-    candidatos = [
-        root,
-        root + "/models",
-        root + "/chat/completions",
-    ]
+    candidatos = [root, root + "/models", root + "/chat/completions"]
     visto = []
     for target in candidatos:
         req = Request(target, method="GET")
@@ -195,7 +225,7 @@ def _complete_openai(
     url: str,
     model: str,
     etiqueta: str,
-    api_key: str | None = None,
+    provider: str,
 ) -> tuple[bool, str]:
     body = json.dumps(
         {
@@ -203,19 +233,16 @@ def _complete_openai(
             "messages": [{"role": "user", "content": prompt}],
         }
     ).encode("utf-8")
-    headers = {"Content-Type": "application/json"}
-    if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
-    req = Request(url, data=body, method="POST", headers=headers)
+    req = Request(url, data=body, method="POST", headers=_auth_headers(provider))
     try:
         with urlopen(req, timeout=60) as resp:
             raw = resp.read().decode("utf-8", errors="replace")
     except HTTPError as exc:
         try:
-            detalle = exc.read().decode("utf-8", errors="replace")[:300]
+            detalle = exc.read().decode("utf-8", errors="replace")[:400]
         except Exception:
             detalle = str(exc.reason)
-        return False, f"{etiqueta} HTTP {exc.code}: {detalle}"
+        return False, f"{etiqueta} HTTP {exc.code} model={model} url={url} {detalle}"
     except URLError as exc:
         return False, f"{etiqueta} no alcanzable ({url}): {exc.reason}"
     except Exception as exc:
@@ -241,20 +268,22 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
     if provider == "jan":
         url = p.get("jan_url") or DEFAULT_POLICY["jan_url"]
         model = p.get("jan_model") or "auto"
+        ids, raw_models = _listar_modelos(url, "jan")
         if model in PLACEHOLDER_MODELS:
-            model = _primer_modelo(url) or model
+            model = ids[0] if ids else model
         if model in PLACEHOLDER_MODELS:
-            return False, "Jan no devolvió ningún modelo en /v1/models."
-        return _complete_openai(prompt, url, model, "Jan")
+            return False, f"Jan no listó modelos. /v1/models: {raw_models}"
+        return _complete_openai(prompt, url, model, "Jan", "jan")
 
     if provider == "gpt4all":
         url = p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"]
         model = p.get("gpt4all_model") or "auto"
+        ids, raw_models = _listar_modelos(url, "gpt4all")
         if model in PLACEHOLDER_MODELS:
-            model = _primer_modelo(url) or model
+            model = ids[0] if ids else model
         if model in PLACEHOLDER_MODELS:
-            return False, "GPT4All no devolvió ningún modelo en /v1/models."
-        return _complete_openai(prompt, url, model, "GPT4All")
+            return False, f"GPT4All no listó modelos. /v1/models: {raw_models}"
+        return _complete_openai(prompt, url, model, "GPT4All", "gpt4all")
 
     if provider == "grok":
         key = os.environ.get(ENV_KEY["grok"])
@@ -265,7 +294,7 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
             p.get("grok_url") or DEFAULT_POLICY["grok_url"],
             p.get("grok_model") or "grok-3",
             "Grok",
-            api_key=key,
+            "grok",
         )
 
     if provider == "openrouter":
@@ -277,7 +306,7 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
             p.get("openrouter_url") or DEFAULT_POLICY["openrouter_url"],
             p.get("openrouter_model") or "openrouter/auto",
             "OpenRouter",
-            api_key=key,
+            "openrouter",
         )
 
     return False, f"Proveedor '{provider}' desconocido."
