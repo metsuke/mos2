@@ -1,6 +1,6 @@
 # Deuda técnica y campañas futuras previstas
 
-**Versión del documento:** 1.4  
+**Versión del documento:** 1.6  
 **Estado:** Inventario  
 **Producto:** 0.2.7
 
@@ -16,14 +16,17 @@ No perder lo aplazado. No es spec. Mandan SEC, SSS, A11Y e INCENTIVOS.
 
 | Ítem | Destino |
 |------|---------|
-| Worker de tareas solo vive con la sesión MOSh (no hay daemon sin shell) | 10 / campaña propia |
+| Worker de tareas solo vive con la sesión MOSh | 10 / campaña propia |
 | Laboratorio de lectores de pantalla | Futura |
 | Conteo fino passed/failed en a11y.py | Calidad |
 | VERSIONING.md docs.N | Cierre docs |
 | Geo / DepManager | Campaña propia |
 | Dual Python + C | Futura |
 | MOS2 sin Python 3 | Futura |
-| Suite de desarrollo (aceptar/commit/handoff) | 08 |
+| Suite de desarrollo (aceptar/commit/handoff) | 08 (después de la mini iarouter) |
+| Comillas en la línea de MOSh | Calidad / 08 |
+| Formatos de salida en pantalla | Campaña propia |
+| Jan LAN fiable + listar/elegir modelo + claves + share/puente | Mini campaña 2026-09-07-01 |
 
 ## Cerrada en 0.2.7
 
@@ -37,6 +40,7 @@ No perder lo aplazado. No es spec. Mandan SEC, SSS, A11Y e INCENTIVOS.
 | man y help de app |
 | Worker de sesión + tick clase sistema |
 | complete Jan, GPT4All, Grok, OpenRouter + detectar/usar/preguntar |
+| iarouter: tabla sintética + párrafo por proveedor |
 
 ---
 
@@ -46,10 +50,12 @@ No perder lo aplazado. No es spec. Mandan SEC, SSS, A11Y e INCENTIVOS.
 |----|------|--------|
 | 05 | Higiene, A11Y | Cerrada |
 | 06 | INCENTIVOS | Cerrada en alcance |
-| 07 | Apps, tareas, iarouter (completa) | Cerrada en producto 0.2.7 |
-| 08 | App de desarrollo | Siguiente (sigue pausada hasta tag 0.2.7 en main) |
+| 07 | Apps, tareas, iarouter base | Cerrada en producto 0.2.7 |
+| — | Mini iarouter (modelos, claves, LAN, share, puente) | En curso (plan 2026-09-07-01) |
+| 08 | App de desarrollo | Después de la mini iarouter |
 | 09 | Prueba RGPD con la suite | Prevista |
 | 10 | Malla de instancias | Prevista |
+| — | Formatos de salida en pantalla | Prevista |
 
 ---
 
