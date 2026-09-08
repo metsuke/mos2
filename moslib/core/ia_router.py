@@ -3,7 +3,7 @@ moslib.core.ia_router
 Fachada de modelos. Política en disco; la IA no la escribe.
 Proveedores: jan, gpt4all (locales), grok, openrouter (remotos).
 Jan: 127.0.0.1 y, si falta, barrido de /24 privadas en puerto 1337 con cache.
-Claves solo en variables de entorno, nunca en git.
+Claves solo en variables de entorno o almacén local (M2).
 """
 
 from __future__ import annotations
@@ -30,9 +30,9 @@ DEFAULT_POLICY = {
     "gpt4all_url": "http://127.0.0.1:4891/v1/chat/completions",
     "gpt4all_model": "auto",
     "grok_url": "https://api.x.ai/v1/chat/completions",
-    "grok_model": "grok-3",
+    "grok_model": "auto",
     "openrouter_url": "https://openrouter.ai/api/v1/chat/completions",
-    "openrouter_model": "openrouter/auto",
+    "openrouter_model": "auto",
 }
 
 PROVIDERS = ("jan", "gpt4all", "grok", "openrouter")
@@ -97,6 +97,15 @@ def set_provider(name: str) -> tuple[bool, str]:
     return True, f"Proveedor activo: {name} (enabled=true)"
 
 
+def _campo_modelo(provider: str) -> str:
+    return {
+        "jan": "jan_model",
+        "gpt4all": "gpt4all_model",
+        "grok": "grok_model",
+        "openrouter": "openrouter_model",
+    }[provider]
+
+
 def _mentions_mos(text: str, allow: list) -> bool:
     if ".mos" not in text:
         return False
@@ -137,7 +146,7 @@ def _listar_modelos(chat_url: str, provider: str) -> tuple[list[str], str]:
     url = _models_url(chat_url)
     req = Request(url, method="GET", headers=_auth_headers(provider))
     try:
-        with urlopen(req, timeout=5) as resp:
+        with urlopen(req, timeout=15) as resp:
             raw = resp.read().decode("utf-8", errors="replace")
     except HTTPError as exc:
         try:
@@ -318,6 +327,55 @@ def resolver_jan_url(policy: dict) -> tuple[str, str]:
     return configurada, "no hay Jan en localhost ni en la LAN visible"
 
 
+def _url_chat(provider: str, policy: dict) -> str:
+    if provider == "jan":
+        url, _ = resolver_jan_url(policy)
+        return url
+    if provider == "gpt4all":
+        return policy.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"]
+    if provider == "grok":
+        return policy.get("grok_url") or DEFAULT_POLICY["grok_url"]
+    if provider == "openrouter":
+        return policy.get("openrouter_url") or DEFAULT_POLICY["openrouter_url"]
+    raise ValueError(provider)
+
+
+def listar_modelos(provider: str | None = None) -> tuple[bool, str, list[str]]:
+    p = load_policy()
+    pid = (provider or p.get("provider") or "jan").lower()
+    if pid not in PROVIDERS:
+        return False, f"Proveedor desconocido: {pid}", []
+    url = _url_chat(pid, p)
+    ids, raw = _listar_modelos(url, pid)
+    if not ids:
+        return False, raw or "sin modelos", []
+    return True, pid, ids
+
+
+def modelo_activo(provider: str | None = None) -> str:
+    p = load_policy()
+    pid = (provider or p.get("provider") or "jan").lower()
+    return str(p.get(_campo_modelo(pid)) or "auto")
+
+
+def set_modelo(model_id: str, provider: str | None = None) -> tuple[bool, str]:
+    p = load_policy()
+    pid = (provider or p.get("provider") or "jan").lower()
+    if pid not in PROVIDERS:
+        return False, f"Proveedor desconocido: {pid}"
+    mid = model_id.strip()
+    if not mid:
+        return False, "Indica un id de modelo."
+    if mid != "auto":
+        ok, msg, ids = listar_modelos(pid)
+        if ok and ids and mid not in ids:
+            return False, f"'{mid}' no está en la lista de {pid}."
+        if not ok and pid in ("grok", "openrouter"):
+            return False, f"No se pudo validar el modelo: {msg}"
+    save_policy({_campo_modelo(pid): mid})
+    return True, f"Modelo de {pid}: {mid}"
+
+
 def detectar() -> list[dict]:
     p = load_policy()
     url, motivo = resolver_jan_url(p)
@@ -363,6 +421,7 @@ def status() -> dict:
         "enabled": bool(p["enabled"]),
         "motivo": "" if p["enabled"] else "política enabled=false",
         "providers": list(PROVIDERS),
+        "modelo": modelo_activo(),
         "disponibles": detectar(),
         "jan_url": p.get("jan_url"),
         "gpt4all_url": p.get("gpt4all_url"),
@@ -413,47 +472,19 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
     if _mentions_mos(blob, list(p.get("allow_mos_paths") or [])):
         return False, "El payload menciona .mos y no está en allow_mos_paths."
     provider = (meta.get("provider") or p.get("provider") or "jan").lower()
+    if provider not in PROVIDERS:
+        return False, f"Proveedor '{provider}' desconocido."
 
-    if provider == "jan":
-        url, _ = resolver_jan_url(p)
-        model = p.get("jan_model") or "auto"
-        ids, raw_models = _listar_modelos(url, "jan")
+    url = _url_chat(provider, p)
+    model = p.get(_campo_modelo(provider)) or "auto"
+    if model in PLACEHOLDER_MODELS:
+        ids, raw_models = _listar_modelos(url, provider)
+        model = ids[0] if ids else model
         if model in PLACEHOLDER_MODELS:
-            model = ids[0] if ids else model
-        if model in PLACEHOLDER_MODELS:
-            return False, f"Jan no listó modelos. /v1/models: {raw_models}"
-        return _complete_openai(prompt, url, model, "Jan", "jan")
-
-    if provider == "gpt4all":
-        url = p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"]
-        model = p.get("gpt4all_model") or "auto"
-        ids, raw_models = _listar_modelos(url, "gpt4all")
-        if model in PLACEHOLDER_MODELS:
-            model = ids[0] if ids else model
-        if model in PLACEHOLDER_MODELS:
-            return False, f"GPT4All no listó modelos. /v1/models: {raw_models}"
-        return _complete_openai(prompt, url, model, "GPT4All", "gpt4all")
-
-    if provider == "grok":
-        if not os.environ.get(ENV_KEY["grok"]):
-            return False, f"Falta {ENV_KEY['grok']}."
-        return _complete_openai(
-            prompt,
-            p.get("grok_url") or DEFAULT_POLICY["grok_url"],
-            p.get("grok_model") or "grok-3",
-            "Grok",
-            "grok",
-        )
-
-    if provider == "openrouter":
-        if not os.environ.get(ENV_KEY["openrouter"]):
-            return False, f"Falta {ENV_KEY['openrouter']}."
-        return _complete_openai(
-            prompt,
-            p.get("openrouter_url") or DEFAULT_POLICY["openrouter_url"],
-            p.get("openrouter_model") or "openrouter/auto",
-            "OpenRouter",
-            "openrouter",
-        )
-
-    return False, f"Proveedor '{provider}' desconocido."
+            return False, f"{provider} no listó modelos: {raw_models}"
+    etiqueta = {"jan": "Jan", "gpt4all": "GPT4All", "grok": "Grok", "openrouter": "OpenRouter"}[
+        provider
+    ]
+    if provider in ("grok", "openrouter") and not os.environ.get(ENV_KEY[provider]):
+        return False, f"Falta {ENV_KEY[provider]}."
+    return _complete_openai(prompt, url, model, etiqueta, provider)

@@ -1,6 +1,6 @@
 """
-iarouter: estado, detección, elegir proveedor, preguntar.
-Enviar texto solo con 'preguntar' (acción explícita).
+iarouter: estado, detección, proveedor, modelos, preguntar.
+Enviar texto solo con 'preguntar'.
 """
 
 from moslib.core import ia_router
@@ -35,6 +35,7 @@ def execute(args):
         print()
         print(f"Proveedor activo: {st['provider']}")
         print(f"Enabled: {st['enabled']}")
+        print(f"Modelo: {st.get('modelo', 'auto')}")
         if st.get("motivo"):
             print(f"Motivo de política: {st['motivo']}")
         print()
@@ -47,6 +48,32 @@ def execute(args):
 
     if args[0] in ("usar", "use") and len(args) >= 2:
         ok, msg = ia_router.set_provider(args[1])
+        print(msg)
+        return
+
+    if args[0] in ("modelos", "models"):
+        proveedor = args[1] if len(args) >= 2 else None
+        ok, info, ids = ia_router.listar_modelos(proveedor)
+        if not ok:
+            print(info)
+            return
+        activo = ia_router.modelo_activo(info)
+        print(f"Proveedor: {info}")
+        print(f"Modelo activo: {activo}")
+        print()
+        print("Id")
+        print("--")
+        for mid in ids:
+            marca = " (activo)" if mid == activo else ""
+            print(f"{mid}{marca}")
+        print()
+        for mid in ids:
+            extra = " Este es el modelo activo." if mid == activo else ""
+            print(f"{mid}.{extra}")
+        return
+
+    if args[0] in ("modelo", "model") and len(args) >= 2:
+        ok, msg = ia_router.set_modelo(args[1], args[2] if len(args) >= 3 else None)
         print(msg)
         return
 
@@ -65,12 +92,13 @@ def execute(args):
     print("  iarouter status")
     print("  iarouter detectar")
     print("  iarouter usar jan|gpt4all|grok|openrouter")
+    print("  iarouter modelos [proveedor]")
+    print("  iarouter modelo <id> [proveedor]")
     print("  iarouter preguntar TEXTO")
 
 
 def help():
     return (
-        "Uso: iarouter [status|detectar|usar <proveedor>|preguntar <texto>] - "
-        "Elige modelo (detección automática) y envía una petición explícita. "
-        "Off hasta 'usar'. Claves: XAI_API_KEY, OPENROUTER_API_KEY."
+        "Uso: iarouter [status|detectar|usar|modelos|modelo|preguntar] - "
+        "Proveedor, lista de modelos, modelo activo y petición explícita."
     )
