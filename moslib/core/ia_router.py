@@ -2,6 +2,7 @@
 moslib.core.ia_router
 Fachada de modelos. Política en disco; la IA no la escribe.
 Proveedores: jan, gpt4all (locales), grok, openrouter (remotos).
+Jan: 127.0.0.1 y, si falta, barrido de /24 privadas en puerto 1337 con cache.
 Claves solo en variables de entorno, nunca en git.
 """
 
@@ -9,6 +10,9 @@ from __future__ import annotations
 
 import json
 import os
+import socket
+import threading
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import URLError, HTTPError
 from urllib.request import Request, urlopen
@@ -39,6 +43,8 @@ ENV_KEY = {
     "gpt4all": "GPT4ALL_API_KEY",
 }
 PLACEHOLDER_MODELS = {"", "auto", "jan", "gpt4all"}
+JAN_PORT = 1337
+CACHE_TTL_SEC = 600
 
 
 def policy_path() -> Path:
@@ -46,6 +52,13 @@ def policy_path() -> Path:
     d = get_user_mos_dir() / "config"
     d.mkdir(parents=True, exist_ok=True)
     return d / "ia_router.json"
+
+
+def _jan_cache_path() -> Path:
+    ensure_user_space()
+    d = get_user_mos_dir() / "config"
+    d.mkdir(parents=True, exist_ok=True)
+    return d / "ia_jan_cache.json"
 
 
 def load_policy() -> dict:
@@ -151,11 +164,6 @@ def _listar_modelos(chat_url: str, provider: str) -> tuple[list[str], str]:
     return ids, raw[:300]
 
 
-def _primer_modelo(chat_url: str, provider: str) -> str | None:
-    ids, _ = _listar_modelos(chat_url, provider)
-    return ids[0] if ids else None
-
-
 def _probe_http(url: str) -> tuple[bool, str]:
     root = _root_v1(url)
     candidatos = [root, root + "/models", root + "/chat/completions"]
@@ -177,13 +185,154 @@ def _probe_http(url: str) -> tuple[bool, str]:
     return False, "; ".join(visto)
 
 
+def _load_jan_cache() -> dict | None:
+    path = _jan_cache_path()
+    if not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(data, dict) or not data.get("url"):
+        return None
+    try:
+        ts = datetime.fromisoformat(data["cuando"])
+    except Exception:
+        return None
+    edad = (datetime.now(timezone.utc) - ts).total_seconds()
+    if edad > CACHE_TTL_SEC:
+        return None
+    return data
+
+
+def _save_jan_cache(url: str, origen: str) -> None:
+    payload = {
+        "url": url,
+        "origen": origen,
+        "cuando": datetime.now(timezone.utc).isoformat(),
+    }
+    _jan_cache_path().write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def _local_ipv4() -> list[str]:
+    found = set()
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("1.1.1.1", 80))
+        found.add(s.getsockname()[0])
+        s.close()
+    except Exception:
+        pass
+    try:
+        for info in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
+            found.add(info[4][0])
+    except Exception:
+        pass
+    return [ip for ip in found if not ip.startswith("127.")]
+
+
+def _es_privada(ip: str) -> bool:
+    try:
+        parts = [int(x) for x in ip.split(".")]
+    except ValueError:
+        return False
+    if parts[0] == 10:
+        return True
+    if parts[0] == 192 and parts[1] == 168:
+        return True
+    if parts[0] == 172 and 16 <= parts[1] <= 31:
+        return True
+    return False
+
+
+def _hosts_lan() -> list[str]:
+    hosts = []
+    vistos = set()
+    for ip in _local_ipv4():
+        if not _es_privada(ip):
+            continue
+        prefijo = ".".join(ip.split(".")[:3])
+        for n in range(1, 255):
+            h = f"{prefijo}.{n}"
+            if h not in vistos:
+                vistos.add(h)
+                hosts.append(h)
+    return hosts
+
+
+def _puerto_abierto(ip: str, port: int, timeout: float = 0.12) -> bool:
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(timeout)
+        ok = s.connect_ex((ip, port)) == 0
+        s.close()
+        return ok
+    except Exception:
+        return False
+
+
+def _escanear_jan_lan() -> str | None:
+    encontrados: list[str] = []
+    lock = threading.Lock()
+
+    def prueba(ip: str) -> None:
+        if not _puerto_abierto(ip, JAN_PORT):
+            return
+        url = f"http://{ip}:{JAN_PORT}/v1/chat/completions"
+        ok, _ = _probe_http(url)
+        if ok:
+            with lock:
+                encontrados.append(url)
+
+    hilos = []
+    for ip in _hosts_lan():
+        t = threading.Thread(target=prueba, args=(ip,), daemon=True)
+        hilos.append(t)
+        t.start()
+        if len(hilos) >= 64:
+            for h in hilos:
+                h.join()
+            hilos = []
+    for h in hilos:
+        h.join()
+    return encontrados[0] if encontrados else None
+
+
+def resolver_jan_url(policy: dict) -> tuple[str, str]:
+    configurada = policy.get("jan_url") or DEFAULT_POLICY["jan_url"]
+    ok, motivo = _probe_http(configurada)
+    if ok:
+        return configurada, f"local o configurada: {motivo}"
+    cache = _load_jan_cache()
+    if cache:
+        ok, motivo = _probe_http(cache["url"])
+        if ok:
+            return cache["url"], f"cache: {motivo}"
+    lan = _escanear_jan_lan()
+    if lan:
+        _save_jan_cache(lan, "lan")
+        return lan, f"encontrada en LAN: {lan}"
+    return configurada, "no hay Jan en localhost ni en la LAN visible"
+
+
 def detectar() -> list[dict]:
     p = load_policy()
-    out = []
-    ok, motivo = _probe_http(p.get("jan_url") or DEFAULT_POLICY["jan_url"])
-    out.append({"id": "jan", "tipo": "local", "disponible": ok, "motivo": motivo})
-    ok, motivo = _probe_http(p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"])
-    out.append({"id": "gpt4all", "tipo": "local", "disponible": ok, "motivo": motivo})
+    url, motivo = resolver_jan_url(p)
+    ok = "no hay Jan" not in motivo
+    out = [
+        {
+            "id": "jan",
+            "tipo": "local",
+            "disponible": ok,
+            "motivo": motivo,
+            "url": url,
+        }
+    ]
+    okg, motivog = _probe_http(p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"])
+    out.append({"id": "gpt4all", "tipo": "local", "disponible": okg, "motivo": motivog})
     for pid in ("grok", "openrouter"):
         env = ENV_KEY[pid]
         if os.environ.get(env):
@@ -266,7 +415,7 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
     provider = (meta.get("provider") or p.get("provider") or "jan").lower()
 
     if provider == "jan":
-        url = p.get("jan_url") or DEFAULT_POLICY["jan_url"]
+        url, _ = resolver_jan_url(p)
         model = p.get("jan_model") or "auto"
         ids, raw_models = _listar_modelos(url, "jan")
         if model in PLACEHOLDER_MODELS:
@@ -286,8 +435,7 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
         return _complete_openai(prompt, url, model, "GPT4All", "gpt4all")
 
     if provider == "grok":
-        key = os.environ.get(ENV_KEY["grok"])
-        if not key:
+        if not os.environ.get(ENV_KEY["grok"]):
             return False, f"Falta {ENV_KEY['grok']}."
         return _complete_openai(
             prompt,
@@ -298,8 +446,7 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
         )
 
     if provider == "openrouter":
-        key = os.environ.get(ENV_KEY["openrouter"])
-        if not key:
+        if not os.environ.get(ENV_KEY["openrouter"]):
             return False, f"Falta {ENV_KEY['openrouter']}."
         return _complete_openai(
             prompt,
