@@ -27,6 +27,14 @@ def _print_detect(items: list, titulo: str | None = None):
         print(f"{nombre} ({tipo}) está {estado}. {motivo}")
 
 
+def _proveedor_y_resto(args, inicio: int):
+    if len(args) <= inicio:
+        return None, []
+    if args[inicio].lower() in ia_router.PROVIDERS:
+        return args[inicio].lower(), args[inicio + 1 :]
+    return None, args[inicio:]
+
+
 def execute(args):
     args = list(args or [])
     if not args or args[0] in ("status",):
@@ -53,6 +61,9 @@ def execute(args):
 
     if args[0] in ("modelos", "models"):
         proveedor = args[1] if len(args) >= 2 else None
+        if proveedor and proveedor.lower() not in ia_router.PROVIDERS:
+            print(f"Proveedor desconocido: {proveedor}")
+            return
         ok, info, ids = ia_router.listar_modelos(proveedor)
         if not ok:
             print(info)
@@ -72,8 +83,13 @@ def execute(args):
             print(f"{mid}.{extra}")
         return
 
-    if args[0] in ("modelo", "model") and len(args) >= 2:
-        ok, msg = ia_router.set_modelo(args[1], args[2] if len(args) >= 3 else None)
+    if args[0] in ("modelo", "model"):
+        proveedor, resto = _proveedor_y_resto(args, 1)
+        if not resto:
+            print("Uso: iarouter modelo [proveedor] <id del modelo...>")
+            return
+        mid = " ".join(resto)
+        ok, msg = ia_router.set_modelo(mid, proveedor)
         print(msg)
         return
 
@@ -93,7 +109,7 @@ def execute(args):
     print("  iarouter detectar")
     print("  iarouter usar jan|gpt4all|grok|openrouter")
     print("  iarouter modelos [proveedor]")
-    print("  iarouter modelo <id> [proveedor]")
+    print("  iarouter modelo [proveedor] <id del modelo...>")
     print("  iarouter preguntar TEXTO")
 
 
