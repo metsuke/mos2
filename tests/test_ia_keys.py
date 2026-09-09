@@ -15,8 +15,11 @@ def test_save_and_resolve(tmp_path, monkeypatch):
 def test_tamper_fails(tmp_path, monkeypatch):
     monkeypatch.setattr(K, "_dir", lambda: tmp_path)
     K.save_key("grok", "abc")
-    path = tmp_path / "ia_keys.json"
-    path.write_text(path.read_text(encoding="utf-8").replace("A", "B"), encoding="utf-8")
+    store = K._load_store()
+    raw = bytearray(store["grok"].encode("ascii"))
+    raw[0] = raw[0] ^ 1
+    store["grok"] = raw.decode("ascii", errors="ignore")
+    K._save_store(store)
     assert K.load_key("grok") is None
 
 

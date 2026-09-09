@@ -1,7 +1,8 @@
 """
 moslib.core.ia_router
 Fachada de modelos. Política en disco; la IA no la escribe.
-Claves: moslib.core.ia_keys ( .mos ; env se ingiere).
+Claves: moslib.core.ia_keys.
+Jan/GPT4All: localhost, cache, /24 privada.
 """
 
 from __future__ import annotations
@@ -36,6 +37,7 @@ DEFAULT_POLICY = {
 PROVIDERS = ("jan", "gpt4all", "grok", "openrouter")
 PLACEHOLDER_MODELS = {"", "auto", "jan", "gpt4all"}
 JAN_PORT = 1337
+GPT4ALL_PORT = 4891
 CACHE_TTL_SEC = 600
 
 
@@ -46,11 +48,11 @@ def policy_path() -> Path:
     return d / "ia_router.json"
 
 
-def _jan_cache_path() -> Path:
+def _cache_path(nombre: str) -> Path:
     ensure_user_space()
     d = get_user_mos_dir() / "config"
     d.mkdir(parents=True, exist_ok=True)
-    return d / "ia_jan_cache.json"
+    return d / nombre
 
 
 def load_policy() -> dict:
@@ -138,6 +140,9 @@ def _auth_headers(provider: str) -> dict:
     key = ia_keys.resolve_key(provider)
     if key:
         headers["Authorization"] = f"Bearer {key}"
+    if provider == "openrouter":
+        headers["HTTP-Referer"] = "https://metsuke.com"
+        headers["X-Title"] = "MetsuOS"
     return headers
 
 
@@ -193,8 +198,8 @@ def _probe_http(url: str) -> tuple[bool, str]:
     return False, "; ".join(visto)
 
 
-def _load_jan_cache() -> dict | None:
-    path = _jan_cache_path()
+def _load_url_cache(nombre: str) -> dict | None:
+    path = _cache_path(nombre)
     if not path.is_file():
         return None
     try:
@@ -207,19 +212,18 @@ def _load_jan_cache() -> dict | None:
         ts = datetime.fromisoformat(data["cuando"])
     except Exception:
         return None
-    edad = (datetime.now(timezone.utc) - ts).total_seconds()
-    if edad > CACHE_TTL_SEC:
+    if (datetime.now(timezone.utc) - ts).total_seconds() > CACHE_TTL_SEC:
         return None
     return data
 
 
-def _save_jan_cache(url: str, origen: str) -> None:
+def _save_url_cache(nombre: str, url: str, origen: str) -> None:
     payload = {
         "url": url,
         "origen": origen,
         "cuando": datetime.now(timezone.utc).isoformat(),
     }
-    _jan_cache_path().write_text(
+    _cache_path(nombre).write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -282,14 +286,14 @@ def _puerto_abierto(ip: str, port: int, timeout: float = 0.12) -> bool:
         return False
 
 
-def _escanear_jan_lan() -> str | None:
+def _escanear_lan(port: int, ruta: str) -> str | None:
     encontrados: list[str] = []
     lock = threading.Lock()
 
     def prueba(ip: str) -> None:
-        if not _puerto_abierto(ip, JAN_PORT):
+        if not _puerto_abierto(ip, port):
             return
-        url = f"http://{ip}:{JAN_PORT}/v1/chat/completions"
+        url = f"http://{ip}:{port}{ruta}"
         ok, _ = _probe_http(url)
         if ok:
             with lock:
@@ -309,21 +313,38 @@ def _escanear_jan_lan() -> str | None:
     return encontrados[0] if encontrados else None
 
 
-def resolver_jan_url(policy: dict) -> tuple[str, str]:
-    configurada = policy.get("jan_url") or DEFAULT_POLICY["jan_url"]
-    ok, motivo = _probe_http(configurada)
+def _resolver_local(url_cfg: str, cache_name: str, port: int, etiqueta: str) -> tuple[str, str]:
+    ok, motivo = _probe_http(url_cfg)
     if ok:
-        return configurada, f"local o configurada: {motivo}"
-    cache = _load_jan_cache()
+        return url_cfg, f"local o configurada: {motivo}"
+    cache = _load_url_cache(cache_name)
     if cache:
         ok, motivo = _probe_http(cache["url"])
         if ok:
             return cache["url"], f"cache: {motivo}"
-    lan = _escanear_jan_lan()
+    lan = _escanear_lan(port, "/v1/chat/completions")
     if lan:
-        _save_jan_cache(lan, "lan")
+        _save_url_cache(cache_name, lan, "lan")
         return lan, f"encontrada en LAN: {lan}"
-    return configurada, "no hay Jan en localhost ni en la LAN visible"
+    return url_cfg, f"no hay {etiqueta} en localhost ni en la LAN visible"
+
+
+def resolver_jan_url(policy: dict) -> tuple[str, str]:
+    return _resolver_local(
+        policy.get("jan_url") or DEFAULT_POLICY["jan_url"],
+        "ia_jan_cache.json",
+        JAN_PORT,
+        "Jan",
+    )
+
+
+def resolver_gpt4all_url(policy: dict) -> tuple[str, str]:
+    return _resolver_local(
+        policy.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"],
+        "ia_gpt4all_cache.json",
+        GPT4ALL_PORT,
+        "GPT4All",
+    )
 
 
 def _url_chat(provider: str, policy: dict) -> str:
@@ -331,7 +352,8 @@ def _url_chat(provider: str, policy: dict) -> str:
         url, _ = resolver_jan_url(policy)
         return url
     if provider == "gpt4all":
-        return policy.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"]
+        url, _ = resolver_gpt4all_url(policy)
+        return url
     if provider == "grok":
         return policy.get("grok_url") or DEFAULT_POLICY["grok_url"]
     if provider == "openrouter":
@@ -388,8 +410,17 @@ def detectar() -> list[dict]:
             "url": url,
         }
     ]
-    okg, motivog = _probe_http(p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"])
-    out.append({"id": "gpt4all", "tipo": "local", "disponible": okg, "motivo": motivog})
+    urlg, motivog = resolver_gpt4all_url(p)
+    okg = "no hay GPT4All" not in motivog
+    out.append(
+        {
+            "id": "gpt4all",
+            "tipo": "local",
+            "disponible": okg,
+            "motivo": motivog,
+            "url": urlg,
+        }
+    )
     for pid in ("grok", "openrouter"):
         if ia_keys.has_any_key(pid):
             origen = "almacén .mos" if ia_keys.has_stored_key(pid) else "entorno (ingerido)"
