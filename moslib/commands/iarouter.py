@@ -1,9 +1,10 @@
 """
-iarouter: estado, detección, proveedor, modelos, preguntar.
-Enviar texto solo con 'preguntar'.
+iarouter: estado, detección, proveedor, modelos, claves, preguntar.
 """
 
-from moslib.core import ia_router
+import getpass
+
+from moslib.core import ia_keys, ia_router
 
 
 def _print_detect(items: list, titulo: str | None = None):
@@ -35,8 +36,24 @@ def _proveedor_y_resto(args, inicio: int):
     return None, args[inicio:]
 
 
+def _pedir_clave(pid: str) -> None:
+    print(f"Clave para {pid} (no se muestra al escribir). Vacío cancela.")
+    try:
+        raw = getpass.getpass("clave: ")
+    except Exception:
+        print("No se pudo leer la clave en este terminal.")
+        return
+    if not raw.strip():
+        print("Cancelado.")
+        return
+    ok, msg = ia_keys.save_key(pid, raw)
+    print(msg)
+
+
 def execute(args):
     args = list(args or [])
+    ia_keys.ingest_env()
+
     if not args or args[0] in ("status",):
         st = ia_router.status()
         print("Enrutador de IA")
@@ -55,8 +72,24 @@ def execute(args):
         return
 
     if args[0] in ("usar", "use") and len(args) >= 2:
+        pid = args[1].lower()
+        if pid in ("grok", "openrouter") and not ia_keys.has_any_key(pid):
+            _pedir_clave(pid)
         ok, msg = ia_router.set_provider(args[1])
         print(msg)
+        return
+
+    if args[0] in ("clave", "key") and len(args) >= 2:
+        pid = args[1].lower()
+        if len(args) >= 3 and args[2] in ("borrar", "delete"):
+            ok, msg = ia_keys.delete_key(pid)
+            print(msg)
+            return
+        if ia_keys.has_stored_key(pid):
+            print(f"Ya hay clave de {pid} en .mos. No se muestra.")
+            print(f"Para sustituirla: iarouter clave {pid} (pide otra).")
+            print(f"Para borrarla: iarouter clave {pid} borrar")
+        _pedir_clave(pid)
         return
 
     if args[0] in ("modelos", "models"):
@@ -108,6 +141,7 @@ def execute(args):
     print("  iarouter status")
     print("  iarouter detectar")
     print("  iarouter usar jan|gpt4all|grok|openrouter")
+    print("  iarouter clave <proveedor> [borrar]")
     print("  iarouter modelos [proveedor]")
     print("  iarouter modelo [proveedor] <id del modelo...>")
     print("  iarouter preguntar TEXTO")
@@ -115,6 +149,6 @@ def execute(args):
 
 def help():
     return (
-        "Uso: iarouter [status|detectar|usar|modelos|modelo|preguntar] - "
-        "Proveedor, lista de modelos, modelo activo y petición explícita."
+        "Uso: iarouter [status|detectar|usar|clave|modelos|modelo|preguntar] - "
+        "Proveedor, claves en .mos, modelos y petición explícita."
     )

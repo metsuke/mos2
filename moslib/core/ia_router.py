@@ -1,15 +1,12 @@
 """
 moslib.core.ia_router
 Fachada de modelos. Política en disco; la IA no la escribe.
-Proveedores: jan, gpt4all (locales), grok, openrouter (remotos).
-Jan: 127.0.0.1 y, si falta, barrido de /24 privadas en puerto 1337 con cache.
-Claves solo en variables de entorno o almacén local (M2).
+Claves: moslib.core.ia_keys ( .mos ; env se ingiere).
 """
 
 from __future__ import annotations
 
 import json
-import os
 import socket
 import threading
 from datetime import datetime, timezone
@@ -17,6 +14,7 @@ from pathlib import Path
 from urllib.error import URLError, HTTPError
 from urllib.request import Request, urlopen
 
+from moslib.core import ia_keys
 from moslib.core.user import ensure_user_space, get_user_mos_dir
 
 DEFAULT_POLICY = {
@@ -36,12 +34,6 @@ DEFAULT_POLICY = {
 }
 
 PROVIDERS = ("jan", "gpt4all", "grok", "openrouter")
-ENV_KEY = {
-    "grok": "XAI_API_KEY",
-    "openrouter": "OPENROUTER_API_KEY",
-    "jan": "JAN_API_KEY",
-    "gpt4all": "GPT4ALL_API_KEY",
-}
 PLACEHOLDER_MODELS = {"", "auto", "jan", "gpt4all"}
 JAN_PORT = 1337
 CACHE_TTL_SEC = 600
@@ -90,6 +82,14 @@ def set_provider(name: str) -> tuple[bool, str]:
     name = name.lower().strip()
     if name not in PROVIDERS:
         return False, f"Proveedor desconocido: {name}. Usa: {', '.join(PROVIDERS)}"
+    if name in ("grok", "openrouter"):
+        ia_keys.ingest_env()
+        if not ia_keys.has_any_key(name):
+            return False, (
+                f"No hay clave para {name}. "
+                f"Usa: iarouter clave {name} "
+                f"o define {ia_keys.ENV_KEY[name]} (se copiará a .mos)."
+            )
     avail = {d["id"]: d for d in detectar()}
     if not avail[name]["disponible"]:
         return False, f"{name} no está disponible: {avail[name]['motivo']}"
@@ -135,8 +135,7 @@ def _root_v1(chat_url: str) -> str:
 
 def _auth_headers(provider: str) -> dict:
     headers = {"Content-Type": "application/json"}
-    env = ENV_KEY.get(provider)
-    key = os.environ.get(env) if env else None
+    key = ia_keys.resolve_key(provider)
     if key:
         headers["Authorization"] = f"Bearer {key}"
     return headers
@@ -359,8 +358,7 @@ def modelo_activo(provider: str | None = None) -> str:
 
 
 def set_modelo(model_id: str, provider: str | None = None) -> tuple[bool, str]:
-    p = load_policy()
-    pid = (provider or p.get("provider") or "jan").lower()
+    pid = (provider or load_policy().get("provider") or "jan").lower()
     if pid not in PROVIDERS:
         return False, f"Proveedor desconocido: {pid}"
     mid = model_id.strip()
@@ -377,6 +375,7 @@ def set_modelo(model_id: str, provider: str | None = None) -> tuple[bool, str]:
 
 
 def detectar() -> list[dict]:
+    ia_keys.ingest_env()
     p = load_policy()
     url, motivo = resolver_jan_url(p)
     ok = "no hay Jan" not in motivo
@@ -392,14 +391,14 @@ def detectar() -> list[dict]:
     okg, motivog = _probe_http(p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"])
     out.append({"id": "gpt4all", "tipo": "local", "disponible": okg, "motivo": motivog})
     for pid in ("grok", "openrouter"):
-        env = ENV_KEY[pid]
-        if os.environ.get(env):
+        if ia_keys.has_any_key(pid):
+            origen = "almacén .mos" if ia_keys.has_stored_key(pid) else "entorno (ingerido)"
             out.append(
                 {
                     "id": pid,
                     "tipo": "remoto",
                     "disponible": True,
-                    "motivo": f"variable {env} presente",
+                    "motivo": f"clave presente ({origen})",
                 }
             )
         else:
@@ -408,7 +407,7 @@ def detectar() -> list[dict]:
                     "id": pid,
                     "tipo": "remoto",
                     "disponible": False,
-                    "motivo": f"falta variable {env}",
+                    "motivo": f"falta clave; iarouter clave {pid}",
                 }
             )
     return out
@@ -474,6 +473,8 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
     provider = (meta.get("provider") or p.get("provider") or "jan").lower()
     if provider not in PROVIDERS:
         return False, f"Proveedor '{provider}' desconocido."
+    if provider in ("grok", "openrouter") and not ia_keys.has_any_key(provider):
+        return False, f"Falta clave de {provider}. iarouter clave {provider}"
 
     url = _url_chat(provider, p)
     model = p.get(_campo_modelo(provider)) or "auto"
@@ -485,6 +486,4 @@ def complete(prompt: str, meta: dict | None = None) -> tuple[bool, str]:
     etiqueta = {"jan": "Jan", "gpt4all": "GPT4All", "grok": "Grok", "openrouter": "OpenRouter"}[
         provider
     ]
-    if provider in ("grok", "openrouter") and not os.environ.get(ENV_KEY[provider]):
-        return False, f"Falta {ENV_KEY[provider]}."
     return _complete_openai(prompt, url, model, etiqueta, provider)
