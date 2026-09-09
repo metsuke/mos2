@@ -1,10 +1,10 @@
 """
-iarouter: estado, detección, proveedor, modelos, claves, preguntar.
+iarouter: estado, detección, proveedor, modelos, claves, share, preguntar.
 """
 
 import getpass
 
-from moslib.core import ia_keys, ia_router
+from moslib.core import ia_keys, ia_router, ia_share
 
 
 def _print_detect(items: list, titulo: str | None = None):
@@ -26,6 +26,23 @@ def _print_detect(items: list, titulo: str | None = None):
         motivo = d.get("motivo") or "sin detalle"
         print()
         print(f"{nombre} ({tipo}) está {estado}. {motivo}")
+
+
+def _print_share(items: list):
+    print("Share LAN")
+    print()
+    print("Comprobación     ¿OK?")
+    print("---------------- ----")
+    for d in items:
+        marca = "SI" if d.get("ok") else "NO"
+        print(f"{d.get('id', '-'):16} {marca}")
+    print()
+    print("Detalle")
+    print("-------")
+    for d in items:
+        estado = "correcto" if d.get("ok") else "no correcto"
+        print()
+        print(f"{d.get('id')}: {estado}. {d.get('motivo', '')}")
 
 
 def _proveedor_y_resto(args, inicio: int):
@@ -71,6 +88,10 @@ def execute(args):
         _print_detect(ia_router.detectar(), "Detección de proveedores")
         return
 
+    if args[0] == "share":
+        _print_share(ia_share.diagnostico())
+        return
+
     if args[0] in ("usar", "use") and len(args) >= 2:
         pid = args[1].lower()
         if pid in ("grok", "openrouter") and not ia_keys.has_any_key(pid):
@@ -87,7 +108,7 @@ def execute(args):
             return
         if ia_keys.has_stored_key(pid):
             print(f"Ya hay clave de {pid} en .mos. No se muestra.")
-            print(f"Para sustituirla: iarouter clave {pid} (pide otra).")
+            print(f"Para sustituirla: iarouter clave {pid}")
             print(f"Para borrarla: iarouter clave {pid} borrar")
         _pedir_clave(pid)
         return
@@ -140,6 +161,7 @@ def execute(args):
     print("  iarouter")
     print("  iarouter status")
     print("  iarouter detectar")
+    print("  iarouter share")
     print("  iarouter usar jan|gpt4all|grok|openrouter")
     print("  iarouter clave <proveedor> [borrar]")
     print("  iarouter modelos [proveedor]")
@@ -149,6 +171,6 @@ def execute(args):
 
 def help():
     return (
-        "Uso: iarouter [status|detectar|usar|clave|modelos|modelo|preguntar] - "
-        "Proveedor, claves en .mos, modelos y petición explícita."
+        "Uso: iarouter [status|detectar|share|usar|clave|modelos|modelo|preguntar] - "
+        "Proveedor, LAN share, claves, modelos y petición explícita."
     )
