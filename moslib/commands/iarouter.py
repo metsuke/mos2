@@ -1,10 +1,10 @@
 """
-iarouter: estado, detección, proveedor, modelos, claves, share, preguntar.
+iarouter: estado, detección, proveedor, modelos, claves, share, publicar, puente, preguntar.
 """
 
 import getpass
 
-from moslib.core import ia_keys, ia_router, ia_share
+from moslib.core import ia_bridge, ia_keys, ia_router, ia_share
 
 
 def _print_detect(items: list, titulo: str | None = None):
@@ -28,8 +28,8 @@ def _print_detect(items: list, titulo: str | None = None):
         print(f"{nombre} ({tipo}) está {estado}. {motivo}")
 
 
-def _print_share(items: list):
-    print("Share LAN")
+def _print_share(items: list, titulo: str):
+    print(titulo)
     print()
     print("Comprobación     ¿OK?")
     print("---------------- ----")
@@ -43,6 +43,24 @@ def _print_share(items: list):
         estado = "correcto" if d.get("ok") else "no correcto"
         print()
         print(f"{d.get('id')}: {estado}. {d.get('motivo', '')}")
+
+
+def _print_puente():
+    st = ia_bridge.estado()
+    print("Puente MetsuOS")
+    print()
+    print(f"Activo: {st['activo']}")
+    print(f"Puerto: {st['puerto']}")
+    print(f"Destino: {st['destino']}")
+    print()
+    print("Detalle")
+    print("-------")
+    print()
+    if st["activo"]:
+        for url in st["urls"]:
+            print(f"URL para otro MetsuOS: {url}")
+    else:
+        print("Parado. iarouter puente on para abrirlo en la LAN.")
 
 
 def _proveedor_y_resto(args, inicio: int):
@@ -89,7 +107,24 @@ def execute(args):
         return
 
     if args[0] == "share":
-        _print_share(ia_share.diagnostico())
+        _print_share(ia_share.diagnostico(), "Share LAN")
+        return
+
+    if args[0] == "publicar":
+        _print_share(ia_share.publicar(), "Publicar (autorización explícita)")
+        return
+
+    if args[0] == "puente":
+        sub = args[1] if len(args) >= 2 else "status"
+        if sub in ("on", "start", "arrancar"):
+            ok, msg = ia_bridge.arrancar()
+            print(msg)
+            return
+        if sub in ("off", "stop", "parar"):
+            ok, msg = ia_bridge.parar()
+            print(msg)
+            return
+        _print_puente()
         return
 
     if args[0] in ("usar", "use") and len(args) >= 2:
@@ -162,6 +197,8 @@ def execute(args):
     print("  iarouter status")
     print("  iarouter detectar")
     print("  iarouter share")
+    print("  iarouter publicar")
+    print("  iarouter puente [on|off|status]")
     print("  iarouter usar jan|gpt4all|grok|openrouter")
     print("  iarouter clave <proveedor> [borrar]")
     print("  iarouter modelos [proveedor]")
@@ -171,6 +208,6 @@ def execute(args):
 
 def help():
     return (
-        "Uso: iarouter [status|detectar|share|usar|clave|modelos|modelo|preguntar] - "
-        "Proveedor, LAN share, claves, modelos y petición explícita."
+        "Uso: iarouter [status|detectar|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - "
+        "Proveedor, LAN, puente, claves, modelos y petición explícita."
     )

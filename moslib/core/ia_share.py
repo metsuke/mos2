@@ -1,18 +1,21 @@
 """
 moslib.core.ia_share
-Diagnóstico de si Jan/GPT4All se pueden usar desde la LAN.
-No cambia el firewall. Eso es iarouter publicar (M6).
+Diagnóstico y publicación explícita de puertos Jan/GPT4All en LAN.
+publicar no se llama solo. No abre Internet: solo perfil privado / LAN.
 """
 
 from __future__ import annotations
 
+import shutil
 import socket
+import subprocess
 import sys
 from urllib.error import URLError, HTTPError
 from urllib.request import Request, urlopen
 
 JAN_PORT = 1337
 GPT4ALL_PORT = 4891
+PUERTOS = (("jan", JAN_PORT), ("gpt4all", GPT4ALL_PORT))
 
 
 def _perfil() -> str:
@@ -71,19 +74,16 @@ def _guia(perfil: str, puerto: int) -> str:
     if perfil == "macos/native":
         return (
             f"En macOS el servidor debe escuchar en 0.0.0.0:{puerto}, no solo en 127.0.0.1. "
-            f"En Firewall de aplicaciones, permite el binario de Jan o GPT4All. "
-            f"Luego: iarouter publicar (autorización explícita)."
+            f"En Firewall de aplicaciones, permite el binario de Jan o GPT4All."
         )
     if perfil.startswith("windows"):
         return (
             f"En Windows el servidor debe escuchar en 0.0.0.0:{puerto}. "
-            f"En el firewall de Windows, regla de entrada TCP {puerto} solo para la LAN. "
-            f"Luego: iarouter publicar."
+            f"Regla de entrada TCP {puerto} solo en perfil privado."
         )
     return (
         f"El servidor debe escuchar en 0.0.0.0:{puerto}. "
-        f"Abre TCP {puerto} en el firewall hacia la LAN, no hacia Internet. "
-        f"Luego: iarouter publicar."
+        f"Abre TCP {puerto} hacia la LAN, no hacia Internet."
     )
 
 
@@ -118,8 +118,70 @@ def diagnostico() -> list[dict]:
             "motivo": f"entorno {perfil}; IP LAN {ip_lan or 'desconocida'}",
         }
     )
-    if not (ip_lan and any(i["id"] == "jan-lan" and i["ok"] for i in items)):
+    if not any(i["id"] == "jan-lan" and i["ok"] for i in items):
         items.append({"id": "guia-jan", "ok": False, "motivo": _guia(perfil, JAN_PORT)})
-    if not (ip_lan and any(i["id"] == "gpt4all-lan" and i["ok"] for i in items)):
+    if not any(i["id"] == "gpt4all-lan" and i["ok"] for i in items):
         items.append({"id": "guia-gpt4all", "ok": False, "motivo": _guia(perfil, GPT4ALL_PORT)})
+    return items
+
+
+def _run(cmd: list[str]) -> tuple[bool, str]:
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+    except Exception as exc:
+        return False, str(exc)
+    out = (r.stdout or "") + (r.stderr or "")
+    return r.returncode == 0, out.strip()[:400]
+
+
+def _publicar_windows(puerto: int) -> tuple[bool, str]:
+    nombre = f"MetsuOS-LAN-{puerto}"
+    return _run(
+        [
+            "netsh",
+            "advfirewall",
+            "firewall",
+            "add",
+            "rule",
+            f"name={nombre}",
+            "dir=in",
+            "action=allow",
+            "protocol=TCP",
+            f"localport={str(puerto)}",
+            "profile=private",
+        ]
+    )
+
+
+def _publicar_linux(puerto: int) -> tuple[bool, str]:
+    if shutil.which("ufw"):
+        return _run(["ufw", "allow", "from", "10.0.0.0/8", "to", "any", "port", str(puerto)])
+    return False, "sin ufw; abre el puerto a mano en la LAN"
+
+
+def _publicar_macos(puerto: int) -> tuple[bool, str]:
+    return (
+        False,
+        "macOS no deja a MetsuOS crear la regla del Firewall de aplicaciones. "
+        f"Permite Jan/GPT4All en Ajustes > Red > Firewall y bind 0.0.0.0:{puerto}.",
+    )
+
+
+def publicar() -> list[dict]:
+    perfil = _perfil()
+    items = list(diagnostico())
+    for nombre, puerto in PUERTOS:
+        if perfil.startswith("windows"):
+            ok, detalle = _publicar_windows(puerto)
+        elif perfil.startswith("linux"):
+            ok, detalle = _publicar_linux(puerto)
+        else:
+            ok, detalle = _publicar_macos(puerto)
+        items.append(
+            {
+                "id": f"publicar-{nombre}",
+                "ok": ok,
+                "motivo": detalle or _guia(perfil, puerto),
+            }
+        )
     return items
