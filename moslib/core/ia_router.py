@@ -2,7 +2,7 @@
 moslib.core.ia_router
 Fachada de modelos. Política en disco; la IA no la escribe.
 Claves: moslib.core.ia_keys.
-Jan/GPT4All: localhost, cache, /24 privada.
+Jan/GPT4All: localhost, resolv/WSL, pasarela, cache, /24 privada.
 """
 
 from __future__ import annotations
@@ -97,6 +97,20 @@ def set_provider(name: str) -> tuple[bool, str]:
         return False, f"{name} no está disponible: {avail[name]['motivo']}"
     save_policy({"provider": name, "enabled": True})
     return True, f"Proveedor activo: {name} (enabled=true)"
+
+
+def set_destino(provider: str, url: str) -> tuple[bool, str]:
+    pid = provider.lower().strip()
+    campo = {"jan": "jan_url", "gpt4all": "gpt4all_url"}.get(pid)
+    if not campo:
+        return False, f"No se puede fijar URL de {pid}."
+    u = url.strip()
+    if not u.startswith("http://") and not u.startswith("https://"):
+        return False, "La URL debe ser http(s)."
+    if not u.rstrip("/").endswith("chat/completions"):
+        u = u.rstrip("/") + "/chat/completions"
+    save_policy({campo: u})
+    return True, f"{campo} = {u}"
 
 
 def _campo_modelo(provider: str) -> str:
@@ -275,6 +289,35 @@ def _hosts_lan() -> list[str]:
     return hosts
 
 
+def _hosts_extra() -> list[tuple[str, str]]:
+    extra = []
+    try:
+        for line in Path("/etc/resolv.conf").read_text(encoding="utf-8").splitlines():
+            if line.strip().startswith("nameserver"):
+                ip = line.split()[1]
+                if ip and not ip.startswith("127."):
+                    extra.append((ip, "resolv.conf / WSL host"))
+    except OSError:
+        pass
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("1.1.1.1", 80))
+        yo = s.getsockname()[0]
+        s.close()
+        partes = yo.split(".")
+        if len(partes) == 4:
+            extra.append((".".join(partes[:3] + ["1"]), "posible pasarela .1"))
+    except Exception:
+        pass
+    vistos = set()
+    out = []
+    for ip, origen in extra:
+        if ip not in vistos:
+            vistos.add(ip)
+            out.append((ip, origen))
+    return out
+
+
 def _puerto_abierto(ip: str, port: int, timeout: float = 0.12) -> bool:
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -284,6 +327,14 @@ def _puerto_abierto(ip: str, port: int, timeout: float = 0.12) -> bool:
         return ok
     except Exception:
         return False
+
+
+def _probar_host(ip: str, port: int) -> str | None:
+    if not _puerto_abierto(ip, port):
+        return None
+    url = f"http://{ip}:{port}/v1/chat/completions"
+    ok, _ = _probe_http(url)
+    return url if ok else None
 
 
 def _escanear_lan(port: int, ruta: str) -> str | None:
@@ -322,11 +373,16 @@ def _resolver_local(url_cfg: str, cache_name: str, port: int, etiqueta: str) -> 
         ok, motivo = _probe_http(cache["url"])
         if ok:
             return cache["url"], f"cache: {motivo}"
+    for ip, origen in _hosts_extra():
+        url = _probar_host(ip, port)
+        if url:
+            _save_url_cache(cache_name, url, origen)
+            return url, f"{origen}: {url}"
     lan = _escanear_lan(port, "/v1/chat/completions")
     if lan:
         _save_url_cache(cache_name, lan, "lan")
         return lan, f"encontrada en LAN: {lan}"
-    return url_cfg, f"no hay {etiqueta} en localhost ni en la LAN visible"
+    return url_cfg, f"no hay {etiqueta} en localhost, host WSL ni LAN visible"
 
 
 def resolver_jan_url(policy: dict) -> tuple[str, str]:

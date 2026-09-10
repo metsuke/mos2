@@ -26,6 +26,36 @@ def _print_detect(items: list, titulo: str | None = None):
         motivo = d.get("motivo") or "sin detalle"
         print()
         print(f"{nombre} ({tipo}) está {estado}. {motivo}")
+        if d.get("url"):
+            print(f"URL: {d['url']}")
+
+
+def _ofrecer_destino(items: list):
+    pol = ia_router.load_policy()
+    for d in items:
+        pid = d.get("id")
+        url = d.get("url") or ""
+        if pid not in ("jan", "gpt4all"):
+            continue
+        if not d.get("disponible") or not url:
+            continue
+        if "127.0.0.1" in url:
+            continue
+        actual = pol.get("jan_url") if pid == "jan" else pol.get("gpt4all_url")
+        if actual and url.rstrip("/") in (actual or ""):
+            continue
+        print()
+        print(f"Se ha encontrado {pid} en {url}")
+        print("¿Guardar esta URL en la política de este usuario? [s/N]")
+        try:
+            resp = input("> ").strip().lower()
+        except EOFError:
+            return
+        if resp in ("s", "si", "sí", "y", "yes"):
+            ok, msg = ia_router.set_destino(pid, url)
+            print(msg)
+        else:
+            print("No se ha guardado.")
 
 
 def _print_share(items: list, titulo: str):
@@ -99,11 +129,15 @@ def execute(args):
         if st.get("motivo"):
             print(f"Motivo de política: {st['motivo']}")
         print()
-        _print_detect(st.get("disponibles") or ia_router.detectar())
+        items = st.get("disponibles") or ia_router.detectar()
+        _print_detect(items)
+        _ofrecer_destino(items)
         return
 
     if args[0] in ("detectar", "detect"):
-        _print_detect(ia_router.detectar(), "Detección de proveedores")
+        items = ia_router.detectar()
+        _print_detect(items, "Detección de proveedores")
+        _ofrecer_destino(items)
         return
 
     if args[0] == "share":
