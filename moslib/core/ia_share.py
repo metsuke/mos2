@@ -15,6 +15,7 @@ from urllib.request import Request, urlopen
 
 JAN_PORT = 1337
 GPT4ALL_PORT = 4891
+PUENTE_PORT = 17337
 PUERTOS = (("jan", JAN_PORT), ("gpt4all", GPT4ALL_PORT))
 
 
@@ -27,6 +28,20 @@ def _perfil() -> str:
     if plat.startswith("linux"):
         return "linux/native"
     return plat
+
+
+def _run(cmd: list[str], stdin_tty: bool = False) -> tuple[bool, str]:
+    try:
+        r = subprocess.run(
+            cmd,
+            capture_output=not stdin_tty,
+            text=True,
+            timeout=120,
+        )
+    except Exception as exc:
+        return False, str(exc)
+    out = ((r.stdout or "") + (r.stderr or "")).strip()
+    return r.returncode == 0, out
 
 
 def _local_ipv4() -> list[str]:
@@ -70,6 +85,55 @@ def _http(url: str) -> tuple[bool, str]:
         return False, str(exc)
 
 
+def _netstat_puerto(puerto: int) -> str:
+    if sys.platform.startswith("win"):
+        ok, out = _run(["netstat", "-an"])
+    else:
+        ok, out = _run(["netstat", "-an"])
+        if not ok:
+            ok, out = _run(["ss", "-ltn"])
+    if not ok:
+        return "no se pudo leer netstat/ss"
+    lineas = [
+        ln.strip()
+        for ln in (out or "").splitlines()
+        if str(puerto) in ln and ("LISTEN" in ln.upper() or "LISTENING" in ln.upper())
+    ]
+    if not lineas:
+        return f"nadie en LISTEN en {puerto}"
+    texto = " | ".join(lineas[:4])
+    solo_local = any("127.0.0.1:" + str(puerto) in ln or "[::1]:" in ln for ln in lineas)
+    todas_local = all(
+        ("127.0.0.1" in ln or "[::1]" in ln) and "0.0.0.0" not in ln
+        for ln in lineas
+    )
+    if solo_local and todas_local:
+        return f"LISTEN solo en localhost: {texto}. Jan no es visible en la LAN. Usa puente o bind 0.0.0.0."
+    if "0.0.0.0:" + str(puerto) in texto or ":::" in texto:
+        return f"LISTEN en todas las interfaces: {texto}"
+    return texto
+
+
+def _perfil_firewall_windows() -> str:
+    ok, out = _run(
+        [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "Get-NetConnectionProfile | Select-Object -ExpandProperty NetworkCategory",
+        ]
+    )
+    if not ok or not out.strip():
+        return "no se pudo leer el perfil de red"
+    cats = [ln.strip() for ln in out.splitlines() if ln.strip()]
+    if any(c.lower() == "public" for c in cats):
+        return (
+            "perfil de red Public. La regla de publicar es Private y no aplica. "
+            "En Configuración > Red, pon esta red como Privada. " + " ".join(cats)
+        )
+    return "perfil de red: " + " ".join(cats)
+
+
 def _guia(perfil: str, puerto: int) -> str:
     if perfil == "macos/native":
         return (
@@ -79,7 +143,8 @@ def _guia(perfil: str, puerto: int) -> str:
     if perfil.startswith("windows"):
         return (
             f"En Windows el servidor debe escuchar en 0.0.0.0:{puerto}. "
-            f"Regla de entrada TCP {puerto} solo en perfil privado."
+            f"Regla de entrada TCP {puerto} solo en perfil privado. "
+            f"Plan B: iarouter puente on y abrir TCP {PUENTE_PORT}."
         )
     return (
         f"El servidor debe escuchar en 0.0.0.0:{puerto}. "
@@ -95,6 +160,8 @@ def diagnostico() -> list[dict]:
 
     ok_j, mot_j = _escucha("127.0.0.1", JAN_PORT)
     items.append({"id": "jan-local", "ok": ok_j, "motivo": mot_j})
+    items.append({"id": "jan-listen", "ok": ok_j, "motivo": _netstat_puerto(JAN_PORT)})
+
     if ip_lan:
         ok_jl, mot_jl = _escucha(ip_lan, JAN_PORT)
         items.append({"id": "jan-lan", "ok": ok_jl, "motivo": mot_jl})
@@ -105,11 +172,23 @@ def diagnostico() -> list[dict]:
 
     ok_g, mot_g = _escucha("127.0.0.1", GPT4ALL_PORT)
     items.append({"id": "gpt4all-local", "ok": ok_g, "motivo": mot_g})
+    items.append({"id": "gpt4all-listen", "ok": ok_g, "motivo": _netstat_puerto(GPT4ALL_PORT)})
     if ip_lan:
         ok_gl, mot_gl = _escucha(ip_lan, GPT4ALL_PORT)
         items.append({"id": "gpt4all-lan", "ok": ok_gl, "motivo": mot_gl})
     else:
         items.append({"id": "gpt4all-lan", "ok": False, "motivo": "sin IPv4 privada"})
+
+    ok_p, mot_p = _escucha("127.0.0.1", PUENTE_PORT)
+    items.append({"id": "puente-local", "ok": ok_p, "motivo": mot_p + ". iarouter puente on si está parado."})
+    items.append({"id": "puente-listen", "ok": ok_p, "motivo": _netstat_puerto(PUENTE_PORT)})
+    if ip_lan:
+        ok_pl, mot_pl = _escucha(ip_lan, PUENTE_PORT)
+        items.append({"id": "puente-lan", "ok": ok_pl, "motivo": mot_pl})
+
+    if perfil.startswith("windows"):
+        fw = _perfil_firewall_windows()
+        items.append({"id": "firewall-perfil", "ok": "Public" not in fw, "motivo": fw})
 
     items.append(
         {
@@ -123,20 +202,6 @@ def diagnostico() -> list[dict]:
     if not any(i["id"] == "gpt4all-lan" and i["ok"] for i in items):
         items.append({"id": "guia-gpt4all", "ok": False, "motivo": _guia(perfil, GPT4ALL_PORT)})
     return items
-
-
-def _run(cmd: list[str], stdin_tty: bool = False) -> tuple[bool, str]:
-    try:
-        r = subprocess.run(
-            cmd,
-            capture_output=not stdin_tty,
-            text=True,
-            timeout=120,
-        )
-    except Exception as exc:
-        return False, str(exc)
-    out = ((r.stdout or "") + (r.stderr or "")).strip()
-    return r.returncode == 0, out[:400]
 
 
 def _ps_manual(puerto: int) -> str:
@@ -210,7 +275,8 @@ def _publicar_macos(puerto: int) -> tuple[bool, str]:
 def publicar() -> list[dict]:
     perfil = _perfil()
     items = list(diagnostico())
-    for nombre, puerto in PUERTOS:
+    destinos = list(PUERTOS) + (("puente", PUENTE_PORT),)
+    for nombre, puerto in destinos:
         if perfil.startswith("windows"):
             ok, detalle = _publicar_windows(puerto)
         elif perfil.startswith("linux"):

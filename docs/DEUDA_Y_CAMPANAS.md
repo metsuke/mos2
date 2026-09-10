@@ -27,6 +27,8 @@ No perder lo aplazado. No es spec. Mandan SEC, SSS, A11Y e INCENTIVOS.
 | Suite de desarrollo (aceptar/commit/handoff) | 08 (después de esta mini) |
 | Comillas en la línea de MOSh | Calidad / 08 |
 | Formatos de salida en pantalla | Campaña propia |
+| Documento de reglas éticas de enfrentamiento cibernético (defensa si hay ataque directo; no ofensiva) | Campaña de seguridad futura |
+| Inventario de red ofensivo / laboratorio defensivo | Tras ese documento |
 
 Hasta que exista `devtest` + `update <rama>`, el código de prueba entre máquinas se publica por **main** y se trae con `update`.
 
