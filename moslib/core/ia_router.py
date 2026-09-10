@@ -2,13 +2,15 @@
 moslib.core.ia_router
 Fachada de modelos. Política en disco; la IA no la escribe.
 Claves: moslib.core.ia_keys.
-Jan/GPT4All: localhost, resolv/WSL, pasarela, cache, /24, puente 17337.
+Jan/GPT4All: localhost, resolv/WSL, ipconfig.exe, pasarela, cache, /24, puente 17337.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import socket
+import subprocess
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
@@ -290,6 +292,36 @@ def _hosts_lan() -> list[str]:
     return hosts
 
 
+def _ips_windows_desde_wsl() -> list[str]:
+    candidatos = [
+        Path("/mnt/c/Windows/System32/ipconfig.exe"),
+        Path("/mnt/c/WINDOWS/system32/ipconfig.exe"),
+    ]
+    exe = next((p for p in candidatos if p.is_file()), None)
+    if exe is None:
+        return []
+    try:
+        r = subprocess.run(
+            [str(exe)],
+            capture_output=True,
+            text=True,
+            timeout=8,
+        )
+    except Exception:
+        return []
+    texto = (r.stdout or "") + (r.stderr or "")
+    ips = []
+    for m in re.finditer(r"\b(\d{1,3}(?:\.\d{1,3}){3})\b", texto):
+        ip = m.group(1)
+        if _es_privada(ip) and not ip.endswith(".255") and not ip.endswith(".0"):
+            ips.append(ip)
+    vistos = []
+    for ip in ips:
+        if ip not in vistos:
+            vistos.append(ip)
+    return vistos
+
+
 def _hosts_extra() -> list[tuple[str, str]]:
     extra = []
     try:
@@ -297,7 +329,7 @@ def _hosts_extra() -> list[tuple[str, str]]:
             if line.strip().startswith("nameserver"):
                 ip = line.split()[1]
                 if ip and not ip.startswith("127."):
-                    extra.append((ip, "resolv.conf / WSL host"))
+                    extra.append((ip, "resolv.conf / WSL DNS"))
     except OSError:
         pass
     try:
@@ -310,6 +342,8 @@ def _hosts_extra() -> list[tuple[str, str]]:
             extra.append((".".join(partes[:3] + ["1"]), "posible pasarela .1"))
     except Exception:
         pass
+    for ip in _ips_windows_desde_wsl():
+        extra.append((ip, "ipconfig.exe (Windows en este host)"))
     vistos = set()
     out = []
     for ip, origen in extra:
