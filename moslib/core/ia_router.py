@@ -2,7 +2,7 @@
 moslib.core.ia_router
 Fachada de modelos. Política en disco; la IA no la escribe.
 Claves: moslib.core.ia_keys.
-Jan/GPT4All: localhost, resolv/WSL, pasarela, cache, /24 privada.
+Jan/GPT4All: localhost, resolv/WSL, pasarela, cache, /24, puente 17337.
 """
 
 from __future__ import annotations
@@ -38,6 +38,7 @@ PROVIDERS = ("jan", "gpt4all", "grok", "openrouter")
 PLACEHOLDER_MODELS = {"", "auto", "jan", "gpt4all"}
 JAN_PORT = 1337
 GPT4ALL_PORT = 4891
+PUENTE_PORT = 17337
 CACHE_TTL_SEC = 600
 
 
@@ -193,7 +194,7 @@ def _listar_modelos(chat_url: str, provider: str) -> tuple[list[str], str]:
 
 def _probe_http(url: str) -> tuple[bool, str]:
     root = _root_v1(url)
-    candidatos = [root, root + "/models", root + "/chat/completions"]
+    candidatos = [root, root + "/models", root + "/chat/completions", root + "/health"]
     visto = []
     for target in candidatos:
         req = Request(target, method="GET")
@@ -318,7 +319,7 @@ def _hosts_extra() -> list[tuple[str, str]]:
     return out
 
 
-def _puerto_abierto(ip: str, port: int, timeout: float = 0.12) -> bool:
+def _puerto_abierto(ip: str, port: int, timeout: float = 0.2) -> bool:
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(timeout)
@@ -337,34 +338,37 @@ def _probar_host(ip: str, port: int) -> str | None:
     return url if ok else None
 
 
-def _escanear_lan(port: int, ruta: str) -> str | None:
-    encontrados: list[str] = []
+def _escanear_lan(puertos: list[int]) -> tuple[str, int] | None:
+    encontrados: list[tuple[str, int]] = []
     lock = threading.Lock()
 
-    def prueba(ip: str) -> None:
-        if not _puerto_abierto(ip, port):
-            return
-        url = f"http://{ip}:{port}{ruta}"
-        ok, _ = _probe_http(url)
-        if ok:
+    def prueba(ip: str, port: int) -> None:
+        url = _probar_host(ip, port)
+        if url:
             with lock:
-                encontrados.append(url)
+                encontrados.append((url, port))
 
     hilos = []
     for ip in _hosts_lan():
-        t = threading.Thread(target=prueba, args=(ip,), daemon=True)
-        hilos.append(t)
-        t.start()
-        if len(hilos) >= 64:
-            for h in hilos:
-                h.join()
-            hilos = []
+        for port in puertos:
+            t = threading.Thread(target=prueba, args=(ip, port), daemon=True)
+            hilos.append(t)
+            t.start()
+            if len(hilos) >= 64:
+                for h in hilos:
+                    h.join()
+                hilos = []
     for h in hilos:
         h.join()
     return encontrados[0] if encontrados else None
 
 
-def _resolver_local(url_cfg: str, cache_name: str, port: int, etiqueta: str) -> tuple[str, str]:
+def _resolver_local(
+    url_cfg: str,
+    cache_name: str,
+    puertos: list[int],
+    etiqueta: str,
+) -> tuple[str, str]:
     ok, motivo = _probe_http(url_cfg)
     if ok:
         return url_cfg, f"local o configurada: {motivo}"
@@ -374,22 +378,24 @@ def _resolver_local(url_cfg: str, cache_name: str, port: int, etiqueta: str) -> 
         if ok:
             return cache["url"], f"cache: {motivo}"
     for ip, origen in _hosts_extra():
-        url = _probar_host(ip, port)
-        if url:
-            _save_url_cache(cache_name, url, origen)
-            return url, f"{origen}: {url}"
-    lan = _escanear_lan(port, "/v1/chat/completions")
-    if lan:
-        _save_url_cache(cache_name, lan, "lan")
-        return lan, f"encontrada en LAN: {lan}"
-    return url_cfg, f"no hay {etiqueta} en localhost, host WSL ni LAN visible"
+        for port in puertos:
+            url = _probar_host(ip, port)
+            if url:
+                _save_url_cache(cache_name, url, origen)
+                return url, f"{origen} puerto {port}: {url}"
+    hallado = _escanear_lan(puertos)
+    if hallado:
+        url, port = hallado
+        _save_url_cache(cache_name, url, "lan")
+        return url, f"LAN puerto {port}: {url}"
+    return url_cfg, f"no hay {etiqueta} en localhost, host WSL, puente ni LAN visible"
 
 
 def resolver_jan_url(policy: dict) -> tuple[str, str]:
     return _resolver_local(
         policy.get("jan_url") or DEFAULT_POLICY["jan_url"],
         "ia_jan_cache.json",
-        JAN_PORT,
+        [JAN_PORT, PUENTE_PORT],
         "Jan",
     )
 
@@ -398,7 +404,7 @@ def resolver_gpt4all_url(policy: dict) -> tuple[str, str]:
     return _resolver_local(
         policy.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"],
         "ia_gpt4all_cache.json",
-        GPT4ALL_PORT,
+        [GPT4ALL_PORT, PUENTE_PORT],
         "GPT4All",
     )
 
