@@ -125,38 +125,78 @@ def diagnostico() -> list[dict]:
     return items
 
 
-def _run(cmd: list[str]) -> tuple[bool, str]:
+def _run(cmd: list[str], stdin_tty: bool = False) -> tuple[bool, str]:
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+        r = subprocess.run(
+            cmd,
+            capture_output=not stdin_tty,
+            text=True,
+            timeout=120,
+        )
     except Exception as exc:
         return False, str(exc)
-    out = (r.stdout or "") + (r.stderr or "")
-    return r.returncode == 0, out.strip()[:400]
+    out = ((r.stdout or "") + (r.stderr or "")).strip()
+    return r.returncode == 0, out[:400]
+
+
+def _ps_manual(puerto: int) -> str:
+    return (
+        "New-NetFirewallRule -DisplayName "
+        f"'MetsuOS-LAN-{puerto}' -Direction Inbound -Protocol TCP "
+        f"-LocalPort {puerto} -Action Allow -Profile Private"
+    )
 
 
 def _publicar_windows(puerto: int) -> tuple[bool, str]:
     nombre = f"MetsuOS-LAN-{puerto}"
-    return _run(
+    args = (
+        f"advfirewall firewall add rule name={nombre} dir=in action=allow "
+        f"protocol=TCP localport={puerto} profile=private"
+    )
+    print(f"Windows: se pedirá permiso UAC para el puerto {puerto}.")
+    ok, detalle = _run(
         [
-            "netsh",
-            "advfirewall",
-            "firewall",
-            "add",
-            "rule",
-            f"name={nombre}",
-            "dir=in",
-            "action=allow",
-            "protocol=TCP",
-            f"localport={str(puerto)}",
-            "profile=private",
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "Start-Process -FilePath netsh -ArgumentList "
+            f"'{args}' -Verb RunAs -Wait",
         ]
+    )
+    if ok:
+        return True, detalle or f"regla {nombre} (UAC). Si aceptaste el diálogo, está creada."
+    manual = _ps_manual(puerto)
+    return (
+        False,
+        "No se pudo elevar. Pega esto en PowerShell como administrador:\n" + manual,
     )
 
 
 def _publicar_linux(puerto: int) -> tuple[bool, str]:
     if shutil.which("ufw"):
-        return _run(["ufw", "allow", "from", "10.0.0.0/8", "to", "any", "port", str(puerto)])
-    return False, "sin ufw; abre el puerto a mano en la LAN"
+        print(f"sudo ufw: se pedirá la clave para el puerto {puerto}.")
+        return _run(
+            ["sudo", "ufw", "allow", "from", "10.0.0.0/8", "to", "any", "port", str(puerto)],
+            stdin_tty=True,
+        )
+    print(f"sudo iptables: se pedirá la clave para el puerto {puerto}.")
+    return _run(
+        [
+            "sudo",
+            "iptables",
+            "-A",
+            "INPUT",
+            "-p",
+            "tcp",
+            "--dport",
+            str(puerto),
+            "-s",
+            "10.0.0.0/8",
+            "-j",
+            "ACCEPT",
+        ],
+        stdin_tty=True,
+    )
 
 
 def _publicar_macos(puerto: int) -> tuple[bool, str]:
