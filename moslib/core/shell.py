@@ -13,6 +13,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from moslib.core.cmd_loader import CommandManager
+from moslib.core.entorno import descripcion, etiqueta
 from moslib.core.tasks import start_worker, stop_worker
 from moslib.core.user import (
     get_username,
@@ -26,6 +27,7 @@ class MOSh:
     def __init__(self):
         self.username = get_username()
         self.mos_dir = ensure_user_space(self.username)
+        self.env_tag = etiqueta()
 
         system_commands_dir = current_dir.parent / "commands"
         user_commands_dir = self.mos_dir / "commands"
@@ -39,7 +41,7 @@ class MOSh:
         )
 
         self.running = True
-        self.prompt = f"mosh/{self.username}@metsuos:~$ "
+        self.prompt = f"mosh/{self.env_tag}/{self.username}@metsuos:~$ "
 
     def _run_startup_tests(self) -> bool:
         print("[MetsuOS] Ejecutando tests de arranque (unitarios + seguridad)...")
@@ -77,6 +79,7 @@ class MOSh:
         start_worker(30.0)
         print("Iniciando MOSh para MetsuOS...")
         print(f"Usuario: {self.username}")
+        print(f"Entorno: {self.env_tag} ({descripcion(self.env_tag)})")
         print(f"Espacio personal: {self.mos_dir}")
         print("Worker de tareas: activo mientras dure esta sesión.")
         print("Usa 'exit' para salir, 'help' para ayuda, 'docs' para documentación, 'a11y' para accesibilidad")
