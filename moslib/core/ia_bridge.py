@@ -1,38 +1,68 @@
 """
 moslib.core.ia_bridge
-Endpoint HTTP de este MetsuOS para la LAN.
-No es P2P. Off hasta arrancar. Proxy a Jan/GPT4All locales.
+Proxy LAN -> Jan/GPT4All en localhost.
+Nunca reenvía a la IP de esta máquina ni al puerto 17337.
 """
 
 from __future__ import annotations
 
 import json
+import socket
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
-from moslib.core.ia_router import DEFAULT_POLICY, load_policy
-
 PUERTO = 17337
+JAN_LOCAL = "http://127.0.0.1:1337/v1"
+GPT4ALL_LOCAL = "http://127.0.0.1:4891/v1"
 _server = None
 _thread = None
 
 
-def _destino() -> str:
-    p = load_policy()
-    if p.get("provider") == "gpt4all":
-        return p.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"]
-    return p.get("jan_url") or DEFAULT_POLICY["jan_url"]
+def _tcp(host: str, port: int) -> bool:
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.4)
+        ok = s.connect_ex((host, port)) == 0
+        s.close()
+        return ok
+    except Exception:
+        return False
 
 
-def _base() -> str:
-    url = _destino().rstrip("/")
-    if url.endswith("chat/completions"):
-        return url[: -len("/chat/completions")]
-    if url.endswith("/v1"):
-        return url
-    return url
+def _ips_propias() -> set[str]:
+    out = {"127.0.0.1", "0.0.0.0", "localhost"}
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("1.1.1.1", 80))
+        out.add(s.getsockname()[0])
+        s.close()
+    except Exception:
+        pass
+    return out
+
+
+def _es_bucle(url: str) -> bool:
+    try:
+        u = urlparse(url)
+        host = (u.hostname or "").lower()
+        port = u.port or (443 if u.scheme == "https" else 80)
+    except Exception:
+        return False
+    if port == PUERTO:
+        return True
+    return host in _ips_propias() and port == PUERTO
+
+
+def _backend() -> str:
+    """Solo localhost. Si Jan no está, GPT4All. Nunca la política LAN."""
+    if _tcp("127.0.0.1", 1337):
+        return JAN_LOCAL
+    if _tcp("127.0.0.1", 4891):
+        return GPT4ALL_LOCAL
+    return JAN_LOCAL
 
 
 class _Handler(BaseHTTPRequestHandler):
@@ -48,10 +78,13 @@ class _Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.startswith("/v1/models"):
-            self._proxy("GET", _base() + "/models", b"")
+            self._proxy("GET", _backend() + "/models", b"")
             return
         if self.path in ("/", "/health"):
-            self._send(200, json.dumps({"ok": True, "bridge": True}).encode("utf-8"))
+            self._send(
+                200,
+                json.dumps({"ok": True, "bridge": True, "backend": _backend()}).encode("utf-8"),
+            )
             return
         self._send(404, b'{"error":"not found"}')
 
@@ -62,15 +95,18 @@ class _Handler(BaseHTTPRequestHandler):
             self._send(403, b'{"error":".mos no permitido"}')
             return
         if self.path.startswith("/v1/chat/completions"):
-            self._proxy("POST", _base() + "/chat/completions", raw)
+            self._proxy("POST", _backend() + "/chat/completions", raw)
             return
         self._send(404, b'{"error":"not found"}')
 
     def _proxy(self, method: str, url: str, body: bytes):
+        if _es_bucle(url):
+            self._send(508, b'{"error":"rechazado: el puente no puede llamarse a si mismo"}')
+            return
         headers = {"Content-Type": "application/json"}
         req = Request(url, data=body if method == "POST" else None, method=method, headers=headers)
         try:
-            with urlopen(req, timeout=60) as resp:
+            with urlopen(req, timeout=120) as resp:
                 data = resp.read()
                 self._send(resp.status, data)
         except HTTPError as exc:
@@ -83,21 +119,12 @@ class _Handler(BaseHTTPRequestHandler):
 
 def estado() -> dict:
     vivo = _server is not None
-    ips = []
-    try:
-        import socket
-
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("1.1.1.1", 80))
-        ips.append(s.getsockname()[0])
-        s.close()
-    except Exception:
-        pass
+    ips = [ip for ip in _ips_propias() if ip not in {"127.0.0.1", "0.0.0.0", "localhost"}]
     return {
         "activo": vivo,
         "puerto": PUERTO,
         "urls": [f"http://{ip}:{PUERTO}/v1/chat/completions" for ip in ips],
-        "destino": _destino(),
+        "destino": _backend(),
     }
 
 
@@ -114,7 +141,7 @@ def arrancar() -> tuple[bool, str]:
     _thread.start()
     st = estado()
     urls = " ".join(st["urls"]) or f"http://127.0.0.1:{PUERTO}/v1"
-    return True, f"Puente activo. Otro MetsuOS puede usar: {urls}"
+    return True, f"Puente activo hacia {_backend()}. Otro MetsuOS: {urls}"
 
 
 def parar() -> tuple[bool, str]:

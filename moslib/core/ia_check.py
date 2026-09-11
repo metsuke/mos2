@@ -3,6 +3,7 @@ moslib.core.ia_check
 Diagnóstico de compartición.
 Modo corto: conclusión + una acción.
 Modo detalle: lo mismo y las pruebas que lo justifican.
+Nunca ofrece la IP de esta máquina como destino a guardar.
 """
 
 from __future__ import annotations
@@ -151,6 +152,7 @@ def _puente_sesion() -> bool:
 
 def _hechos() -> dict:
     lan = _ipv4_propia()
+    propias = set(lan) | {"127.0.0.1"}
     ip_lan = lan[0] if lan else None
     listen = {n: _listen(p) for n, p in SERVICIOS}
     local = {n: _tcp("127.0.0.1", p) for n, p in SERVICIOS}
@@ -161,18 +163,19 @@ def _hechos() -> dict:
     }
     urls = []
     pruebas = []
-    destinos = [("127.0.0.1", "localhost")]
-    for ip in lan:
-        destinos.append((ip, "propia"))
+    destinos = []
+    if not (local["jan"] or local["gpt4all"] or local["puente"]):
+        destinos.append(("127.0.0.1", "localhost"))
     for ip in _ips_windows():
-        destinos.append((ip, "windows-host"))
+        if ip not in propias:
+            destinos.append((ip, "windows-host"))
     resolv = Path("/etc/resolv.conf")
     if resolv.is_file():
         try:
             for line in resolv.read_text(encoding="utf-8").splitlines():
                 if line.strip().startswith("nameserver"):
                     ip = line.split()[1]
-                    if ip and not ip.startswith("127."):
+                    if ip and not ip.startswith("127.") and ip not in propias:
                         destinos.append((ip, "resolv"))
         except OSError:
             pass
@@ -189,7 +192,7 @@ def _hechos() -> dict:
             ok, det = _http(f"http://{ip}:{p}{ruta}")
             chat = f"http://{ip}:{p}/v1/chat/completions"
             pruebas.append(_item(f"prueba-{n}-{origen}-{ip}", ok, det, chat if ok else ""))
-            if ok and ip != "127.0.0.1":
+            if ok and ip not in propias:
                 urls.append(chat)
     return {
         "wsl": _es_wsl(),
@@ -210,7 +213,7 @@ def _decidir(h: dict) -> tuple[str, str, str]:
     urls = h["urls"]
     if urls:
         return (
-            "Esta instancia ya ve una compartición en la red.",
+            "Esta instancia ya ve una compartición AJENA en la red (no es esta máquina).",
             "Cuando pregunte si guardar la URL, responde s. "
             "Después escribe: iarouter usar jan   y cuando esté activo: iarouter preguntar hola",
             urls[0],
@@ -226,6 +229,7 @@ def _decidir(h: dict) -> tuple[str, str, str]:
                 "3) Tipo de perfil de red: Privado (no Público). "
                 "4) Vuelve a MOSh y escribe: iarouter publicar   (acepta el UAC). "
                 "5) En la otra instancia (WSL o Mac): iarouter check. "
+                "No guardes aquí la URL de tu propia IP. Esta máquina usa 127.0.0.1. "
                 "Si no encuentras la opción: PowerShell como administrador: "
                 "Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi' -NetworkCategory Private "
                 "(cambia Wi-Fi por el alias que salga en Get-NetConnectionProfile).",
@@ -235,7 +239,8 @@ def _decidir(h: dict) -> tuple[str, str, str]:
             return (
                 "Jan o GPT4All solo escuchan en 127.0.0.1. Otra máquina o WSL no pueden usar ese puerto.",
                 "En ESTA sesión de MOSh escribe: iarouter puente on   "
-                "No cierres este MOSh. Luego: iarouter publicar   y en la otra instancia: iarouter check",
+                "No cierres este MOSh. Luego: iarouter publicar   y en la otra instancia: iarouter check. "
+                "No cambies jan_url de esta máquina a su IP LAN.",
                 "",
             )
         if h["puente_sesion"] and not h["lan_ok"]["puente"]:
@@ -254,10 +259,10 @@ def _decidir(h: dict) -> tuple[str, str, str]:
                 "",
             )
         return (
-            "Hay proceso local y aún no está expuesto en la LAN.",
-            "En ESTA sesión: iarouter publicar    Red en perfil Privado. "
-            "En macOS no hay publicar automático: permite Jan en Firewall y bind 0.0.0.0. "
-            "En Linux: el mismo publicar pedirá sudo. Luego en la otra instancia: iarouter check",
+            "Hay proceso local. Esta instancia debe seguir usando 127.0.0.1, no su IP LAN.",
+            "Si el puente no está: iarouter puente on. Luego: iarouter publicar. "
+            "En WSL o Mac: iarouter check. "
+            "Si alguna vez guardaste http://TU-IP:17337 en esta Windows, escribe: iarouter usar jan",
             "",
         )
 
@@ -280,12 +285,11 @@ def _decidir(h: dict) -> tuple[str, str, str]:
 def check(detalle: bool = False) -> list[dict]:
     h = _hechos()
     conclusion, accion, url = _decidir(h)
+    ok_conc = bool(url) or ("Hay proceso local" in conclusion)
     out = [
-        _item("conclusion", bool(url) or False if "ya ve" in conclusion else False, conclusion, url),
+        _item("conclusion", ok_conc, conclusion, url),
         _item("accion", True, accion, url),
     ]
-    if "ya ve" in conclusion:
-        out[0]["ok"] = True
     if not detalle:
         return out
     out.append(_item("detalle-wsl", h["wsl"], f"wsl={h['wsl']} ip_lan={h['ip_lan']} perfil={h['perfil'] or '-'}"))
