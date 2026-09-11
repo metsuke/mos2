@@ -1,7 +1,7 @@
 """
 moslib.core.ia_check
 Batería ampliable de comprobaciones de conectividad IA.
-Añadir un caso = añadir un dict a CASES o un origen a ORIGENES.
+Añadir un caso = añadir un origen a ORIGENES o un servicio a SERVICIOS.
 """
 
 from __future__ import annotations
@@ -186,7 +186,9 @@ def origen_env() -> list[tuple[str, str]]:
         val = os.environ.get(var)
         if not val:
             continue
-        m = re.search(r"https?://([^/:]+)", val) or re.match(r"^(\d{1,3}(?:\.\d{1,3}){3})$", val)
+        m = re.search(r"https?://([^/:]+)", val) or re.match(
+            r"^(\d{1,3}(?:\.\d{1,3}){3})$", val
+        )
         if m:
             out.append((m.group(1), f"env-{var}"))
     return out
@@ -203,8 +205,6 @@ ORIGENES = [
     origen_env,
 ]
 
-
-# servicio, puerto, rutas HTTP a probar, tipo de URL de chat si responde
 SERVICIOS = [
     {
         "id": "jan",
@@ -293,8 +293,8 @@ def check() -> list[dict]:
 
     halladas: list[str] = []
     for ip, origen in destinos:
-        if ip == "0.0.0.0" or origen.startswith("error-"):
-            items.append(_item(f"origen-{origen}", False, ip))
+        if ip == "0.0.0.0" or str(origen).startswith("error-"):
+            items.append(_item(f"origen-{origen}", False, str(ip)))
             continue
         for svc in SERVICIOS:
             ident = f"{svc['id']}-{origen}-{ip}-{svc['puerto']}"
@@ -337,4 +337,4 @@ def check() -> list[dict]:
                 "Ningún Jan, GPT4All ni puente respondió en los destinos conocidos.",
             )
         )
-    return items 
+    return items

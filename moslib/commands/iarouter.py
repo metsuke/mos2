@@ -1,10 +1,10 @@
 """
-iarouter: estado, detección, proveedor, modelos, claves, share, publicar, puente, preguntar.
+iarouter: estado, detección, check, proveedor, modelos, claves, share, publicar, puente, preguntar.
 """
 
 import getpass
 
-from moslib.core import ia_bridge, ia_keys, ia_router, ia_share
+from moslib.core import ia_bridge, ia_check, ia_keys, ia_router, ia_share
 
 
 def _print_detect(items: list, titulo: str | None = None):
@@ -30,22 +30,41 @@ def _print_detect(items: list, titulo: str | None = None):
             print(f"URL: {d['url']}")
 
 
+def _print_lista(items: list, titulo: str):
+    print(titulo)
+    print()
+    print("Comprobación                              ¿OK?")
+    print("----------------------------------------- ----")
+    for d in items:
+        marca = "SI" if d.get("ok") or d.get("disponible") else "NO"
+        print(f"{str(d.get('id', '-'))[:41]:41} {marca}")
+    print()
+    print("Detalle")
+    print("-------")
+    for d in items:
+        estado = "correcto" if d.get("ok") or d.get("disponible") else "no correcto"
+        print()
+        print(f"{d.get('id')}: {estado}. {d.get('motivo', '')}")
+        if d.get("url"):
+            print(f"URL: {d['url']}")
+
+
 def _ofrecer_destino(items: list):
     pol = ia_router.load_policy()
+    vistos = set()
     for d in items:
-        pid = d.get("id")
         url = d.get("url") or ""
-        if pid not in ("jan", "gpt4all"):
+        if not url or "127.0.0.1" in url:
             continue
-        if not d.get("disponible") or not url:
+        if url in vistos:
             continue
-        if "127.0.0.1" in url:
-            continue
+        vistos.add(url)
+        pid = "gpt4all" if "4891" in url else "jan"
         actual = pol.get("jan_url") if pid == "jan" else pol.get("gpt4all_url")
         if actual and url.rstrip("/") in (actual or ""):
             continue
         print()
-        print(f"Se ha encontrado {pid} en {url}")
+        print(f"Se ha encontrado un destino en {url}")
         print("¿Guardar esta URL en la política de este usuario? [s/N]")
         try:
             resp = input("> ").strip().lower()
@@ -56,23 +75,6 @@ def _ofrecer_destino(items: list):
             print(msg)
         else:
             print("No se ha guardado.")
-
-
-def _print_share(items: list, titulo: str):
-    print(titulo)
-    print()
-    print("Comprobación     ¿OK?")
-    print("---------------- ----")
-    for d in items:
-        marca = "SI" if d.get("ok") else "NO"
-        print(f"{d.get('id', '-'):16} {marca}")
-    print()
-    print("Detalle")
-    print("-------")
-    for d in items:
-        estado = "correcto" if d.get("ok") else "no correcto"
-        print()
-        print(f"{d.get('id')}: {estado}. {d.get('motivo', '')}")
 
 
 def _print_puente():
@@ -140,12 +142,18 @@ def execute(args):
         _ofrecer_destino(items)
         return
 
+    if args[0] == "check":
+        items = ia_check.check()
+        _print_lista(items, "Check automático Jan / GPT4All / puente")
+        _ofrecer_destino(items)
+        return
+
     if args[0] == "share":
-        _print_share(ia_share.diagnostico(), "Share LAN")
+        _print_lista(ia_share.diagnostico(), "Share LAN")
         return
 
     if args[0] == "publicar":
-        _print_share(ia_share.publicar(), "Publicar (autorización explícita)")
+        _print_lista(ia_share.publicar(), "Publicar (autorización explícita)")
         return
 
     if args[0] == "puente":
@@ -230,6 +238,7 @@ def execute(args):
     print("  iarouter")
     print("  iarouter status")
     print("  iarouter detectar")
+    print("  iarouter check")
     print("  iarouter share")
     print("  iarouter publicar")
     print("  iarouter puente [on|off|status]")
@@ -242,6 +251,6 @@ def execute(args):
 
 def help():
     return (
-        "Uso: iarouter [status|detectar|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - "
+        "Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - "
         "Proveedor, LAN, puente, claves, modelos y petición explícita."
     )
