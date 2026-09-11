@@ -438,7 +438,7 @@ def resolver_gpt4all_url(policy: dict) -> tuple[str, str]:
     return _resolver_local(
         policy.get("gpt4all_url") or DEFAULT_POLICY["gpt4all_url"],
         "ia_gpt4all_cache.json",
-        [GPT4ALL_PORT, PUENTE_PORT],
+        [GPT4ALL_PORT],
         "GPT4All",
     )
 
