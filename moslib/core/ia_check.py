@@ -1,7 +1,6 @@
 """
 moslib.core.ia_check
-Batería ampliable de comprobaciones de conectividad IA.
-Añadir un caso = añadir un origen a ORIGENES o un servicio a SERVICIOS.
+Batería ampliable + conclusión y acción recomendada.
 """
 
 from __future__ import annotations
@@ -151,10 +150,8 @@ def origen_politica() -> list[tuple[str, str]]:
     for campo in ("jan_url", "gpt4all_url"):
         raw = str(p.get(campo) or "")
         m = re.search(r"https?://([^/:]+)", raw)
-        if m:
-            host = m.group(1)
-            if host not in ("localhost",):
-                out.append((host, f"politica-{campo}"))
+        if m and m.group(1) not in ("localhost",):
+            out.append((m.group(1), f"politica-{campo}"))
     return out
 
 
@@ -206,21 +203,9 @@ ORIGENES = [
 ]
 
 SERVICIOS = [
-    {
-        "id": "jan",
-        "puerto": JAN,
-        "rutas": ("/v1/models", "/v1", "/v1/chat/completions"),
-    },
-    {
-        "id": "gpt4all",
-        "puerto": GPT4ALL,
-        "rutas": ("/v1/models", "/v1", "/v1/chat/completions"),
-    },
-    {
-        "id": "puente",
-        "puerto": PUENTE,
-        "rutas": ("/health", "/v1/models", "/v1/chat/completions"),
-    },
+    {"id": "jan", "puerto": JAN, "rutas": ("/v1/models", "/v1", "/v1/chat/completions")},
+    {"id": "gpt4all", "puerto": GPT4ALL, "rutas": ("/v1/models", "/v1", "/v1/chat/completions")},
+    {"id": "puente", "puerto": PUENTE, "rutas": ("/health", "/v1/models", "/v1/chat/completions")},
 ]
 
 
@@ -233,108 +218,114 @@ def _destinos() -> list[tuple[str, str]]:
         except Exception as exc:
             pares = [("0.0.0.0", f"error-{fn.__name__}:{exc}")]
         for ip, origen in pares:
-            clave = (ip, origen)
-            if clave in vistos:
+            if (ip, origen) in vistos:
                 continue
-            vistos.add(clave)
+            vistos.add((ip, origen))
             out.append((ip, origen))
     return out
 
 
-def _caso_contexto() -> list[dict]:
-    wsl = Path("/mnt/c/Windows").is_dir()
-    items = [
-        _item("ctx-plataforma", True, f"sys.platform={sys.platform}"),
-        _item("ctx-wsl", wsl, "WSL con /mnt/c" if wsl else "no parece WSL"),
-        _item("ctx-hostname", True, socket.gethostname()),
-    ]
-    try:
-        from moslib.core.ia_router import load_policy
+def _sintesis(crudos: list[dict], wsl: bool) -> list[dict]:
+    ok_local_jan = any(
+        d.get("ok") and str(d.get("id", "")).startswith("jan-localhost") for d in crudos
+    )
+    ok_local_puente = any(
+        d.get("ok") and str(d.get("id", "")).startswith("puente-localhost") for d in crudos
+    )
+    urls = [d["url"] for d in crudos if d.get("ok") and d.get("url")]
+    urls_remotas = [u for u in urls if "127.0.0.1" not in u]
+    ok_win_desde_wsl = any(
+        d.get("ok") and "ipconfig-windows" in str(d.get("id", "")) for d in crudos
+    )
+    hay_ips_win = any("ipconfig-windows" in str(d.get("id", "")) for d in crudos)
 
-        p = load_policy()
-        items.append(
+    if urls_remotas:
+        return [
             _item(
-                "ctx-politica",
+                "conclusion",
                 True,
-                f"enabled={p.get('enabled')} provider={p.get('provider')} "
-                f"jan_url={p.get('jan_url')} gpt4all_url={p.get('gpt4all_url')}",
-            )
-        )
-    except Exception as exc:
-        items.append(_item("ctx-politica", False, str(exc)))
-    try:
-        from moslib.core import ia_bridge
-
-        st = ia_bridge.estado()
-        items.append(
+                "Hay un destino usable fuera de localhost: " + urls_remotas[0],
+                urls_remotas[0],
+            ),
             _item(
-                "ctx-puente-proceso",
-                bool(st.get("activo")),
-                f"activo={st.get('activo')} puerto={st.get('puerto')} destino={st.get('destino')}",
-            )
-        )
-    except Exception as exc:
-        items.append(_item("ctx-puente-proceso", False, str(exc)))
-    return items
+                "accion",
+                True,
+                "Acepta guardar la URL si lo pregunta. Luego: iarouter usar jan   y   iarouter preguntar hola",
+                urls_remotas[0],
+            ),
+        ]
+    if ok_local_jan or ok_local_puente:
+        return [
+            _item(
+                "conclusion",
+                True,
+                "Jan o el puente responden en esta máquina (localhost) y no en las otras IPs.",
+            ),
+            _item(
+                "accion",
+                False,
+                "En la instancia que comparte: iarouter puente on   y   iarouter publicar. "
+                "En Windows la red debe ser perfil Privado. Luego en esta instancia otra vez: iarouter check",
+            ),
+        ]
+    if wsl and hay_ips_win and not ok_win_desde_wsl:
+        return [
+            _item(
+                "conclusion",
+                False,
+                "Estás en WSL. Se vieron IPs de Windows y ninguna acepta 1337/4891/17337.",
+            ),
+            _item(
+                "accion",
+                False,
+                "En Git Bash de Windows (deja la sesión abierta): iarouter puente on. "
+                "Luego iarouter publicar (UAC). Red Privada. Vuelve aquí y: iarouter check",
+            ),
+        ]
+    return [
+        _item(
+            "conclusion",
+            False,
+            "Esta instancia no alcanza ningún Jan, GPT4All ni puente.",
+        ),
+        _item(
+            "accion",
+            False,
+            "Arranca Jan o GPT4All, o en la máquina que debe compartir: iarouter puente on. "
+            "Después: iarouter check",
+        ),
+    ]
 
 
 def check() -> list[dict]:
-    items = list(_caso_contexto())
+    wsl = Path("/mnt/c/Windows").is_dir()
+    crudos: list[dict] = []
     destinos = _destinos()
-    items.append(
-        _item(
-            "mapa-destinos",
-            bool(destinos),
-            "Destinos: " + ", ".join(f"{o}={i}" for i, o in destinos)
-            if destinos
-            else "sin destinos",
-        )
-    )
 
-    halladas: list[str] = []
     for ip, origen in destinos:
         if ip == "0.0.0.0" or str(origen).startswith("error-"):
-            items.append(_item(f"origen-{origen}", False, str(ip)))
+            crudos.append(_item(f"origen-{origen}", False, str(ip)))
             continue
         for svc in SERVICIOS:
             ident = f"{svc['id']}-{origen}-{ip}-{svc['puerto']}"
             if not _tcp(ip, svc["puerto"]):
-                items.append(_item(ident, False, f"TCP cerrado {ip}:{svc['puerto']}"))
+                crudos.append(_item(ident, False, f"TCP cerrado {ip}:{svc['puerto']}"))
                 continue
             ok_http = False
             detalle = ""
             for ruta in svc["rutas"]:
-                url = f"http://{ip}:{svc['puerto']}{ruta}"
-                ok, mot = _http(url)
+                ok, mot = _http(f"http://{ip}:{svc['puerto']}{ruta}")
                 if ok:
                     ok_http = True
                     detalle = mot
                     break
                 detalle = mot
             chat = f"http://{ip}:{svc['puerto']}/v1/chat/completions"
-            items.append(_item(ident, ok_http, detalle, chat if ok_http else ""))
-            if ok_http:
-                halladas.append(chat)
+            crudos.append(_item(ident, ok_http, detalle, chat if ok_http else ""))
 
-    if halladas:
-        unicas = []
-        for u in halladas:
-            if u not in unicas:
-                unicas.append(u)
-        items.append(
-            _item(
-                "resumen",
-                True,
-                "URLs utilizables: " + " ".join(unicas),
-                unicas[0],
-            )
-        )
-    else:
-        items.append(
-            _item(
-                "resumen",
-                False,
-                "Ningún Jan, GPT4All ni puente respondió en los destinos conocidos.",
-            )
-        )
-    return items
+    sintesis = _sintesis(crudos, wsl)
+    cabecera = [
+        _item("ctx-plataforma", True, f"sys.platform={sys.platform}"),
+        _item("ctx-wsl", wsl, "WSL" if wsl else "no WSL"),
+    ]
+    return sintesis + cabecera + crudos
