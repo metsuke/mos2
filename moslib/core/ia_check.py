@@ -1,37 +1,28 @@
 """
 moslib.core.ia_check
-Batería ampliable + conclusión y acción recomendada.
+Diagnóstico de compartición.
+Modo corto: conclusión + una acción.
+Modo detalle: lo mismo y las pruebas que lo justifican.
 """
 
 from __future__ import annotations
 
-import json
-import os
 import re
 import socket
 import subprocess
 import sys
 from pathlib import Path
-from urllib.error import URLError, HTTPError
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 JAN = 1337
 GPT4ALL = 4891
 PUENTE = 17337
+SERVICIOS = (("jan", JAN), ("gpt4all", GPT4ALL), ("puente", PUENTE))
 
 
-def _es_privada(ip: str) -> bool:
-    try:
-        p = [int(x) for x in ip.split(".")]
-    except ValueError:
-        return False
-    if p[0] == 10:
-        return True
-    if p[0] == 192 and p[1] == 168:
-        return True
-    if p[0] == 172 and 16 <= p[1] <= 31:
-        return True
-    return False
+def _item(ident: str, ok: bool, motivo: str, url: str = "") -> dict:
+    return {"id": ident, "ok": ok, "motivo": motivo, "url": url}
 
 
 def _tcp(ip: str, port: int, timeout: float = 0.6) -> bool:
@@ -49,27 +40,40 @@ def _http(url: str) -> tuple[bool, str]:
     req = Request(url, method="GET")
     try:
         with urlopen(req, timeout=3) as resp:
-            cuerpo = resp.read(160).decode("utf-8", errors="replace")
-        return True, f"HTTP OK {url} {cuerpo[:80]}"
+            return True, resp.read(80).decode("utf-8", errors="replace")
     except HTTPError as exc:
         if exc.code in (400, 401, 404, 405, 422):
-            return True, f"HTTP {exc.code} {url}"
-        return False, f"HTTP {exc.code} {url}"
-    except URLError as exc:
-        return False, f"no: {exc.reason} {url}"
+            return True, f"HTTP {exc.code}"
+        return False, f"HTTP {exc.code}"
     except Exception as exc:
-        return False, f"{exc} {url}"
+        return False, str(exc)
 
 
-def _item(ident: str, ok: bool, motivo: str, url: str = "") -> dict:
-    return {"id": ident, "ok": ok, "motivo": motivo, "url": url}
+def _es_privada(ip: str) -> bool:
+    try:
+        p = [int(x) for x in ip.split(".")]
+    except ValueError:
+        return False
+    return (
+        p[0] == 10
+        or (p[0] == 192 and p[1] == 168)
+        or (p[0] == 172 and 16 <= p[1] <= 31)
+    )
 
 
-def origen_localhost() -> list[tuple[str, str]]:
-    return [("127.0.0.1", "localhost")]
+def _es_wsl() -> bool:
+    if Path("/mnt/c/Windows").is_dir():
+        return True
+    proc = Path("/proc/version")
+    if not proc.is_file():
+        return False
+    try:
+        return "microsoft" in proc.read_text(encoding="utf-8", errors="ignore").lower()
+    except OSError:
+        return False
 
 
-def origen_ipv4_propia() -> list[tuple[str, str]]:
+def _ipv4_propia() -> list[str]:
     found = set()
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -78,47 +82,10 @@ def origen_ipv4_propia() -> list[tuple[str, str]]:
         s.close()
     except Exception:
         pass
-    try:
-        for info in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
-            ip = info[4][0]
-            if not ip.startswith("127."):
-                found.add(ip)
-    except Exception:
-        pass
-    return [(ip, "ipv4-propia") for ip in sorted(found)]
+    return [ip for ip in found if not ip.startswith("127.")]
 
 
-def origen_resolv() -> list[tuple[str, str]]:
-    path = Path("/etc/resolv.conf")
-    if not path.is_file():
-        return []
-    out = []
-    try:
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip().startswith("nameserver"):
-                ip = line.split()[1]
-                if ip and not ip.startswith("127."):
-                    out.append((ip, "resolv"))
-    except OSError:
-        pass
-    return out
-
-
-def origen_pasarela() -> list[tuple[str, str]]:
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("1.1.1.1", 80))
-        yo = s.getsockname()[0]
-        s.close()
-        partes = yo.split(".")
-        if len(partes) == 4:
-            return [(".".join(partes[:3] + ["1"]), "pasarela-.1")]
-    except Exception:
-        pass
-    return []
-
-
-def origen_ipconfig_windows() -> list[tuple[str, str]]:
+def _ips_windows() -> list[str]:
     for exe in (
         Path("/mnt/c/Windows/System32/ipconfig.exe"),
         Path("/mnt/c/WINDOWS/system32/ipconfig.exe"),
@@ -129,203 +96,190 @@ def origen_ipconfig_windows() -> list[tuple[str, str]]:
             r = subprocess.run([str(exe)], capture_output=True, text=True, timeout=8)
         except Exception:
             return []
-        texto = (r.stdout or "") + (r.stderr or "")
         ips = []
-        for m in re.finditer(r"\b(\d{1,3}(?:\.\d{1,3}){3})\b", texto):
+        for m in re.finditer(r"\b(\d{1,3}(?:\.\d{1,3}){3})\b", (r.stdout or "") + (r.stderr or "")):
             ip = m.group(1)
-            if _es_privada(ip) and not ip.endswith(".255") and not ip.endswith(".0"):
+            if _es_privada(ip) and not ip.endswith(".0") and not ip.endswith(".255"):
                 if ip not in ips:
                     ips.append(ip)
-        return [(ip, "ipconfig-windows") for ip in ips]
+        return ips
     return []
 
 
-def origen_politica() -> list[tuple[str, str]]:
+def _listen(puerto: int) -> str:
     try:
-        from moslib.core.ia_router import load_policy
+        r = subprocess.run(["netstat", "-an"], capture_output=True, text=True, timeout=8)
+        texto = (r.stdout or "") + (r.stderr or "")
     except Exception:
-        return []
-    p = load_policy()
-    out = []
-    for campo in ("jan_url", "gpt4all_url"):
-        raw = str(p.get(campo) or "")
-        m = re.search(r"https?://([^/:]+)", raw)
-        if m and m.group(1) not in ("localhost",):
-            out.append((m.group(1), f"politica-{campo}"))
-    return out
+        return ""
+    lineas = [
+        ln
+        for ln in texto.splitlines()
+        if str(puerto) in ln and ("LISTEN" in ln.upper() or "LISTENING" in ln.upper())
+    ]
+    return " | ".join(ln.strip() for ln in lineas[:3])
 
 
-def origen_cache() -> list[tuple[str, str]]:
+def _perfil_windows() -> str:
+    if not sys.platform.startswith("win"):
+        return ""
     try:
-        from moslib.core.user import get_user_mos_dir
-    except Exception:
-        return []
-    out = []
-    d = get_user_mos_dir() / "config"
-    for nombre in ("ia_jan_cache.json", "ia_gpt4all_cache.json"):
-        path = d / nombre
-        if not path.is_file():
-            continue
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        raw = str(data.get("url") or "")
-        m = re.search(r"https?://([^/:]+)", raw)
-        if m:
-            out.append((m.group(1), f"cache-{nombre}"))
-    return out
-
-
-def origen_env() -> list[tuple[str, str]]:
-    out = []
-    for var in ("JAN_URL", "METSUOS_JAN_URL", "JAN_HOST"):
-        val = os.environ.get(var)
-        if not val:
-            continue
-        m = re.search(r"https?://([^/:]+)", val) or re.match(
-            r"^(\d{1,3}(?:\.\d{1,3}){3})$", val
+        r = subprocess.run(
+            [
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                "Get-NetConnectionProfile | Select-Object -ExpandProperty NetworkCategory",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=8,
         )
-        if m:
-            out.append((m.group(1), f"env-{var}"))
-    return out
+        return (r.stdout or "").strip()
+    except Exception:
+        return ""
 
 
-ORIGENES = [
-    origen_localhost,
-    origen_ipv4_propia,
-    origen_resolv,
-    origen_pasarela,
-    origen_ipconfig_windows,
-    origen_politica,
-    origen_cache,
-    origen_env,
-]
+def _puente_sesion() -> bool:
+    try:
+        from moslib.core import ia_bridge
 
-SERVICIOS = [
-    {"id": "jan", "puerto": JAN, "rutas": ("/v1/models", "/v1", "/v1/chat/completions")},
-    {"id": "gpt4all", "puerto": GPT4ALL, "rutas": ("/v1/models", "/v1", "/v1/chat/completions")},
-    {"id": "puente", "puerto": PUENTE, "rutas": ("/health", "/v1/models", "/v1/chat/completions")},
-]
+        return bool(ia_bridge.estado().get("activo"))
+    except Exception:
+        return False
 
 
-def _destinos() -> list[tuple[str, str]]:
-    vistos = set()
-    out = []
-    for fn in ORIGENES:
+def _hechos() -> dict:
+    lan = _ipv4_propia()
+    ip_lan = lan[0] if lan else None
+    listen = {n: _listen(p) for n, p in SERVICIOS}
+    local = {n: _tcp("127.0.0.1", p) for n, p in SERVICIOS}
+    lan_ok = {n: (_tcp(ip_lan, p) if ip_lan else False) for n, p in SERVICIOS}
+    solo_loop = {
+        n: bool(listen[n]) and "127.0.0.1" in listen[n] and "0.0.0.0" not in listen[n]
+        for n, _p in SERVICIOS
+    }
+    urls = []
+    pruebas = []
+    destinos = [("127.0.0.1", "localhost")]
+    for ip in lan:
+        destinos.append((ip, "propia"))
+    for ip in _ips_windows():
+        destinos.append((ip, "windows-host"))
+    resolv = Path("/etc/resolv.conf")
+    if resolv.is_file():
         try:
-            pares = fn()
-        except Exception as exc:
-            pares = [("0.0.0.0", f"error-{fn.__name__}:{exc}")]
-        for ip, origen in pares:
-            if (ip, origen) in vistos:
-                continue
-            vistos.add((ip, origen))
-            out.append((ip, origen))
-    return out
-
-
-def _sintesis(crudos: list[dict], wsl: bool) -> list[dict]:
-    ok_local_jan = any(
-        d.get("ok") and str(d.get("id", "")).startswith("jan-localhost") for d in crudos
-    )
-    ok_local_puente = any(
-        d.get("ok") and str(d.get("id", "")).startswith("puente-localhost") for d in crudos
-    )
-    urls = [d["url"] for d in crudos if d.get("ok") and d.get("url")]
-    urls_remotas = [u for u in urls if "127.0.0.1" not in u]
-    ok_win_desde_wsl = any(
-        d.get("ok") and "ipconfig-windows" in str(d.get("id", "")) for d in crudos
-    )
-    hay_ips_win = any("ipconfig-windows" in str(d.get("id", "")) for d in crudos)
-
-    if urls_remotas:
-        return [
-            _item(
-                "conclusion",
-                True,
-                "Hay un destino usable fuera de localhost: " + urls_remotas[0],
-                urls_remotas[0],
-            ),
-            _item(
-                "accion",
-                True,
-                "Acepta guardar la URL si lo pregunta. Luego: iarouter usar jan   y   iarouter preguntar hola",
-                urls_remotas[0],
-            ),
-        ]
-    if ok_local_jan or ok_local_puente:
-        return [
-            _item(
-                "conclusion",
-                True,
-                "Jan o el puente responden en esta máquina (localhost) y no en las otras IPs.",
-            ),
-            _item(
-                "accion",
-                False,
-                "En la instancia que comparte: iarouter puente on   y   iarouter publicar. "
-                "En Windows la red debe ser perfil Privado. Luego en esta instancia otra vez: iarouter check",
-            ),
-        ]
-    if wsl and hay_ips_win and not ok_win_desde_wsl:
-        return [
-            _item(
-                "conclusion",
-                False,
-                "Estás en WSL. Se vieron IPs de Windows y ninguna acepta 1337/4891/17337.",
-            ),
-            _item(
-                "accion",
-                False,
-                "En Git Bash de Windows (deja la sesión abierta): iarouter puente on. "
-                "Luego iarouter publicar (UAC). Red Privada. Vuelve aquí y: iarouter check",
-            ),
-        ]
-    return [
-        _item(
-            "conclusion",
-            False,
-            "Esta instancia no alcanza ningún Jan, GPT4All ni puente.",
-        ),
-        _item(
-            "accion",
-            False,
-            "Arranca Jan o GPT4All, o en la máquina que debe compartir: iarouter puente on. "
-            "Después: iarouter check",
-        ),
-    ]
-
-
-def check() -> list[dict]:
-    wsl = Path("/mnt/c/Windows").is_dir()
-    crudos: list[dict] = []
-    destinos = _destinos()
-
+            for line in resolv.read_text(encoding="utf-8").splitlines():
+                if line.strip().startswith("nameserver"):
+                    ip = line.split()[1]
+                    if ip and not ip.startswith("127."):
+                        destinos.append((ip, "resolv"))
+        except OSError:
+            pass
+    vistos = set()
     for ip, origen in destinos:
-        if ip == "0.0.0.0" or str(origen).startswith("error-"):
-            crudos.append(_item(f"origen-{origen}", False, str(ip)))
+        if ip in vistos:
             continue
-        for svc in SERVICIOS:
-            ident = f"{svc['id']}-{origen}-{ip}-{svc['puerto']}"
-            if not _tcp(ip, svc["puerto"]):
-                crudos.append(_item(ident, False, f"TCP cerrado {ip}:{svc['puerto']}"))
+        vistos.add(ip)
+        for n, p in SERVICIOS:
+            ruta = "/health" if n == "puente" else "/v1/models"
+            if not _tcp(ip, p):
+                pruebas.append(_item(f"prueba-{n}-{origen}-{ip}", False, f"cerrado {ip}:{p}"))
                 continue
-            ok_http = False
-            detalle = ""
-            for ruta in svc["rutas"]:
-                ok, mot = _http(f"http://{ip}:{svc['puerto']}{ruta}")
-                if ok:
-                    ok_http = True
-                    detalle = mot
-                    break
-                detalle = mot
-            chat = f"http://{ip}:{svc['puerto']}/v1/chat/completions"
-            crudos.append(_item(ident, ok_http, detalle, chat if ok_http else ""))
+            ok, det = _http(f"http://{ip}:{p}{ruta}")
+            chat = f"http://{ip}:{p}/v1/chat/completions"
+            pruebas.append(_item(f"prueba-{n}-{origen}-{ip}", ok, det, chat if ok else ""))
+            if ok and ip != "127.0.0.1":
+                urls.append(chat)
+    return {
+        "wsl": _es_wsl(),
+        "ip_lan": ip_lan,
+        "listen": listen,
+        "local": local,
+        "lan_ok": lan_ok,
+        "solo_loop": solo_loop,
+        "perfil": _perfil_windows(),
+        "puente_sesion": _puente_sesion(),
+        "ips_windows": _ips_windows(),
+        "urls": urls,
+        "pruebas": pruebas,
+    }
 
-    sintesis = _sintesis(crudos, wsl)
-    cabecera = [
-        _item("ctx-plataforma", True, f"sys.platform={sys.platform}"),
-        _item("ctx-wsl", wsl, "WSL" if wsl else "no WSL"),
+
+def _decidir(h: dict) -> tuple[str, str, str]:
+    """Devuelve conclusion, accion, url."""
+    urls = h["urls"]
+    if urls:
+        return (
+            "Esta instancia ya ve una compartición en la red.",
+            "Acepta guardar la URL si lo pregunta. Después: iarouter usar jan",
+            urls[0],
+        )
+
+    if h["local"]["jan"] or h["local"]["gpt4all"] or h["local"]["puente"]:
+        if h["perfil"] and "Public" in h["perfil"]:
+            return (
+                "Hay servidor local, pero la red Windows es Pública. La regla de publicar no aplica.",
+                "En Configuración > Red, pon esta red como Privada. Luego: iarouter publicar",
+                "",
+            )
+        if (h["local"]["jan"] or h["local"]["gpt4all"]) and h["solo_loop"]["jan"] and not h["puente_sesion"]:
+            return (
+                "Jan/GPT4All solo escuchan en localhost. Otra máquina no puede entrar a 1337/4891.",
+                "En ESTA sesión: iarouter puente on",
+                "",
+            )
+        if h["puente_sesion"] and not h["lan_ok"]["puente"]:
+            return (
+                "El puente está en esta sesión y no responde en la IP LAN. Suele ser el firewall del 17337.",
+                "iarouter publicar",
+                "",
+            )
+        if h["local"]["jan"] and not h["lan_ok"]["jan"] and not h["puente_sesion"]:
+            return (
+                "Jan responde en localhost y no en la IP LAN.",
+                "iarouter puente on",
+                "",
+            )
+        return (
+            "Hay proceso local y la LAN de esta máquina aún no lo expone.",
+            "iarouter publicar   y comprueba que la red es Privada. Luego en la otra instancia: iarouter check",
+            "",
+        )
+
+    if h["wsl"] and h["ips_windows"]:
+        return (
+            "Esta instancia es WSL y no ve Jan ni puente en las IPs de Windows.",
+            "Ve a Git Bash de Windows, deja MOSh abierto: iarouter puente on   y   iarouter publicar. Vuelve aquí: iarouter check",
+            "",
+        )
+    return (
+        "Aquí no hay servidor local ni se ve ninguno ajeno.",
+        "En la máquina que debe compartir, dentro de MOSh: iarouter check",
+        "",
+    )
+
+
+def check(detalle: bool = False) -> list[dict]:
+    h = _hechos()
+    conclusion, accion, url = _decidir(h)
+    out = [
+        _item("conclusion", bool(url) or False if "ya ve" in conclusion else False, conclusion, url),
+        _item("accion", True, accion, url),
     ]
-    return sintesis + cabecera + crudos
+    if "ya ve" in conclusion:
+        out[0]["ok"] = True
+    if not detalle:
+        return out
+    out.append(_item("detalle-wsl", h["wsl"], f"wsl={h['wsl']} ip_lan={h['ip_lan']} perfil={h['perfil'] or '-'}"))
+    out.append(_item("detalle-puente-sesion", h["puente_sesion"], "puente en ESTE MOSh"))
+    for n, p in SERVICIOS:
+        out.append(
+            _item(
+                f"detalle-listen-{n}",
+                h["local"][n],
+                f"local={h['local'][n]} lan={h['lan_ok'][n]} loop_only={h['solo_loop'][n]} listen={h['listen'][n] or 'nadie'} puerto={p}",
+            )
+        )
+    out.extend(h["pruebas"])
+    return out

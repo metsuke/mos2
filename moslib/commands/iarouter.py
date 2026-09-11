@@ -143,8 +143,9 @@ def execute(args):
         return
 
     if args[0] == "check":
-        items = ia_check.check()
-        _print_lista(items, "Check automático Jan / GPT4All / puente")
+        detalle = len(args) >= 2 and args[1] in ("detalle", "-v", "verbose")
+        items = ia_check.check(detalle=detalle)
+        _print_lista(items, "Check de compartición")
         _ofrecer_destino(items)
         return
 
@@ -239,6 +240,7 @@ def execute(args):
     print("  iarouter status")
     print("  iarouter detectar")
     print("  iarouter check")
+    print("  iarouter check detalle")
     print("  iarouter share")
     print("  iarouter publicar")
     print("  iarouter puente [on|off|status]")
