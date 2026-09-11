@@ -275,7 +275,7 @@ def _publicar_macos(puerto: int) -> tuple[bool, str]:
 def publicar() -> list[dict]:
     perfil = _perfil()
     items = list(diagnostico())
-    destinos = list(PUERTOS) + (("puente", PUENTE_PORT),)
+    destinos = list(PUERTOS) + [("puente", PUENTE_PORT)]
     for nombre, puerto in destinos:
         if perfil.startswith("windows"):
             ok, detalle = _publicar_windows(puerto)
