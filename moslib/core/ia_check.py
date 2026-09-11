@@ -207,55 +207,72 @@ def _hechos() -> dict:
 
 
 def _decidir(h: dict) -> tuple[str, str, str]:
-    """Devuelve conclusion, accion, url."""
     urls = h["urls"]
     if urls:
         return (
             "Esta instancia ya ve una compartición en la red.",
-            "Acepta guardar la URL si lo pregunta. Después: iarouter usar jan",
+            "Cuando pregunte si guardar la URL, responde s. "
+            "Después escribe: iarouter usar jan   y cuando esté activo: iarouter preguntar hola",
             urls[0],
         )
 
     if h["local"]["jan"] or h["local"]["gpt4all"] or h["local"]["puente"]:
         if h["perfil"] and "Public" in h["perfil"]:
             return (
-                "Hay servidor local, pero la red Windows es Pública. La regla de publicar no aplica.",
-                "En Configuración > Red, pon esta red como Privada. Luego: iarouter publicar",
+                "Hay servidor local, pero esta red Windows está en perfil Público. "
+                "publicar crea reglas solo para perfil Privado, así que el firewall sigue tapando 1337/17337.",
+                "En esta Windows: 1) Clic derecho en el icono de red de la bandeja o Configuración > Red e Internet. "
+                "2) Entra en Wi‑Fi o Ethernet, la conexión activa. "
+                "3) Tipo de perfil de red: Privado (no Público). "
+                "4) Vuelve a MOSh y escribe: iarouter publicar   (acepta el UAC). "
+                "5) En la otra instancia (WSL o Mac): iarouter check. "
+                "Si no encuentras la opción: PowerShell como administrador: "
+                "Set-NetConnectionProfile -InterfaceAlias 'Wi-Fi' -NetworkCategory Private "
+                "(cambia Wi-Fi por el alias que salga en Get-NetConnectionProfile).",
                 "",
             )
         if (h["local"]["jan"] or h["local"]["gpt4all"]) and h["solo_loop"]["jan"] and not h["puente_sesion"]:
             return (
-                "Jan/GPT4All solo escuchan en localhost. Otra máquina no puede entrar a 1337/4891.",
-                "En ESTA sesión: iarouter puente on",
+                "Jan o GPT4All solo escuchan en 127.0.0.1. Otra máquina o WSL no pueden usar ese puerto.",
+                "En ESTA sesión de MOSh escribe: iarouter puente on   "
+                "No cierres este MOSh. Luego: iarouter publicar   y en la otra instancia: iarouter check",
                 "",
             )
         if h["puente_sesion"] and not h["lan_ok"]["puente"]:
             return (
-                "El puente está en esta sesión y no responde en la IP LAN. Suele ser el firewall del 17337.",
-                "iarouter publicar",
+                "El puente está activo en este MOSh y no responde en la IP LAN. El puerto 17337 no entra por el firewall.",
+                "En ESTA sesión: iarouter publicar   y acepta UAC. "
+                "Si falla, PowerShell administrador: "
+                "New-NetFirewallRule -DisplayName 'MetsuOS-Puente-LAN' -Direction Inbound -Protocol TCP -LocalPort 17337 -Action Allow -Profile Private. "
+                "Luego en la otra instancia: iarouter check",
                 "",
             )
         if h["local"]["jan"] and not h["lan_ok"]["jan"] and not h["puente_sesion"]:
             return (
-                "Jan responde en localhost y no en la IP LAN.",
-                "iarouter puente on",
+                "Jan responde en localhost y no en la IP de la LAN.",
+                "En ESTA sesión: iarouter puente on    Luego: iarouter publicar    Luego en la otra instancia: iarouter check",
                 "",
             )
         return (
-            "Hay proceso local y la LAN de esta máquina aún no lo expone.",
-            "iarouter publicar   y comprueba que la red es Privada. Luego en la otra instancia: iarouter check",
+            "Hay proceso local y aún no está expuesto en la LAN.",
+            "En ESTA sesión: iarouter publicar    Red en perfil Privado. "
+            "En macOS no hay publicar automático: permite Jan en Firewall y bind 0.0.0.0. "
+            "En Linux: el mismo publicar pedirá sudo. Luego en la otra instancia: iarouter check",
             "",
         )
 
     if h["wsl"] and h["ips_windows"]:
         return (
-            "Esta instancia es WSL y no ve Jan ni puente en las IPs de Windows.",
-            "Ve a Git Bash de Windows, deja MOSh abierto: iarouter puente on   y   iarouter publicar. Vuelve aquí: iarouter check",
+            "Estás en WSL. Las IPs de Windows se ven y no abren Jan ni el puente.",
+            "No lo arregles desde WSL. Abre Git Bash en Windows, cd al clone, ./mos2.sh, "
+            "escribe: iarouter check    y sigue la acción de esa instancia (casi siempre puente on y publicar). "
+            "Deja ese MOSh abierto. Vuelve a este WSL y escribe: iarouter check",
             "",
         )
     return (
         "Aquí no hay servidor local ni se ve ninguno ajeno.",
-        "En la máquina que debe compartir, dentro de MOSh: iarouter check",
+        "Ve a la máquina o entorno que debe compartir (win con Jan, no este WSL si Jan corre en Windows). "
+        "Ahí: ./mos2.sh    y    iarouter check    Aplica solo esa acción. Vuelve aquí: iarouter check",
         "",
     )
 
