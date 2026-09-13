@@ -67,69 +67,172 @@ Un comando puede importar únicamente:
 1. Módulos de la biblioteca estándar de Python
 2. El paquete `moslib` y sus submódulos
 
+Ejemplos permitidos:
+
+- import os
+- import sys
+- from pathlib import Path
+- import moslib
+- from moslib.core.user import get_username
+
 ### Prohibido
 
+Está prohibido:
+
 1. Importar cualquier paquete de terceros no estándar
-2. Usar imports relativos en comandos
+2. Usar imports relativos en comandos (`from . import ...`, `from ..x import ...`)
 3. Eludir la validación cargando código dinámico no autorizado
 4. Usar `eval` o `exec` sobre entrada externa o para cargar lógica arbitraria
 
-Criterio: AST, primer segmento stdlib o moslib → permitido; resto → prohibido.
+Ejemplos prohibidos:
+
+- import requests
+- import numpy
+- from flask import Flask
+- from . import utils
+
+### Criterio de decisión
+
+La validación se basa en análisis estático del código fuente mediante AST, sin ejecutar el comando.
+
+Para un nombre de módulo:
+
+- se toma el segmento de primer nivel
+- si pertenece a la stdlib → permitido
+- si es `moslib` o empieza por `moslib.` → permitido
+- en cualquier otro caso → prohibido
 
 ---
 
 ## Momentos de validación
 
-Runtime: validar antes de cargar; si falla, no execute(), mensaje `[SEGURIDAD]`.
-Arranque: inventario sistema + usuario actual; ilegal → no hay sesión.
-Ambas capas obligatorias.
+### Validación en runtime (carga de comando)
+
+Cada vez que el sistema va a cargar un comando, debe validar el archivo antes de ejecutarlo.
+
+Si la validación falla:
+
+1. El comando no se carga
+2. Se muestra un rechazo explícito con prefijo `[SEGURIDAD]`
+3. Se listan los errores detectados
+4. El shell no ejecuta `execute()`
+
+### Validación en arranque
+
+Al iniciar MOSh, la batería de tests debe incluir comprobaciones de seguridad sobre:
+
+- todos los comandos de sistema
+- todos los comandos del usuario actual
+
+Si cualquier comando existente viola la política, el arranque debe fallar y el sistema no iniciará la sesión interactiva.
+
+### Relación entre ambas
+
+| Momento | Qué cubre | Efecto si falla |
+|---------|-----------|-----------------|
+| Runtime | El comando concreto que se intenta usar | Rechazo de ese comando |
+| Arranque | Inventario actual de comandos sistema + usuario actual | Bloqueo total de arranque |
+
+Ambas capas son obligatorias. Una no sustituye a la otra.
 
 ---
 
 ## Comportamiento de rechazo
+
+Mensaje mínimo esperado en runtime:
 
 ```text
 [SEGURIDAD] Comando '<nombre>' rechazado:
   - Import prohibido: import <modulo>
 ```
 
-Texto lineal, no solo color. Determinista.
+El texto debe indicar qué ha pasado. No debe basarse solo en color ANSI.
+
+Después, el shell puede indicar que el comando no está disponible o no fue encontrado.
+
+El rechazo debe ser determinista: el mismo archivo ilegal produce el mismo resultado.
 
 ---
 
 ## Responsabilidades por componente
 
-moslib/core/security.py AST; cmd_loader.py valida antes de cargar; shell.py tests de arranque; tests/test_security.py y test_all_commands_security.py.
+| Nivel 1 | Nivel 2 | Nivel 3 | Responsabilidad de seguridad |
+|---------|---------|---------|------------------------------|
+| moslib/ | core/ | security.py | Análisis AST y API de validación |
+| moslib/ | core/ | cmd_loader.py | Invocar validación antes de cargar |
+| moslib/ | core/ | shell.py | Ejecutar tests de arranque y bloquear si fallan |
+| tests/ | | test_security.py | Casos unitarios de política |
+| tests/ | | test_all_commands_security.py | Inventario real de comandos |
+| moslib/ | commands/ | * | Cumplir la política en su código fuente |
 
 ---
 
 ## Espacio de usuario y confianza
 
-No es código de confianza del producto. Siempre se valida. Puede bloquear arranque local.
+El espacio de usuario es controlado por el propio usuario del sistema anfitrión.
+
+Por tanto:
+
+- no se considera código de confianza del producto
+- siempre se valida
+- puede impedir el arranque local si contiene comandos ilegales
+
+Esto es intencional: protege el modelo de seguridad del sistema frente a extensiones inseguras del propio usuario.
 
 ---
 
 ## Límites de esta política
 
-No cubre integridad del anfitrión, secretos fuera de MetsuOS, atacante que escribe moslib, binarios externos, bugs de stdlib/Python, RGPD.
+Esta política NO cubre por sí sola:
+
+1. Integridad del filesystem del anfitrión
+2. Secretos del usuario fuera de MetsuOS
+3. Ataques con capacidad de modificar `moslib/` sin pasar por el proceso de desarrollo
+4. Ejecución de binarios externos invocados por wrappers no contemplados
+5. Vulnerabilidades de la stdlib o del intérprete Python
+6. Protección de datos personales (RGPD / LOPDGDD): campaña futura, no este documento
+
+Su alcance es el control de extensión por comandos dentro del modelo MetsuOS.
 
 ---
 
-## Requisitos derivados
+## Requisitos de seguridad derivados
 
-REQ-SEC-001 a REQ-SEC-006 y REQ-A11Y-002.
+Los siguientes requisitos son normativos y deben aparecer también en el SRS:
+
+- REQ-SEC-001: Todo comando se valida por AST antes de cargarse
+- REQ-SEC-002: Solo se permiten imports de stdlib y moslib
+- REQ-SEC-003: Los imports relativos en comandos están prohibidos
+- REQ-SEC-004: El rechazo debe mostrar motivo claro
+- REQ-SEC-005: El arranque debe fallar si existe cualquier comando ilegal en sistema o en el usuario actual
+- REQ-SEC-006: No se permite desactivar la seguridad en modo normal de operación
+- REQ-A11Y-002: Conflicto A11Y/SEC documentado; no exclusión de perfil
 
 ---
 
 ## Verificación
 
-Tests unitarios e inventario; demo de rechazo; arranque bloqueado y recuperado; mensaje usable.
+La política se verifica por:
+
+1. Tests unitarios de `security.py`
+2. Tests de inventario de comandos
+3. Pruebas manuales de rechazo con un comando de usuario ilegal
+4. Arranque bloqueado mientras exista el comando ilegal
+5. Arranque correcto tras eliminar o corregir el comando ilegal
+6. Inspección de que el mensaje de rechazo es texto usable
 
 ---
 
 ## Cambios de política
 
-Exigen actualizar este documento, tests, justificación y revisión SSS/ICD/A11Y. Sin flags para saltar seguridad.
+Cualquier relajación o ampliación de esta política requiere:
+
+1. Actualización de este documento
+2. Actualización de tests
+3. Justificación en metodología o release notes de la baseline
+4. Revisión de impacto sobre SSS, ICD y A11Y
+
+No se admiten flags ocultos para “saltar seguridad” en operación normal.
 
 ---
 
@@ -150,11 +253,11 @@ Un comando de app puede importar su mini-moslib **solo** si la validación recib
 
 ### Secretos de IA
 
-`.mos/config/.ia_wrap` e `ia_keys.json`: no versionar, 0600, HMAC. status no lista valores. HTTP solo desde moslib.core.
+Ficheros `.mos/config/.ia_wrap` e `ia_keys.json`: no versionar, 0600, HMAC. `iarouter status` no lista valores. HTTP de modelos solo desde moslib.core.
 
 ### LAN y puente
 
-share no abre puertos por sí solo. publicar es explícito. Puente :17337 off por defecto; no sirve `.mos`.
+`share` no abre puertos por sí solo. `publicar` es explícito. Puente `:17337` off por defecto; no sirve `.mos`.
 
 ### Tests añadidos
 
@@ -164,8 +267,8 @@ test_security_minimoslib.py, test_ia_keys.py, test_ia_router.py.
 
 ## Autoridad
 
-`04-SEC` es documento de máxima prioridad técnica junto con SSS y A11Y.
+`04-SEC` es documento de máxima prioridad técnica junto con las normas no negociables del SSS y la política A11Y.
 
-En caso de conflicto con conveniencia, prevalece esta política.
+En caso de conflicto con conveniencia de implementación, prevalece esta política.
 
-En caso de conflicto con un perfil A11Y soportado, se aplica «Relación con accesibilidad».
+En caso de conflicto con un perfil A11Y soportado, se aplica la sección «Relación con accesibilidad» de este mismo documento.
