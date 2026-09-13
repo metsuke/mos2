@@ -7,6 +7,7 @@ iarouter – enrutador de modelos (local y remoto)
 iarouter
 iarouter status
 iarouter detectar
+iarouter check [jan|gpt4all|grok|openrouter|share] [twitter] [detalle]
 iarouter share
 iarouter publicar
 iarouter puente [on|off|status]
@@ -30,6 +31,13 @@ jan, gpt4all, grok u openrouter).
 `clave` guarda la clave en `.mos/config/` envuelta con moslib.core.secreto.
 No imprime la clave. Si existe XAI_API_KEY u OPENROUTER_API_KEY en el
 entorno y aún no hay valor en `.mos`, se copia al almacén.
+
+## CHECK
+`check` sin argumentos ejecuta todos los diagnósticos (LAN + cada proveedor).
+`check grok` valida DNS/TLS/clave/models de api.x.ai.
+`check grok twitter` centra el escenario del cliente Grok dentro de X
+(paths `/i/api/1.1/*`, 404/410, diferencias Windows/Mac) y lista acciones
+manuales que MOS2 no puede aplicar por código.
 
 ## DETECCIÓN
 - jan: HTTP local (127.0.0.1:1337) y, si falta, /24 privada con cache

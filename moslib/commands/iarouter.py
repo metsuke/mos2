@@ -47,6 +47,8 @@ def _print_lista(items: list, titulo: str):
         print(f"{d.get('id')}: {estado}. {d.get('motivo', '')}")
         if d.get("url"):
             print(f"URL: {d['url']}")
+        if d.get("accion"):
+            print(f"Acción: {d['accion']}")
 
 
 def _ofrecer_destino(items: list):
@@ -57,6 +59,8 @@ def _ofrecer_destino(items: list):
         if not url or "127.0.0.1" in url:
             continue
         if url in vistos:
+            continue
+        if "chat/completions" not in url and "1337" not in url and "4891" not in url:
             continue
         vistos.add(url)
         pid = "gpt4all" if "4891" in url else "jan"
@@ -117,6 +121,45 @@ def _pedir_clave(pid: str) -> None:
     print(msg)
 
 
+def _parse_check_args(args: list) -> tuple[str, str | None, bool]:
+    """
+    iarouter check
+    iarouter check detalle
+    iarouter check grok
+    iarouter check grok detalle
+    iarouter check grok twitter
+    iarouter check jan -v
+    """
+    detalle = False
+    scope = "all"
+    extra = None
+    tokens = [a.lower() for a in args[1:]]
+    flags = {"detalle", "-v", "verbose", "--verbose"}
+
+    clean = []
+    for t in tokens:
+        if t in flags:
+            detalle = True
+        else:
+            clean.append(t)
+
+    if not clean:
+        return scope, extra, detalle
+
+    if clean[0] in ia_check.SCOPES or clean[0] == "share":
+        scope = clean[0]
+        if len(clean) >= 2 and clean[1] in ("twitter", "x", "cliente"):
+            extra = clean[1]
+    elif clean[0] in ("twitter", "x"):
+        scope = "grok"
+        extra = "twitter"
+    else:
+        print(f"Ámbito desconocido: {clean[0]}")
+        print("Usa: all|share|jan|gpt4all|grok|openrouter  [twitter]")
+        scope = "all"
+    return scope, extra, detalle
+
+
 def execute(args):
     args = list(args or [])
     ia_keys.ingest_env()
@@ -143,10 +186,16 @@ def execute(args):
         return
 
     if args[0] == "check":
-        detalle = len(args) >= 2 and args[1] in ("detalle", "-v", "verbose")
-        items = ia_check.check(detalle=detalle)
-        _print_lista(items, "Check de compartición")
-        _ofrecer_destino(items)
+        scope, extra, detalle = _parse_check_args(args)
+        titulo = "Check de iarouter"
+        if scope != "all":
+            titulo += f" [{scope}" + (f"/{extra}" if extra else "") + "]"
+        if detalle:
+            titulo += " (detalle)"
+        items = ia_check.check(detalle=detalle, scope=scope, extra=extra)
+        _print_lista(items, titulo)
+        if scope in ("all", "share", "jan", "gpt4all"):
+            _ofrecer_destino(items)
         return
 
     if args[0] == "share":
@@ -241,6 +290,9 @@ def execute(args):
     print("  iarouter detectar")
     print("  iarouter check")
     print("  iarouter check detalle")
+    print("  iarouter check jan|gpt4all|grok|openrouter|share")
+    print("  iarouter check grok twitter")
+    print("  iarouter check grok twitter detalle")
     print("  iarouter share")
     print("  iarouter publicar")
     print("  iarouter puente [on|off|status]")
@@ -254,5 +306,5 @@ def execute(args):
 def help():
     return (
         "Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - "
-        "Proveedor, LAN, puente, claves, modelos y petición explícita."
+        "Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X."
     )
