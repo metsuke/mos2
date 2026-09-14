@@ -1,9 +1,9 @@
 # Manual de usuario de MetsuOS (MOS2)
 
-**Versión del documento:** 1.1  
-**Baseline de referencia:** v0.2.1 (evolución entornos)  
+**Versión del documento:** 1.2  
+**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Manual formal de usuario  
-**Documentos relacionados:** docs/man/, docs/ENVIRONMENTS.md, docs/METHODOLOGY.md, docs/specs/01-SSS-System-Specification.md
+**Documentos relacionados:** docs/man/, docs/ENVIRONMENTS.md, docs/METHODOLOGY.md, docs/specs/01-SSS-System-Specification.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
 
 ---
 
@@ -14,6 +14,7 @@ MetsuOS (también llamado MOS2) es un sistema operativo simulado y modular escri
 Su interfaz principal es el shell **MOSh**, donde puedes ejecutar:
 
 - comandos oficiales del sistema
+- comandos de apps instaladas
 - comandos personales de usuario
 - utilidades de ayuda, tests, actualización y documentación
 
@@ -24,6 +25,8 @@ Para ayuda extendida de un comando concreto:
 ```text
 man <comando>
 ```
+
+La v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter, red y `update reiniciar`.
 
 ---
 
@@ -112,6 +115,7 @@ Usa 'exit' para salir, 'help' para ayuda
 mosh/tu_usuario@metsuos:~$
 ```
 
+
 ---
 
 ## Conceptos básicos
@@ -130,6 +134,7 @@ MetsuOS usa el nombre de usuario real de tu sistema anfitrión.
 |---------|---------|---------|---------|---------|-----|
 | rootfs/ | home/ | usuario/ | .mos/ | | Raíz personal |
 | | | | | commands/ | Tus comandos |
+| | | | | apps/ | Apps de ámbito usuario |
 | | | | | data/ | Tus datos |
 | | | | | config/ | Tu configuración |
 | | | | | packages/ | Reserva de paquetes personales |
@@ -137,10 +142,13 @@ MetsuOS usa el nombre de usuario real de tu sistema anfitrión.
 
 Este contenido no se sube al repositorio principal.
 
-### Comandos de sistema y de usuario
+### Comandos de sistema, de app y de usuario
 
-- **Sistema:** los trae MetsuOS, protegidos.
-- **Usuario:** los creas tú en tu espacio personal.
+- **Sistema:** los trae MetsuOS, protegidos. Ganan siempre si el nombre coincide.
+- **App:** viven en una app instalada (usuario o sistema).
+- **Usuario:** los creas tú en `.mos/commands/` con prefijo `user_`.
+
+Prioridad: sistema > app de sistema > app de usuario > comando `user_`.
 
 ---
 
@@ -148,14 +156,22 @@ Este contenido no se sube al repositorio principal.
 
 | Tipo | Comando | Descripción |
 |------|---------|-------------|
+| accesibilidad | a11y | Tests A11Y e informe |
+| apps | apps | Instalar, listar, ver y quitar apps |
+| ayuda | docs | Lista y muestra docs/ y ficheros públicos de la raíz |
 | ayuda | help | Lista de comandos o ayuda de uno concreto |
-| ayuda | man | Manual extendido (docs/man/) |
+| ayuda | man | Manual extendido (docs/man/ y man de app) |
+| calidad | synccheck | Compara HEAD local con origin/main |
 | calidad | test | Batería de tests |
 | calidad | update | Sincroniza con origin/main (backup si hay cambios) |
 | host | sysinfo | Información del anfitrión |
 | host | uptime | Tiempo activo del anfitrión |
 | host | version | Versión e historial Git |
+| ia | iarouter | Modelos locales/remotos; apagado hasta que lo actives |
+| red | red | Diagnóstico de red del anfitrión (no es P2P) |
 | sesion | exit | Sale del shell |
+| tareas | hilos | Vista de tareas por clase |
+| tareas | tareas | Tareas locales (GTD) |
 | utilidad | clear | Limpia la pantalla |
 | utilidad | echo | Imprime texto |
 
@@ -167,16 +183,24 @@ Ejemplos:
 help
 help version
 man update
+docs
+a11y
+synccheck
+apps list
+tareas
+hilos
+iarouter
+red
 version
-version -h 20
 sysinfo
 test
 update
+update reiniciar
 ```
 
 ---
 
-## Ayuda: help y man
+## Ayuda: help, man y docs
 
 ### help
 
@@ -188,7 +212,13 @@ update
 - `man` lista páginas de manual disponibles
 - `man <comando>` muestra el manual extendido
 
-Los manuales viven en `docs/man/`.
+Los manuales de sistema viven en `docs/man/`. Una app puede aportar el suyo.
+
+### docs
+
+- `docs` lista documentos
+- `docs <ruta>` muestra un fichero bajo `docs/` o README, CHANGELOG, AGENTS, LICENSE
+
 
 ---
 
@@ -217,11 +247,45 @@ def help():
 ### Cómo invocarlo
 
 - Siempre: `user_hola`
-- También: `hola` si no existe un comando de sistema llamado `hola`
+- También: `hola` si no existe un comando de sistema ni de app con más prioridad llamado `hola`
 
 ### Regla importante
 
 Tu comando **no puede** sustituir un comando oficial del sistema.
+
+---
+
+## Apps
+
+```text
+apps list
+apps show <id>
+apps install <ruta-o-repo>
+apps remove <id>
+```
+
+Una app no es un `user_*.py`. Lleva `app.json` y comandos propios. Sin A11Y mínima no se acepta. Detalle: `docs/specs/08-APPS.md` y `man apps`.
+
+---
+
+## Tareas e hilos
+
+```text
+tareas
+hilos
+```
+
+Son locales a tu sesión y a tu espacio. No son la malla P2P. Detalle: `docs/specs/09-TASKS.md`.
+
+---
+
+## iarouter
+
+```text
+iarouter
+```
+
+Va apagado hasta que lo actives (`usar` / `preguntar`). No lista claves. Jan y GPT4All son locales; Grok y OpenRouter necesitan clave. El puente HTTP, si lo enciendes, no es P2P. Detalle: `docs/specs/10-IA-ROUTER.md`.
 
 ---
 
@@ -231,8 +295,10 @@ Solo se permiten imports de:
 
 - biblioteca estándar de Python
 - moslib
+- en un comando de app: minimoslib de esa app
 
 Un import ilegal hace que el comando se rechace; si sigue presente, el arranque puede bloquearse.
+
 
 ---
 
@@ -258,6 +324,12 @@ test
 
 Los tests se ejecutan solos. Si fallan, MetsuOS no abre la sesión interactiva.
 
+También puedes lanzar solo A11Y:
+
+```text
+a11y
+```
+
 ---
 
 ## Actualizar MetsuOS
@@ -272,7 +344,22 @@ Qué hace:
 
 1. Si hay cambios locales, los guarda en una rama backup con fecha y hora
 2. Sincroniza main con origin/main de forma forzada
-3. Limpia backups antiguos dejando un máximo controlado
+3. Alinea tags locales con origin
+4. Limpia backups antiguos dejando un máximo controlado
+
+Los módulos ya cargados en esta sesión **no cambian solos**. Después de un update:
+
+```text
+update reiniciar
+```
+
+o sal con `exit` y vuelve a lanzar `./mos2.sh`.
+
+Comprobar sin actualizar:
+
+```text
+synccheck
+```
 
 Emergencia desde fuera del shell: `mos2_forced_update.sh` (solo si sabes lo que implica).
 
@@ -281,11 +368,11 @@ Emergencia desde fuera del shell: `mos2_forced_update.sh` (solo si sabes lo que 
 ## Flujo de trabajo recomendado
 
 1. Arranca MetsuOS
-2. Consulta `help` o `man`
+2. Consulta `help`, `man` o `docs`
 3. Trabaja con comandos de sistema
-4. Crea comandos personales si lo necesitas
+4. Instala apps o crea comandos personales si lo necesitas
 5. Ejecuta `test` cuando hagas cambios relevantes
-6. Usa `update` para alinear tu copia local con el repositorio
+6. Usa `update` y luego `update reiniciar` para alinear tu copia con el repositorio
 
 ---
 
@@ -310,10 +397,16 @@ Usa `./mos2.sh` o `./install.sh`. No ejecutes a mano el script `poetry` sin exte
 2. Nombre `user_algo.py`
 3. Define `execute` y `help`
 4. Sin imports ilegales
+5. Que no lo tape un comando de sistema o de app
 
 ### Quiero un nombre corto y no funciona
 
-Si existe un comando de sistema con ese nombre, el sistema gana. Usa `user_...`.
+Si existe un comando de sistema o de app con ese nombre, ese gana. Usa `user_...`.
+
+### Tras update no veo el código nuevo
+
+Usa `update reiniciar` o sal y vuelve a entrar.
+
 
 ---
 
@@ -327,7 +420,9 @@ Si existe un comando de sistema con ese nombre, el sistema gana. Usa `user_...`.
 | docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |
 | docs/STYLE_GUIDE.md | Normas de código |
 | docs/specs/ | Especificaciones técnicas |
+| docs/A11Y.md | Política de accesibilidad |
 | README.md | Visión general del repositorio |
+| CHANGELOG.md | Historial de releases |
 
 ---
 
@@ -338,9 +433,10 @@ MetsuOS todavía no es un sistema operativo completo.
 - no sustituye tu sistema anfitrión
 - no es un kernel real
 - no permite paquetes Python arbitrarios dentro de comandos
+- no es la malla P2P ni una tienda remota de apps
 - está en evolución activa
 
-Aun así es usable como shell modular con seguridad, espacio personal, tests y actualización controlada.
+Aun así es usable como shell modular con seguridad, espacio personal, apps locales, tareas, iarouter (off por defecto), tests y actualización controlada.
 
 ---
 

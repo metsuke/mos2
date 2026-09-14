@@ -1,9 +1,9 @@
 # 06 – TEST · Verificación y validación
 
-**Versión del documento:** 1.1  
-**Baseline de referencia:** v0.2.4  
+**Versión del documento:** 1.2  
+**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
-**Documentos relacionados:** docs/specs/02-SRS-Software-Requirements.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/METHODOLOGY.md
+**Documentos relacionados:** docs/specs/02-SRS-Software-Requirements.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/METHODOLOGY.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
 
 ---
 
@@ -17,6 +17,9 @@ Objetivos:
 - impedir el arranque sobre una base rota
 - hacer de los tests una parte normal del producto, no solo del desarrollo
 - verificar accesibilidad automática y regenerar el informe A11Y
+- cubrir apps, prioridad de nombres, minimoslib, tareas e iarouter
+
+La v1.1 se conserva. Esta v1.2 no relaja el arranque bloqueante.
 
 ---
 
@@ -35,14 +38,17 @@ Objetivos:
 
 | Área | Qué se verifica |
 |------|-----------------|
-| Seguridad | Política de imports y rechazo de comandos ilegales |
+| Seguridad | Política de imports, minimoslib/app_dir y rechazo de comandos ilegales |
 | Usuario | Resolución de usuario, rutas y espacio .mos |
-| Loader | Resolución de nombres, carga y rechazo seguro |
+| Loader | Resolución de nombres (incl. apps), carga y rechazo seguro |
 | Contrato de comandos | execute/help en comandos de sistema |
 | Estilo crítico | Docstrings de core, ausencia de eval/exec indebidos |
 | Arranque | Ejecución de pytest y bloqueo si hay fallos |
 | Documentación operativa | Existencia de man/manual/specs cuando el requisito lo exige |
 | Accesibilidad | Prefijos, help, no solo-color, declaración, informe, comandos a11y y docs |
+| Apps | install/list, prioridad, A11Y mínima |
+| Tareas | almacén local y comandos tareas/hilos |
+| IA | off por defecto; no listar claves |
 
 ---
 
@@ -61,7 +67,11 @@ Objetivos:
 | tests/ | test_style_core_modules.py | Docstrings de módulos core |
 | tests/ | test_style_no_forbidden_patterns.py | Patrones prohibidos |
 | tests/ | test_version_metadata.py | Formato SemVer de Poetry |
-| tests/ | test_a11y_*.py | Tests marcados a11y (se añaden en Bloque 3) |
+| tests/ | test_a11y_*.py | Tests marcados a11y |
+| tests/ | test_apps*.py | Apps, ámbito, minimoslib (nombres reales del árbol) |
+| tests/ | test_tasks*.py | Tareas e hilos |
+| tests/ | test_ia_router*.py / test_iarouter*.py | iarouter off y claves |
+
 
 ---
 
@@ -76,6 +86,9 @@ Validan funciones y módulos aislados:
 - contrato de comandos
 - estilo crítico
 - generación / lectura del informe A11Y
+- apps / minimoslib
+- tasks store
+- ia_router off por defecto
 
 ### Integración ligera
 
@@ -85,6 +98,7 @@ Validan colaboración entre piezas:
 - shell startup tests runner
 - inventario de comandos reales del workspace
 - comando a11y + escritura de informe
+- loader + comandos de app
 
 ### Demostración manual
 
@@ -95,6 +109,10 @@ Se usa cuando el requisito es interactivo:
 - docs <ruta>
 - a11y
 - update con y sin cambios locales
+- update reiniciar
+- apps list / install
+- tareas / hilos
+- iarouter status (sin claves)
 - bloqueo de arranque con un user_*.py ilegal
 
 ---
@@ -118,7 +136,7 @@ Al iniciar MOSh:
 - humo de usuario/espacio personal
 - ausencia de patrones prohibidos críticos
 
-Los tests A11Y, cuando existan, forman parte de la batería habitual. Si esa batería los incluye, el informe A11Y se regenera.
+Los tests A11Y forman parte de la batería habitual. Si esa batería los incluye, el informe A11Y se regenera.
 
 ### Mensaje de fallo
 
@@ -138,8 +156,11 @@ Debe indicar:
 | import os / pathlib / moslib | permitido |
 | import requests / numpy / jander | rechazado |
 | from . import x | rechazado |
+| minimoslib con app_dir de esa app | permitido en comando de app |
+| minimoslib en comando de sistema o user_ | rechazado |
 | comando ilegal en runtime | no se ejecuta + mensaje [SEGURIDAD] |
 | comando ilegal presente al arranque | arranque bloqueado |
+
 
 ---
 
@@ -157,6 +178,13 @@ Para comandos de usuario:
 1. nombre de archivo user_*.py
 2. también están sujetos a seguridad de imports
 3. no pueden tapar un comando de sistema
+
+Para comandos de app:
+
+1. viven en commands/ de la app
+2. misma puerta SEC/A11Y
+3. no tapar un comando de sistema
+4. invocación corta / id_cmd / app_id_cmd según ICD
 
 ---
 
@@ -185,7 +213,7 @@ Fuera de esta baseline (no se testea en laboratorio):
 - lectores de pantalla de escritorio
 - sello WCAG / RD 1112/2018
 
-Sí se testea: existencia de declaración e informe, help no vacío, prefijo de seguridad, comando docs cuando exista.
+Sí se testea: existencia de declaración e informe, help no vacío, prefijo de seguridad, comando docs, A11Y mínima de comando de app.
 
 ---
 
@@ -222,6 +250,7 @@ Es fallo bloqueante:
 3. ruptura del contrato execute/help en un comando de sistema
 4. imposibilidad de arrancar por tests y “resolverlo” saltándolos
 
+
 ---
 
 ## Cómo añadir tests en una feature nueva
@@ -234,7 +263,8 @@ Checklist:
 4. ¿Añade comando de sistema? → contrato + man + inventario
 5. ¿Cambia arranque/loader/user? → probar regresión de arranque
 6. ¿Afecta A11Y? → marca a11y e informe
-7. Ejecutar `poetry run pytest` antes del commit
+7. ¿Afecta apps / tareas / iarouter? → tests de esa área
+8. Ejecutar `poetry run pytest` antes del commit
 
 ---
 
@@ -273,7 +303,7 @@ La baseline no exige todavía:
 4. tests end-to-end completos de todos los comandos interactivos
 5. laboratorio de lectores de pantalla
 
-Sí exige una batería local fiable y bloqueante en arranque.
+Sí exige una batería local fiable y bloqueante en arranque, incluida la cobertura Must de apps, tareas e iarouter.
 
 ---
 

@@ -40,8 +40,11 @@ El número de campañas del proyecto se ve contando ficheros y este índice. No 
 | 2026-08-25 | 01 | 2026-08-25-01-entornos-onboarding-versionado.md | Cerrada |
 | 2026-08-28 | 01 | 2026-08-28-01-higiene-a11y-cierre.md | Diseñada |
 | 2026-09-13 | 01 | 2026-09-13-01-iarouter-check-scopes.md | En curso |
+| 2026-09-13 | 02 | 2026-09-13-02-sync-docs-028.md | Cerrada |
 
 Fechas de las cerradas: aproximadas al trabajo real; cada plan lo indica si es reconstrucción.
+
+Este índice no lista todos los ficheros de `docs/plans/` (hay planes de septiembre previos al 13). Completarlo es deuda aparte; no forma parte de este paso.
 
 ---
 

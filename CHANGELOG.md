@@ -18,6 +18,9 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 
 - Spec 10 v1.2
 - man iarouter y man update
+- Campaña 2026-09-13-02-sync-docs-028: Overview, SSS, SRS, ICD, SEC, SDD, TEST, SRelD y USER_MANUAL alineados con el árbol 0.2.7 / 0.2.8
+- Plan: docs/plans/2026-09-13-02-sync-docs-028.md
+- Sin bump de Poetry ni tag de producto en esta campaña
 
 ## 0.2.7 — 2026-09-06
 

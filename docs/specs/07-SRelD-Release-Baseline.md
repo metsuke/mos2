@@ -1,15 +1,15 @@
 # 07 – SRelD · Baseline de release
 
-**Versión del documento:** 1.1  
-**Baseline descrita:** v0.2.1 (más evolución posterior documentada)  
+**Versión del documento:** 1.2  
+**Baseline descrita:** v0.2.1 (congelada) + producto actual v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo de referencia  
-**Documentos relacionados:** docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md
+**Documentos relacionados:** docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, CHANGELOG.md
 
 ---
 
 ## Propósito
 
-Este documento congela y describe la baseline de producto **v0.2.1** y registra evoluciones controladas posteriores.
+Este documento congela y describe la baseline de producto **v0.2.1** y registra evoluciones controladas posteriores hasta **v0.2.7**.
 
 Sirve para:
 
@@ -17,23 +17,20 @@ Sirve para:
 - comparar releases futuras sin ambigüedad
 - evitar regresiones respecto a capacidades ya aceptadas
 
+La v1.1 no se borra: v0.2.1 sigue siendo la referencia histórica.
+
 ---
 
-## Identificación de la baseline
+## Identificación
 
-| Campo | Valor |
-|-------|-------|
-| Nombre de producto | MetsuOS / MOS2 |
-| Versión de baseline | 0.2.1 |
-| Tag de referencia | v0.2.1 |
-| Tipo | Alpha funcional |
-| Licencia | GPL-3.0 |
-| Python mínimo | 3.10 |
-
-Notas:
-
-- Sobre esta baseline se inicia el marco documental completo en `docs/`.
-- Piezas posteriores (man, entornos, Poetry portable) se listan como evolución sin reescribir el significado de v0.2.1.
+| Campo | v0.2.1 | v0.2.7 |
+|-------|--------|--------|
+| Nombre | MetsuOS / MOS2 | MetsuOS / MOS2 |
+| Tag | v0.2.1 | v0.2.7 (Poetry) |
+| Tipo | Alpha funcional | Alpha funcional |
+| Licencia | GPL-3.0 | GPL-3.0 |
+| Python mínimo | 3.10 | 3.10 |
+| Hacia | — | v0.2.8 (entrada CHANGELOG; tag producto pendiente de pruebas humanas) |
 
 ---
 
@@ -52,7 +49,7 @@ Notas:
 | Espacio de usuario por usuario anfitrión | Incluida |
 | Migración automática de home legacy | Incluida |
 
-### Comandos de sistema
+### Comandos de sistema (v0.2.1)
 
 | Comando | Estado en baseline |
 |---------|--------------------|
@@ -75,7 +72,7 @@ Notas:
 | Invocación corta sin conflicto | Incluida |
 | Rechazo por imports ilegales | Incluida |
 
-### Actualización
+### Actualización (v0.2.1)
 
 | Capacidad | Estado en baseline |
 |-----------|--------------------|
@@ -84,34 +81,28 @@ Notas:
 | poda de ramas backup | Incluida |
 | mos2_forced_update.sh de emergencia | Incluido |
 
+
 ---
 
-## Estructura de producto de la baseline
+## Estructura de producto de v0.2.1
 
-| Nivel 1 | Nivel 2 | Nivel 3 | Incluido en baseline |
-|---------|---------|---------|----------------------|
+| Nivel 1 | Nivel 2 | Nivel 3 | Incluido |
+|---------|---------|---------|----------|
 | moslib/ | core/ | shell.py | Sí |
 | moslib/ | core/ | cmd_loader.py | Sí |
 | moslib/ | core/ | user.py | Sí |
 | moslib/ | core/ | security.py | Sí |
-| moslib/ | commands/ | clear.py | Sí |
-| moslib/ | commands/ | echo.py | Sí |
-| moslib/ | commands/ | help.py | Sí |
-| moslib/ | commands/ | sysinfo.py | Sí |
-| moslib/ | commands/ | test.py | Sí |
-| moslib/ | commands/ | update.py | Sí |
-| moslib/ | commands/ | uptime.py | Sí |
-| moslib/ | commands/ | version.py | Sí |
+| moslib/ | commands/ | clear.py help.py echo.py | Sí |
+| moslib/ | commands/ | sysinfo.py test.py update.py | Sí |
+| moslib/ | commands/ | uptime.py version.py | Sí |
 | rootfs/ | bin/ | mos.py | Sí |
 | rootfs/ | home/ | .gitignore | Sí |
 | tests/ | | test_*.py | Sí |
-| install.sh | | | Sí |
-| mos2.sh | | | Sí |
-| pyproject.toml | | | Sí |
+| install.sh / mos2.sh / pyproject.toml | | | Sí |
 
 ---
 
-## Dependencias de la baseline
+## Dependencias
 
 | Dependencia | Alcance | Notas |
 |-------------|---------|-------|
@@ -124,13 +115,11 @@ No forman parte del modelo de comandos las dependencias arbitrarias de terceros.
 
 ---
 
-## Verificación asociada a la baseline
-
-La baseline se considera coherente cuando:
+## Verificación asociada a v0.2.1
 
 1. la batería de tests pasa
 2. el arranque de MOSh pasa los tests de arranque
-3. los comandos de sistema de la baseline están disponibles
+3. los comandos de sistema de esa baseline están disponibles
 4. un comando de usuario con import ilegal es rechazado
 5. un comando ilegal presente en el usuario actual bloquea arranque
 6. `update` puede sincronizar con origin/main preservando cambios locales en backup
@@ -148,37 +137,53 @@ La baseline se considera coherente cuando:
 
 ---
 
+## Evolución posterior (resumen)
+
+| Elemento | Destino |
+|----------|---------|
+| man, USER_MANUAL, ENVIRONMENTS, A11Y, docs, synccheck | Post-0.2.1 hasta 0.2.5 |
+| Poetry portable en mos2.sh / install.sh | v0.2.2 |
+| Apps, tareas, iarouter, red, update reiniciar | v0.2.7 / árbol hacia v0.2.8 |
+| Specs 08, 09, 10 | v0.2.7 |
+
+---
+
+## Producto actual v0.2.7
+
+Además de v0.2.1 y de la evolución 0.2.2–0.2.5, el árbol incluye:
+
+| Capacidad | Estado |
+|-----------|--------|
+| moslib/core/apps.py + comando apps | Incluida |
+| moslib/core/tasks.py + tareas / hilos | Incluida |
+| moslib/core/ia_router.py + comando iarouter | Incluida (off por defecto) |
+| comando red | Incluida (no es P2P) |
+| update reiniciar | Incluida |
+| minimoslib / app_dir | Incluida |
+| Prioridad sistema > app sistema > app usuario > user_ | Incluida |
+
+
+---
+
 ## Tags y referencias
 
 | Referencia | Uso |
 |------------|-----|
-| v0.2.1 | Baseline funcional principal |
+| v0.2.1 | Baseline funcional histórica |
 | v0.2.0-alpha-user-space | Baseline previa de espacio de usuario |
-| v0.2.2 | Prevista: Poetry portable + docs/ENVIRONMENTS (fix de producto) |
+| v0.2.2 | Poetry portable + ENVIRONMENTS |
+| v0.2.5 | A11Y + docs + synccheck (cierre de esa campaña) |
+| v0.2.7 | Poetry actual; apps, tareas, iarouter, red |
+| v0.2.8 | Prevista en CHANGELOG; tag de producto pendiente de pruebas humanas |
 | main | Línea activa de integración |
 
----
+Detalle de relato: `CHANGELOG.md`. Tags y bump: `docs/VERSIONING.md`.
 
-## Evolución posterior a esta baseline
-
-| Elemento | Tipo | Destino |
-|----------|------|---------|
-| docs/METHODOLOGY.md | proceso | Obligatorio |
-| docs/STYLE_GUIDE.md | calidad | Obligatorio |
-| docs/specs/* | ECSS-light | Obligatorio |
-| docs/USER_MANUAL.md | usuario | Obligatorio |
-| docs/man/* | ayuda extendida | Obligatorio |
-| moslib/commands/man.py | comando | Obligatorio |
-| tests de estilo | calidad | Obligatorio |
-| docs/ENVIRONMENTS.md | entornos | Obligatorio en evolución post-0.2.1 |
-| mos2.sh / install.sh Poetry portable | fix plataforma | Obligatorio en evolución hacia v0.2.2 |
-| Contexto de sesión genérico | proceso | Obligatorio (sin datos personales de máquina) |
-
-Cuando la evolución de entornos/Poetry se integre en main con bump de producto, la release **v0.2.2** debe reflejarse en `pyproject.toml` y en este SRelD (o entrada de versión nueva).
+Esta campaña de sync docs **no** hace bump de Poetry ni tag de producto.
 
 ---
 
-## Criterio de no regresión respecto a v0.2.1
+## Criterio de no regresión
 
 Se considerará regresión cualquier pérdida de:
 
@@ -188,8 +193,9 @@ Se considerará regresión cualquier pérdida de:
 4. resolución de comandos de usuario sin pisar sistema
 5. comando update con backup
 6. disponibilidad de pytest en el producto
-
-Tras v0.2.2, también: resolución portable de Poetry en lanzador/instalador según perfiles documentados.
+7. resolución portable de Poetry (desde v0.2.2)
+8. a11y / docs / declaración (desde v0.2.5)
+9. apps / tareas / iarouter off por defecto / red (desde v0.2.7)
 
 ---
 

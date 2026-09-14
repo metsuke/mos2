@@ -1,9 +1,9 @@
 # 02 – SRS · Requisitos software
 
-**Versión del documento:** 1.2  
-**Baseline de referencia:** v0.2.4  
+**Versión del documento:** 1.3  
+**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
-**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/06-TEST-Verification-and-Validation.md
+**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/06-TEST-Verification-and-Validation.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
 
 ---
 
@@ -17,6 +17,8 @@ Cada requisito tiene:
 - enunciado normativo
 - prioridad
 - método de verificación
+
+La v1.2 permanece Must. Esta v1.3 añade áreas APP, TASK, IA y comandos del árbol 0.2.7. No borra ni rebaja los Must anteriores.
 
 ---
 
@@ -38,6 +40,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | UPD | Actualización |
 | PLAT | Plataforma / entornos |
 | A11Y | Accesibilidad |
+| APP | Apps |
+| TASK | Tareas e hilos |
+| IA | Enrutador de IA |
 
 ### Prioridad
 
@@ -54,6 +59,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | Test | Automatizado por pytest u otro test |
 | Demo | Demostración manual |
 | Inspection | Revisión de código o documentación |
+
 
 ---
 
@@ -86,6 +92,10 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-009 | El sistema debe proporcionar un comando man para mostrar documentación extendida desde docs/man/ | Must | Demo / Test |
 | REQ-CMD-010 | Un comando de usuario no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-015 | Al cerrar la baseline 0.2.5 deben existir los comandos de sistema a11y y docs | Must | Inspection / Demo |
+| REQ-CMD-016 | Deben existir los comandos de sistema apps, tareas, hilos e iarouter | Must | Inspection / Demo |
+| REQ-CMD-017 | Debe existir el comando de sistema red (diagnóstico de red del anfitrión; no es P2P) | Must | Inspection / Demo |
+| REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
+| REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 
 ---
 
@@ -97,6 +107,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-012 | Si se solicita user_nombre y existe el archivo correspondiente de usuario, debe usarse ese | Must | Test |
 | REQ-CMD-013 | Si se solicita nombre y no existe comando de sistema, puede resolverse a user_nombre | Must | Test |
 | REQ-CMD-014 | La resolución de nombre corto de usuario nunca tiene prioridad sobre un comando de sistema | Must | Test |
+| REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+
 
 ---
 
@@ -112,6 +124,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-USER-006 | El contenido de rootfs/home/ no debe versionarse como producto | Must | Inspection |
 | REQ-USER-007 | Si existe home legacy y no existe el nuevo, el sistema debe migrar automáticamente | Must | Demo / Test |
 | REQ-USER-008 | El espacio de usuario debe crearse en el arranque del shell si falta | Must | Demo / Test |
+| REQ-USER-009 | El espacio personal debe poder albergar apps de ámbito usuario bajo .mos/apps/ | Must | Inspection / Test |
 
 ---
 
@@ -127,6 +140,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-006 | Si existe cualquier comando ilegal en ese inventario, el sistema no debe iniciar la sesión interactiva | Must | Demo / Test |
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
+| REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+
+REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la excepción tasada de apps.
 
 ---
 
@@ -152,6 +168,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-005 | Debe existir cobertura del contrato execute/help de comandos de sistema | Must | Test |
 | REQ-TEST-006 | Debe existir un comando de sistema test que lance la batería | Must | Demo |
 | REQ-TEST-007 | pytest debe estar disponible en la instalación normal del producto | Must | Inspection / Demo |
+| REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
+| REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
 
 ---
 
@@ -165,6 +183,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-004 | update debe mantener un número máximo controlado de ramas backup locales | Must | Demo / Inspection |
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must | Demo / Inspection |
+| REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must | Demo / Inspection |
+
 
 ---
 
@@ -209,6 +229,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must | Inspection / Demo |
 
+
 ---
 
 ## Requisitos de accesibilidad
@@ -236,7 +257,44 @@ Formato: `REQ-<AREA>-<NNN>`
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-TEST-008 | Debe existir marca pytest a11y para aislar la validación de accesibilidad | Must | Test |
-| REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de “solo CI” | Must | Inspection |
+| REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
+
+---
+
+## Requisitos de apps
+
+| ID | Requisito | Prioridad | Verificación |
+|----|-----------|-----------|--------------|
+| REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must | Inspection / Test |
+| REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must | Demo / Test |
+| REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
+| REQ-APP-004 | Los comandos de app deben invocarse por nombre corto, id_cmd o app_id_cmd según el loader | Must | Test |
+| REQ-APP-005 | Sin A11Y mínima el comando de app no se acepta ni se ejecuta | Must | Test |
+
+---
+
+## Requisitos de tareas
+
+| ID | Requisito | Prioridad | Verificación |
+|----|-----------|-----------|--------------|
+| REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
+| REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must | Demo / Test |
+| REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
+| REQ-TASK-004 | Durante la sesión MOSh puede haber un worker que avance tareas automáticas | Should | Demo / Test |
+| REQ-TASK-005 | Tareas e hilos no son la malla P2P | Must | Inspection |
+
+---
+
+## Requisitos de iarouter
+
+| ID | Requisito | Prioridad | Verificación |
+|----|-----------|-----------|--------------|
+| REQ-IA-001 | iarouter debe estar apagado por defecto | Must | Test / Demo |
+| REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must | Inspection / Test |
+| REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must | Demo / Test |
+| REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
+| REQ-IA-005 | Las claves no deben listarse en status | Must | Inspection / Demo |
+| REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
 
 ---
 
@@ -244,13 +302,16 @@ Formato: `REQ-<AREA>-<NNN>`
 
 | Spec de origen | Requisitos principales |
 |----------------|------------------------|
-| SSS | REQ-SYS-*, REQ-USER-*, REQ-PLAT-*, REQ-CMD-010, REQ-A11Y-001 |
+| SSS | REQ-SYS-*, REQ-USER-*, REQ-PLAT-*, REQ-CMD-010, REQ-CMD-016 a REQ-CMD-020, REQ-A11Y-001 |
 | SEC | REQ-SEC-* |
-| ICD | REQ-CMD-001 a REQ-CMD-015 |
+| ICD | REQ-CMD-001 a REQ-CMD-020 |
 | A11Y | REQ-A11Y-*, REQ-DOC-009 a REQ-DOC-011, REQ-TEST-008, REQ-TEST-009 |
 | Metodología / calidad | REQ-BOOT-*, REQ-TEST-*, REQ-DOC-* |
 | Operación | REQ-UPD-* |
 | Entornos | REQ-PLAT-005, REQ-PLAT-006, REQ-PLAT-007, REQ-DOC-008 |
+| APPS | REQ-APP-* |
+| TASKS | REQ-TASK-* |
+| IA-ROUTER | REQ-IA-* |
 
 ---
 
