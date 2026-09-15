@@ -1,0 +1,11 @@
+{
+  "titulo": "a11y",
+  "nombre": "a11y – validación de accesibilidad e informe automático",
+  "sinopsis": "a11y",
+  "opciones": "Ninguna en esta baseline.",
+  "ejemplos": "a11y",
+  "seguridad": "Comando de sistema. Solo usa biblioteca estándar y moslib. Lanza pytest con el intérprete del proceso actual.",
+  "vease": "test, docs, help, man",
+  "schema": "metsuos-docgen-man-1",
+  "id": "a11y"
+}

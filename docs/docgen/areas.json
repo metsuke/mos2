@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-docgen-areas-1",
+  "areas": [
+    {"id": "SYS", "nombre": "Sistema / shell"},
+    {"id": "CMD", "nombre": "Comandos"},
+    {"id": "USER", "nombre": "Espacio de usuario"},
+    {"id": "SEC", "nombre": "Seguridad"},
+    {"id": "BOOT", "nombre": "Arranque"},
+    {"id": "TEST", "nombre": "Pruebas"},
+    {"id": "DOC", "nombre": "Documentación"},
+    {"id": "UPD", "nombre": "Actualización"},
+    {"id": "PLAT", "nombre": "Plataforma / entornos"},
+    {"id": "A11Y", "nombre": "Accesibilidad"},
+    {"id": "APP", "nombre": "Apps"},
+    {"id": "TASK", "nombre": "Tareas e hilos"},
+    {"id": "IA", "nombre": "Enrutador de IA"}
+  ]
+}

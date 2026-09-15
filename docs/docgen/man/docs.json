@@ -1,0 +1,11 @@
+{
+  "titulo": "docs",
+  "nombre": "docs – consulta la documentación del clone desde MOSh",
+  "sinopsis": "docs\ndocs <ruta>",
+  "opciones": "Ninguna en esta baseline. La ruta es el resto de la línea.",
+  "ejemplos": "docs\ndocs README.md\ndocs A11Y.md\ndocs a11y/DECLARACION.md\ndocs a11y/informe.md",
+  "seguridad": "Comando de sistema. Solo stdlib y moslib. Resuelve paths y rechaza lo que salga de docs/ o de la lista blanca de la raíz.",
+  "vease": "a11y, man, help",
+  "schema": "metsuos-docgen-man-1",
+  "id": "docs"
+}

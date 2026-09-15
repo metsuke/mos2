@@ -1,0 +1,11 @@
+{
+  "titulo": "help",
+  "nombre": "help – muestra ayuda corta de comandos",
+  "sinopsis": "help\nhelp <comando>",
+  "opciones": "Ninguna. El primer argumento se interpreta como nombre de comando.",
+  "ejemplos": "help\nhelp version\nhelp update",
+  "seguridad": "Comando de sistema.",
+  "vease": "man, version, test",
+  "schema": "metsuos-docgen-man-1",
+  "id": "help"
+}

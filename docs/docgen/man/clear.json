@@ -1,0 +1,11 @@
+{
+  "titulo": "clear",
+  "nombre": "clear – limpia la pantalla del terminal",
+  "sinopsis": "clear",
+  "opciones": "Ninguna.",
+  "ejemplos": "clear",
+  "seguridad": "Comando de sistema. No realiza imports fuera de la política de MetsuOS.",
+  "vease": "help, man",
+  "schema": "metsuos-docgen-man-1",
+  "id": "clear"
+}

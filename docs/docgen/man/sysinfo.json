@@ -1,0 +1,11 @@
+{
+  "titulo": "sysinfo",
+  "nombre": "sysinfo – información del sistema anfitrión",
+  "sinopsis": "sysinfo",
+  "opciones": "Ninguna en esta baseline.",
+  "ejemplos": "sysinfo",
+  "seguridad": "Comando de sistema. Solo consulta información; no modifica el host.",
+  "vease": "uptime, version, help",
+  "schema": "metsuos-docgen-man-1",
+  "id": "sysinfo"
+}

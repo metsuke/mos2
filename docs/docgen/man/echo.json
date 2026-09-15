@@ -1,0 +1,11 @@
+{
+  "titulo": "echo",
+  "nombre": "echo – imprime texto en la salida estándar",
+  "sinopsis": "echo [args...]",
+  "opciones": "Ninguna formal en esta baseline.",
+  "ejemplos": "echo hola\necho Hola desde MetsuOS",
+  "seguridad": "Comando de sistema. No ejecuta el texto como código.",
+  "vease": "help, man",
+  "schema": "metsuos-docgen-man-1",
+  "id": "echo"
+}

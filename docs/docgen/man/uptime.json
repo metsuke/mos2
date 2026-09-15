@@ -1,0 +1,11 @@
+{
+  "titulo": "uptime",
+  "nombre": "uptime – tiempo de actividad del sistema anfitrión",
+  "sinopsis": "uptime",
+  "opciones": "Ninguna en esta baseline.",
+  "ejemplos": "uptime",
+  "seguridad": "Comando de sistema. Solo lectura de información del host.",
+  "vease": "sysinfo, version, help",
+  "schema": "metsuos-docgen-man-1",
+  "id": "uptime"
+}

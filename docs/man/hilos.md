@@ -7,7 +7,18 @@ hilos – vista por clase de las tareas
 hilos
 
 ## DESCRIPCIÓN
-Salida lineal agrupada por realtime, heavy, normal, sistema.
+Uso: hilos - Lista tareas por clase (texto lineal, vista tele).
+
+Uso: hilos - Lista tareas por clase (texto lineal, vista tele).
+
+## OPCIONES
+Ver help del comando.
+
+## EJEMPLOS
+hilos
 
 ## SEGURIDAD
 Comando de sistema. stdlib + moslib.
+
+## VÉASE TAMBIÉN
+help, man

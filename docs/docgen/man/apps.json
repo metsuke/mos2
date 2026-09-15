@@ -1,0 +1,9 @@
+{
+  "titulo": "apps",
+  "nombre": "apps – instala, lista y quita apps locales",
+  "sinopsis": "apps\napps list\napps show ID\napps install RUTA\napps remove ID",
+  "ejemplos": "apps list\napps install /ruta/a/mi-app",
+  "seguridad": "Comando de sistema. stdlib + moslib.",
+  "schema": "metsuos-docgen-man-1",
+  "id": "apps"
+}

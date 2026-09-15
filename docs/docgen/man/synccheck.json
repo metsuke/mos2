@@ -1,0 +1,10 @@
+{
+  "titulo": "synccheck",
+  "nombre": "synccheck – compara el clone local con origin/main",
+  "sinopsis": "synccheck",
+  "ejemplos": "synccheck",
+  "seguridad": "Comando de sistema. stdlib + moslib. Requiere red para fetch.",
+  "vease": "update, version",
+  "schema": "metsuos-docgen-man-1",
+  "id": "synccheck"
+}

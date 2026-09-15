@@ -1,0 +1,11 @@
+{
+  "titulo": "version",
+  "nombre": "version – muestra la versión de MetsuOS y su historial",
+  "sinopsis": "version\nversion -h [n]",
+  "opciones": "| Opción | Significado |\n|--------|-------------|\n| -h | Muestra historial |\n| -h n | Muestra hasta n entradas de historial |",
+  "ejemplos": "version\nversion -h\nversion -h 20",
+  "seguridad": "Comando de sistema. Consulta metadatos git del repositorio del producto.",
+  "vease": "update, help, man",
+  "schema": "metsuos-docgen-man-1",
+  "id": "version"
+}

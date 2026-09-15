@@ -1,0 +1,9 @@
+{
+  "titulo": "red",
+  "nombre": "red – inventario lícito de la red del anfitrión",
+  "sinopsis": "red",
+  "seguridad": "Comando de sistema. Solo lectura. stdlib y herramientas del anfitrión\n(arp, route, ip, netstat).",
+  "vease": "iarouter, sysinfo",
+  "schema": "metsuos-docgen-man-1",
+  "id": "red"
+}

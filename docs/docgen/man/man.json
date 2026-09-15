@@ -1,0 +1,11 @@
+{
+  "titulo": "man",
+  "nombre": "man – muestra el manual extendido de un comando",
+  "sinopsis": "man\nman <comando>",
+  "opciones": "Ninguna. El primer argumento se interpreta como nombre de comando.",
+  "ejemplos": "man\nman update\nman help",
+  "seguridad": "Comando de sistema. Solo lee archivos de documentación del producto.",
+  "vease": "help, docs/USER_MANUAL.md",
+  "schema": "metsuos-docgen-man-1",
+  "id": "man"
+}

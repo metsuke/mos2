@@ -1,6 +1,6 @@
 # Planes de campaña de MetsuOS
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Estado:** Normativo de proceso  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md
 
@@ -41,6 +41,8 @@ El número de campañas del proyecto se ve contando ficheros y este índice. No 
 | 2026-08-28 | 01 | 2026-08-28-01-higiene-a11y-cierre.md | Diseñada |
 | 2026-09-13 | 01 | 2026-09-13-01-iarouter-check-scopes.md | En curso |
 | 2026-09-13 | 02 | 2026-09-13-02-sync-docs-028.md | Cerrada |
+| 2026-09-14 | 01 | 2026-09-14-01-docgen.md | En curso |
+
 
 Fechas de las cerradas: aproximadas al trabajo real; cada plan lo indica si es reconstrucción.
 

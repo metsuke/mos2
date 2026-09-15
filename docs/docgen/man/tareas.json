@@ -1,0 +1,8 @@
+{
+  "titulo": "tareas",
+  "nombre": "tareas – lista y gestiona tareas locales",
+  "sinopsis": "tareas list\ntareas add COMANDO\ntareas hecha ID\ntareas tick",
+  "seguridad": "Comando de sistema. stdlib + moslib.",
+  "schema": "metsuos-docgen-man-1",
+  "id": "tareas"
+}

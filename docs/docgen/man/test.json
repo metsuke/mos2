@@ -1,0 +1,11 @@
+{
+  "titulo": "test",
+  "nombre": "test – ejecuta la batería de tests de MetsuOS",
+  "sinopsis": "test [args-pytest...]",
+  "opciones": "Cualquier argumento adicional se reenvía a pytest cuando la implementación lo permite.",
+  "ejemplos": "test\ntest -q\ntest tests/test_security.py",
+  "seguridad": "Comando de sistema. No reduce la política de seguridad; la verifica.",
+  "vease": "update, help, man",
+  "schema": "metsuos-docgen-man-1",
+  "id": "test"
+}

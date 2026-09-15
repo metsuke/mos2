@@ -1,0 +1,8 @@
+{
+  "titulo": "iarouter",
+  "nombre": "iarouter – enrutador de modelos (local y remoto)",
+  "sinopsis": "iarouter\niarouter status\niarouter detectar\niarouter check [jan|gpt4all|grok|openrouter|share] [twitter] [detalle]\niarouter share\niarouter publicar\niarouter puente [on|off|status]\niarouter usar jan|gpt4all|grok|openrouter\niarouter clave <proveedor> [borrar]\niarouter modelos [proveedor]\niarouter modelo [proveedor] <id del modelo...>\niarouter preguntar TEXTO",
+  "seguridad": "Off por defecto hasta `usar`.\nNo incluye rutas `.mos` en el payload salvo allowlist del humano.\nLas claves no van a git. El JSON del almacén no lleva el texto en claro.\nQuien copie a la vez `.ia_wrap` e `ia_keys.json` puede recuperarlas.\nSolo stdlib y moslib.",
+  "schema": "metsuos-docgen-man-1",
+  "id": "iarouter"
+}

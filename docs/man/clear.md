@@ -7,9 +7,9 @@ clear – limpia la pantalla del terminal
 clear
 
 ## DESCRIPCIÓN
-Borra el contenido visible de la terminal y deja el cursor arriba del todo.
+Uso: clear - Limpia la pantalla de la terminal.
 
-No recibe argumentos. Si se pasan, se ignoran o no alteran la operación básica de limpiar pantalla, según la implementación del comando.
+Uso: clear - Limpia la pantalla de la terminal.
 
 ## OPCIONES
 Ninguna.
