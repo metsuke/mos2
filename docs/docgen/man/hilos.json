@@ -1,8 +1,36 @@
 {
-  "titulo": "hilos",
-  "nombre": "hilos – vista por clase de las tareas",
-  "sinopsis": "hilos",
-  "seguridad": "Comando de sistema. stdlib + moslib.",
   "schema": "metsuos-docgen-man-1",
-  "id": "hilos"
+  "id": "hilos",
+  "titulo": "hilos",
+  "origen": "/Users/Metsuke/mos2/docs/man/hilos.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "hilos – vista por clase de las tareas"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "hilos"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Uso: hilos - Lista tareas por clase (texto lineal, vista tele).\n\nUso: hilos - Lista tareas por clase (texto lineal, vista tele)."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ver help del comando."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "hilos"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. stdlib + moslib."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "help, man"
+    }
+  ]
 }

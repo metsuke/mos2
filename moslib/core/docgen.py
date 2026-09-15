@@ -1,9 +1,6 @@
 """
 moslib.core.docgen
-Motor de regeneración de documentos: rutas, inventario, backup.
-
-No pisa un markdown en este módulo hasta que exista ingestión
-y render en fases posteriores. Aquí solo cimientos.
+Motor de regeneración de documentos: rutas, inventario, backup, man.
 """
 
 from __future__ import annotations
@@ -14,7 +11,6 @@ import shutil
 
 
 def get_project_root() -> Path:
-    """Raíz del clone (moslib/ y docs/)."""
     return Path(__file__).resolve().parent.parent.parent
 
 
@@ -30,7 +26,6 @@ def get_areas_path() -> Path:
     return get_docgen_dir() / "areas.json"
 
 
-# id estable -> ruta relativa al clone
 DOCUMENTOS = (
     {"id": "readme", "rel": "README.md"},
     {"id": "changelog", "rel": "CHANGELOG.md"},
@@ -60,7 +55,6 @@ DOCUMENTOS = (
     {"id": "08-apps", "rel": "docs/specs/08-APPS.md"},
     {"id": "09-tasks", "rel": "docs/specs/09-TASKS.md"},
     {"id": "10-ia-router", "rel": "docs/specs/10-IA-ROUTER.md"},
-    {"id": "man-echo", "rel": "docs/man/echo.md"},
 )
 
 
@@ -69,10 +63,10 @@ def man_documentos() -> list[dict]:
     man_dir = get_project_root() / "docs" / "man"
     if not man_dir.is_dir():
         return []
-    out = []
-    for path in sorted(man_dir.glob("*.md")):
-        out.append({"id": f"man-{path.stem}", "rel": f"docs/man/{path.name}"})
-    return out
+    return [
+        {"id": f"man-{path.stem}", "rel": f"docs/man/{path.name}"}
+        for path in sorted(man_dir.glob("*.md"))
+    ]
 
 
 def todos_documentos() -> list[dict]:
@@ -93,6 +87,7 @@ def get_documento(doc_id: str) -> dict | None:
             return dict(item)
     return None
 
+
 def resolve_path(doc_id: str) -> Path | None:
     item = get_documento(doc_id)
     if item is None:
@@ -101,9 +96,7 @@ def resolve_path(doc_id: str) -> Path | None:
 
 
 def ensure_docgen_dirs() -> None:
-    """Crea docs/docgen y backup si faltan."""
-    backup = get_backup_dir()
-    backup.mkdir(parents=True, exist_ok=True)
+    get_backup_dir().mkdir(parents=True, exist_ok=True)
 
 
 def backup_stamp() -> str:
@@ -111,10 +104,6 @@ def backup_stamp() -> str:
 
 
 def backup_document(doc_id: str) -> Path | None:
-    """
-    Copia el markdown actual a docs/docgen/backup/<id>/<stamp>.md
-    No pisa el original. Si el original no existe, no hace nada.
-    """
     src = resolve_path(doc_id)
     if src is None or not src.is_file():
         return None
@@ -130,12 +119,10 @@ def list_backups(doc_id: str) -> list[Path]:
     folder = get_backup_dir() / doc_id
     if not folder.is_dir():
         return []
-    return sorted(folder.iterdir())
-
+    return sorted(p for p in folder.iterdir() if p.is_file())
 
 
 def scan_command_help(nombre: str) -> str:
-    """Lee help() del comando de sistema sin ejecutarlo."""
     import importlib
 
     mod = importlib.import_module(f"moslib.commands.{nombre}")
@@ -149,104 +136,97 @@ def man_store_path(nombre: str) -> Path:
     return get_docgen_dir() / "man" / f"{nombre}.json"
 
 
-def render_man_echo() -> str:
-    """Plantilla + help() + prosa absorbida en json si existe."""
+def list_man_nombres() -> list[str]:
+    man_dir = get_project_root() / "docs" / "man"
+    if not man_dir.is_dir():
+        return []
+    return [p.stem for p in sorted(man_dir.glob("*.md"))]
+
+
+
+def ingest_man(nombre: str) -> Path:
     import json
+    import re
 
-    ayuda = scan_command_help("echo")
-    extra = {}
-    store = man_store_path("echo")
-    if store.is_file():
-        extra = json.loads(store.read_text(encoding="utf-8"))
-    nombre = extra.get("nombre", "echo – imprime texto en la salida estándar")
-    descripcion = extra.get(
-        "descripcion",
-        "Escribe en pantalla los argumentos recibidos, separados por espacios.",
-    )
-    opciones = extra.get("opciones", "Ninguna formal en esta baseline.")
-    ejemplos = extra.get("ejemplos", "echo hola\necho Hola desde MetsuOS")
-    seguridad = extra.get(
-        "seguridad",
-        "Comando de sistema. No ejecuta el texto como código.",
-    )
-    vease = extra.get("vease", "help, man")
-    return (
-        "# echo\n\n"
-        "## NOMBRE\n"
-        f"{nombre}\n\n"
-        "## SINOPSIS\n"
-        "echo [texto...]\n\n"
-        "## DESCRIPCIÓN\n"
-        f"{descripcion}\n\n"
-        f"{ayuda}\n\n"
-        "## OPCIONES\n"
-        f"{opciones}\n\n"
-        "## EJEMPLOS\n"
-        f"{ejemplos}\n\n"
-        "## SEGURIDAD\n"
-        f"{seguridad}\n\n"
-        "## VÉASE TAMBIÉN\n"
-        f"{vease}\n"
-    )
+    doc_id = f"man-{nombre}"
+    candidatos = []
+    src = get_project_root() / "docs" / "man" / f"{nombre}.md"
+    if src.is_file():
+        candidatos.append(src)
+    candidatos.extend(list_backups(doc_id))
+    if not candidatos:
+        raise FileNotFoundError(f"no hay man ni backup para {nombre}")
 
+    def _tam(path: Path) -> int:
+        try:
+            return path.stat().st_size
+        except OSError:
+            return 0
 
-def generate_man_echo() -> Path:
-    """Backup del man actual y pisa docs/man/echo.md."""
-    doc_id = "man-echo"
-    nuevo = render_man_echo()
-    src = resolve_path(doc_id)
-    if src is not None and src.is_file():
-        actual = src.read_text(encoding="utf-8")
-        if len(nuevo) < len(actual) * 0.5:
-            raise RuntimeError(
-                "docgen aborta: el render de man-echo es mucho más corto "
-                "que el fichero actual. Revisa la plantilla o el json."
-            )
-        backup_document(doc_id)
-    dest = get_project_root() / "docs" / "man" / "echo.md"
+    origen = max(candidatos, key=_tam)
+    texto = origen.read_text(encoding="utf-8")
+    titulo = nombre
+    secciones = []
+    actual = None
+    buf = []
+
+    def _cerrar():
+        nonlocal actual, buf
+        if actual is None:
+            buf = []
+            return
+        secciones.append({"titulo": actual, "cuerpo": "\n".join(buf).strip()})
+        actual = None
+        buf = []
+
+    for linea in texto.splitlines():
+        if linea.startswith("## "):
+            _cerrar()
+            actual = linea[3:].strip()
+            continue
+        if linea.startswith("# "):
+            titulo = linea[2:].strip()
+            continue
+        if actual is not None:
+            buf.append(linea)
+    _cerrar()
+    dest = man_store_path(nombre)
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(nuevo, encoding="utf-8")
+    dest.write_text(
+        json.dumps(
+            {
+                "schema": "metsuos-docgen-man-1",
+                "id": nombre,
+                "titulo": titulo,
+                "origen": str(origen),
+                "secciones": secciones,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     return dest
-
 
 
 def render_man(nombre: str) -> str:
     import json
 
     ayuda = scan_command_help(nombre)
-    extra = {}
     store = man_store_path(nombre)
-    if store.is_file():
-        extra = json.loads(store.read_text(encoding="utf-8"))
-    titulo = extra.get("titulo", nombre)
-    nom = extra.get("nombre", f"{nombre} – comando de sistema")
-    sinopsis = extra.get("sinopsis", f"{nombre} [args...]")
-    descripcion = extra.get("descripcion", ayuda)
-    opciones = extra.get("opciones", "Ver help del comando.")
-    ejemplos = extra.get("ejemplos", nombre)
-    seguridad = extra.get(
-        "seguridad",
-        "Comando de sistema. Sujeto a la política de imports.",
-    )
-    vease = extra.get("vease", "help, man")
-    return (
-        f"# {titulo}\n\n"
-        "## NOMBRE\n"
-        f"{nom}\n\n"
-        "## SINOPSIS\n"
-        f"{sinopsis}\n\n"
-        "## DESCRIPCIÓN\n"
-        f"{descripcion}\n\n"
-        f"{ayuda}\n\n"
-        "## OPCIONES\n"
-        f"{opciones}\n\n"
-        "## EJEMPLOS\n"
-        f"{ejemplos}\n\n"
-        "## SEGURIDAD\n"
-        f"{seguridad}\n\n"
-        "## VÉASE TAMBIÉN\n"
-        f"{vease}\n"
-    )
+    if not store.is_file():
+        raise FileNotFoundError(
+            f"no hay json de {nombre}; ejecuta docgen ingest man"
+        )
+    extra = json.loads(store.read_text(encoding="utf-8"))
+    bloques = [f"# {extra.get('titulo', nombre)}", ""]
+    for sec in extra.get("secciones") or []:
+        tit = sec.get("titulo") or "SECCIÓN"
+        cuerpo = sec.get("cuerpo") or ""
+        bloques.extend([f"## {tit}", cuerpo, ""])
+    bloques.extend(["## HELP DEL COMANDO", ayuda, ""])
+    return "\n".join(bloques)
 
 
 def generate_man(nombre: str) -> Path:
@@ -257,8 +237,7 @@ def generate_man(nombre: str) -> Path:
         actual = src.read_text(encoding="utf-8")
         if len(nuevo) < max(80, int(len(actual) * 0.5)):
             raise RuntimeError(
-                f"docgen aborta: man-{nombre} quedaría mucho más corto. "
-                "Absorbe prosa en docs/docgen/man/<nombre>.json"
+                f"docgen aborta: man-{nombre} quedaría mucho más corto."
             )
         backup_document(doc_id)
     dest = get_project_root() / "docs" / "man" / f"{nombre}.md"
@@ -267,84 +246,13 @@ def generate_man(nombre: str) -> Path:
     return dest
 
 
-
-def ingest_man(nombre: str) -> Path:
-    """
-    Lee docs/man/<nombre>.md de hoy y escribe docs/docgen/man/<nombre>.json.
-    No pisa el markdown. Secciones por encabezado ##.
-    """
-    import json
-    import re
-
-    src = get_project_root() / "docs" / "man" / f"{nombre}.md"
-    if not src.is_file():
-        raise FileNotFoundError(f"no existe {src}")
-    texto = src.read_text(encoding="utf-8")
-    partes = {"titulo": nombre}
-    actual = None
-    buf = []
-    for linea in texto.splitlines():
-        m = re.match(r"^#\s+(.+)$", linea)
-        if m and not linea.startswith("##"):
-            partes["titulo"] = m.group(1).strip()
-            continue
-        m = re.match(r"^##\s+(.+)$", linea)
-        if m:
-            if actual is not None:
-                partes[actual] = "\n".join(buf).strip()
-            raw = m.group(1).strip().lower()
-            raw = raw.replace("é", "e").replace("á", "a")
-            clave = {
-                "nombre": "nombre",
-                "sinopsis": "sinopsis",
-                "descripcion": "descripcion",
-                "opciones": "opciones",
-                "ejemplos": "ejemplos",
-                "seguridad": "seguridad",
-                "vease tambien": "vease",
-                "vease": "vease",
-            }.get(raw)
-            actual = clave
-            buf = []
-            continue
-        if actual is not None:
-            buf.append(linea)
-    if actual is not None:
-        partes[actual] = "\n".join(buf).strip()
-    partes["schema"] = "metsuos-docgen-man-1"
-    partes["id"] = nombre
-    dest = man_store_path(nombre)
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(json.dumps(partes, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return dest
-
-
-def list_man_nombres() -> list[str]:
-    man_dir = get_project_root() / "docs" / "man"
-    if not man_dir.is_dir():
-        return []
-    return [p.stem for p in sorted(man_dir.glob("*.md"))]
-
-
-def ingest_man_faltantes() -> list[Path]:
-    """Absorbe cada docs/man/*.md que aún no tenga json."""
-    escritos = []
-    for nombre in list_man_nombres():
-        store = man_store_path(nombre)
-        if store.is_file():
-            continue
-        escritos.append(ingest_man(nombre))
-    return escritos
-
-
-def ingest_man_todos(forzar: bool = False) -> list[Path]:
-    """Absorbe todos. Si forzar=False, solo los que faltan."""
+def ingest_man_todos(forzar: bool = True) -> list:
+    nombres = list_man_nombres()
     if not forzar:
-        return ingest_man_faltantes()
-    return [ingest_man(nombre) for nombre in list_man_nombres()]
+        nombres = [n for n in nombres if not man_store_path(n).is_file()]
+    return [ingest_man(n) for n in nombres]
 
 
-def generate_man_todos() -> list[Path]:
-    """Ingesta lo que falte y regenera todos los man."""
-    ingest_man_faltantes()
-    return [generate_man(nombre) for nombre in list_man_nombres()]
+def generate_man_todos() -> list:
+    ingest_man_todos(forzar=True)
+    return [generate_man(n) for n in list_man_nombres()]

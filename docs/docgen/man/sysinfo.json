@@ -1,11 +1,36 @@
 {
-  "titulo": "sysinfo",
-  "nombre": "sysinfo – información del sistema anfitrión",
-  "sinopsis": "sysinfo",
-  "opciones": "Ninguna en esta baseline.",
-  "ejemplos": "sysinfo",
-  "seguridad": "Comando de sistema. Solo consulta información; no modifica el host.",
-  "vease": "uptime, version, help",
   "schema": "metsuos-docgen-man-1",
-  "id": "sysinfo"
+  "id": "sysinfo",
+  "titulo": "sysinfo",
+  "origen": "/Users/Metsuke/mos2/docs/man/sysinfo.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "sysinfo – información del sistema anfitrión"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "sysinfo"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Muestra información del entorno donde corre MetsuOS: datos de máquina, sistema operativo anfitrión y estado general accesible desde Python.\n\nNo describe el “kernel” de MetsuOS, sino el host real."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna en esta baseline."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "sysinfo"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Solo consulta información; no modifica el host."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "uptime, version, help"
+    }
+  ]
 }

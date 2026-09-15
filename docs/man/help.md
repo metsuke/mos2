@@ -8,9 +8,11 @@ help
 help <comando>
 
 ## DESCRIPCIÓN
-Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen.
+Sin argumentos, lista comandos disponibles y una ayuda breve.
 
-Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen.
+Con argumento, muestra la ayuda específica de ese comando.
+
+La ayuda corta se obtiene de la función help() de cada módulo de comando. Para documentación extendida, usar man.
 
 ## OPCIONES
 Ninguna. El primer argumento se interpreta como nombre de comando.
@@ -25,3 +27,6 @@ Comando de sistema.
 
 ## VÉASE TAMBIÉN
 man, version, test
+
+## HELP DEL COMANDO
+Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen.

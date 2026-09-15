@@ -30,3 +30,6 @@ Comando de sistema. Consulta metadatos git del repositorio del producto.
 
 ## VÉASE TAMBIÉN
 update, help, man
+
+## HELP DEL COMANDO
+Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (tags + commits).

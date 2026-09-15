@@ -1,11 +1,36 @@
 {
-  "titulo": "echo",
-  "nombre": "echo – imprime texto en la salida estándar",
-  "sinopsis": "echo [args...]",
-  "opciones": "Ninguna formal en esta baseline.",
-  "ejemplos": "echo hola\necho Hola desde MetsuOS",
-  "seguridad": "Comando de sistema. No ejecuta el texto como código.",
-  "vease": "help, man",
   "schema": "metsuos-docgen-man-1",
-  "id": "echo"
+  "id": "echo",
+  "titulo": "echo",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-echo/20260915_052210.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "echo – imprime texto en la salida estándar"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "echo [texto...]"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Escribe en pantalla los argumentos recibidos, separados por espacios.\n\nÚtil para mensajes simples, pruebas del shell y comprobaciones rápidas.\n\nUso: echo [texto] - Imprime texto en la salida estándar."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna formal en esta baseline."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "echo hola\necho Hola desde MetsuOS"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. No ejecuta el texto como código."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "help, man"
+    }
+  ]
 }

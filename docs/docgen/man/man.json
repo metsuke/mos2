@@ -1,11 +1,36 @@
 {
-  "titulo": "man",
-  "nombre": "man – muestra el manual extendido de un comando",
-  "sinopsis": "man\nman <comando>",
-  "opciones": "Ninguna. El primer argumento se interpreta como nombre de comando.",
-  "ejemplos": "man\nman update\nman help",
-  "seguridad": "Comando de sistema. Solo lee archivos de documentación del producto.",
-  "vease": "help, docs/USER_MANUAL.md",
   "schema": "metsuos-docgen-man-1",
-  "id": "man"
+  "id": "man",
+  "titulo": "man",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-man/20260915_095117.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "man – muestra el manual extendido de un comando"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "man\nman <comando>"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "man consulta las páginas de manual almacenadas en docs/man/.\n\nSin argumentos, lista las páginas disponibles.\nCon un nombre de comando, muestra el manual extendido correspondiente.\n\nA diferencia de help, man está pensado para explicación más completa: sinopsis, descripción, ejemplos y referencias."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna. El primer argumento se interpreta como nombre de comando."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "man\nman update\nman help"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Solo lee archivos de documentación del producto."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "help, docs/USER_MANUAL.md"
+    }
+  ]
 }

@@ -1,8 +1,24 @@
 {
-  "titulo": "tareas",
-  "nombre": "tareas – lista y gestiona tareas locales",
-  "sinopsis": "tareas list\ntareas add COMANDO\ntareas hecha ID\ntareas tick",
-  "seguridad": "Comando de sistema. stdlib + moslib.",
   "schema": "metsuos-docgen-man-1",
-  "id": "tareas"
+  "id": "tareas",
+  "titulo": "tareas",
+  "origen": "/Users/Metsuke/mos2/docs/man/tareas.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "tareas – lista y gestiona tareas locales"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "tareas list\ntareas add COMANDO\ntareas hecha ID\ntareas tick"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Manuales y automáticas en .mos/data/tareas.json.\ntick reencola automáticas de clase sistema que estén hechas.\nUna tarea en bloqueada_a11y_sec no se ejecuta."
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. stdlib + moslib."
+    }
+  ]
 }

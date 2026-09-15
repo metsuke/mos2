@@ -1,11 +1,36 @@
 {
-  "titulo": "test",
-  "nombre": "test – ejecuta la batería de tests de MetsuOS",
-  "sinopsis": "test [args-pytest...]",
-  "opciones": "Cualquier argumento adicional se reenvía a pytest cuando la implementación lo permite.",
-  "ejemplos": "test\ntest -q\ntest tests/test_security.py",
-  "seguridad": "Comando de sistema. No reduce la política de seguridad; la verifica.",
-  "vease": "update, help, man",
   "schema": "metsuos-docgen-man-1",
-  "id": "test"
+  "id": "test",
+  "titulo": "test",
+  "origen": "/Users/Metsuke/mos2/docs/man/test.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "test – ejecuta la batería de tests de MetsuOS"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "test [args-pytest...]"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Lanza pytest sobre el proyecto.\n\nSirve para verificar seguridad, contrato de comandos, loader, usuario y estilo crítico.\n\nAdemás, MetsuOS ya ejecuta tests al arrancar. Si fallan en el arranque, el shell no inicia."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Cualquier argumento adicional se reenvía a pytest cuando la implementación lo permite."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "test\ntest -q\ntest tests/test_security.py"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. No reduce la política de seguridad; la verifica."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "update, help, man"
+    }
+  ]
 }

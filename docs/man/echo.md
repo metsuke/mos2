@@ -4,10 +4,12 @@
 echo – imprime texto en la salida estándar
 
 ## SINOPSIS
-echo [args...]
+echo [texto...]
 
 ## DESCRIPCIÓN
-Uso: echo [texto] - Imprime texto en la salida estándar.
+Escribe en pantalla los argumentos recibidos, separados por espacios.
+
+Útil para mensajes simples, pruebas del shell y comprobaciones rápidas.
 
 Uso: echo [texto] - Imprime texto en la salida estándar.
 
@@ -23,3 +25,6 @@ Comando de sistema. No ejecuta el texto como código.
 
 ## VÉASE TAMBIÉN
 help, man
+
+## HELP DEL COMANDO
+Uso: echo [texto] - Imprime texto en la salida estándar.

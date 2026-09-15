@@ -1,9 +1,28 @@
 {
-  "titulo": "red",
-  "nombre": "red – inventario lícito de la red del anfitrión",
-  "sinopsis": "red",
-  "seguridad": "Comando de sistema. Solo lectura. stdlib y herramientas del anfitrión\n(arp, route, ip, netstat).",
-  "vease": "iarouter, sysinfo",
   "schema": "metsuos-docgen-man-1",
-  "id": "red"
+  "id": "red",
+  "titulo": "red",
+  "origen": "/Users/Metsuke/mos2/docs/man/red.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "red – inventario lícito de la red del anfitrión"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "red"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Muestra lo que el sistema operativo ya conoce de esta máquina:\n\n- perfil de entorno\n- hostname\n- direcciones IPv4 propias\n- DNS de /etc/resolv.conf si existe\n- tabla de rutas / pasarela (salida de route, ip route o netstat)\n- caché ARP (vecinos que el SO ya ha visto)\n\nNo barre la LAN, no explora puertos ajenos y no cambia el firewall.\nNo es un inventario ofensivo ni un laboratorio de enfrentamiento\ncibernético. Eso queda para una campaña de seguridad futura y un\ndocumento ético específico."
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Solo lectura. stdlib y herramientas del anfitrión\n(arp, route, ip, netstat)."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "iarouter, sysinfo"
+    }
+  ]
 }

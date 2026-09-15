@@ -76,3 +76,6 @@ Solo stdlib y moslib.
 
 ## VER TAMBIÉN
 docs/specs/10-IA-ROUTER.md
+
+## HELP DEL COMANDO
+Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X.

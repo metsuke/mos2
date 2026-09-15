@@ -1,11 +1,36 @@
 {
-  "titulo": "update",
-  "nombre": "update – actualiza MetsuOS desde origin/main con backup local y tags alineados",
-  "sinopsis": "update\nupdate reiniciar",
-  "opciones": "reiniciar – relanza MOSh sobre el árbol actual. Si se combina con update (sin haber hecho solo esa palabra), primero hace el pull y después relanza.",
-  "ejemplos": "update\nupdate reiniciar",
-  "seguridad": "Comando de sistema. Opera sobre el repositorio git del producto. Úsalo solo cuando quieras alinear tu árbol local y tus tags con el remoto.",
-  "vease": "version, test, help, synccheck",
   "schema": "metsuos-docgen-man-1",
-  "id": "update"
+  "id": "update",
+  "titulo": "update",
+  "origen": "/Users/Metsuke/mos2/docs/man/update.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "update – actualiza MetsuOS desde origin/main con backup local y tags alineados"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "update\nupdate reiniciar"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Sincroniza la copia local del producto con origin/main de forma forzada.\n\nSi hay cambios locales pendientes:\n\n1. crea una rama backup/YYYYMMDD_HHMMSS\n2. preserva ahí el trabajo local\n3. vuelve a main\n4. hace fetch de origin\n5. sincroniza tags con origin (alta y baja)\n6. hace reset hard a origin/main\n7. elimina ramas backup antiguas dejando un máximo de 10\n\nLas ramas backup son locales y no se publican como parte del producto.\n\nLos tags locales pasan a coincidir con los de origin. Desaparecen tags que el remoto ya no tiene. También desaparecen tags que solo existían en este clone y nunca se empujaron.\n\nEsto usa Git (fetch --tags --prune --prune-tags), no una función de un forge concreto.\n\nEl código nuevo no sustituye los módulos ya cargados en esta sesión de MOSh. Tras update hay que salir y volver a entrar, o usar update reiniciar, que relanza rootfs/bin/mos.py (vuelve a pasar los tests de arranque)."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "reiniciar – relanza MOSh sobre el árbol actual. Si se combina con update (sin haber hecho solo esa palabra), primero hace el pull y después relanza."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "update\nupdate reiniciar"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Opera sobre el repositorio git del producto. Úsalo solo cuando quieras alinear tu árbol local y tus tags con el remoto."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "version, test, help, synccheck"
+    }
+  ]
 }

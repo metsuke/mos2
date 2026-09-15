@@ -1,11 +1,36 @@
 {
-  "titulo": "clear",
-  "nombre": "clear – limpia la pantalla del terminal",
-  "sinopsis": "clear",
-  "opciones": "Ninguna.",
-  "ejemplos": "clear",
-  "seguridad": "Comando de sistema. No realiza imports fuera de la política de MetsuOS.",
-  "vease": "help, man",
   "schema": "metsuos-docgen-man-1",
-  "id": "clear"
+  "id": "clear",
+  "titulo": "clear",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-clear/20260915_095657.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "clear – limpia la pantalla del terminal"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "clear"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Borra el contenido visible de la terminal y deja el cursor arriba del todo.\n\nNo recibe argumentos. Si se pasan, se ignoran o no alteran la operación básica de limpiar pantalla, según la implementación del comando."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "clear"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. No realiza imports fuera de la política de MetsuOS."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "help, man"
+    }
+  ]
 }

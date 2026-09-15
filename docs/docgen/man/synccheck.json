@@ -1,10 +1,32 @@
 {
-  "titulo": "synccheck",
-  "nombre": "synccheck – compara el clone local con origin/main",
-  "sinopsis": "synccheck",
-  "ejemplos": "synccheck",
-  "seguridad": "Comando de sistema. stdlib + moslib. Requiere red para fetch.",
-  "vease": "update, version",
   "schema": "metsuos-docgen-man-1",
-  "id": "synccheck"
+  "id": "synccheck",
+  "titulo": "synccheck",
+  "origen": "/Users/Metsuke/mos2/docs/man/synccheck.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "synccheck – compara el clone local con origin/main"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "synccheck"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Hace git fetch origin y muestra:\n\n- SHA de HEAD local\n- SHA de origin/main\n- si están sincronizados\n- version de Poetry y línea de versión del README en origin/main\n- URL raw de GitHub anclada a ese SHA (no uses /main/ a secas para auditar)\n\nNo usa APIs de un forge. Solo Git."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "synccheck"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. stdlib + moslib. Requiere red para fetch."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "update, version"
+    }
+  ]
 }

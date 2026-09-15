@@ -8,9 +8,12 @@ man
 man <comando>
 
 ## DESCRIPCIÓN
-Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/).
+man consulta las páginas de manual almacenadas en docs/man/.
 
-Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/).
+Sin argumentos, lista las páginas disponibles.
+Con un nombre de comando, muestra el manual extendido correspondiente.
+
+A diferencia de help, man está pensado para explicación más completa: sinopsis, descripción, ejemplos y referencias.
 
 ## OPCIONES
 Ninguna. El primer argumento se interpreta como nombre de comando.
@@ -25,3 +28,6 @@ Comando de sistema. Solo lee archivos de documentación del producto.
 
 ## VÉASE TAMBIÉN
 help, docs/USER_MANUAL.md
+
+## HELP DEL COMANDO
+Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/).

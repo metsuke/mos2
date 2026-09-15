@@ -1,11 +1,36 @@
 {
-  "titulo": "docs",
-  "nombre": "docs – consulta la documentación del clone desde MOSh",
-  "sinopsis": "docs\ndocs <ruta>",
-  "opciones": "Ninguna en esta baseline. La ruta es el resto de la línea.",
-  "ejemplos": "docs\ndocs README.md\ndocs A11Y.md\ndocs a11y/DECLARACION.md\ndocs a11y/informe.md",
-  "seguridad": "Comando de sistema. Solo stdlib y moslib. Resuelve paths y rechaza lo que salga de docs/ o de la lista blanca de la raíz.",
-  "vease": "a11y, man, help",
   "schema": "metsuos-docgen-man-1",
-  "id": "docs"
+  "id": "docs",
+  "titulo": "docs",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-docs/20260915_095527.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "docs – consulta la documentación del clone desde MOSh"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "docs\ndocs <ruta>"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Sin argumentos, lista:\n\n- ficheros públicos de la raíz: README.md, CHANGELOG.md, AGENTS.md, LICENSE\n- todos los ficheros bajo docs/\n\nCon argumento, muestra el contenido en texto plano si la ruta está permitida.\n\nRutas válidas:\n\n- README.md, CHANGELOG.md, AGENTS.md, LICENSE\n- cualquier fichero bajo docs/ (A11Y.md, a11y/DECLARACION.md, specs/..., plans/..., man/...)\n- también se acepta el prefijo docs/ delante de una ruta interna\n\nNo se pueden leer rutas fuera de esa lista (por ejemplo el espacio de usuario o ficheros del anfitrión).\n\nPensado para teclado y lector de terminal."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna en esta baseline. La ruta es el resto de la línea."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "docs\ndocs README.md\ndocs A11Y.md\ndocs a11y/DECLARACION.md\ndocs a11y/informe.md"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Solo stdlib y moslib. Resuelve paths y rechaza lo que salga de docs/ o de la lista blanca de la raíz."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "a11y, man, help"
+    }
+  ]
 }

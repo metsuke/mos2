@@ -1,11 +1,36 @@
 {
-  "titulo": "version",
-  "nombre": "version – muestra la versión de MetsuOS y su historial",
-  "sinopsis": "version\nversion -h [n]",
-  "opciones": "| Opción | Significado |\n|--------|-------------|\n| -h | Muestra historial |\n| -h n | Muestra hasta n entradas de historial |",
-  "ejemplos": "version\nversion -h\nversion -h 20",
-  "seguridad": "Comando de sistema. Consulta metadatos git del repositorio del producto.",
-  "vease": "update, help, man",
   "schema": "metsuos-docgen-man-1",
-  "id": "version"
+  "id": "version",
+  "titulo": "version",
+  "origen": "/Users/Metsuke/mos2/docs/man/version.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "version – muestra la versión de MetsuOS y su historial"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "version\nversion -h [n]"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Sin argumentos, muestra la versión actual basada en git describe.\n\nCon -h, muestra historial de versiones. Si se indica n, limita la cantidad de entradas.\n\nEl historial prioriza tags y puede completar con commits recientes según la implementación del comando."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "| Opción | Significado |\n|--------|-------------|\n| -h | Muestra historial |\n| -h n | Muestra hasta n entradas de historial |"
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "version\nversion -h\nversion -h 20"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Consulta metadatos git del repositorio del producto."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "update, help, man"
+    }
+  ]
 }

@@ -1,9 +1,36 @@
 {
-  "titulo": "apps",
-  "nombre": "apps – instala, lista y quita apps locales",
-  "sinopsis": "apps\napps list\napps show ID\napps install RUTA\napps remove ID",
-  "ejemplos": "apps list\napps install /ruta/a/mi-app",
-  "seguridad": "Comando de sistema. stdlib + moslib.",
   "schema": "metsuos-docgen-man-1",
-  "id": "apps"
+  "id": "apps",
+  "titulo": "apps",
+  "origen": "/Users/Metsuke/mos2/docs/man/apps.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "apps – instala, lista y quita apps locales"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "apps\napps list\napps show ID\napps install RUTA\napps remove ID"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala.\n\nUso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ver help del comando."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "apps list\napps install /ruta/a/mi-app"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. stdlib + moslib."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "help, man"
+    }
+  ]
 }

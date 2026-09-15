@@ -20,3 +20,6 @@ Comando de sistema. Solo lectura de información del host.
 
 ## VÉASE TAMBIÉN
 sysinfo, version, help
+
+## HELP DEL COMANDO
+Uso: uptime - Muestra el tiempo que lleva encendido el sistema operativo anfitrión.

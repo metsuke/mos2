@@ -1,11 +1,36 @@
 {
-  "titulo": "help",
-  "nombre": "help – muestra ayuda corta de comandos",
-  "sinopsis": "help\nhelp <comando>",
-  "opciones": "Ninguna. El primer argumento se interpreta como nombre de comando.",
-  "ejemplos": "help\nhelp version\nhelp update",
-  "seguridad": "Comando de sistema.",
-  "vease": "man, version, test",
   "schema": "metsuos-docgen-man-1",
-  "id": "help"
+  "id": "help",
+  "titulo": "help",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-help/20260915_100637.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "help – muestra ayuda corta de comandos"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "help\nhelp <comando>"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Sin argumentos, lista comandos disponibles y una ayuda breve.\n\nCon argumento, muestra la ayuda específica de ese comando.\n\nLa ayuda corta se obtiene de la función help() de cada módulo de comando. Para documentación extendida, usar man."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna. El primer argumento se interpreta como nombre de comando."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "help\nhelp version\nhelp update"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "man, version, test"
+    }
+  ]
 }

@@ -27,3 +27,6 @@ Comando de sistema. Solo lectura. stdlib y herramientas del anfitrión
 
 ## VÉASE TAMBIÉN
 iarouter, sysinfo
+
+## HELP DEL COMANDO
+Uso: red - Muestra red local lícita: hostname, IP, DNS, pasarela y caché ARP. No barre la LAN.

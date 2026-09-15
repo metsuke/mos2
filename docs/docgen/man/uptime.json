@@ -1,11 +1,36 @@
 {
-  "titulo": "uptime",
-  "nombre": "uptime – tiempo de actividad del sistema anfitrión",
-  "sinopsis": "uptime",
-  "opciones": "Ninguna en esta baseline.",
-  "ejemplos": "uptime",
-  "seguridad": "Comando de sistema. Solo lectura de información del host.",
-  "vease": "sysinfo, version, help",
   "schema": "metsuos-docgen-man-1",
-  "id": "uptime"
+  "id": "uptime",
+  "titulo": "uptime",
+  "origen": "/Users/Metsuke/mos2/docs/man/uptime.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "uptime – tiempo de actividad del sistema anfitrión"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "uptime"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Muestra cuánto tiempo lleva activo el sistema operativo anfitrión, no el tiempo de sesión de MOSh."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna en esta baseline."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "uptime"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Solo lectura de información del host."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "sysinfo, version, help"
+    }
+  ]
 }

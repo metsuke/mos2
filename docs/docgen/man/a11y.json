@@ -1,11 +1,36 @@
 {
-  "titulo": "a11y",
-  "nombre": "a11y – validación de accesibilidad e informe automático",
-  "sinopsis": "a11y",
-  "opciones": "Ninguna en esta baseline.",
-  "ejemplos": "a11y",
-  "seguridad": "Comando de sistema. Solo usa biblioteca estándar y moslib. Lanza pytest con el intérprete del proceso actual.",
-  "vease": "test, docs, help, man",
   "schema": "metsuos-docgen-man-1",
-  "id": "a11y"
+  "id": "a11y",
+  "titulo": "a11y",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-a11y/20260915_095424.md",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "a11y – validación de accesibilidad e informe automático"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "a11y"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Ejecuta solo los tests marcados a11y (pytest -m a11y) y regenera:\n\n- docs/a11y/informe.md\n- docs/a11y/informe.json\n\nImprime la situación de cumplimiento:\n\n- plenamente conforme\n- parcialmente conforme\n- no conforme\n\nSi no hay tests con esa marca, el informe queda como parcialmente conforme y lo indica.\n\nNo declara conformidad legal con el RD 1112/2018. La política está en docs/A11Y.md y la declaración en docs/a11y/DECLARACION.md."
+    },
+    {
+      "titulo": "OPCIONES",
+      "cuerpo": "Ninguna en esta baseline."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "a11y"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Comando de sistema. Solo usa biblioteca estándar y moslib. Lanza pytest con el intérprete del proceso actual."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "test, docs, help, man"
+    }
+  ]
 }
