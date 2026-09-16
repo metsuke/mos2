@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "red",
   "titulo": "red",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/red.md",
   "secciones": [
     {
@@ -23,6 +25,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "iarouter, sysinfo"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: red - Muestra red local lícita: hostname, IP, DNS, pasarela y caché ARP. No barre la LAN."
     }
   ]
 }

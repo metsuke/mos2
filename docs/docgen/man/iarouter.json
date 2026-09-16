@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "iarouter",
   "titulo": "iarouter",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/iarouter.md",
   "secciones": [
     {
@@ -43,6 +45,10 @@
     {
       "titulo": "VER TAMBIÉN",
       "cuerpo": "docs/specs/10-IA-ROUTER.md"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X."
     }
   ]
 }

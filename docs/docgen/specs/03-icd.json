@@ -1,0 +1,98 @@
+{
+  "schema": "metsuos-docgen-spec-1",
+  "id": "03-icd",
+  "titulo": "03 – ICD · Interfaces y contrato de comandos",
+  "preambulo": "**Versión del documento:** 1.2  \n**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  \n**Estado:** Normativo  \n**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/03-icd/20260916_025234.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Este documento define las interfaces internas principales de MetsuOS y el contrato obligatorio de los comandos.\n\nSu función es evitar que núcleo, comandos y espacio de usuario se acoplen de forma implícita o incompatible.\n\nLa v1.1 se conserva. Esta v1.2 añade prioridad de apps, contratos de apps/tareas/iarouter/red y `update reiniciar`.\n\n---"
+    },
+    {
+      "titulo": "Alcance",
+      "cuerpo": "Cubre:\n\n1. Contrato de todo comando (sistema, app o usuario)\n2. Resolución de nombres de comando\n3. Interfaz shell ↔ command loader\n4. Interfaz command loader ↔ security\n5. Interfaz shell/user ↔ espacio personal\n6. Punto de entrada del sistema\n7. Ayuda, man y consulta de documentación\n8. Actualización y tags\n9. Tests de arranque e informe A11Y\n10. Apps, tareas, iarouter y red\n\nNo cubre el detalle interno de cada comando concreto, salvo su contrato común.\n\n---"
+    },
+    {
+      "titulo": "Contrato de comando",
+      "cuerpo": "Todo comando válido, de sistema, de app o de usuario, debe ser un módulo Python que exponga:\n\n### execute(args)\n\n- Nombre: `execute`\n- Tipo: callable\n- Parámetro: `args` (lista de argumentos ya segmentados por el shell)\n- Responsabilidad: ejecutar la acción del comando\n- No debe depender de un registro manual externo\n- Solo imports de biblioteca estándar y de moslib\n- En comandos de app: además `minimoslib` de esa app, con `app_dir` de esa app\n\n### help()\n\n- Nombre: `help`\n- Tipo: callable\n- Retorno: `str` no vacío\n- Responsabilidad: devolver texto de ayuda usable por el sistema de ayuda, por A11Y y por el usuario\n\n### Reglas adicionales\n\n1. El módulo se descubre por archivo `.py` en un directorio de comandos.\n2. El nombre del comando de sistema coincide con el nombre del archivo sin extensión.\n3. El nombre de archivo de un comando de usuario debe empezar por `user_`.\n4. Un comando de usuario o de app nunca sobrescribe un comando de sistema.\n5. Un comando de app vive en `commands/` de esa app, no como `user_*.py`.\n\n---"
+    },
+    {
+      "titulo": "Ubicación de comandos",
+      "cuerpo": "| Tipo | Ubicación | Patrón de archivo |\n|------|-----------|-------------------|\n| Sistema | moslib/commands/ | `<nombre>.py` |\n| App sistema | rootfs/opt/apps/<id>/commands/ | `<cmd>.py` |\n| App usuario | rootfs/home/<usuario>/.mos/apps/<id>/commands/ | `<cmd>.py` |\n| Usuario | rootfs/home/<usuario>/.mos/commands/ | `user_<nombre>.py` |\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Nivel 5 | Descripción |\n|---------|---------|---------|---------|---------|-------------|\n| moslib/ | commands/ | | | | Comandos de sistema |\n| rootfs/ | opt/ | apps/ | `<id>/` | commands/ | Comandos de app sistema |\n| rootfs/ | home/ | `<usuario>/` | .mos/ | commands/ | Comandos de usuario |\n| rootfs/ | home/ | `<usuario>/` | .mos/ | apps/ | Apps de ámbito usuario |\n\nLas rutas de instalación reales las fija `moslib/core/apps.py`. Esta tabla es el contrato de ubicación, no un listado de cada app.\n\n---"
+    },
+    {
+      "titulo": "Resolución de nombres de comando",
+      "cuerpo": "El orden de resolución es obligatorio:\n\n### Prioridad 1 · Comando de sistema\n\nSi existe `moslib/commands/<nombre>.py`, se usa ese.\n\n### Prioridad 2 · App de ámbito sistema\n\nSi una app instalada en ámbito sistema expone ese nombre (corto, `id_cmd` o `app_id_cmd` según el loader), se usa ese.\n\n### Prioridad 3 · App de ámbito usuario\n\nIgual que la anterior, en apps del usuario.\n\n### Prioridad 4 · Nombre completo de usuario\n\nSi el usuario escribe `user_<nombre>` y existe `user_<nombre>.py` en su espacio, se usa ese.\n\n### Prioridad 5 · Nombre corto de usuario\n\nSi el usuario escribe `<nombre>` y nadie con más prioridad lo tiene, se busca `user_<nombre>.py`.\n\n### Resultado si no hay match\n\nEl shell informa que el comando no fue encontrado, con texto claro (sin basarse solo en color).\n\n### Tabla resumen\n\n| Entrada del usuario | ¿Existe sistema? | ¿Existe app? | ¿Existe user_X? | Resultado |\n|---------------------|------------------|--------------|-----------------|-----------|\n| help | Sí | Irrelevante | Irrelevante | Sistema help |\n| user_hola | No aplica para sistema con ese nombre literal | Irrelevante | Sí | Usuario user_hola |\n| hola | No | No | Sí | Usuario user_hola |\n| hola | Sí | Sí o no | Sí o no | Sistema hola |\n| paso | No | App con comando paso | Sí o no | App (sistema gana a usuario) |\n| app_dev_paso | No | Sí | Irrelevante | App por id_cmd |\n| noexiste | No | No | No | No encontrado |\n\nFormas de invocación de un comando de app: nombre corto, `id_cmd`, `app_id_cmd`. Detalle en spec 08.\n\n---"
+    },
+    {
+      "titulo": "Interfaz Shell ↔ CommandManager",
+      "cuerpo": "### Componentes\n\n| Componente | Módulo | Responsabilidad |\n|------------|--------|-----------------|\n| Shell | moslib/core/shell.py | Leer entrada, invocar comandos, controlar ciclo de vida, worker de tareas |\n| CommandManager | moslib/core/cmd_loader.py | Resolver, validar y cargar módulos de comando (sistema, app, usuario) |\n\n### Contrato de uso\n\nEl shell obtiene un módulo de comando mediante una operación equivalente a:\n\n```text\nget_command(cmd_name) -> module | None\n```\n\nSi el resultado no es `None` y el módulo tiene `execute`, el shell llama:\n\n```text\nmodule.execute(args)\n```\n\n### Seguridad en la interfaz\n\nCommandManager debe aplicar la validación de seguridad antes de devolver un módulo ejecutable en operación normal.\n\nPara un comando de app, el loader debe pasar a SEC el `app_dir` de esa app.\n\n---"
+    },
+    {
+      "titulo": "Interfaz CommandManager ↔ Security",
+      "cuerpo": "### Componente de seguridad\n\n| Componente | Módulo | Responsabilidad |\n|------------|--------|-----------------|\n| Security | moslib/core/security.py | Analizar fuente y decidir si un comando es admisible |\n\n### Operación principal\n\n```text\nvalidate_command_file(path) -> (ok: bool, errors: list[str])\n```\n\nPara apps, la operación equivalente incluye `app_dir`.\n\nReglas:\n\n1. Si `ok` es False, el comando no se carga\n2. `errors` debe contener motivos legibles, con prefijo estable en el mensaje al usuario (`[SEGURIDAD]`)\n3. La validación es estática (AST), no ejecuta el comando\n\n---"
+    },
+    {
+      "titulo": "Interfaz de usuario y espacio personal",
+      "cuerpo": "### Componente\n\n| Componente | Módulo | Responsabilidad |\n|------------|--------|-----------------|\n| User | moslib/core/user.py | Resolver usuario anfitrión, rutas y espacio .mos |\n\n### Operaciones conceptuales\n\n| Operación | Resultado esperado |\n|-----------|--------------------|\n| get_username() | Nombre del usuario del sistema anfitrión |\n| get_project_root() | Raíz del proyecto MetsuOS |\n| get_user_home() | rootfs/home/<usuario> |\n| get_user_mos_dir() | rootfs/home/<usuario>/.mos |\n| ensure_user_space() | Crea estructura .mos si falta y aplica migración legacy si procede |\n\n### Migración legacy\n\nSi existe una ubicación antigua de home de usuario y no existe la nueva, el sistema debe migrar de forma automática a:\n\n```text\nrootfs/home/<usuario>/\n```\n\n---"
+    },
+    {
+      "titulo": "Punto de entrada del sistema",
+      "cuerpo": "| Nivel 1 | Nivel 2 | Nivel 3 | Descripción |\n|---------|---------|---------|-------------|\n| rootfs/ | bin/ | mos.py | Entrada principal del shell |\n\nResponsabilidad de `mos.py`:\n\n1. Preparar el path de importación del proyecto si hace falta\n2. Instanciar el shell\n3. Lanzar el bucle interactivo\n\nNo debe contener lógica de negocio que pertenezca a `moslib/core`.\n\n---"
+    },
+    {
+      "titulo": "Interfaz de ayuda",
+      "cuerpo": "### help de sistema\n\nEl comando `help` debe poder:\n\n- listar comandos disponibles\n- mostrar ayuda de un comando concreto\n- distinguir, cuando proceda, origen de sistema, de app o de usuario\n\n### help() de cada comando\n\nCada comando aporta su propia ayuda mediante `help()`.\n\n### man\n\nLa interfaz de documentación extendida de comandos se basa en páginas:\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Descripción |\n|---------|---------|---------|-------------|\n| docs/ | man/ | `<comando>.md` | Manual extendido del comando de sistema |\n\nEl comando de sistema `man` debe leer esas páginas y mostrarlas al usuario.\n\nSi una app aporta `man/`, `man` debe poder mostrar esa página para el comando de la app.\n\n---"
+    },
+    {
+      "titulo": "Interfaz de documentación general",
+      "cuerpo": "El comando de sistema `docs` consulta el árbol `docs/` del clone.\n\nComportamiento de interfaz:\n\n- sin argumentos: listar documentos disponibles (paths relativos a `docs/`)\n- con argumento: mostrar el fichero si está bajo `docs/` (p. ej. `A11Y.md`, `a11y/DECLARACION.md`, `a11y/informe.md`, `plans/...`, `specs/...`)\n- lista blanca de la raíz del clone: README, CHANGELOG, AGENTS, LICENSE\n- no debe salir del árbol `docs/` salvo esa lista blanca\n- salida en texto plano, usable por lector de terminal\n\n---"
+    },
+    {
+      "titulo": "Interfaz de accesibilidad",
+      "cuerpo": "El comando de sistema `a11y`:\n\n- ejecuta solo tests con marca `a11y`\n- escribe `docs/a11y/informe.md` y `docs/a11y/informe.json`\n- imprime la situación de cumplimiento en texto\n\nEl comando `test` (batería completa) regenera el mismo informe si esa batería incluye tests `a11y`.\n\n---"
+    },
+    {
+      "titulo": "Interfaz de actualización",
+      "cuerpo": "El comando `update` interactúa con el repositorio git del producto (Git, no un forge).\n\nContrato de comportamiento a nivel de interfaz de sistema:\n\n1. Detectar cambios locales pendientes\n2. Si existen, preservarlos en una rama local `backup/YYYYMMDD_HHMMSS`\n3. Fetch de origin\n4. Sincronizar tags locales con origin (alta y baja)\n5. Sincronizar `main` con `origin/main` de forma forzada\n6. Podar ramas `backup/*` antiguas dejando un máximo controlado\n\nLos módulos ya cargados en la sesión **no cambian solos** tras un update. Interfaz adicional:\n\n```text\nupdate reiniciar\n```\n\nEquivale a recargar la sesión o a salir y volver a lanzar `./mos2.sh`.\n\n`synccheck` compara HEAD local con `origin/main` sin aplicar el update.\n\nEsta interfaz no publica automáticamente las ramas backup al remoto.\n\n---"
+    },
+    {
+      "titulo": "Interfaz de tests de arranque",
+      "cuerpo": "Antes de entrar en modo interactivo, el shell debe invocar la batería de tests del proyecto.\n\nInterfaz conceptual:\n\n```text\nrun_startup_tests() -> bool\n```\n\n- True: continuar arranque\n- False: abortar arranque con mensaje claro y accionable\n\n---"
+    },
+    {
+      "titulo": "Interfaz de apps",
+      "cuerpo": "| Componente | Módulo | Responsabilidad |\n|------------|--------|-----------------|\n| Apps | moslib/core/apps.py | Install desde path o repo git, ámbito, list/show/remove |\n| Comando | moslib/commands/apps.py | Fachada de usuario |\n\nContrato de comando: `apps list|show|install|remove`.\n\nUna app declara identidad en `app.json`. Detalle normativo: spec 08.\n\n---"
+    },
+    {
+      "titulo": "Interfaz de tareas",
+      "cuerpo": "| Componente | Módulo | Responsabilidad |\n|------------|--------|-----------------|\n| Tasks | moslib/core/tasks.py | Almacén GTD local y tick |\n| Shell | moslib/core/shell.py | Worker de sesión |\n| Comandos | tareas.py, hilos.py | Lista, alta, hecha, vista por clase |\n\nNo es la malla P2P. Detalle: spec 09.\n\n---"
+    },
+    {
+      "titulo": "Interfaz de iarouter",
+      "cuerpo": "| Componente | Módulo | Responsabilidad |\n|------------|--------|-----------------|\n| Fachada | moslib/core/ia_router.py | Off por defecto; Jan, GPT4All, Grok, OpenRouter |\n| Comando | moslib/commands/iarouter.py | detectar, usar, preguntar, modelos, clave, share, puente |\n\nNo envía hasta activación explícita. Las claves no se listan. El puente HTTP `:17337`, si está activo, no es P2P. Detalle: spec 10.\n\n---"
+    },
+    {
+      "titulo": "Interfaz de red",
+      "cuerpo": "El comando de sistema `red` diagnostica la red del anfitrión. No es P2P ni sustituye a iarouter.\n\n---"
+    },
+    {
+      "titulo": "Datos intercambiados en la ejecución de un comando",
+      "cuerpo": "| Dato | Dirección | Formato | Notas |\n|------|-----------|---------|-------|\n| Línea de entrada | Usuario → Shell | str | Texto crudo |\n| cmd_name | Shell → Loader | str | Primer token |\n| args | Shell → Comando | list[str] | Resto de tokens |\n| module | Loader → Shell | module/None | Tras seguridad |\n| salida | Comando → Usuario | texto en stdout/stderr | Mensajes de negocio o error |\n\n---"
+    },
+    {
+      "titulo": "Invariantes de interfaz",
+      "cuerpo": "1. El shell no ejecuta un comando sin pasar por el loader en operación normal.\n2. El loader no entrega un comando ilegal si la seguridad está activa.\n3. El nombre corto de usuario nunca gana a un comando de sistema ni de app con más prioridad.\n4. `help()` de un comando siempre devuelve string no vacío.\n5. El espacio de usuario no se usa como fuente de comandos de sistema.\n6. `docs` no lee ficheros fuera de `docs/` salvo la lista blanca de la raíz.\n7. El color no es la única señal de resultado en las interfaces de este ICD.\n8. Prioridad: sistema > app sistema > app usuario > user_.\n9. iarouter no envía por defecto.\n\n---"
+    },
+    {
+      "titulo": "Verificación de este ICD",
+      "cuerpo": "Se verifica mediante:\n\n1. Tests de contrato execute/help\n2. Tests de resolución de nombres y seguridad en loader\n3. Tests de espacio de usuario\n4. Pruebas manuales de invocación con y sin prefijo `user_`\n5. Arranque con y sin comandos ilegales\n6. Tests A11Y y comando docs\n7. Tests de apps, prefijos y minimoslib\n8. Tests de tareas e iarouter\n\n---"
+    },
+    {
+      "titulo": "Autoridad",
+      "cuerpo": "Este ICD es normativo para cualquier cambio en la forma de descubrir, cargar, nombrar o invocar comandos.\n\nRomper este contrato requiere actualización explícita del documento y de sus tests asociados."
+    }
+  ]
+}

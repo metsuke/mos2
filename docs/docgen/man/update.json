@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "update",
   "titulo": "update",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/update.md",
   "secciones": [
     {
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "version, test, help, synccheck"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: update [reiniciar] - Trae origin/main. Los módulos de esta sesión no cambian hasta relanzar MOSh. update reiniciar relanza el proceso tras el pull (o solo relanza si no hay pull pendiente)."
     }
   ]
 }

@@ -2,7 +2,9 @@
   "schema": "metsuos-docgen-man-1",
   "id": "a11y",
   "titulo": "a11y",
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-a11y/20260915_095424.md",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/man/a11y.md",
   "secciones": [
     {
       "titulo": "NOMBRE",
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "test, docs, help, man"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: a11y - Ejecuta solo los tests de accesibilidad y regenera docs/a11y/informe.md e informe.json"
     }
   ]
 }

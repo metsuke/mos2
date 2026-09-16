@@ -2,7 +2,9 @@
   "schema": "metsuos-docgen-man-1",
   "id": "help",
   "titulo": "help",
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-help/20260915_100637.md",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/man/help.md",
   "secciones": [
     {
       "titulo": "NOMBRE",
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "man, version, test"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen."
     }
   ]
 }

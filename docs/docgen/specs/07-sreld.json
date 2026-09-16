@@ -1,0 +1,58 @@
+{
+  "schema": "metsuos-docgen-spec-1",
+  "id": "07-sreld",
+  "titulo": "07 – SRelD · Baseline de release",
+  "preambulo": "**Versión del documento:** 1.2  \n**Baseline descrita:** v0.2.1 (congelada) + producto actual v0.2.7 (árbol hacia v0.2.8)  \n**Estado:** Normativo de referencia  \n**Documentos relacionados:** docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, CHANGELOG.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/07-sreld/20260916_025234.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Este documento congela y describe la baseline de producto **v0.2.1** y registra evoluciones controladas posteriores hasta **v0.2.7**.\n\nSirve para:\n\n- saber qué contiene exactamente la versión de referencia\n- comparar releases futuras sin ambigüedad\n- evitar regresiones respecto a capacidades ya aceptadas\n\nLa v1.1 no se borra: v0.2.1 sigue siendo la referencia histórica.\n\n---"
+    },
+    {
+      "titulo": "Identificación",
+      "cuerpo": "| Campo | v0.2.1 | v0.2.7 |\n|-------|--------|--------|\n| Nombre | MetsuOS / MOS2 | MetsuOS / MOS2 |\n| Tag | v0.2.1 | v0.2.7 (Poetry) |\n| Tipo | Alpha funcional | Alpha funcional |\n| Licencia | GPL-3.0 | GPL-3.0 |\n| Python mínimo | 3.10 | 3.10 |\n| Hacia | — | v0.2.8 (entrada CHANGELOG; tag producto pendiente de pruebas humanas) |\n\n---"
+    },
+    {
+      "titulo": "Capacidades incluidas en v0.2.1",
+      "cuerpo": "### Núcleo\n\n| Capacidad | Estado en baseline |\n|-----------|--------------------|\n| Shell interactivo MOSh | Incluida |\n| Carga dinámica de comandos | Incluida |\n| Hot-reload por mtime | Incluida |\n| Seguridad de imports por AST | Incluida |\n| Validación de seguridad en runtime | Incluida |\n| Tests de arranque bloqueantes | Incluida |\n| Espacio de usuario por usuario anfitrión | Incluida |\n| Migración automática de home legacy | Incluida |\n\n### Comandos de sistema (v0.2.1)\n\n| Comando | Estado en baseline |\n|---------|--------------------|\n| help | Incluido |\n| version | Incluido |\n| sysinfo | Incluido |\n| uptime | Incluido |\n| echo | Incluido |\n| clear | Incluido |\n| test | Incluido |\n| update | Incluido |\n| exit | Incluido (builtin del shell) |\n\n### Comandos de usuario\n\n| Capacidad | Estado en baseline |\n|-----------|--------------------|\n| Archivos user_*.py | Incluida |\n| Invocación con prefijo user_ | Incluida |\n| Invocación corta sin conflicto | Incluida |\n| Rechazo por imports ilegales | Incluida |\n\n### Actualización (v0.2.1)\n\n| Capacidad | Estado en baseline |\n|-----------|--------------------|\n| update desde origin/main | Incluida |\n| backup local automático | Incluida |\n| poda de ramas backup | Incluida |\n| mos2_forced_update.sh de emergencia | Incluido |\n\n\n---"
+    },
+    {
+      "titulo": "Estructura de producto de v0.2.1",
+      "cuerpo": "| Nivel 1 | Nivel 2 | Nivel 3 | Incluido |\n|---------|---------|---------|----------|\n| moslib/ | core/ | shell.py | Sí |\n| moslib/ | core/ | cmd_loader.py | Sí |\n| moslib/ | core/ | user.py | Sí |\n| moslib/ | core/ | security.py | Sí |\n| moslib/ | commands/ | clear.py help.py echo.py | Sí |\n| moslib/ | commands/ | sysinfo.py test.py update.py | Sí |\n| moslib/ | commands/ | uptime.py version.py | Sí |\n| rootfs/ | bin/ | mos.py | Sí |\n| rootfs/ | home/ | .gitignore | Sí |\n| tests/ | | test_*.py | Sí |\n| install.sh / mos2.sh / pyproject.toml | | | Sí |\n\n---"
+    },
+    {
+      "titulo": "Dependencias",
+      "cuerpo": "| Dependencia | Alcance | Notas |\n|-------------|---------|-------|\n| Python ^3.10 | runtime | Obligatorio |\n| pytest | producto | Disponible también en instalación normal |\n| pytest-cov | producto | Disponible; cobertura formal no aún obligatoria |\n| Poetry | desarrollo/instalación | Gestión de entorno y deps |\n\nNo forman parte del modelo de comandos las dependencias arbitrarias de terceros.\n\n---"
+    },
+    {
+      "titulo": "Verificación asociada a v0.2.1",
+      "cuerpo": "1. la batería de tests pasa\n2. el arranque de MOSh pasa los tests de arranque\n3. los comandos de sistema de esa baseline están disponibles\n4. un comando de usuario con import ilegal es rechazado\n5. un comando ilegal presente en el usuario actual bloquea arranque\n6. `update` puede sincronizar con origin/main preservando cambios locales en backup\n\n---"
+    },
+    {
+      "titulo": "Limitaciones conocidas de v0.2.1",
+      "cuerpo": "1. Fase Alpha: no es un sistema operativo completo.\n2. No hay empaquetado multi-repo de usuario todavía operativo.\n3. No hay CI externa obligatoria.\n4. No hay métrica mínima obligatoria de cobertura.\n5. El manual formal y el comando `man` se consolidan como evolución inmediata sobre esta baseline.\n6. help puede requerir alineación continua con el loader y los comandos de usuario.\n\n---"
+    },
+    {
+      "titulo": "Evolución posterior (resumen)",
+      "cuerpo": "| Elemento | Destino |\n|----------|---------|\n| man, USER_MANUAL, ENVIRONMENTS, A11Y, docs, synccheck | Post-0.2.1 hasta 0.2.5 |\n| Poetry portable en mos2.sh / install.sh | v0.2.2 |\n| Apps, tareas, iarouter, red, update reiniciar | v0.2.7 / árbol hacia v0.2.8 |\n| Specs 08, 09, 10 | v0.2.7 |\n\n---"
+    },
+    {
+      "titulo": "Producto actual v0.2.7",
+      "cuerpo": "Además de v0.2.1 y de la evolución 0.2.2–0.2.5, el árbol incluye:\n\n| Capacidad | Estado |\n|-----------|--------|\n| moslib/core/apps.py + comando apps | Incluida |\n| moslib/core/tasks.py + tareas / hilos | Incluida |\n| moslib/core/ia_router.py + comando iarouter | Incluida (off por defecto) |\n| comando red | Incluida (no es P2P) |\n| update reiniciar | Incluida |\n| minimoslib / app_dir | Incluida |\n| Prioridad sistema > app sistema > app usuario > user_ | Incluida |\n\n\n---"
+    },
+    {
+      "titulo": "Tags y referencias",
+      "cuerpo": "| Referencia | Uso |\n|------------|-----|\n| v0.2.1 | Baseline funcional histórica |\n| v0.2.0-alpha-user-space | Baseline previa de espacio de usuario |\n| v0.2.2 | Poetry portable + ENVIRONMENTS |\n| v0.2.5 | A11Y + docs + synccheck (cierre de esa campaña) |\n| v0.2.7 | Poetry actual; apps, tareas, iarouter, red |\n| v0.2.8 | Prevista en CHANGELOG; tag de producto pendiente de pruebas humanas |\n| main | Línea activa de integración |\n\nDetalle de relato: `CHANGELOG.md`. Tags y bump: `docs/VERSIONING.md`.\n\nEsta campaña de sync docs **no** hace bump de Poetry ni tag de producto.\n\n---"
+    },
+    {
+      "titulo": "Criterio de no regresión",
+      "cuerpo": "Se considerará regresión cualquier pérdida de:\n\n1. arranque bloqueante por tests\n2. seguridad de imports\n3. espacio de usuario por usuario anfitrión\n4. resolución de comandos de usuario sin pisar sistema\n5. comando update con backup\n6. disponibilidad de pytest en el producto\n7. resolución portable de Poetry (desde v0.2.2)\n8. a11y / docs / declaración (desde v0.2.5)\n9. apps / tareas / iarouter off por defecto / red (desde v0.2.7)\n\n---"
+    },
+    {
+      "titulo": "Autoridad",
+      "cuerpo": "Este SRelD fija el significado de la baseline v0.2.1 y el registro de evoluciones posteriores.\n\nLas releases futuras deben declarar qué mantienen, qué añaden y qué cambian respecto a esta referencia."
+    }
+  ]
+}

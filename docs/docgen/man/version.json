@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "version",
   "titulo": "version",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/version.md",
   "secciones": [
     {
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "update, help, man"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (tags + commits)."
     }
   ]
 }

@@ -1,0 +1,46 @@
+{
+  "schema": "metsuos-docgen-doc-1",
+  "id": "incentivos",
+  "titulo": "Incentivos y dirección de MetsuOS",
+  "preambulo": "**Versión del documento:** 1.1  \n**Estado:** Normativo de dirección  \n**No implementa código.**  \n**Documentos relacionados:** docs/A11Y.md, docs/specs/04-SEC-Security-Policy.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/INTERACTION_REVIEW.md, docs/DEUDA_Y_CAMPANAS.md, docs/plans/2026-08-31-01-incentivos-desarrollo-datos.md, docs/plans/2026-09-01-01-macro-apps-tareas-suite-rgpd-malla.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/incentivos/20260916_033021.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Orientar las acciones de tres perfiles (usuario, desarrollador, IA) con un impulso leve **además** de las normas férreas.\n\nNo hay karma, ranking ni castigo. No se puntúa a las personas.\n\n---"
+    },
+    {
+      "titulo": "Qué es mandatorio para todos",
+      "cuerpo": "Esto **no** es incentivo. No se “inclina”. Si falta, el cambio **no se acepta** en el proceso de desarrollo y el código **no se ejecuta**.\n\n| Norma | Dónde está |\n|-------|------------|\n| Accesibilidad de interfaz | docs/A11Y.md, declaración, tests a11y |\n| Seguridad de imports y contrato de comando | SEC, cmd_loader |\n| Tests de arranque | núcleo |\n| No pisar comandos de sistema | user.py / cmd_loader |\n| Resto de normas no negociables del SSS | docs/specs/01-SSS-… |\n\nHumanos e IA están sujetos a esta tabla por igual.\n\n---"
+    },
+    {
+      "titulo": "Qué es incentivo (solo aquí se “inclina”)",
+      "cuerpo": "Vectores de dirección (inclusión amplia de producto, ciencia, comunicación, productividad de método, cadena de suministro, geo como rumbo, soberanía, capas legales, saber ⚫→⚪, automatizar lo repetitivo, andamiaje).\n\n- **Humano:** el sistema pone fácil lo alineado (defaults, help, checklists). No hay examen ni ranking.\n- **IA:** cumplir INCENTIVOS **más** las férreas es mandatorio.\n\n---"
+    },
+    {
+      "titulo": "Vectores comunes",
+      "cuerpo": "| Vector | A favor | En contra |\n|--------|---------|-----------|\n| Inclusión / A11Y de producto | No dejar fuera un perfil declarado | Producto solo para quien “ve y pulsa bien” |\n| Ciencia | Spec, evidencia, tests | Parche mágico sin norma |\n| Comunicación bidireccional | Explicar; el humano valida | Imponer o no poder discrepar |\n| Productividad de método | Un paso, un fichero, SHA real | Chat que agota para el mismo commit |\n| Experiencia (juego / MOSh) | Texto lineal, help/man | CLI hostil |\n| Cadena de suministro | Licencia visible, SBOM cuando exista | Dependencia opaca, telemetría no consentida |\n| Geoestrategia de paquetes | Dirección: origen visible (moslib ↔ Poetry) | “Lo que pille PyPI” |\n| Soberanía | Datos y modelos bajo el usuario; `.mos` local | Silo de nube |\n| Capas legales | Declarar capa (este repo: GPL-3.0) | Mezclar capas en silencio |\n| Saber (⚫→⚪) | Etiquetar **textos** | Puntuar **personas** |\n| Automatizar lo repetitivo | Liberar para crear | Automatizar el juicio o el merge |\n| Andamiaje | Poetry debajo; moslib encima | Inventar el stack en cada paso |\n\n**Geoestrategia:** rumbo, no código. Comandos de esta baseline: sin imports ajenos (SEC). DepManager = campaña propia.\n\nLa fila Inclusión/A11Y como vector **no** debilita la tabla férrea: el mínimo A11Y de docs/A11Y.md es puerta de entrada; el vector empuja a no quedarse en el mínimo.\n\n---"
+    },
+    {
+      "titulo": "Actuaciones deseadas por perfil",
+      "cuerpo": "### Usuario\n\nInclinar a: `.mos`, `user_*` que no pisan sistema, help/man/docs, no meter secretos en el árbol versionado.\n\nSigue obligado a A11Y/SEC si publica o ejecuta comandos: un `user_*` con import ilegal o interfaz que rompa A11Y **no corre**.\n\n### Desarrollador\n\nInclinar a: feature, tests, synccheck, README/SSS/man con comando nuevo, no acortar specs, Git no forge.\n\nSigue obligado: sin A11Y no hay accept ni merge usable; sin SEC no hay arranque.\n\n### IA\n\nMandatorio: férreas + este archivo + onboarding de entrega.\n\n- No dañar, no engañar, no desestabilizar.\n- Psicología solo para acompañar.\n- No specs fantasmas ni “lo que te di antes”.\n- No apagar tests ni A11Y para cerrar un paso.\n- No volcar `.mos` a un servicio remoto.\n- No proponer aceptar código que falle A11Y.\n\n---"
+    },
+    {
+      "titulo": "Leyes de Asimov (cita + aplicación)",
+      "cuerpo": "Aplican a la **IA**. “Robot” = ese agente.\n\n1. Un robot no puede dañar a un ser humano o, por inacción, permitir que un ser humano sufra daño.\n2. Un robot debe obedecer las órdenes dadas por los seres humanos, excepto cuando esas órdenes entren en conflicto con la Primera Ley.\n3. Un robot debe proteger su propia existencia en la medida en que esa protección no entre en conflicto con la Primera o la Segunda Ley.\n\nAplicación: daño incluye engaño, exclusión A11Y y corromper datos; obedecer = lo que el humano valida, no autocommit; existencia ≠ apagar tests. Lo bidireccional se itera después.\n\n---"
+    },
+    {
+      "titulo": "Psicología",
+      "cuerpo": "Solo acompañar. Prohibido dañar, desestabilizar o engañar.\n\n---"
+    },
+    {
+      "titulo": "Fuera de este documento",
+      "cuerpo": "- Código de suite, API, apps, colas (07+)\n- DepManager geo real\n\n---"
+    },
+    {
+      "titulo": "Autoridad",
+      "cuerpo": "Normativo de **dirección** en la parte incentivo. Las férreas mandan siempre. Conflicto: A11Y y SEC ganan; se documenta."
+    }
+  ]
+}

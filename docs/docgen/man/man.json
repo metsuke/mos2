@@ -2,7 +2,9 @@
   "schema": "metsuos-docgen-man-1",
   "id": "man",
   "titulo": "man",
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-man/20260915_095117.md",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/man/man.md",
   "secciones": [
     {
       "titulo": "NOMBRE",
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "help, docs/USER_MANUAL.md"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/)."
     }
   ]
 }

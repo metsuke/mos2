@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "sysinfo",
   "titulo": "sysinfo",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/sysinfo.md",
   "secciones": [
     {
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "uptime, version, help"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: sysinfo - Muestra hardware, memoria y estado de la CPU sin requerir privilegios de administrador."
     }
   ]
 }

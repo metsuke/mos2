@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "uptime",
   "titulo": "uptime",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/uptime.md",
   "secciones": [
     {
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "sysinfo, version, help"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: uptime - Muestra el tiempo que lleva encendido el sistema operativo anfitrión."
     }
   ]
 }

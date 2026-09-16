@@ -1,0 +1,62 @@
+{
+  "schema": "metsuos-docgen-doc-1",
+  "id": "ai-onboarding",
+  "titulo": "Onboarding para agentes IA (MetsuOS)",
+  "preambulo": "**Versión del documento:** 1.3  \n**Estado:** Normativo de proceso  \n**Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/ai-onboarding/20260916_033021.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.\n\nPunto de entrada corto: `AGENTS.md`.  \nDirección de trabajo: `docs/INCENTIVOS.md` (mandatorio para la IA).\n\n---"
+    },
+    {
+      "titulo": "Orden de lectura",
+      "cuerpo": "1. AGENTS.md\n2. Este archivo\n3. docs/INCENTIVOS.md\n4. docs/METHODOLOGY.md\n5. docs/INTERACTION_REVIEW.md\n6. docs/ENVIRONMENTS.md\n7. docs/VERSIONING.md\n8. docs/A11Y.md y docs/a11y/DECLARACION.md\n9. docs/STYLE_GUIDE.md\n10. docs/specs/00-OVERVIEW.md y el resto de specs según la tarea\n11. docs/plans/ si hay campaña\n12. Código solo cuando se sepa qué norma aplica\n\nNo inventar features que no estén en código o specs.\n\n---"
+    },
+    {
+      "titulo": "Qué es MetsuOS (férreo)",
+      "cuerpo": "- SO simulado modular en Python; shell MOSh.\n- Núcleo moslib/; rootfs/ simulado.\n- Contrato: execute(args) y help() -> str no vacío.\n- Imports de comandos: solo stdlib + moslib (AST).\n- Usuario anfitrión; comandos user_*.py; nunca pisan sistema.\n- Tests de arranque bloqueantes.\n- A11Y de interfaz mandatoria.\n- Poetry + mos2.sh / install.sh multi-entorno.\n- Git, no APIs de un forge.\n- Comandos de calidad actuales: test, update, synccheck.\n- Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma.\n\n---"
+    },
+    {
+      "titulo": "Contexto de sesión",
+      "cuerpo": "```text\nContexto: <sistema> / <entorno> / <rol>\n```\n\nSi falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas home en el repo público.\n\n---"
+    },
+    {
+      "titulo": "Cómo entregar trabajo al humano",
+      "cuerpo": "- Un paso / un fichero por mensaje, salvo pareja inseparable avisada.\n- Fichero **entero**. Prohibido “añade esta fila”: las tablas van montadas.\n- Prohibido “usa lo que te di antes”: volver a pegar el documento.\n- Cachos solo si no cabe: cacho 1 sustituye todo; no dejar un spec inválido a mitad.\n- Completo: primero mkdir / touch / code, luego el texto.\n- Parcial (avisando “no sustituyas el fichero”): primero el recorte, luego code.\n- Encabezados sin numeración.\n- Directorios en tablas (una columna por nivel).\n- Comandos: Tipo A–Z, comando A–Z dentro del tipo.\n- Si el nuevo texto es más corto que el del repo: avisar. No resumir sin consultar.\n- Breadcrumb: campaña, grupo, bloque x/y, paso, %, contexto.\n- Si se salta un número de paso: explicar por qué en el mismo mensaje.\n- No usar «corrida». CHANGELOG: no dejar «Sin publicar» al humano.\n- Psicología: acompañar; prohibido dañar, desestabilizar o engañar.\n- Asimov (docs/INCENTIVOS.md): cita + nota de aplicación; no autocommit; no apagar tests.\n\n---"
+    },
+    {
+      "titulo": "Estado real del repositorio",
+      "cuerpo": "1. Pedir `synccheck` cuando haya duda.\n2. Leer por SHA (`git show origin/main:archivo` o raw con SHA).\n3. No diagnosticar solo con `.../main/` en CDN.\n4. Si Poetry, README, CHANGELOG y comandos no cuadran: hotfix antes del siguiente bloque.\n\nProducto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `synccheck`.\n\n---"
+    },
+    {
+      "titulo": "Antes de tocar código",
+      "cuerpo": "1. Leer el repo real (SHA).\n2. Impacto SEC / SSS / ICD / SRS / A11Y / INCENTIVOS.\n3. STYLE_GUIDE e imports.\n4. Plan por fases; campaña en docs/plans/.\n5. No desactivar tests ni seguridad.\n6. VERSIONING (¿bump? ¿tag?).\n7. Comando nuevo: código + help + man + README + SSS + CHANGELOG.\n8. No abrir DepManager ni política geo real (solo dirección).\n\n---"
+    },
+    {
+      "titulo": "Versionado",
+      "cuerpo": "| Cambio | Poetry | Tag |\n|--------|--------|-----|\n| Runtime / comandos / scripts | Bump X.Y.Z | vX.Y.Z |\n| Solo docs | No bump | vX.Y.Z-docs o vX.Y.Z-docs.N |\n\n---"
+    },
+    {
+      "titulo": "Plataforma",
+      "cuerpo": "- Poetry: un candidato solo si `--version` se puede ejecutar.\n- windows/git-bash: `py -m poetry`.\n- windows/wsl: clone en FS Linux; rechazo bajo `/mnt/<letra>/`.\n\n---"
+    },
+    {
+      "titulo": "Accesibilidad",
+      "cuerpo": "docs/A11Y.md es mandatoria. Conflicto con SEC: procedimiento escrito.\n\n---"
+    },
+    {
+      "titulo": "Cierre de grupo",
+      "cuerpo": "docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditoría.\n\n---"
+    },
+    {
+      "titulo": "Checklist de cada mensaje de trabajo",
+      "cuerpo": "1. ¿Breadcrumb?\n2. ¿Un paso / un fichero?\n3. ¿Fichero entero?\n4. ¿Tablas ya hechas?\n5. ¿He vuelto a pegar en vez de remitir?\n6. ¿SHA o synccheck si hablo del remoto?\n7. ¿A11Y / SEC / INCENTIVOS / contrato intactos?\n\n---"
+    },
+    {
+      "titulo": "Autoridad",
+      "cuerpo": "Este documento manda sobre el estilo de asistencia.\nSi choca con SEC, SSS, A11Y o INCENTIVOS, prevalecen esas normas y luego se actualiza este archivo."
+    }
+  ]
+}

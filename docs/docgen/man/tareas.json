@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "tareas",
   "titulo": "tareas",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/tareas.md",
   "secciones": [
     {
@@ -19,6 +21,10 @@
     {
       "titulo": "SEGURIDAD",
       "cuerpo": "Comando de sistema. stdlib + moslib."
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: tareas [list|add <comando>|hecha <id>|tick] - Tareas locales. bloqueada_a11y_sec no se ejecuta."
     }
   ]
 }

@@ -1,0 +1,46 @@
+{
+  "schema": "metsuos-docgen-spec-1",
+  "id": "09-tasks",
+  "titulo": "09 – Tareas",
+  "preambulo": "**Versión del documento:** 1.0  \n**Estado:** Normativo (campaña 07, frente B)  \n**Baseline:** v0.2.5  \n**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/08-APPS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/plans/2026-09-01-02-campana-07-soporte-apps-tareas-ia.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/09-tasks/20260916_025234.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Definir el sistema de tareas de MetsuOS (manual y automático), inspirado en GTD y ampliable.\n\nNo describe la malla P2P (10) ni la suite de desarrollo (08). Las automáticas de la 07 son **locales**.\n\n---"
+    },
+    {
+      "titulo": "Principio",
+      "cuerpo": "- **Manual:** el usuario entra en un comando, resuelve, sale.\n- **Automática:** segundo plano local; se consulta como “canales” (texto lineal).\n- Apps y núcleo **encolan** aquí. No inventan colas propias.\n\nSi A11Y o SEC fallan, estado `bloqueada_a11y_sec`: **no se ejecuta**.\n\n---"
+    },
+    {
+      "titulo": "Campos estables",
+      "cuerpo": "| Campo | Obligatorio | Valores / notas |\n|-------|-------------|-----------------|\n| id | sí | estable |\n| origen | sí | sistema / app / usuario |\n| modo | sí | manual / automatica |\n| privilegio | sí | root / no-root |\n| clase | sí | realtime / heavy / normal / sistema |\n| proyecto | no | slug |\n| prioridad | sí | entero ≥ 0; 0 = más urgente en 07 |\n| maslow | no | 1–5; solo origen usuario; stub |\n| recurrencia | sí | una_vez / cada_n_minutos / cada_n_dias |\n| intervalo | no | N según recurrencia |\n| estado | sí | pendiente / en_curso / hecha / fallida / bloqueada_a11y_sec |\n| comando | sí | qué invocar |\n| creado / actualizado | sí | timestamps |\n\nNo renombrar estos campos. Se pueden añadir otros en v1.1+.\n\n---"
+    },
+    {
+      "titulo": "Clases y privilegio",
+      "cuerpo": "| Clase | Uso |\n|-------|-----|\n| realtime | Poca latencia; no bloquear con trabajo heavy |\n| heavy | Largo o mucha CPU/RAM |\n| normal | Resto |\n| sistema | Al vaciar la pila de esa clase, se **reencola** |\n\nRoot: puede usar fachada moslib para recursos/temperatura del anfitrión (stdlib). No-root: no.\n\nIntervalo de automáticas: en 07, función simple de `prioridad` (documentar la fórmula en ICD). No hace falta la fórmula final de producto.\n\n---"
+    },
+    {
+      "titulo": "Persistencia",
+      "cuerpo": "| origen | Dónde |\n|--------|--------|\n| usuario | `.mos/` (no versionar como producto) |\n| app | datos de esa app, no el árbol público del núcleo salvo que la app sea de sistema |\n| sistema | almacén de sistema local; no secretos en git |\n\n---"
+    },
+    {
+      "titulo": "Comandos (07)",
+      "cuerpo": "| Comando (nombre a fijar en ICD) | Función |\n|---------------------------------|---------|\n| listar / filtrar | siempre las manuales del usuario; automáticas bajo filtro |\n| entrar en manual | ejecutar el comando asociado |\n| hilos (tele) | por tipo: estado, clase, privilegio; texto lineal, no solo color |\n| tick | avanzar automáticas si aún no hay daemon |\n\nShell síncrono: `tick` o proceso hijo documentado. No fingir red ni P2P.\n\n---"
+    },
+    {
+      "titulo": "Recurrencia",
+      "cuerpo": "- `una_vez`: al `hecha`, no vuelve.\n- `cada_n_dias`: manual recurrente; reaparece.\n- `cada_n_minutos`: automática; N ajustable por prioridad en ICD.\n\n---"
+    },
+    {
+      "titulo": "Criterios de aceptación del frente B",
+      "cuerpo": "1. Este spec publicado.\n2. Se crea una manual `una_vez`, se lista, se entra, pasa a `hecha`.\n3. Una automática `sistema` se reencola al vaciar (test unitario o tick).\n4. `bloqueada_a11y_sec` no invoca `comando`.\n5. Vista hilos usable con teclado y lector de terminal.\n\n---"
+    },
+    {
+      "titulo": "Autoridad",
+      "cuerpo": "Normativo para tareas. Choca con SEC/A11Y/SSS → ganan esas."
+    }
+  ]
+}

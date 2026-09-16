@@ -2,7 +2,9 @@
   "schema": "metsuos-docgen-man-1",
   "id": "clear",
   "titulo": "clear",
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-clear/20260915_095657.md",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/man/clear.md",
   "secciones": [
     {
       "titulo": "NOMBRE",
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "help, man"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: clear - Limpia la pantalla de la terminal."
     }
   ]
 }

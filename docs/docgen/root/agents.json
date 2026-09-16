@@ -1,0 +1,30 @@
+{
+  "schema": "metsuos-docgen-doc-1",
+  "id": "agents",
+  "titulo": "AGENTS.md — Punto de entrada para IA (MetsuOS / MOS2)",
+  "preambulo": "Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y sigue `docs/AI_ONBOARDING.md`.",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/agents/20260916_032325.md",
+  "secciones": [
+    {
+      "titulo": "Lectura mínima",
+      "cuerpo": "1. Este archivo\n2. docs/AI_ONBOARDING.md\n3. docs/INCENTIVOS.md\n4. docs/METHODOLOGY.md\n5. docs/INTERACTION_REVIEW.md\n6. docs/ENVIRONMENTS.md\n7. docs/VERSIONING.md\n8. docs/A11Y.md y docs/a11y/DECLARACION.md\n9. docs/STYLE_GUIDE.md\n10. docs/specs/00-OVERVIEW.md\n11. docs/plans/ si hay campaña\n12. Código y resto de specs según la tarea"
+    },
+    {
+      "titulo": "Normas que no se improvisan",
+      "cuerpo": "- Comandos: execute(args) y help() -> str\n- Imports en comandos: solo biblioteca estándar y moslib\n- El usuario no sobrescribe comandos de sistema (prefijo user_)\n- Tests de arranque bloqueantes\n- Accesibilidad de interfaz mandatoria (docs/A11Y.md)\n- Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)\n- Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md\n- Sin rutas personales ni nombres de máquina en docs públicas\n- Encabezados de documentación sin numeración\n- Entregar archivos enteros; tablas ya montadas; un paso cada vez\n- No remitir a un pegado anterior: volver a pegar\n- Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso\n- Si el archivo nuevo es más corto, avisarlo\n- Directorios en tablas (una columna por nivel)\n- Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo\n- Breadcrumb de campaña en cada paso; explicar saltos de número\n- Git, no funciones exclusivas de un forge\n- Crear ficheros: mkdir -p / touch / editor\n- Estado del repo: comando synccheck y lectura por SHA\n- Psicología: acompañar; no dañar, desestabilizar ni engañar"
+    },
+    {
+      "titulo": "Contexto de sesión",
+      "cuerpo": "```text\nContexto: <sistema> / <entorno> / <rol>\n```\n\nSi falta y hace falta para paths o Poetry, preguntar."
+    },
+    {
+      "titulo": "Versiones",
+      "cuerpo": "Cambio de runtime → bump en pyproject.toml + tag vX.Y.Z.  \nSolo docs → sin bump; tag vX.Y.Z-docs o vX.Y.Z-docs.N.  \nDetalle: docs/VERSIONING.md.\n\nProducto de referencia: 0.2.5. Comandos a11y, docs, synccheck."
+    },
+    {
+      "titulo": "Qué no hacer",
+      "cuerpo": "- No inventar features ausentes en código o specs\n- No desactivar seguridad ni tests para hacer pasar un cambio\n- No excluir un perfil A11Y por comodidad\n- No asumir Mac, Git Bash o WSL sin contexto declarado\n- No diagnosticar el remoto solo con raw .../main/\n- No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)"
+    }
+  ]
+}

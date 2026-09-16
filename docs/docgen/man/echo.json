@@ -2,7 +2,9 @@
   "schema": "metsuos-docgen-man-1",
   "id": "echo",
   "titulo": "echo",
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-echo/20260915_052210.md",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/man/echo.md",
   "secciones": [
     {
       "titulo": "NOMBRE",
@@ -31,6 +33,14 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "help, man"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: echo [texto] - Imprime texto en la salida estándar."
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: echo [texto] - Imprime texto en la salida estándar."
     }
   ]
 }

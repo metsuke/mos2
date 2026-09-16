@@ -1,0 +1,82 @@
+{
+  "schema": "metsuos-docgen-spec-1",
+  "id": "05-sdd",
+  "titulo": "05 – SDD · Arquitectura y diseño",
+  "preambulo": "**Versión del documento:** 1.2  \n**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  \n**Estado:** Normativo descriptivo alineado con el código actual  \n**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/05-sdd/20260916_025234.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Este documento describe la arquitectura y el diseño de MetsuOS tal como existen en la baseline de referencia.\n\nSirve para:\n\n- entender el sistema sin leer todo el código\n- implementar cambios sin romper responsabilidades\n- mantener alineados diseño, specs y código\n\nLa v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter y red al diseño.\n\n---"
+    },
+    {
+      "titulo": "Vista general de arquitectura",
+      "cuerpo": "MetsuOS se organiza en capas:\n\n1. **Lanzamiento** · scripts anfitrión y punto de entrada\n2. **Shell** · interacción con el usuario y worker de tareas\n3. **Núcleo** · usuario, seguridad, carga de comandos, apps, tareas, ia_router\n4. **Comandos** · funciones de sistema, de app y de usuario\n5. **Persistencia local de usuario** · espacio `.mos`\n6. **Verificación** · tests de arranque y de desarrollo\n7. **Documentación** · metodología, entornos, specs, manual y man\n\nPrincipio rector: el shell coordina; el núcleo decide; los comandos ejecutan acciones concretas bajo contrato y seguridad.\n\n---"
+    },
+    {
+      "titulo": "Estructura estática del producto",
+      "cuerpo": "| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción de diseño |\n|---------|---------|---------|---------|------------------------|\n| moslib/ | | | | Paquete núcleo del producto |\n| | core/ | | | Componentes estructurales |\n| | | shell.py | | MOSh: bucle interactivo, arranque, worker |\n| | | cmd_loader.py | | Resolución, seguridad y carga (sistema/app/user) |\n| | | user.py | | Identidad de usuario y espacio personal |\n| | | security.py | | Validación AST de imports (incl. app_dir) |\n| | | apps.py | | Install path/repo, ámbito usuario/sistema |\n| | | tasks.py | | Almacén GTD local y tick |\n| | | ia_router.py | | Fachada Jan/GPT4All/Grok/OpenRouter |\n| | commands/ | | | Comandos oficiales de sistema |\n| rootfs/ | | | | Árbol simulado tipo Unix |\n| | bin/ | mos.py | | Entrada del sistema |\n| | home/ | usuario/.mos/ | | Espacio personal no versionado |\n| | opt/ | apps/ | | Apps de ámbito sistema |\n| apps/ | | | | Cunas de apps en el clone |\n| tests/ | | | | Verificación automatizada |\n| docs/ | | | | Metodología, ENVIRONMENTS, specs, manual y man |\n| install.sh | | | | Instalación, aliases y Poetry portable |\n| mos2.sh | | | | Lanzador principal con Poetry portable |\n| pyproject.toml | | | | Dependencias y metadata Poetry |\n\n\n---"
+    },
+    {
+      "titulo": "Responsabilidades por componente",
+      "cuerpo": "### shell.py · MOSh\n\nResponsabilidades:\n\n- resolver usuario y asegurar espacio personal\n- instanciar CommandManager\n- ejecutar tests de arranque\n- bloquear inicio si los tests fallan\n- leer líneas de comando\n- invocar comandos resueltos\n- manejar exit y errores de interacción\n- worker de sesión para tareas automáticas\n\nNo responsabilidades:\n\n- implementar la lógica de cada comando\n- validar AST por sí mismo\n- gestionar git update\n- resolver el ejecutable de Poetry del anfitrión\n\n### cmd_loader.py · CommandManager\n\nResponsabilidades:\n\n- localizar comandos de sistema, de app y de usuario\n- aplicar seguridad antes de cargar (con app_dir si es app)\n- cargar módulos Python desde archivo\n- cachear por mtime para hot-reload\n- resolver nombres con la prioridad del ICD (sistema > app sistema > app usuario > user_)\n\nNo responsabilidades:\n\n- crear el espacio de usuario\n- decidir política de imports\n- imprimir el prompt\n\n### security.py\n\nResponsabilidades:\n\n- parsear fuente con AST\n- decidir si un import es legal\n- aceptar minimoslib solo con app_dir de esa app\n- devolver lista de errores legibles\n- validar archivos de comando\n\nNo responsabilidades:\n\n- ejecutar comandos\n- conocer el prompt\n- gestionar homes de usuario\n\n### user.py\n\nResponsabilidades:\n\n- obtener usuario del anfitrión\n- calcular rutas de proyecto, rootfs y home\n- migrar home legacy si aplica\n- crear estructura `.mos`\n\nNo responsabilidades:\n\n- cargar comandos\n- validar imports\n- ejecutar tests\n\n### apps.py\n\nResponsabilidades:\n\n- instalar desde path del clone o repo git\n- ámbito usuario o sistema\n- listar, mostrar y quitar apps\n\nNo responsabilidades:\n\n- saltarse SEC o A11Y\n- ser tienda remota ni P2P\n\n### tasks.py\n\nResponsabilidades:\n\n- almacén local de tareas manuales y automáticas\n- tick / avance para el worker\n\nNo responsabilidades:\n\n- malla P2P\n\n### ia_router.py\n\nResponsabilidades:\n\n- detectar proveedores (Jan, GPT4All, Grok, OpenRouter)\n- off por defecto; no listar claves\n\nNo responsabilidades:\n\n- sustituir al shell\n- ser P2P\n\n### commands/*\n\nResponsabilidades:\n\n- implementar una acción concreta\n- ofrecer ayuda textual\n- respetar política de imports y estilo\n\nNo responsabilidades:\n\n- descubrir otros comandos\n- administrar el ciclo de vida del shell\n\n### mos2.sh e install.sh\n\nResponsabilidades:\n\n- ubicarse respecto a la raíz del clone (`SCRIPT_DIR`)\n- detectar perfil de entorno (unix vs windows/git-bash)\n- resolver Poetry de forma portable (`docs/ENVIRONMENTS.md`)\n- lanzar MOSh o instalar dependencias con el comando resuelto\n\nNo responsabilidades:\n\n- lógica de negocio de comandos\n- hardcodear rutas home de un usuario concreto\n\n\n---"
+    },
+    {
+      "titulo": "Diseño de lanzamiento y Poetry",
+      "cuerpo": "`mos2.sh` e `install.sh` comparten la misma política de resolución:\n\n- **windows/git-bash:** priorizar `poetry.exe`, luego `py -m poetry` / `python -m poetry`; evitar el script `poetry` sin extensión cuando provoca Permission denied\n- **linux/native, macos/native, windows/wsl:** priorizar `poetry`, luego `python3 -m poetry` / `python -m poetry`\n\nTras resolver, todas las invocaciones de ese script usan el mismo comando. Detalle normativo: `docs/ENVIRONMENTS.md`.\n\n---"
+    },
+    {
+      "titulo": "Flujo de arranque",
+      "cuerpo": "1. El usuario lanza `mos2`, `./mos2.sh` o `python rootfs/bin/mos.py`\n2. Si usa `mos2.sh`, el script resuelve Poetry y ejecuta `... run python rootfs/bin/mos.py`\n3. `mos.py` prepara el path e instancia `MOSh`\n4. `MOSh.__init__`: username, espacio `.mos`, `CommandManager`\n5. `MOSh.run()` ejecuta tests de arranque\n6. Si fallan → mensaje de error y `sys.exit(1)`\n7. Si pasan → banner, usuario, espacio personal y bucle REPL\n8. Durante la sesión puede correr el worker de tareas\n\n---"
+    },
+    {
+      "titulo": "Flujo de ejecución de un comando",
+      "cuerpo": "1. El usuario escribe una línea\n2. El shell separa `cmd_name` y `args`\n3. Si `cmd_name == exit` → termina\n4. El shell pide el módulo a `CommandManager.get_command(cmd_name)`\n5. El loader busca: sistema, app sistema, app usuario, user_ completo, user_ corto\n6. Antes de cargar, valida seguridad del archivo (con app_dir si es app)\n7. Si es ilegal → rechazo y no ejecución\n8. Si es legal → carga/recarga módulo\n9. El shell llama `module.execute(args)`\n\n---"
+    },
+    {
+      "titulo": "Diseño de seguridad",
+      "cuerpo": "### Enfoque\n\nValidación estática por AST, no sandbox completo del intérprete.\n\n### Enforcement runtime\n\n`CommandManager._load_module()` llama a `validate_command_file()` antes de importlib.\n\n### Enforcement de arranque\n\n`MOSh._run_startup_tests()` lanza pytest; el inventario de seguridad debe fallar si hay comandos ilegales de sistema o del usuario actual.\n\n### Ventaja\n\n- no ejecuta el comando para detectar el problema\n- errores explícitos\n- aplica a sistema, app y usuario\n\n---"
+    },
+    {
+      "titulo": "Diseño del espacio de usuario",
+      "cuerpo": "### Identidad\n\nEl usuario de MetsuOS es el usuario del sistema anfitrión.\n\n### Ruta canónica\n\n```text\nrootfs/home/<usuario>/.mos/\n```\n\n### Subestructura\n\n| Subdir | Uso de diseño |\n|--------|----------------|\n| commands/ | extensión personal por comandos |\n| apps/ | apps de ámbito usuario |\n| data/ | datos persistentes del usuario |\n| config/ | configuración personal |\n| packages/ | reserva de empaquetado personal |\n| repos/ | reserva de repos personales |\n\n### Migración\n\nSi existe home legacy y no la canónica, `user.py` migra el directorio.\n\n\n---"
+    },
+    {
+      "titulo": "Diseño de comandos de sistema de la baseline",
+      "cuerpo": "| Tipo | Comando | Rol de diseño |\n|------|---------|---------------|\n| accesibilidad | a11y | tests A11Y e informe |\n| apps | apps | install / list / show / remove |\n| ayuda | docs | consulta de docs/ y lista blanca de raíz |\n| ayuda | help | descubrimiento y ayuda corta |\n| ayuda | man | documentación extendida en docs/man y man de app |\n| calidad | synccheck | HEAD vs origin/main |\n| calidad | test | batería de tests |\n| calidad | update | sincronización controlada; update reiniciar |\n| host | sysinfo | inspección del anfitrión |\n| host | uptime | tiempo de actividad del anfitrión |\n| host | version | versión e historial git |\n| ia | iarouter | off por defecto; proveedores locales/remotos |\n| red | red | diagnóstico de red del anfitrión; no P2P |\n| tareas | hilos | vista por clase |\n| tareas | tareas | GTD local |\n| utilidad | clear | higiene de terminal |\n| utilidad | echo | salida de texto |\n\n---"
+    },
+    {
+      "titulo": "Diseño de hot-reload",
+      "cuerpo": "CommandManager guarda cache de módulos y mtime del archivo. Si cambió, recarga; si no, reutiliza. La seguridad se reevalúa en la carga.\n\nTras `update`, los módulos ya en memoria no cambian solos. Hace falta `update reiniciar` o salir y relanzar.\n\n---"
+    },
+    {
+      "titulo": "Diseño de actualización",
+      "cuerpo": "El comando `update`:\n\n1. detectar working tree sucio\n2. crear rama `backup/timestamp` si hay cambios\n3. commit de preservación si procede\n4. volver a main\n5. fetch + reset hard a origin/main\n6. alinear tags locales con origin\n7. podar backups antiguos\n\nPrioriza no perder trabajo local y dejar main idéntico al remoto; no publica backups como release.\n\n---"
+    },
+    {
+      "titulo": "Diseño de verificación",
+      "cuerpo": "### tests/\n\nValidan seguridad, usuario, loader, contrato de comandos, estilo crítico, inventario, apps, tareas e iarouter.\n\n### Arranque bloqueante\n\nLa verificación es puerta de entrada a la sesión interactiva.\n\n---"
+    },
+    {
+      "titulo": "Diseño documental",
+      "cuerpo": "| Nivel 1 | Nivel 2 | Papel |\n|---------|---------|-------|\n| docs/ | METHODOLOGY.md | proceso de evolución |\n| docs/ | ENVIRONMENTS.md | perfiles de entorno y Poetry |\n| docs/ | STYLE_GUIDE.md | normas de implementación |\n| docs/ | specs/ | requisitos y diseño controlados |\n| docs/ | USER_MANUAL.md | visión de usuario |\n| docs/ | man/ | ayuda extendida por comando |\n| docs/ | INCENTIVOS.md | dirección de trabajo |\n| docs/ | INTERACTION_REVIEW.md | cierre de interacción |\n| docs/ | DEUDA_Y_CAMPANAS.md | deuda y campañas |\n\n\n---"
+    },
+    {
+      "titulo": "Decisiones de diseño relevantes",
+      "cuerpo": "| Decisión | Motivo |\n|----------|--------|\n| Comandos como archivos .py independientes | máxima modularidad |\n| Seguridad por AST | detectar antes de ejecutar |\n| Usuario = usuario del anfitrión | simplicidad y realismo alpha |\n| rootfs/home para homes | escalabilidad y analogía Unix |\n| Tests al arranque | no operar sobre base rota |\n| update con backup local | reducir riesgo de pérdida de trabajo |\n| docs/man + comando man | ayuda extendida estilo Unix |\n| Poetry resuelto en shell scripts | portabilidad git-bash / wsl / native |\n| Apps fuera de moslib/commands | extensión controlada, misma puerta SEC |\n| iarouter off por defecto | no hay envío silencioso |\n| Tareas locales + worker de sesión | GTD sin malla P2P |\n\n---"
+    },
+    {
+      "titulo": "Límites actuales de diseño",
+      "cuerpo": "En esta baseline el diseño no incluye todavía:\n\n1. permisos internos ricos multi-usuario MetsuOS\n2. IPC entre comandos\n3. UI gráfica\n4. sandbox OS-level de procesos\n5. malla P2P ni tienda remota de apps\n6. suite de desarrollo completa ni DepManager geo\n\nLas reservas `packages/` y `repos/` existen para no cerrar esas líneas de evolución.\n\nApps locales (path/repo git), tareas e iarouter **sí** están en este árbol; dejan de ser “todavía no” de la v1.1.\n\n---"
+    },
+    {
+      "titulo": "Guía práctica para modificar el sistema",
+      "cuerpo": "| Si necesitas... | Toca principalmente... | No olvides... |\n|-----------------|------------------------|---------------|\n| Cambiar el prompt o el REPL | shell.py | tests de arranque |\n| Cambiar resolución de comandos | cmd_loader.py | ICD + tests loader |\n| Cambiar política de imports | security.py | SEC + tests security |\n| Cambiar homes/migración | user.py | USER reqs + tests user |\n| Añadir comando de sistema | moslib/commands/cmd.py | contrato, man, tests, help |\n| Añadir comando de usuario | rootfs/home/.../user_*.py | prefijo user_ y seguridad |\n| Añadir o instalar app | apps.py + paquete de app | spec 08, SEC, A11Y |\n| Cambiar tareas / worker | tasks.py / shell.py | spec 09 |\n| Cambiar iarouter | ia_router.py | spec 10, claves no listadas |\n| Cambiar resolución de Poetry | mos2.sh / install.sh | ENVIRONMENTS + REQ-PLAT |\n| Cambiar normas de producto | docs/specs/ | luego código y tests |\n\n---"
+    },
+    {
+      "titulo": "Autoridad",
+      "cuerpo": "Este SDD describe el diseño de la baseline actual.\n\nSi el código cambia de arquitectura, este documento debe actualizarse en la misma fase o inmediatamente después, antes de considerar el cambio cerrado."
+    }
+  ]
+}

@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "apps",
   "titulo": "apps",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/apps.md",
   "secciones": [
     {
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "help, man"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala."
     }
   ]
 }

@@ -1,0 +1,46 @@
+{
+  "schema": "metsuos-docgen-doc-1",
+  "id": "human-onboarding",
+  "titulo": "Onboarding humano de MetsuOS",
+  "preambulo": "**Versión del documento:** 1.2  \n**Estado:** Guía de entrada  \n**Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/human-onboarding/20260916_033021.md",
+  "secciones": [
+    {
+      "titulo": "Para quién es este documento",
+      "cuerpo": "Personas que clonan el repo por primera vez y quieren:\n\n- instalar y arrancar MOSh\n- entender el mapa de documentación\n- no perderse entre Mac, Git Bash y WSL\n\nNo sustituye al manual de usuario ni a las specs. Es el “por dónde empiezo”.\n\n---"
+    },
+    {
+      "titulo": "Arranque rápido",
+      "cuerpo": "Desde la raíz del clone:\n\n```text\n./install.sh\n./mos2.sh\n```\n\nDentro del shell: `help`, `man`, `docs`, `a11y`, `synccheck`, `exit`.\n\nDetalle de uso cotidiano: docs/USER_MANUAL.md.\n\n---"
+    },
+    {
+      "titulo": "Elige un solo clone",
+      "cuerpo": "No mezcles dos copias del mismo proyecto (por ejemplo una en disco Windows montado y otra en home Linux). Cada clone tiene su propio `.venv`.\n\nEn WSL usa un clone en filesystem Linux (por ejemplo bajo $HOME), no bajo /mnt/c/...  \nSi lanzas install.sh o mos2.sh desde /mnt/... en WSL, el sistema debe rechazarlo y explicarte el motivo.\n\n---"
+    },
+    {
+      "titulo": "Perfiles de entorno",
+      "cuerpo": "Declara (en chat con IA o en notas de trabajo):\n\n```text\nContexto: <sistema> / <entorno> / <rol>\n```\n\n| Sistema | Entorno | Notas |\n|---------|---------|-------|\n| linux | native | Poetry habitual |\n| macos | native | Igual |\n| windows | git-bash | Preferir py -m poetry; poetry.exe puede dar Permission denied |\n| windows | wsl | Clone en FS Linux |\n\nNormativa: docs/ENVIRONMENTS.md.\n\n---"
+    },
+    {
+      "titulo": "Dirección de trabajo (sin karma)",
+      "cuerpo": "docs/INCENTIVOS.md explica hacia dónde empuja el proyecto.\n\nPara ti como persona **no es un examen ni un ranking**. El sistema intenta poner fácil lo alineado (tu carpeta `.mos`, help, no pisar comandos de sistema).\n\nPara una IA que te ayude **sí es obligatorio**.\n\n---"
+    },
+    {
+      "titulo": "Mapa corto de documentación",
+      "cuerpo": "| Documento | Para qué |\n|-----------|----------|\n| README.md | Visión del repo |\n| docs/USER_MANUAL.md | Uso de MOSh |\n| docs/A11Y.md | Política de accesibilidad |\n| docs/a11y/DECLARACION.md | Declaración de accesibilidad |\n| docs/a11y/informe.md | Última validación A11Y automática |\n| docs/INCENTIVOS.md | Vectores y roles (dirección) |\n| docs/ENVIRONMENTS.md | Plataformas y Poetry |\n| docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |\n| docs/STYLE_GUIDE.md | Cómo se escribe el código |\n| docs/VERSIONING.md | Versiones, tags y Poetry |\n| docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |\n| docs/INTERACTION_REVIEW.md | Cierre de grupo con la IA |\n| docs/plans/ | Planes de campaña |\n| docs/AI_ONBOARDING.md / AGENTS.md | Si colaboras con una IA |\n| docs/specs/ | Requisitos y diseño (ECSS-light) |\n| docs/man/ | Manual extendido por comando |\n\nTrabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo es largo, cacho 1 reemplaza el fichero y lo demás se pega debajo.\n\n---"
+    },
+    {
+      "titulo": "Qué puedes hacer como usuario",
+      "cuerpo": "- Crear comandos personales `user_*.py` en tu espacio `.mos/commands/`\n- Invocarlos como `user_algo` o `algo` si no choca con un comando de sistema\n- No puedes pisar comandos oficiales\n- No puedes importar librerías Python de terceros en comandos (solo stdlib y moslib)\n- Consultar accesibilidad en docs/A11Y.md y la declaración en docs/a11y/\n- Comprobar si tu clone coincide con origin/main: `synccheck`\n\n---"
+    },
+    {
+      "titulo": "Si algo falla",
+      "cuerpo": "| Síntoma | Qué mirar |\n|---------|-----------|\n| Tests de arranque en rojo | Comando con import ilegal o pytest no instalado en ESE clone |\n| Permission denied con poetry | Git Bash: usar ./mos2.sh (py -m poetry), no Scripts/poetry |\n| install.sh /bin/bash^M | Finales de línea CRLF; convertir scripts a LF |\n| WSL + /mnt/ | Mover el trabajo a un clone en home Linux |\n| Duda de si el remoto es el que cree la IA | Ejecutar synccheck y pegar la salida |\n\n---"
+    },
+    {
+      "titulo": "Siguiente lectura",
+      "cuerpo": "1. docs/USER_MANUAL.md\n2. docs/A11Y.md si te interesa accesibilidad\n3. docs/INCENTIVOS.md si te interesa la dirección del proyecto\n4. Si vas a programar: docs/DEVELOPER_GUIDE.md y docs/STYLE_GUIDE.md\n5. Si vas a cambiar el producto: docs/METHODOLOGY.md y docs/VERSIONING.md"
+    }
+  ]
+}

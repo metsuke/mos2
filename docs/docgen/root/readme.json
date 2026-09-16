@@ -1,0 +1,66 @@
+{
+  "schema": "metsuos-docgen-doc-1",
+  "id": "readme",
+  "titulo": "MetsuOS (MOS2)",
+  "preambulo": "Sistema Operativo simulado y modular basado en Python\n\n**Estado:** Alpha (funcional y en desarrollo activo)  \n**Versión:** 0.2.7  \n**Python** · **Licencia GPL-3.0** · **Poetry**\n\nMetsuOS (también conocido como MOS2) es un sistema operativo simulado y modular escrito en Python.  \nImplementa un shell interactivo llamado **MOSh** que carga dinámicamente comandos desde módulos Python independientes, inspirado en la estructura de un sistema Linux.\n\nProyecto personal de Metsuke.\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/readme/20260916_032325.md",
+  "secciones": [
+    {
+      "titulo": "Características principales",
+      "cuerpo": "- Shell interactivo propio (MOSh) con prompt personalizado\n- Carga dinámica de comandos con **hot-reload** automático\n- Estructura de directorios inspirada en Linux (`rootfs/`)\n- **Espacio personal por usuario** basado en el nombre de usuario real del sistema operativo anfitrión\n- Migración automática del espacio de usuario desde ubicaciones legacy\n- Comandos del sistema protegidos (el usuario no puede sobrescribirlos)\n- Comandos de usuario con prefijo `user_` (invocables también sin prefijo si no hay conflicto)\n- **Validación de seguridad obligatoria**: biblioteca estándar, `moslib` y `minimoslib` de la propia app\n- **Accesibilidad mandatoria** de la interfaz CLI (`docs/A11Y.md` y declaración en `docs/a11y/`)\n- Apps en ámbito usuario o sistema; install desde el clone o desde un repo git\n- Comandos de app invocables como `app_id_cmd`, `id_cmd` o nombre corto\n- Prioridad: sistema > app sistema > app usuario > user_\n- Tareas locales (manuales y automáticas), vista de hilos y worker de sesión\n- Enrutador de IA: Jan, GPT4All, Grok, OpenRouter (off hasta `iarouter usar`)\n- Tests unitarios y de seguridad con pytest\n- Gestión de dependencias y entorno virtual con Poetry\n- Scripts de instalación y lanzamiento multiplataforma (linux/native, macos/native, windows/git-bash, windows/wsl)\n\n---"
+    },
+    {
+      "titulo": "Estructura del proyecto",
+      "cuerpo": "| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción |\n|---------|---------|---------|---------|-------------|\n| moslib/ | | | | Núcleo del sistema |\n| | core/ | | | Componentes principales |\n| | | shell.py | | Shell principal (MOSh) + worker de tareas |\n| | | cmd_loader.py | | Cargador dinámico + seguridad + prefijos de app |\n| | | user.py | | Usuario anfitrión + espacio personal + migración |\n| | | security.py | | Validación de imports (AST + minimoslib) |\n| | | apps.py | | Install path/repo, ámbito usuario/sistema |\n| | | tasks.py | | Tareas GTD locales + worker |\n| | | ia_router.py | | Fachada Jan/GPT4All/Grok/OpenRouter |\n| | commands/ | | | Comandos oficiales del sistema |\n| | | a11y.py | | Validación A11Y e informe |\n| | | apps.py | | Gestión de apps |\n| | | clear.py | | Limpia la pantalla |\n| | | docs.py | | Consulta documentación del clone |\n| | | echo.py | | Imprime texto |\n| | | help.py | | Ayuda sistema, apps y usuario |\n| | | hilos.py | | Vista de tareas por clase |\n| | | iarouter.py | | Detectar, usar, preguntar |\n| | | man.py | | Manual de sistema o de app |\n| | | synccheck.py | | Compara HEAD local con origin/main |\n| | | sysinfo.py | | Información del sistema |\n| | | tareas.py | | Lista y gestiona tareas |\n| | | test.py | | Ejecuta la batería de tests |\n| | | update.py | | Actualiza desde origin/main |\n| | | uptime.py | | Tiempo de actividad |\n| | | version.py | | Versión e historial |\n| rootfs/ | | | | Sistema de archivos simulado |\n| | bin/ | | | Ejecutables del sistema |\n| | | mos.py | | Punto de entrada del sistema |\n| | home/ | | | Carpetas personales de los usuarios |\n| | | usuario/ | | Carpeta del usuario del sistema anfitrión |\n| | | | .mos/ | Espacio privado (commands, apps, data, config) |\n| | opt/ | | | |\n| | | apps/ | | Apps de ámbito sistema |\n| apps/ | | | | Cunas de apps en el clone |\n| docs/ | | | | Documentación del proyecto |\n| | A11Y.md | | | Política de accesibilidad |\n| | a11y/ | | | Declaración e informe A11Y |\n| | AI_ONBOARDING.md | | | Arranque para agentes IA |\n| | HUMAN_ONBOARDING.md | | | Arranque para humanos |\n| | INCENTIVOS.md | | | Dirección de trabajo (vectores y roles) |\n| | INTERACTION_REVIEW.md | | | Cierre de interacción y deuda |\n| | DEVELOPER_GUIDE.md | | | Flujo de desarrollo |\n| | VERSIONING.md | | | Versiones, tags y Poetry |\n| | ENVIRONMENTS.md | | | Perfiles de entorno y Poetry |\n| | METHODOLOGY.md | | | Método de trabajo |\n| | STYLE_GUIDE.md | | | Normas de código |\n| | USER_MANUAL.md | | | Manual de usuario |\n| | DEUDA_Y_CAMPANAS.md | | | Deuda y campañas previstas |\n| | plans/ | | | Planes de campaña |\n| | specs/ | | | Especificaciones ECSS-light |\n| | man/ | | | Páginas man de comandos de sistema |\n| tests/ | | | | Tests unitarios, seguridad y estilo |\n| | conftest.py | | | Configuración compartida de pytest |\n| | test_apps.py | | | Apps |\n| | test_tasks.py | | | Tareas |\n| | test_ia_router.py | | | Enrutador IA |\n| | test_security.py | | | Validación de imports |\n| | test_security_minimoslib.py | | | minimoslib por app |\n| | test_user.py | | | Módulo de usuario |\n| | test_cmd_loader.py | | | Cargador de comandos |\n| | test_cmd_loader_apps.py | | | Carga de comandos de app |\n| | test_cmd_loader_prefixes.py | | | Prefijos y prioridad |\n| | test_version_metadata.py | | | Formato SemVer de Poetry |\n| AGENTS.md | | | | Entrada corta para agentes IA |\n| CHANGELOG.md | | | | Historial de cambios por release |\n| install.sh | | | | Instalación y aliases |\n| mos2.sh | | | | Lanzador principal (Poetry portable) |\n| pyproject.toml | | | | Configuración de Poetry |\n| poetry.lock | | | | Lock de dependencias |\n\n> **Nota:** El contenido de `rootfs/home/` no se versiona (`.gitignore`). Las rutas de usuario son siempre relativas al clone.\n\n---"
+    },
+    {
+      "titulo": "Requisitos",
+      "cuerpo": "- Python 3.10 o superior\n- Poetry instalado\n\n---"
+    },
+    {
+      "titulo": "Instalación",
+      "cuerpo": "```text\ngit clone https://github.com/metsuke/mos2.git\ncd mos2\nchmod +x install.sh\n./install.sh\n```\n\nEl script `install.sh`:\n\n- Configura Poetry para usar un entorno virtual local (`.venv`)\n- Instala las dependencias\n- Ofrece instalar aliases útiles (`mos2`, `mos2f`, `mos2u`, etc.)\n- Resuelve Poetry según el perfil de entorno\n\n### Aliases disponibles (opcionales)\n\n| Alias | Descripción |\n|-------|-------------|\n| mos2 | Lanza MetsuOS |\n| mos2f | Cambia al directorio raíz del proyecto |\n| mos2u | Ejecuta de nuevo el instalador |\n\n---"
+    },
+    {
+      "titulo": "Uso",
+      "cuerpo": "```text\n./mos2.sh\n```\n\no, si tienes el alias:\n\n```text\nmos2\n```\n\nSe abrirá el shell:\n\n```text\nIniciando MOSh para MetsuOS...\nUsuario: tu_usuario_real\nEspacio personal: .../rootfs/home/tu_usuario_real/.mos\nWorker de tareas: activo mientras dure esta sesión.\nUsa 'exit' para salir, 'help' para ayuda\n\nmosh/tu_usuario_real@metsuos:~$\n```\n\n---"
+    },
+    {
+      "titulo": "Comandos del sistema",
+      "cuerpo": "| Tipo | Comando | Descripción |\n|------|---------|-------------|\n| accesibilidad | a11y | Validación A11Y e informe |\n| apps | apps | list/show/install (path o repo)/remove |\n| ayuda | docs | Lista y muestra documentación |\n| ayuda | help | Lista o ayuda de un comando |\n| ayuda | man | Manual de sistema o de app |\n| calidad | synccheck | Compara HEAD local con origin/main |\n| calidad | test | Batería de tests |\n| calidad | update | Sincroniza origin/main |\n| host | sysinfo | Hardware y estado del anfitrión |\n| host | uptime | Tiempo de actividad del anfitrión |\n| host | version | Versión e historial |\n| ia | iarouter | Detectar, elegir proveedor, preguntar |\n| sesion | exit | Sale del shell |\n| tareas | hilos | Vista por clase de las tareas |\n| tareas | tareas | Lista, alta, hecha, tick |\n| utilidad | clear | Limpia la pantalla |\n| utilidad | echo | Imprime texto |\n\n---"
+    },
+    {
+      "titulo": "Cómo añadir comandos",
+      "cuerpo": "### Comandos del sistema (oficiales)\n\nCrea un archivo en `moslib/commands/` (ejemplo `hola.py`):\n\n```text\ndef execute(args):\n    print(\"¡Hola desde MetsuOS!\")\n\ndef help():\n    return \"Uso: hola - Saluda al usuario\"\n```\n\n### Comandos de usuario (personales)\n\n1. El sistema crea automáticamente `rootfs/home/<tu_usuario>/.mos/commands/`\n2. Crea un archivo cuyo nombre **debe** empezar por `user_`\n\n```text\ndef execute(args):\n    print(\"¡Hola desde mi espacio personal!\")\n\ndef help():\n    return \"Uso: user_hola - Saluda desde el espacio de usuario\"\n```\n\n#### Reglas de invocación\n\n- Sistema: solo el nombre del fichero.\n- App `app_dev_paso`: `app_dev_paso`, `dev_paso` o `paso` si nadie con más prioridad lo tiene.\n- Usuario: `user_hola` siempre; `hola` solo si no hay sistema ni app con ese nombre.\n- Prioridad: sistema > app sistema > app usuario > user_.\n- Nadie pisa un comando de sistema.\n\n#### Regla de seguridad obligatoria\n\nTodo comando (sistema, usuario o de app) solo puede importar:\n\n- módulos de la biblioteca estándar de Python\n- módulos de `moslib` (y submódulos)\n- en comandos de app: `minimoslib` de **esa** app\n\nCualquier otro import hace que el comando sea rechazado. Sin A11Y mínima no se acepta ni se ejecuta.\n\n### Apps\n\nEstructura: `app.json`, `commands/`, `minimoslib/`, `man/`.  \n`apps install apps/foo` (ruta relativa al clone) o `apps install <url.git>`.  \n`ambito` en `app.json`: `usuario` o `sistema`.\n\n---"
+    },
+    {
+      "titulo": "IA",
+      "cuerpo": "```text\niarouter detectar\niarouter usar jan\niarouter preguntar hola\n```\n\nLocales: Jan (`127.0.0.1:1337`), GPT4All (`127.0.0.1:4891`).  \nRemotos: `XAI_API_KEY` (Grok), `OPENROUTER_API_KEY` (OpenRouter).  \nOff hasta `usar`. Spec: `docs/specs/10-IA-ROUTER.md`.\n\n---"
+    },
+    {
+      "titulo": "Tests",
+      "cuerpo": "Los scripts `./install.sh` y `./mos2.sh` resuelven Poetry según el perfil de entorno.  \nVer `docs/ENVIRONMENTS.md`.\n\nDesde la raíz del clone:\n\n```text\n./mos2.sh\n```\n\nDentro del shell:\n\n```text\ntest\n```\n\nSi Poetry ya funciona en tu PATH:\n\n```text\npoetry run pytest\n```\n\n---"
+    },
+    {
+      "titulo": "Accesibilidad",
+      "cuerpo": "Política: `docs/A11Y.md`  \nDeclaración: `docs/a11y/DECLARACION.md`  \nInforme automático: `docs/a11y/informe.md`\n\nA11Y es mandatoria para humano e IA. No es un incentivo opcional.\n\n---"
+    },
+    {
+      "titulo": "Desarrollo",
+      "cuerpo": "Activar entorno:\n\n```text\npoetry shell\n```\n\nEjecutar el sistema (alternativa recomendada: `./mos2.sh`):\n\n```text\npoetry run python rootfs/bin/mos.py\n```\n\nLa lógica de negocio está en `moslib/`.  \nGuía: `docs/DEVELOPER_GUIDE.md`.  \nHistorial: `CHANGELOG.md`.  \nPlanes: `docs/plans/`.  \nDirección: `docs/INCENTIVOS.md`.\n\n---"
+    },
+    {
+      "titulo": "Documentación",
+      "cuerpo": "| Documento | Contenido |\n|-----------|-----------|\n| AGENTS.md | Entrada corta para agentes IA |\n| CHANGELOG.md | Historial de cambios por release |\n| docs/A11Y.md | Política de accesibilidad |\n| docs/a11y/DECLARACION.md | Declaración de accesibilidad |\n| docs/AI_ONBOARDING.md | Protocolo completo para IA |\n| docs/HUMAN_ONBOARDING.md | Arranque para personas |\n| docs/INCENTIVOS.md | Vectores y actuaciones por rol |\n| docs/INTERACTION_REVIEW.md | Cierre de interacción y deuda |\n| docs/DEUDA_Y_CAMPANAS.md | Deuda y campañas previstas |\n| docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |\n| docs/VERSIONING.md | Versiones, tags y Poetry |\n| docs/USER_MANUAL.md | Manual de usuario formal |\n| docs/ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |\n| docs/METHODOLOGY.md | Método de trabajo |\n| docs/STYLE_GUIDE.md | Normas de estilo de código |\n| docs/plans/ | Planes de campaña |\n| docs/specs/ | Especificaciones ECSS-light |\n| docs/man/ | Páginas man de comandos de sistema |\n\nEstudiar el repo desde cero (IA): `AGENTS.md` → `docs/AI_ONBOARDING.md` → `docs/INCENTIVOS.md`.  \nEstudiar el repo (humano): `docs/HUMAN_ONBOARDING.md`.\n\n---"
+    },
+    {
+      "titulo": "Licencia",
+      "cuerpo": "Este proyecto está licenciado bajo la **GNU General Public License v3.0**.  \nConsulta el archivo `LICENSE` para más detalles.\n\nCopyright (C) 2026 Metsuke\n\n---"
+    },
+    {
+      "titulo": "Autor",
+      "cuerpo": "**Metsuke**  \nSitio web: https://metsuke.com  \nRepositorio: https://github.com/metsuke/mos2\n\n> **Nota:** MetsuOS es un proyecto experimental en fase Alpha.  \n> Aunque ya es funcional como shell con espacio de usuario, seguridad de imports, apps, tareas e iarouter, todavía no pretende ser un sistema operativo completo."
+    }
+  ]
+}

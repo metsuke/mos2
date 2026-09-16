@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "hilos",
   "titulo": "hilos",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/hilos.md",
   "secciones": [
     {
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "help, man"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: hilos - Lista tareas por clase (texto lineal, vista tele)."
     }
   ]
 }

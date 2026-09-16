@@ -2,7 +2,9 @@
   "schema": "metsuos-docgen-man-1",
   "id": "docs",
   "titulo": "docs",
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/man-docs/20260915_095527.md",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/man/docs.md",
   "secciones": [
     {
       "titulo": "NOMBRE",
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "a11y, man, help"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs <ruta> - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)"
     }
   ]
 }

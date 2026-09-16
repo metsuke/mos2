@@ -1,0 +1,46 @@
+{
+  "schema": "metsuos-docgen-spec-1",
+  "id": "00-overview",
+  "titulo": "00 – Overview de especificaciones (ECSS-light)",
+  "preambulo": "**Versión del documento:** 1.5  \n**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  \n**Estado:** Normativo  \n**Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, AGENTS.md, docs/INCENTIVOS.md, docs/INTERACTION_REVIEW.md, docs/DEUDA_Y_CAMPANAS.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/00-overview/20260915_232748.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Este documento es el mapa de las especificaciones de MetsuOS.\n\nDefine:\n\n- Qué documentos forman el conjunto ECSS-light\n- Para qué sirve cada uno\n- En qué orden se leen y se actualizan\n- Qué autoridad tiene cada tipo de norma\n\nNo describe el diseño detallado ni los requisitos individuales: solo organiza el marco.\n\n---"
+    },
+    {
+      "titulo": "Conjunto de especificaciones",
+      "cuerpo": "| Nivel 1 | Nivel 2 | Nivel 3 | Documento | Función |\n|---------|---------|---------|-----------|---------|\n| docs/ | specs/ | 00-OVERVIEW.md | Overview | Mapa y reglas del set de specs |\n| docs/ | specs/ | 01-SSS-System-Specification.md | SSS | Qué es el sistema y normas no negociables |\n| docs/ | specs/ | 02-SRS-Software-Requirements.md | SRS | Requisitos software numerados y verificables |\n| docs/ | specs/ | 03-ICD-Interfaces-and-Command-Contract.md | ICD | Interfaces internas y contrato de comandos |\n| docs/ | specs/ | 04-SEC-Security-Policy.md | SEC | Política de seguridad de imports y validaciones |\n| docs/ | specs/ | 05-SDD-Architecture-and-Design.md | SDD | Arquitectura y diseño alineados con el código |\n| docs/ | specs/ | 06-TEST-Verification-and-Validation.md | TEST | Estrategia de verificación y validación |\n| docs/ | specs/ | 07-SRelD-Release-Baseline.md | SRelD | Baseline de release |\n| docs/ | specs/ | 08-APPS.md | APPS | Apps locales, ámbitos y mini-moslib |\n| docs/ | specs/ | 09-TASKS.md | TASKS | Tareas e hilos locales, worker de sesión |\n| docs/ | specs/ | 10-IA-ROUTER.md | IA-ROUTER | Enrutador de modelos (off por defecto) |\n\nDocumentos de soporte fuera de `specs/`:\n\n| Nivel 1 | Nivel 2 | Función |\n|---------|---------|---------|\n| AGENTS.md | | Entrada corta para agentes IA |\n| CHANGELOG.md | | Historial de cambios por release |\n| docs/ | A11Y.md | Política de accesibilidad |\n| docs/ | a11y/ | Declaración e informe A11Y |\n| docs/ | AI_ONBOARDING.md | Protocolo de trabajo para IA |\n| docs/ | HUMAN_ONBOARDING.md | Arranque para personas |\n| docs/ | INCENTIVOS.md | Dirección de trabajo (vectores y roles) |\n| docs/ | INTERACTION_REVIEW.md | Cierre de interacción y deuda |\n| docs/ | DEUDA_Y_CAMPANAS.md | Deuda y campañas previstas |\n| docs/ | DEVELOPER_GUIDE.md | Flujo práctico de desarrollo |\n| docs/ | VERSIONING.md | Versiones, tags y Poetry |\n| docs/ | METHODOLOGY.md | Método de trabajo y proceso |\n| docs/ | ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |\n| docs/ | STYLE_GUIDE.md | Normas de estilo de código |\n| docs/ | USER_MANUAL.md | Manual de usuario formal |\n| docs/ | man/ | Páginas man por comando |\n| docs/ | plans/ | Planes de campaña |\n\n---"
+    },
+    {
+      "titulo": "Precedencia normativa",
+      "cuerpo": "De mayor a menor autoridad técnica:\n\n1. A11Y de interfaz (perfiles soportados) junto con `04-SEC` y `01-SSS`\n2. `03-ICD` (contratos e interfaces)\n3. `02-SRS` (requisitos software)\n4. `05-SDD` (diseño) y specs de capacidad `08-APPS`, `09-TASKS`, `10-IA-ROUTER`\n5. Código fuente\n6. `USER_MANUAL`, páginas `man`, README\n\nRegla:\n\n- El código debe cumplir SEC, SSS, ICD, SRS y A11Y.\n- Si A11Y y SEC chocan, se aplica el procedimiento de SEC y A11Y.md. No hay excepción silenciosa.\n- Si un cambio de código exige alterar una norma, primero se actualiza la spec y después el código.\n- Tags y bump de Poetry: `docs/VERSIONING.md`.\n- Relato de releases: `CHANGELOG.md`.\n- Dirección de trabajo para IA: `docs/INCENTIVOS.md`.\n\n---"
+    },
+    {
+      "titulo": "Relación con ECSS",
+      "cuerpo": "Este conjunto es una adaptación ligera de ECSS-E-ST-40:\n\n| ECSS | MetsuOS ECSS-light |\n|------|--------------------|\n| SSS | 01-SSS |\n| SRS | 02-SRS |\n| ICD | 03-ICD |\n| SDD | 05-SDD |\n| V&V / test planning | 06-TEST |\n| SRelD | 07-SRelD |\n\nLa seguridad tiene documento propio (`04-SEC`). La accesibilidad tiene política y declaración propias (`docs/A11Y.md`, `docs/a11y/`).\n\n08, 09 y 10 no sustituyen a SSS/SRS/ICD: detallan capacidades ya reservadas o exigidas en el núcleo ECSS-light.\n\n---"
+    },
+    {
+      "titulo": "Cómo se usa este set en el desarrollo",
+      "cuerpo": "### Para implementar una feature\n\n1. Comprobar impacto en SSS / SEC / ICD / SRS / A11Y (y ENVIRONMENTS si afecta a perfiles o Poetry).\n2. Si cambia arquitectura, actualizar SDD. Si toca apps, tareas o iarouter, actualizar 08, 09 o 10.\n3. Implementar en rama `feature/...`.\n4. Añadir o ajustar tests según 06-TEST y STYLE_GUIDE.\n5. Actualizar manual/man/README/onboarding/CHANGELOG/declaración si afecta a uso, proceso, release o cumplimiento A11Y.\n6. Merge solo con tests en verde.\n7. Aplicar VERSIONING (bump/tag si es producto).\n\n### Para revisar un cambio\n\nPreguntas mínimas:\n\n1. ¿Rompe SEC?\n2. ¿Excluye un perfil A11Y?\n3. ¿Rompe el contrato de comando (ICD)?\n4. ¿Queda trazado a algún requisito (SRS) o es solo refactor?\n5. ¿Los tests lo cubren?\n6. ¿Hay que tocar SRelD en la siguiente baseline?\n7. ¿Hay que bump de Poetry o es solo docs?\n8. ¿Hay que anotar CHANGELOG?\n\n---"
+    },
+    {
+      "titulo": "Identificación de requisitos",
+      "cuerpo": "En `02-SRS` los requisitos se numeran así:\n\n```text\nREQ-<AREA>-<NNN>\n```\n\n| Área | Significado |\n|------|-------------|\n| SYS | Sistema |\n| CMD | Comandos |\n| USER | Espacio de usuario |\n| SEC | Seguridad |\n| BOOT | Arranque |\n| TEST | Pruebas |\n| DOC | Documentación |\n| UPD | Actualización |\n| PLAT | Plataforma / entornos |\n| A11Y | Accesibilidad |\n| APP | Apps |\n| TASK | Tareas e hilos |\n| IA | Enrutador de IA |\n\nEjemplo: `REQ-SEC-001`\n\nCada requisito debe ser verificable por test, inspección o demostración.\n\n---"
+    },
+    {
+      "titulo": "Baseline",
+      "cuerpo": "La baseline documental de partida de este marco es **v0.2.1**.  \nProducto de referencia actual: **v0.2.7**.  \nÁrbol hacia **v0.2.8** (entrada en CHANGELOG; tag de producto pendiente de pruebas humanas).\n\n`07-SRelD` describe la baseline.  \n`CHANGELOG.md` resume las evoluciones.  \n`docs/a11y/DECLARACION.md` e `informe.md` describen el cumplimiento A11Y adaptado a CLI.\n\nEsta versión 1.5 del Overview no borra el relato de 1.4: solo actualiza el mapa y la baseline de producto.\n\n---"
+    },
+    {
+      "titulo": "Norma de representación de directorios",
+      "cuerpo": "En todos los documentos de `docs/specs/` las estructuras de directorios se escriben como tablas, con una columna por nivel.\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Descripción |\n|---------|---------|---------|-------------|\n| moslib/ | | | Núcleo |\n| | core/ | | Componentes principales |\n| | | shell.py | Shell MOSh |\n\n---"
+    },
+    {
+      "titulo": "Estado de este overview",
+      "cuerpo": "Este overview es normativo para la organización de las especificaciones.\n\nCualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING, CHANGELOG, A11Y, INCENTIVOS, INTERACTION_REVIEW, DEUDA, planes u onboarding) debe reflejarse aquí."
+    }
+  ]
+}

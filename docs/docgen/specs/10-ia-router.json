@@ -1,0 +1,50 @@
+{
+  "schema": "metsuos-docgen-spec-1",
+  "id": "10-ia-router",
+  "titulo": "10 – Enrutador de IA",
+  "preambulo": "**Versión del documento:** 1.2  \n**Estado:** Normativo (mini campaña iarouter)  \n**Baseline:** v0.2.7 hacia v0.2.8  \n**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/INCENTIVOS.md, docs/A11Y.md, docs/man/iarouter.md, docs/plans/2026-09-07-01-iarouter-modelos-lan.md\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/10-ia-router/20260916_025234.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Fachada única de MetsuOS para llamar a modelos **sin** que la IA fije la política.\n\nProveedores de esta versión:\n\n| Id | Tipo | Disponibilidad |\n|----|------|----------------|\n| jan | local o LAN | HTTP en jan_url, localhost, cache o /24 privada puerto 1337 |\n| gpt4all | local o LAN | HTTP en gpt4all_url, localhost, cache o /24 privada puerto 4891 |\n| grok | remoto | clave en .mos o XAI_API_KEY (se ingiere al almacén) |\n| openrouter | remoto | clave en .mos o OPENROUTER_API_KEY (se ingiere al almacén) |\n\n---"
+    },
+    {
+      "titulo": "Qué no es",
+      "cuerpo": "- No es la suite de desarrollo (08).\n- No es un agente que commitea solo.\n- No lee `.mos` salvo allowlist explícita del humano.\n- No sustituye INCENTIVOS ni A11Y/SEC.\n- No es la malla P2P (campaña 10). El puente LAN es un HTTP local opcional.\n\n---"
+    },
+    {
+      "titulo": "Contrato moslib.core.ia_router",
+      "cuerpo": "| Operación | Comportamiento |\n|-----------|----------------|\n| status | proveedor, enabled, modelo, lista de detectados |\n| detectar | jan/gpt4all HTTP + LAN; grok/openrouter por clave .mos o env |\n| set_provider(id) | solo si detectar lo marca disponible; enabled=true |\n| listar_modelos(id) | GET /v1/models del proveedor |\n| set_modelo(id) | persiste jan_model / gpt4all_model / grok_model / openrouter_model |\n| complete(prompt, meta) | envía o error claro en español |\n\n`meta.provider` puede forzar el id de esa llamada. Si falta, usa la política.\n\nErrores (sin clave, sin red, off, `.mos` no autorizado): mensaje usable, sin volcar secretos, shell vivo.\n\n---"
+    },
+    {
+      "titulo": "Política",
+      "cuerpo": "Ruta: `.mos/config/ia_router.json` (espacio del usuario).\n\n| Campo | Default |\n|-------|---------|\n| enabled | false |\n| provider | jan |\n| jan_url | http://127.0.0.1:1337/v1/chat/completions |\n| jan_model | auto |\n| gpt4all_url | http://127.0.0.1:4891/v1/chat/completions |\n| gpt4all_model | auto |\n| grok_url | https://api.x.ai/v1/chat/completions |\n| grok_model | auto |\n| openrouter_url | https://openrouter.ai/api/v1/chat/completions |\n| openrouter_model | auto |\n| allow_mos_paths | [] |\n| cost_ceiling | null |\n| project | null |\n\nLa IA no escribe este fichero. Lo escribe `iarouter usar` / `iarouter modelo` o el humano.\n\n---"
+    },
+    {
+      "titulo": "Claves",
+      "cuerpo": "moslib.core.ia_keys + moslib.core.secreto.\n\nOrden: almacén `.mos` → si falta, entorno → se copia al almacén.  \nFicheros: `.mos/config/.ia_wrap` y `ia_keys.json` (no git, 0600).  \nHMAC detecta manipulación. Quien copie wrap+json puede recuperar.  \n`iarouter clave` pide sin eco. No se listan en status.\n\n---"
+    },
+    {
+      "titulo": "Transporte",
+      "cuerpo": "Solo a través de moslib. `urllib` de la stdlib. Comandos no hacen HTTP directo.\n\nCuerpo: chat completions (role user + content). Respuesta: `choices[0].message.content`.\n\nOpenRouter añade HTTP-Referer y X-Title.\n\n---"
+    },
+    {
+      "titulo": "LAN, share, publicar, puente",
+      "cuerpo": "| Pieza | Efecto |\n|-------|--------|\n| resolver local | localhost → cache TTL 600 s → /24 privada |\n| share | diagnóstico bind/puerto; guía por entorno; no cambia el anfitrión |\n| publicar | autorización explícita; regla mínima LAN/privado |\n| puente | HTTP MetsuOS :17337, proxy a Jan/GPT4All; off hasta puente on; rechaza .mos |\n\n---"
+    },
+    {
+      "titulo": "Comando de sistema",
+      "cuerpo": "| Subcomando | Efecto |\n|------------|--------|\n| status | política + detección |\n| detectar | solo detección |\n| share | diagnóstico LAN |\n| publicar | intenta abrir LAN (explícito) |\n| puente on\\|off\\|status | endpoint 17337 |\n| usar ID | activa proveedor disponible; pide clave si falta |\n| clave ID [borrar] | alta / baja en .mos |\n| modelos [ID] | lista ids |\n| modelo [ID] texto... | fija modelo (espacios permitidos) |\n| preguntar TEXTO | complete explícito |\n\nSin `preguntar` no hay envío.\n\nSalida: tabla corta + párrafo por ítem.\n\n---"
+    },
+    {
+      "titulo": "Criterios de aceptación",
+      "cuerpo": "1. Spec 1.2 publicado.\n2. enabled=false: no hay llamada de red (test).\n3. Payload con `.mos` no allowlist: rechazo.\n4. detectar distingue local caído y remoto sin clave.\n5. usar un id no disponible: no cambia política.\n6. preguntar con Jan/GPT4All/Grok/OpenRouter implementados en la fachada.\n7. Fallo de red o clave: error usable, shell vivo.\n8. listar/fijar modelo; id con espacios no se toma como proveedor.\n9. clave en .mos no aparece en claro en ia_keys.json (test).\n10. env se ingiere al almacén (test).\n11. share no llama a publicar.\n12. puente off por defecto.\n13. **Pruebas humanas antes del tag 0.2.8:** pytest completo; en una máquina `preguntar` local; si hay segunda máquina, share o puente; Grok u OpenRouter con clave real al menos una vez.\n\n---"
+    },
+    {
+      "titulo": "Autoridad",
+      "cuerpo": "Normativo para llamadas a modelos. Choca con SEC/A11Y → ganan esas."
+    }
+  ]
+}

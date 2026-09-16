@@ -1,0 +1,66 @@
+{
+  "schema": "metsuos-docgen-doc-1",
+  "id": "methodology",
+  "titulo": "Metodología de MetsuOS (MOS2)",
+  "preambulo": "**Versión del documento:** 1.3  \n**Baseline de referencia:** v0.2.4  \n**Estado:** Normativo\n\n---",
+  "cuerpo_completo": null,
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/methodology/20260916_033021.md",
+  "secciones": [
+    {
+      "titulo": "Propósito",
+      "cuerpo": "Este documento define **cómo se desarrolla, documenta y evoluciona MetsuOS**.\n\nSu objetivo es:\n\n- Evitar reinventar decisiones ya tomadas.\n- Impedir que cambios futuros rompan funcionalidad existente.\n- Unificar el trabajo entre el desarrollador humano y la asistencia por IA.\n- Dar trazabilidad entre requisitos, diseño, código y pruebas.\n\nSi existe conflicto entre este documento y el código, **se resuelve actualizando el código o la especificación de forma explícita**. No se improvisan excepciones silenciosas.\n\n---"
+    },
+    {
+      "titulo": "Qué es MetsuOS (marco de referencia)",
+      "cuerpo": "MetsuOS (MOS2) es un sistema operativo **simulado y modular** escrito en Python.\n\nCaracterísticas estructurales no negociables:\n\n- Shell interactivo propio: **MOSh**.\n- Núcleo en `moslib/`.\n- Sistema de archivos simulado en `rootfs/`.\n- Espacio personal por usuario del sistema anfitrión.\n- Comandos como módulos Python independientes.\n- **Todo pasa por mosLib**.\n- No se permiten instalaciones arbitrarias de paquetes Python en comandos.\n- Seguridad de imports obligatoria (solo biblioteca estándar + `moslib`).\n- Accesibilidad de interfaz mandatoria (`docs/A11Y.md`).\n- Agnóstico de plataforma (linux/native, macos/native, windows/git-bash, windows/wsl).\n\nMetsuOS **no** pretende ser un kernel real ni un sustituto completo de un sistema operativo nativo. Es un entorno controlado, extensible y auditable.\n\n---"
+    },
+    {
+      "titulo": "Por qué ECSS-light",
+      "cuerpo": "La metodología de especificación se inspira en **ECSS-E-ST-40** (ingeniería de software de la ESA), adaptada a la escala de un proyecto alpha modular.\n\nSe adopta de ECSS:\n\n- Separación entre *qué* (requisitos) y *cómo* (diseño).\n- Documentos con propósito claro y precedencia.\n- Requisitos numerados y verificables.\n- Control de interfaces.\n- Baseline de release.\n\nSe descarta de ECSS:\n\n- La burocracia completa de un programa espacial.\n- Documentación no mantenible para el tamaño actual del proyecto.\n\nEl resultado se denomina **ECSS-light** y vive en `docs/specs/`.\n\n---"
+    },
+    {
+      "titulo": "Mapa de documentación",
+      "cuerpo": "| Nivel 1 | Nivel 2 | Nivel 3 | Descripción |\n|---------|---------|---------|-------------|\n| AGENTS.md | | | Entrada corta para agentes IA |\n| CHANGELOG.md | | | Historial de releases |\n| docs/ | | | Documentación del proyecto |\n| | A11Y.md | | Política de accesibilidad |\n| | a11y/ | | Declaración e informe A11Y |\n| | AI_ONBOARDING.md | | Protocolo de trabajo para IA |\n| | HUMAN_ONBOARDING.md | | Arranque para personas |\n| | DEVELOPER_GUIDE.md | | Flujo práctico de desarrollo |\n| | VERSIONING.md | | Versiones, tags y Poetry |\n| | METHODOLOGY.md | | Este documento (normativo de proceso) |\n| | ENVIRONMENTS.md | | Perfiles de entorno, Poetry y contexto de sesión |\n| | STYLE_GUIDE.md | | Normas de código |\n| | USER_MANUAL.md | | Manual de usuario formal |\n| | plans/ | | Planes de campaña |\n| | specs/ | | Especificaciones ECSS-light |\n| | | 00-OVERVIEW.md | Mapa y reglas de las specs |\n| | | 01-SSS-System-Specification.md | Especificación de sistema |\n| | | 02-SRS-Software-Requirements.md | Requisitos software |\n| | | 03-ICD-Interfaces-and-Command-Contract.md | Interfaces y contrato de comandos |\n| | | 04-SEC-Security-Policy.md | Política de seguridad |\n| | | 05-SDD-Architecture-and-Design.md | Arquitectura y diseño |\n| | | 06-TEST-Verification-and-Validation.md | Verificación y validación |\n| | | 07-SRelD-Release-Baseline.md | Baseline de release |\n| | man/ | | Páginas man por comando |\n\n### Precedencia\n\n1. A11Y de interfaz (perfiles soportados) junto con normas de seguridad (`04-SEC`) y sistema (`01-SSS`).\n2. Contrato de comandos e interfaces (`03-ICD`).\n3. Requisitos software (`02-SRS`).\n4. Diseño (`05-SDD`).\n5. Código.\n6. README y textos auxiliares.\n\nEl código debe cumplir las especificaciones. Si una mejora exige cambiar una norma, **primero se actualiza la spec** y después el código.\n\nSi A11Y y SEC chocan, se sigue el procedimiento de `docs/A11Y.md` y `04-SEC`.\n\nVersionado de producto y tags: `docs/VERSIONING.md`.\n\n---"
+    },
+    {
+      "titulo": "Método de trabajo (humano + IA)",
+      "cuerpo": "### Principios\n\n- **No romper** lo que ya funciona.\n- **Planes por fases**, no cambios masivos sin control.\n- **Commits atómicos** y mensajes claros.\n- **Tests como puerta de calidad** (incluidos en el arranque del sistema).\n- La IA propone plan y código; el humano ejecuta, prueba y decide.\n- Toda feature nueva debe poder explicarse contra una spec o contra este documento.\n- Cada campaña amplia tiene plan en `docs/plans/YYYY-MM-DD-NN-slug.md` **antes** del código (salvo reconstrucciones).\n\n### Contexto de sesión (multi-entorno)\n\nFormato:\n\n```text\nContexto: <sistema> / <entorno> / <rol>\n```\n\nEjemplos: `macos/native/desarrollo`, `windows/git-bash/prueba`, `windows/wsl/ambos`.\n\nNormas:\n\n- Sin nombres de host ni rutas home personales en el repositorio público.\n- La IA adapta comandos al contexto; si falta, pregunta.\n- Detalle: `docs/ENVIRONMENTS.md`.\n\n### Entrega de documentación por la IA\n\n- Un archivo o sección completa en **un único bloque de texto** listo para copiar y pegar.\n- Explicar en pocas líneas **qué ha cambiado** para validar leyendo.\n- Evitar pedir al humano que reescriba tablas o párrafos largos a mano.\n- Si una fase toca varias piezas, entregar **un paso cada vez**.\n- **Encabezados sin numeración** (`## Título`, no `## 1. Título`).\n- Si el archivo del repo aún tiene números, entregar el documento completo ya sin números.\n- Si la versión nueva es más corta que la del repo (docs **o** código), comprobar que no se pierde contenido e informarlo. Prohibido resumir sin consultar.\n- Si el documento no cabe en un mensaje, **cacho 1 sustituye todo el fichero**; los cachos siguientes se pegan **debajo**.\n- Tablas de comandos del sistema: columna **Tipo** en orden alfabético; dentro de cada tipo, comandos en orden alfabético.\n- Estructuras de directorios: tablas, una columna por nivel.\n- Crear carpetas/ficheros: dar secuencia bash (`mkdir -p`, `touch`, editor).\n- Cada paso de campaña lleva breadcrumb: campaña, grupo, bloque x/y, paso, progreso aproximado.\n- Git, no funciones exclusivas de un forge.\n- No usar la palabra «corrida»; decir «ejecución» o «pasada de tests».\n- CHANGELOG: no dejar «Sin publicar» a criterio del humano.\n\nDetalle operativo para agentes: `AGENTS.md` y `docs/AI_ONBOARDING.md`.\n\n### Flujo estándar de una fase\n\n1. Partir de `main` limpio y actualizado.\n2. Crear rama `feature/<nombre-descriptivo>`.\n3. Acordar un plan por fases (y escribirlo en `docs/plans/` si es campaña nueva).\n4. Implementar **solo** la fase actual.\n5. Ejecutar tests (`./mos2.sh` / `test`, o Poetry según entorno) y/o arranque de MOSh.\n6. Commit atómico.\n7. Pasar a la siguiente fase.\n8. Al terminar el conjunto: merge a `main` y aplicar `docs/VERSIONING.md`.\n\n### Ramas\n\n- `main` → estable, siempre usable.\n- `feature/...` → trabajo en curso.\n- `backup/YYYYMMDD_HHMMSS` → generadas por el comando `update`; locales, no producto.\n\n### Commits\n\n| Prefijo | Uso |\n|---------|-----|\n| feat: | Nueva funcionalidad |\n| fix: | Corrección |\n| docs: | Documentación |\n| test: | Tests |\n| refactor: | Cambio interno sin cambiar comportamiento |\n| chore: | Mantenimiento, tooling, limpieza |\n\n### Rol de la IA\n\nLa IA debe:\n\n- Analizar el estado real del repositorio antes de proponer cambios.\n- Entregar planes por fases con código/docs listos para pegar.\n- Respetar normas férreas (seguridad, contrato de comandos, mosLib, A11Y).\n- Respetar `docs/ENVIRONMENTS.md`, `docs/VERSIONING.md` y el contexto de sesión.\n- Entregar documentos en un solo bloque copiable; resumir el diff.\n- No inventar features como si ya existieran.\n- Advertir riesgos de regresión.\n- Representar estructuras de directorios como tablas (una columna por nivel).\n- No numerar encabezados de documentación.\n- Poner breadcrumb de campaña en cada paso.\n\nEl humano debe:\n\n- Ejecutar los pasos.\n- Verificar en el perfil de entorno que corresponda.\n- Rechazar o corregir lo que no encaje.\n- Hacer los commits y merges.\n\n### Regla de no regresión\n\nAntes de mergear a `main`:\n\n1. Tests en verde.\n2. Arranque de MOSh sin bloqueo por tests.\n3. Smoke-test: `help`, `version`, `test`, y el comando nuevo si aplica.\n4. No desactivar seguridad ni tests de arranque para hacer pasar un cambio.\n\n### Actualización del repositorio local\n\n- Preferir el comando de sistema `update` (incluye alineación de tags con origin).\n- `mos2_forced_update.sh` solo como emergencia.\n- Las ramas `backup/*` son red de seguridad local.\n- Solo Git; no APIs de un forge.\n\n---"
+    },
+    {
+      "titulo": "Ciclo de vida de una funcionalidad",
+      "cuerpo": "Idea → impacto en SSS / SRS / SEC / ICD / A11Y (si aplica) → diseño breve (SDD si cambia arquitectura) → implementación en rama feature → tests → documentación (USER_MANUAL / man / README / ENVIRONMENTS / onboarding / declaración A11Y si aplica) → merge a main → VERSIONING (bump/tag si es producto) → mención en SRelD si la baseline lo requiere.\n\nNo se implementa una feature solo en código si rompe una norma documentada.\n\n---"
+    },
+    {
+      "titulo": "Seguridad, accesibilidad y calidad como parte del proceso",
+      "cuerpo": "- Validación de imports obligatoria en carga de comandos.\n- Batería de tests al arrancar MOSh; si falla, no inicia.\n- Comandos de usuario sujetos a seguridad y a revisión en arranque del usuario actual.\n- A11Y mandatoria; tests A11Y e informe cuando existan en 0.2.5.\n- Conflicto A11Y/SEC: procedimiento escrito; no excepción silenciosa.\n\n---"
+    },
+    {
+      "titulo": "Documentos de usuario, desarrollador e IA",
+      "cuerpo": "- Manual: `docs/USER_MANUAL.md`\n- Humano: `docs/HUMAN_ONBOARDING.md`\n- Desarrollador: `docs/DEVELOPER_GUIDE.md`\n- IA: `AGENTS.md` y `docs/AI_ONBOARDING.md`\n- Entornos: `docs/ENVIRONMENTS.md`\n- Versionado: `docs/VERSIONING.md`\n- Accesibilidad: `docs/A11Y.md`, `docs/a11y/DECLARACION.md`, `docs/a11y/informe.md`\n- Planes: `docs/plans/`\n- Páginas man: `docs/man/<comando>.md`\n- Comando `man`: muestra esas páginas en el shell.\n- Comando `docs`: lista y muestra `docs/` (baseline 0.2.5).\n- Comando `a11y`: validación A11Y e informe (baseline 0.2.5).\n\nTodo comando de sistema nuevo debería incorporar su página man en el mismo cambio (o en el inmediato de la misma fase).\n\n---"
+    },
+    {
+      "titulo": "Estilo de código",
+      "cuerpo": "Las normas de escritura están en `docs/STYLE_GUIDE.md`.\n\nEste documento obliga a respetar la guía, mantener tests de contrato/normas críticas y no introducir excepciones ad hoc sin actualizar la guía.\n\n---"
+    },
+    {
+      "titulo": "Representación de estructuras de directorios",
+      "cuerpo": "Las estructuras de directorios siempre se representan como tablas markdown, con una columna por nivel y una columna final de descripción.\n\nEstá prohibido usar árboles ASCII como forma principal en documentos normativos.\n\n---"
+    },
+    {
+      "titulo": "Baseline y evolución",
+      "cuerpo": "- Baseline funcional de partida de este marco: v0.2.1.\n- Producto actual de referencia: v0.2.4.\n- Cierre A11Y de esta campaña: v0.2.5 previsto.\n- Cada release relevante actualiza `docs/specs/07-SRelD-Release-Baseline.md`.\n- Tags solo-docs: `vX.Y.Z-docs` o `vX.Y.Z-docs.N` con la Poetry vigente (detalle fino de VERSIONING: deuda de cierre).\n\n---"
+    },
+    {
+      "titulo": "Cierre de grupo de bloques",
+      "cuerpo": "Al terminar un grupo de bloques de una campaña:\n\n- Revisión de interacción humano↔IA (incidentes → normas).\n- Deuda técnica (hecho / siguiente bloque / no aplica).\n- Secciones nuevas si hacen falta.\n\nPlantilla formal: Grupo III de la campaña 05 (`docs/INTERACTION_REVIEW.md`).\n\n---"
+    },
+    {
+      "titulo": "Resumen operativo (checklist rápido)",
+      "cuerpo": "1. ¿Parto de main actualizado?\n2. ¿Tengo rama feature/...?\n3. ¿Contexto de sesión declarado si hay multi-entorno?\n4. ¿El cambio respeta SEC + SSS + ICD + A11Y?\n5. ¿Hay tests?\n6. ¿El arranque sigue pasando?\n7. ¿Documenté lo necesario?\n8. ¿VERSIONING aplicado (bump o explícitamente no)?\n9. ¿Commit claro y atómico?\n10. ¿Estructuras de directorios en tabla?\n11. ¿Encabezados de docs sin numeración?\n12. ¿Plan de campaña en docs/plans si aplica?\n\nSi alguna respuesta es no y el cambio es relevante, no se mergea.\n\n---"
+    },
+    {
+      "titulo": "Autoridad de este documento",
+      "cuerpo": "METHODOLOGY.md es normativo para el proceso de desarrollo de MetsuOS.\n\nCualquier excepción debe documentarse explícitamente, nunca como práctica silenciosa."
+    }
+  ]
+}

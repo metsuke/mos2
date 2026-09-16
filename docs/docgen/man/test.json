@@ -2,6 +2,8 @@
   "schema": "metsuos-docgen-man-1",
   "id": "test",
   "titulo": "test",
+  "preambulo": "",
+  "cuerpo_completo": null,
   "origen": "/Users/Metsuke/mos2/docs/man/test.md",
   "secciones": [
     {
@@ -31,6 +33,10 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "update, help, man"
+    },
+    {
+      "titulo": "HELP DEL COMANDO",
+      "cuerpo": "Uso: test [args...] - Ejecuta la batería de tests unitarios y de seguridad (pytest). Regenera también docs/a11y/informe.md e informe.json."
     }
   ]
 }
