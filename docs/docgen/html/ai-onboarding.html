@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>ai-onboarding</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>Onboarding para agentes IA (MetsuOS)</h1>
+<p><strong>Versión del documento:</strong> 1.5 <strong>Estado:</strong> Normativo de proceso <strong>Documentos relacionados:</strong> AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md</p>
+<h2>Propósito</h2>
+<p>Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.</p>
+<p>Punto de entrada corto: <code>AGENTS.md</code>. Dirección de trabajo: <code>docs/INCENTIVOS.md</code> (mandatorio para la IA).</p>
+<h2>Orden de lectura</h2>
+<p>1. AGENTS.md 2. Este archivo 3. docs/INCENTIVOS.md 4. docs/METHODOLOGY.md 5. docs/INTERACTION_REVIEW.md 6. docs/ENVIRONMENTS.md 7. docs/VERSIONING.md 8. docs/A11Y.md y docs/a11y/DECLARACION.md 9. docs/STYLE_GUIDE.md 10. docs/specs/00-OVERVIEW.md y el resto de specs según la tarea 11. docs/plans/ si hay campaña 12. Código solo cuando se sepa qué norma aplica</p>
+<p>No inventar features que no estén en código o specs.</p>
+<h2>Qué es MetsuOS (férreo)</h2>
+<ul><li>SO simulado modular en Python; shell MOSh.</li><li>Núcleo moslib/; rootfs/ simulado.</li><li>Contrato: execute(args) y help() -&gt; str no vacío.</li><li>Imports de comandos: solo stdlib + moslib (AST).</li><li>Usuario anfitrión; comandos user_*.py; nunca pisan sistema.</li><li>Tests de arranque bloqueantes.</li><li>A11Y de interfaz mandatoria.</li><li>Poetry + mos2.sh / install.sh multi-entorno.</li><li>Git, no APIs de un forge.</li><li>Comandos de calidad actuales: test, update, synccheck, docgen.</li><li>Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma.</li></ul>
+<h2>Documentación y docgen</h2>
+<p>Fuente de verdad: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json). El markdown publicado se pinta con <code>docgen generate</code>. Flujo normal de la IA: un JSON por mensaje, fichero entero, luego <code>docgen generate &lt;id&gt;</code>. <code>docgen ingest</code> solo primera absorción o recuperación desde markdown/backup. <code>generate</code> no ingerir: si ingerir al generar, el JSON se pisa con un md viejo o corto. Prohibido reescribir specs/manual/man enteros en el chat como vía habitual.</p>
+<h2>Contexto de sesión</h2>
+<pre><code>Contexto: &lt;sistema&gt; / &lt;entorno&gt; / &lt;rol&gt;</code></pre>
+<p>Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas home en el repo público.</p>
+<h2>Cómo entregar trabajo al humano</h2>
+<ul><li>Un paso / un fichero por mensaje, salvo pareja inseparable avisada.</li><li>Fichero <strong>entero</strong>. Prohibido “añade esta fila”: las tablas van montadas.</li><li>Prohibido “usa lo que te di antes”: volver a pegar el documento.</li><li>Cachos solo si no cabe: cacho 1 sustituye todo; no dejar un spec inválido a mitad.</li><li>Completo: primero mkdir / touch / code, luego el texto.</li><li>Parcial (avisando “no sustituyas el fichero”): primero el recorte, luego code.</li><li>Encabezados sin numeración.</li><li>Directorios en tablas (una columna por nivel).</li><li>Comandos: Tipo A–Z, comando A–Z dentro del tipo.</li><li>Si el nuevo texto es más corto que el del repo: avisar. No resumir sin consultar.</li><li>Breadcrumb: campaña, grupo, bloque x/y, paso, %, contexto.</li><li>Si se salta un número de paso: explicar por qué en el mismo mensaje.</li><li>No usar «corrida». CHANGELOG: no dejar «Sin publicar» al humano.</li><li>Psicología: acompañar; prohibido dañar, desestabilizar o engañar.</li><li>Asimov (docs/INCENTIVOS.md): cita + nota de aplicación; no autocommit; no apagar tests.</li></ul>
+<h2>Estado real del repositorio</h2>
+<p>1. Pedir <code>synccheck</code> cuando haya duda. 2. Leer por SHA (<code>git show origin/main:archivo</code> o raw con SHA). 3. No diagnosticar solo con <code>.../main/</code> en CDN. 4. Si Poetry, README, CHANGELOG y comandos no cuadran: hotfix antes del siguiente bloque.</p>
+<p>Producto de referencia al escribir esto: <strong>0.2.7 / árbol 0.2.8</strong>. Comandos <code>a11y</code>, <code>docs</code>, <code>synccheck</code>, <code>docgen</code>.</p>
+<h2>Antes de tocar código</h2>
+<p>1. Leer el repo real (SHA). 2. Impacto SEC / SSS / ICD / SRS / A11Y / INCENTIVOS. 3. STYLE_GUIDE e imports. 4. Plan por fases; campaña en docs/plans/. 5. No desactivar tests ni seguridad. 6. VERSIONING (¿bump? ¿tag?). 7. Comando nuevo: código + help + man + README + SSS + CHANGELOG. 8. No abrir DepManager ni política geo real (solo dirección).</p>
+<h2>Versionado</h2>
+<table><thead><tr><th>Cambio</th><th>Poetry</th><th>Tag</th></tr></thead><tbody><tr><td>Runtime / comandos / scripts</td><td>Bump X.Y.Z</td><td>vX.Y.Z</td></tr><tr><td>Solo docs</td><td>No bump</td><td>vX.Y.Z-docs o vX.Y.Z-docs.N</td></tr></tbody></table>
+<h2>Plataforma</h2>
+<ul><li>Poetry: un candidato solo si <code>--version</code> se puede ejecutar.</li><li>windows/git-bash: <code>py -m poetry</code>.</li><li>windows/wsl: clone en FS Linux; rechazo bajo <code>/mnt/&lt;letra&gt;/</code>.</li></ul>
+<h2>Accesibilidad</h2>
+<p>docs/A11Y.md es mandatoria. Conflicto con SEC: procedimiento escrito.</p>
+<h2>Cierre de grupo</h2>
+<p>docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditoría.</p>
+<h2>Checklist de cada mensaje de trabajo</h2>
+<p>1. ¿Breadcrumb? 2. ¿Un paso / un fichero? 3. ¿Fichero entero (JSON si es docs)? 4. ¿Tablas ya hechas? 5. ¿He vuelto a pegar en vez de remitir? 6. ¿SHA o synccheck si hablo del remoto? 7. ¿A11Y / SEC / INCENTIVOS / contrato intactos? 8. ¿He evitado ingest de rutinario?</p>
+<h2>Autoridad</h2>
+<p>Este documento manda sobre el estilo de asistencia. Si choca con SEC, SSS, A11Y o INCENTIVOS, prevalecen esas normas y luego se actualiza este archivo.</p>
+</body></html>

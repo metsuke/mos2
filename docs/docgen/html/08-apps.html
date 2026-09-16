@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>08-apps</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>08 – Apps</h1>
+<p><strong>Versión del documento:</strong> 1.0   <strong>Estado:</strong> Normativo (campaña 07, frente A)   <strong>Baseline:</strong> v0.2.5   <strong>Documentos relacionados:</strong> docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/plans/2026-09-01-02-campana-07-soporte-apps-tareas-ia.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Definir qué es una <strong>app</strong> en MetsuOS, cómo se relaciona con el núcleo y qué debe cumplir para cargarse.</p>
+<p>No describe la suite de desarrollo (08), ni la malla (10), ni DepManager.</p>
+<hr>
+<h2>Qué es y qué no es</h2>
+<p>Una app es un paquete con <strong>identidad propia</strong>, <strong>repo propio</strong> (o árbol equivalente) y <strong>uno o más comandos</strong> que se ejecutan dentro de MOSh.</p>
+<p>No es un archivo suelto en <code>moslib/commands/</code>.   No sustituye el núcleo.   No puede importar fuera de stdlib + moslib + su mini-moslib declarado.</p>
+<hr>
+<h2>Metadatos estables</h2>
+<table><thead><tr><th>Campo</th><th>Obligatorio</th><th>Notas</th></tr></thead><tbody><tr><td>id</td><td>sí</td><td>slug estable</td></tr><tr><td>nombre</td><td>sí</td><td>visible en help</td></tr><tr><td>version</td><td>sí</td><td>SemVer</td></tr><tr><td>repo</td><td>no</td><td>URL o ruta</td></tr><tr><td>comandos</td><td>sí</td><td>lista de módulos execute/help</td></tr><tr><td>mini_moslib</td><td>no</td><td>solo lo que el núcleo aún no da</td></tr><tr><td>acceso</td><td>sí</td><td>quién instala/usa (mínimo: local-owner)</td></tr><tr><td>docs</td><td>sí</td><td>man/specs propios sujetos a A11Y/SEC/SSS</td></tr></tbody></table>
+<p>Ampliar campos en versiones posteriores de este spec. No renombrar estos.</p>
+<hr>
+<h2>Ciclo de vida (07)</h2>
+<table><thead><tr><th>Acción</th><th>07 implementa</th></tr></thead><tbody><tr><td>Instalar desde path local</td><td>sí</td></tr><tr><td>Listar instaladas</td><td>sí</td></tr><tr><td>Ver metadatos</td><td>sí</td></tr><tr><td>Quitar</td><td>sí</td></tr><tr><td>Tienda remota / firmas de autor</td><td>no (spec reserva el campo acceso)</td></tr></tbody></table>
+<p>Directorio de instalación: se fija en ICD al implementar. Candidatos: <code>rootfs/home/&lt;usuario&gt;/.mos/apps/</code> (usuario) y un prefijo de sistema no versionado. No mezclar con <code>moslib/commands/</code>.</p>
+<hr>
+<h2>Carga y normas férreas</h2>
+<p>El núcleo descubre apps instaladas y carga sus comandos con <strong>la misma</strong> validación que un comando de sistema:</p>
+<ul><li><code>execute(args)</code> y <code>help()</code> → str</li><li>AST: solo stdlib + moslib (+ mini-moslib de esa app, si el loader lo admite de forma explícita)</li><li>Nombre de comando de app no pisa un comando de sistema</li><li>Prefijo recomendado: <code>app_&lt;id&gt;_</code> o namespace de la app; se concreta en ICD</li><li>A11Y: si la app no cumple el mínimo de docs/A11Y.md (help usable, texto lineal, no solo-color), <strong>no se acepta en desarrollo y no se ejecuta</strong></li><li>SEC: import ilegal → no carga; tests de arranque deben ver las apps instaladas del usuario actual o un inventario declarado</li></ul>
+<p>Mini-moslib: el resto del sistema <strong>no</strong> importa esa mini-lib. Solo comandos de esa app. Subida al moslib central = PR / campaña, no un copy silencioso.</p>
+<hr>
+<h2>Acceso (mínimo 07)</h2>
+<table><thead><tr><th>Valor</th><th>Significado</th></tr></thead><tbody><tr><td>local-owner</td><td>Solo el usuario anfitrión de este clone</td></tr><tr><td>system</td><td>Reservado; no implementar tienda en 07</td></tr></tbody></table>
+<p>Quién “tiene la app” lo decide el desarrollador de la app en metadatos; el núcleo en 07 solo respeta local-owner.</p>
+<hr>
+<h2>Criterios de aceptación del frente A</h2>
+<p>1. Spec publicado (este archivo). 2. Fixture de app de prueba instala, lista, ejecuta un comando legal, se desinstala. 3. Fixture con import ilegal no carga. 4. Fixture que pisa un comando de sistema no carga. 5. Sin A11Y mínima no se acepta ni se ejecuta.</p>
+<hr>
+<h2>Autoridad</h2>
+<p>Normativo para apps. Choca con SEC/A11Y/SSS → ganan esas y se versiona este archivo.</p>
+</body></html>

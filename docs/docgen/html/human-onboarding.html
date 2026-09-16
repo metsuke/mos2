@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>human-onboarding</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>Onboarding humano de MetsuOS</h1>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Estado:</strong> Guía de entrada   <strong>Documentos relacionados:</strong> README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md</p>
+<hr>
+<h2>Para quién es este documento</h2>
+<p>Personas que clonan el repo por primera vez y quieren:</p>
+<ul><li>instalar y arrancar MOSh</li><li>entender el mapa de documentación</li><li>no perderse entre Mac, Git Bash y WSL</li></ul>
+<p>No sustituye al manual de usuario ni a las specs. Es el “por dónde empiezo”.</p>
+<hr>
+<h2>Arranque rápido</h2>
+<p>Desde la raíz del clone:</p>
+<pre><code>./install.sh
+./mos2.sh</code></pre>
+<p>Dentro del shell: <code>help</code>, <code>man</code>, <code>docs</code>, <code>a11y</code>, <code>synccheck</code>, <code>exit</code>.</p>
+<p>Detalle de uso cotidiano: docs/USER_MANUAL.md.</p>
+<hr>
+<h2>Elige un solo clone</h2>
+<p>No mezcles dos copias del mismo proyecto (por ejemplo una en disco Windows montado y otra en home Linux). Cada clone tiene su propio <code>.venv</code>.</p>
+<p>En WSL usa un clone en filesystem Linux (por ejemplo bajo $HOME), no bajo /mnt/c/...   Si lanzas install.sh o mos2.sh desde /mnt/... en WSL, el sistema debe rechazarlo y explicarte el motivo.</p>
+<hr>
+<h2>Perfiles de entorno</h2>
+<p>Declara (en chat con IA o en notas de trabajo):</p>
+<pre><code>Contexto: &lt;sistema&gt; / &lt;entorno&gt; / &lt;rol&gt;</code></pre>
+<table><thead><tr><th>Sistema</th><th>Entorno</th><th>Notas</th></tr></thead><tbody><tr><td>linux</td><td>native</td><td>Poetry habitual</td></tr><tr><td>macos</td><td>native</td><td>Igual</td></tr><tr><td>windows</td><td>git-bash</td><td>Preferir py -m poetry; poetry.exe puede dar Permission denied</td></tr><tr><td>windows</td><td>wsl</td><td>Clone en FS Linux</td></tr></tbody></table>
+<p>Normativa: docs/ENVIRONMENTS.md.</p>
+<hr>
+<h2>Dirección de trabajo (sin karma)</h2>
+<p>docs/INCENTIVOS.md explica hacia dónde empuja el proyecto.</p>
+<p>Para ti como persona <strong>no es un examen ni un ranking</strong>. El sistema intenta poner fácil lo alineado (tu carpeta <code>.mos</code>, help, no pisar comandos de sistema).</p>
+<p>Para una IA que te ayude <strong>sí es obligatorio</strong>.</p>
+<hr>
+<h2>Mapa corto de documentación</h2>
+<table><thead><tr><th>Documento</th><th>Para qué</th></tr></thead><tbody><tr><td>README.md</td><td>Visión del repo</td></tr><tr><td>docs/USER_MANUAL.md</td><td>Uso de MOSh</td></tr><tr><td>docs/A11Y.md</td><td>Política de accesibilidad</td></tr><tr><td>docs/a11y/DECLARACION.md</td><td>Declaración de accesibilidad</td></tr><tr><td>docs/a11y/informe.md</td><td>Última validación A11Y automática</td></tr><tr><td>docs/INCENTIVOS.md</td><td>Vectores y roles (dirección)</td></tr><tr><td>docs/ENVIRONMENTS.md</td><td>Plataformas y Poetry</td></tr><tr><td>docs/METHODOLOGY.md</td><td>Cómo se desarrolla el proyecto</td></tr><tr><td>docs/STYLE_GUIDE.md</td><td>Cómo se escribe el código</td></tr><tr><td>docs/VERSIONING.md</td><td>Versiones, tags y Poetry</td></tr><tr><td>docs/DEVELOPER_GUIDE.md</td><td>Flujo de desarrollo</td></tr><tr><td>docs/INTERACTION_REVIEW.md</td><td>Cierre de grupo con la IA</td></tr><tr><td>docs/plans/</td><td>Planes de campaña</td></tr><tr><td>docs/AI_ONBOARDING.md / AGENTS.md</td><td>Si colaboras con una IA</td></tr><tr><td>docs/specs/</td><td>Requisitos y diseño (ECSS-light)</td></tr><tr><td>docs/man/</td><td>Manual extendido por comando</td></tr></tbody></table>
+<p>Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo es largo, cacho 1 reemplaza el fichero y lo demás se pega debajo.</p>
+<hr>
+<h2>Qué puedes hacer como usuario</h2>
+<ul><li>Crear comandos personales <code>user_*.py</code> en tu espacio <code>.mos/commands/</code></li><li>Invocarlos como <code>user_algo</code> o <code>algo</code> si no choca con un comando de sistema</li><li>No puedes pisar comandos oficiales</li><li>No puedes importar librerías Python de terceros en comandos (solo stdlib y moslib)</li><li>Consultar accesibilidad en docs/A11Y.md y la declaración en docs/a11y/</li><li>Comprobar si tu clone coincide con origin/main: <code>synccheck</code></li></ul>
+<hr>
+<h2>Si algo falla</h2>
+<table><thead><tr><th>Síntoma</th><th>Qué mirar</th></tr></thead><tbody><tr><td>Tests de arranque en rojo</td><td>Comando con import ilegal o pytest no instalado en ESE clone</td></tr><tr><td>Permission denied con poetry</td><td>Git Bash: usar ./mos2.sh (py -m poetry), no Scripts/poetry</td></tr><tr><td>install.sh /bin/bash^M</td><td>Finales de línea CRLF; convertir scripts a LF</td></tr><tr><td>WSL + /mnt/</td><td>Mover el trabajo a un clone en home Linux</td></tr><tr><td>Duda de si el remoto es el que cree la IA</td><td>Ejecutar synccheck y pegar la salida</td></tr></tbody></table>
+<hr>
+<h2>Siguiente lectura</h2>
+<p>1. docs/USER_MANUAL.md 2. docs/A11Y.md si te interesa accesibilidad 3. docs/INCENTIVOS.md si te interesa la dirección del proyecto 4. Si vas a programar: docs/DEVELOPER_GUIDE.md y docs/STYLE_GUIDE.md 5. Si vas a cambiar el producto: docs/METHODOLOGY.md y docs/VERSIONING.md</p>
+</body></html>

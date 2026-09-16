@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>user-manual</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>Manual de usuario de MetsuOS (MOS2)</h1>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Baseline de referencia:</strong> v0.2.7 (árbol hacia v0.2.8)   <strong>Estado:</strong> Manual formal de usuario   <strong>Documentos relacionados:</strong> docs/man/, docs/ENVIRONMENTS.md, docs/METHODOLOGY.md, docs/specs/01-SSS-System-Specification.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md</p>
+<hr>
+<h2>Introducción</h2>
+<p>MetsuOS (también llamado MOS2) es un sistema operativo simulado y modular escrito en Python.</p>
+<p>Su interfaz principal es el shell <strong>MOSh</strong>, donde puedes ejecutar:</p>
+<ul><li>comandos oficiales del sistema</li><li>comandos de apps instaladas</li><li>comandos personales de usuario</li><li>utilidades de ayuda, tests, actualización y documentación</li></ul>
+<p>Este manual explica cómo instalar, arrancar y usar MetsuOS en la práctica.</p>
+<p>Para ayuda extendida de un comando concreto:</p>
+<pre><code>man &lt;comando&gt;</code></pre>
+<p>La v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter, red y <code>update reiniciar</code>.</p>
+<hr>
+<h2>Qué necesitas</h2>
+<ul><li>Python 3.10 o superior</li><li>Poetry</li><li>Git</li><li>Terminal en Linux, macOS o Windows (Git Bash o WSL)</li></ul>
+<hr>
+<h2>Instalación</h2>
+<p>1. Clona el repositorio:</p>
+<pre><code>git clone https://github.com/metsuke/mos2.git
+cd mos2</code></pre>
+<p>2. Ejecuta el instalador:</p>
+<pre><code>chmod +x install.sh
+./install.sh</code></pre>
+<p>El instalador:</p>
+<ul><li>prepara el entorno virtual local</li><li>instala dependencias</li><li>puede configurar aliases útiles</li><li>resuelve Poetry según el perfil de entorno (ver sección Entornos de ejecución)</li></ul>
+<h3>Aliases opcionales</h3>
+<table><thead><tr><th>Alias</th><th>Función</th></tr></thead><tbody><tr><td>mos2</td><td>Lanza MetsuOS</td></tr><tr><td>mos2f</td><td>Va a la raíz del proyecto</td></tr><tr><td>mos2u</td><td>Relanza el instalador</td></tr></tbody></table>
+<hr>
+<h2>Entornos de ejecución</h2>
+<table><thead><tr><th>Sistema</th><th>Entorno</th><th>Notas</th></tr></thead><tbody><tr><td>linux</td><td>native</td><td>Poetry habitual en PATH</td></tr><tr><td>macos</td><td>native</td><td>Igual</td></tr><tr><td>windows</td><td>git-bash</td><td>Lanzador prioriza poetry.exe / python -m poetry</td></tr><tr><td>windows</td><td>wsl</td><td>Clone en filesystem Linux; comportamiento tipo Linux</td></tr></tbody></table>
+<p>Usa siempre <code>./install.sh</code> y <code>./mos2.sh</code> desde la <strong>raíz del clone</strong>.   Normativa: <code>docs/ENVIRONMENTS.md</code>.</p>
+<p>Si en Git Bash aparece <em>Permission denied</em> con el script <code>poetry</code> sin extensión, usa <code>./mos2.sh</code> (no invoques a mano <code>Scripts/poetry</code>).</p>
+<hr>
+<h2>Arranque</h2>
+<pre><code>./mos2.sh</code></pre>
+<p>o, si tienes el alias:</p>
+<pre><code>mos2</code></pre>
+<h3>Qué ocurre al arrancar</h3>
+<p>1. MetsuOS ejecuta la batería de tests. 2. Si algún test falla, el sistema no entra en modo interactivo. 3. Si todo pasa, verás algo similar a:</p>
+<pre><code>Iniciando MOSh para MetsuOS...
+Usuario: tu_usuario
+Espacio personal: .../rootfs/home/tu_usuario/.mos
+Usa &#x27;exit&#x27; para salir, &#x27;help&#x27; para ayuda
+
+mosh/tu_usuario@metsuos:~$</code></pre>
+<hr>
+<h2>Conceptos básicos</h2>
+<h3>MOSh</h3>
+<p>Es el shell de MetsuOS. Lees comandos, los ejecutas y ves el resultado.</p>
+<h3>Usuario</h3>
+<p>MetsuOS usa el nombre de usuario real de tu sistema anfitrión.</p>
+<h3>Espacio personal</h3>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th><th>Nivel 4</th><th>Nivel 5</th><th>Uso</th></tr></thead><tbody><tr><td>rootfs/</td><td>home/</td><td>usuario/</td><td>.mos/</td><td></td><td>Raíz personal</td></tr><tr><td></td><td></td><td></td><td></td><td>commands/</td><td>Tus comandos</td></tr><tr><td></td><td></td><td></td><td></td><td>apps/</td><td>Apps de ámbito usuario</td></tr><tr><td></td><td></td><td></td><td></td><td>data/</td><td>Tus datos</td></tr><tr><td></td><td></td><td></td><td></td><td>config/</td><td>Tu configuración</td></tr><tr><td></td><td></td><td></td><td></td><td>packages/</td><td>Reserva de paquetes personales</td></tr><tr><td></td><td></td><td></td><td></td><td>repos/</td><td>Reserva de repos personales</td></tr></tbody></table>
+<p>Este contenido no se sube al repositorio principal.</p>
+<h3>Comandos de sistema, de app y de usuario</h3>
+<ul><li><strong>Sistema:</strong> los trae MetsuOS, protegidos. Ganan siempre si el nombre coincide.</li><li><strong>App:</strong> viven en una app instalada (usuario o sistema).</li><li><strong>Usuario:</strong> los creas tú en <code>.mos/commands/</code> con prefijo <code>user_</code>.</li></ul>
+<p>Prioridad: sistema &gt; app de sistema &gt; app de usuario &gt; comando <code>user_</code>.</p>
+<hr>
+<h2>Comandos de sistema</h2>
+<table><thead><tr><th>Tipo</th><th>Comando</th><th>Descripción</th></tr></thead><tbody><tr><td>accesibilidad</td><td>a11y</td><td>Tests A11Y e informe</td></tr><tr><td>apps</td><td>apps</td><td>Instalar, listar, ver y quitar apps</td></tr><tr><td>ayuda</td><td>docs</td><td>Lista y muestra docs/ y ficheros públicos de la raíz</td></tr><tr><td>ayuda</td><td>help</td><td>Lista de comandos o ayuda de uno concreto</td></tr><tr><td>ayuda</td><td>man</td><td>Manual extendido (docs/man/ y man de app)</td></tr><tr><td>calidad</td><td>synccheck</td><td>Compara HEAD local con origin/main</td></tr><tr><td>calidad</td><td>test</td><td>Batería de tests</td></tr><tr><td>calidad</td><td>update</td><td>Sincroniza con origin/main (backup si hay cambios)</td></tr><tr><td>host</td><td>sysinfo</td><td>Información del anfitrión</td></tr><tr><td>host</td><td>uptime</td><td>Tiempo activo del anfitrión</td></tr><tr><td>host</td><td>version</td><td>Versión e historial Git</td></tr><tr><td>ia</td><td>iarouter</td><td>Modelos locales/remotos; apagado hasta que lo actives</td></tr><tr><td>red</td><td>red</td><td>Diagnóstico de red del anfitrión (no es P2P)</td></tr><tr><td>sesion</td><td>exit</td><td>Sale del shell</td></tr><tr><td>tareas</td><td>hilos</td><td>Vista de tareas por clase</td></tr><tr><td>tareas</td><td>tareas</td><td>Tareas locales (GTD)</td></tr><tr><td>utilidad</td><td>clear</td><td>Limpia la pantalla</td></tr><tr><td>utilidad</td><td>echo</td><td>Imprime texto</td></tr></tbody></table>
+<p>Norma de tablas: tipos en orden alfabético; dentro de cada tipo, comandos en orden alfabético.</p>
+<p>Ejemplos:</p>
+<pre><code>help
+help version
+man update
+docs
+a11y
+synccheck
+apps list
+tareas
+hilos
+iarouter
+red
+version
+sysinfo
+test
+update
+update reiniciar</code></pre>
+<hr>
+<h2>Ayuda: help, man y docs</h2>
+<h3>help</h3>
+<ul><li><code>help</code> lista comandos y ayuda corta</li><li><code>help &lt;comando&gt;</code> muestra la ayuda específica</li></ul>
+<h3>man</h3>
+<ul><li><code>man</code> lista páginas de manual disponibles</li><li><code>man &lt;comando&gt;</code> muestra el manual extendido</li></ul>
+<p>Los manuales de sistema viven en <code>docs/man/</code>. Una app puede aportar el suyo.</p>
+<h3>docs</h3>
+<ul><li><code>docs</code> lista documentos</li><li><code>docs &lt;ruta&gt;</code> muestra un fichero bajo <code>docs/</code> o README, CHANGELOG, AGENTS, LICENSE</li></ul>
+<hr>
+<h2>Crear tus propios comandos</h2>
+<h3>Dónde crearlos</h3>
+<pre><code>rootfs/home/&lt;tu_usuario&gt;/.mos/commands/</code></pre>
+<h3>Nombre obligatorio</h3>
+<p>El archivo debe empezar por <code>user_</code> (ejemplo: <code>user_hola.py</code>).</p>
+<h3>Contenido mínimo</h3>
+<pre><code>def execute(args):
+    print(&quot;Hola desde mi comando personal&quot;)
+
+def help():
+    return &quot;Uso: user_hola - Saluda desde el espacio de usuario&quot;</code></pre>
+<h3>Cómo invocarlo</h3>
+<ul><li>Siempre: <code>user_hola</code></li><li>También: <code>hola</code> si no existe un comando de sistema ni de app con más prioridad llamado <code>hola</code></li></ul>
+<h3>Regla importante</h3>
+<p>Tu comando <strong>no puede</strong> sustituir un comando oficial del sistema.</p>
+<hr>
+<h2>Apps</h2>
+<pre><code>apps list
+apps show &lt;id&gt;
+apps install &lt;ruta-o-repo&gt;
+apps remove &lt;id&gt;</code></pre>
+<p>Una app no es un <code>user_*.py</code>. Lleva <code>app.json</code> y comandos propios. Sin A11Y mínima no se acepta. Detalle: <code>docs/specs/08-APPS.md</code> y <code>man apps</code>.</p>
+<hr>
+<h2>Tareas e hilos</h2>
+<pre><code>tareas
+hilos</code></pre>
+<p>Son locales a tu sesión y a tu espacio. No son la malla P2P. Detalle: <code>docs/specs/09-TASKS.md</code>.</p>
+<hr>
+<h2>iarouter</h2>
+<pre><code>iarouter</code></pre>
+<p>Va apagado hasta que lo actives (<code>usar</code> / <code>preguntar</code>). No lista claves. Jan y GPT4All son locales; Grok y OpenRouter necesitan clave. El puente HTTP, si lo enciendes, no es P2P. Detalle: <code>docs/specs/10-IA-ROUTER.md</code>.</p>
+<hr>
+<h2>Seguridad de comandos</h2>
+<p>Solo se permiten imports de:</p>
+<ul><li>biblioteca estándar de Python</li><li>moslib</li><li>en un comando de app: minimoslib de esa app</li></ul>
+<p>Un import ilegal hace que el comando se rechace; si sigue presente, el arranque puede bloquearse.</p>
+<hr>
+<h2>Tests</h2>
+<h3>Desde fuera del shell</h3>
+<p>Con Poetry operativo en el PATH:</p>
+<pre><code>poetry run pytest</code></pre>
+<p>Preferible usar el flujo del proyecto (<code>./mos2.sh</code> y luego <code>test</code>), que respeta la resolución de Poetry del entorno.</p>
+<h3>Desde dentro del shell</h3>
+<pre><code>test</code></pre>
+<h3>Al arrancar</h3>
+<p>Los tests se ejecutan solos. Si fallan, MetsuOS no abre la sesión interactiva.</p>
+<p>También puedes lanzar solo A11Y:</p>
+<pre><code>a11y</code></pre>
+<hr>
+<h2>Actualizar MetsuOS</h2>
+<p>Dentro del shell:</p>
+<pre><code>update</code></pre>
+<p>Qué hace:</p>
+<p>1. Si hay cambios locales, los guarda en una rama backup con fecha y hora 2. Sincroniza main con origin/main de forma forzada 3. Alinea tags locales con origin 4. Limpia backups antiguos dejando un máximo controlado</p>
+<p>Los módulos ya cargados en esta sesión <strong>no cambian solos</strong>. Después de un update:</p>
+<pre><code>update reiniciar</code></pre>
+<p>o sal con <code>exit</code> y vuelve a lanzar <code>./mos2.sh</code>.</p>
+<p>Comprobar sin actualizar:</p>
+<pre><code>synccheck</code></pre>
+<p>Emergencia desde fuera del shell: <code>mos2_forced_update.sh</code> (solo si sabes lo que implica).</p>
+<hr>
+<h2>Flujo de trabajo recomendado</h2>
+<p>1. Arranca MetsuOS 2. Consulta <code>help</code>, <code>man</code> o <code>docs</code> 3. Trabaja con comandos de sistema 4. Instala apps o crea comandos personales si lo necesitas 5. Ejecuta <code>test</code> cuando hagas cambios relevantes 6. Usa <code>update</code> y luego <code>update reiniciar</code> para alinear tu copia con el repositorio</p>
+<hr>
+<h2>Problemas frecuentes</h2>
+<h3>El sistema no arranca</h3>
+<p>Causa habitual: tests en rojo o un comando de usuario con import ilegal.</p>
+<p>1. Revisar tests (<code>test</code> o <code>poetry run pytest</code> si aplica) 2. Revisar <code>rootfs/home/&lt;usuario&gt;/.mos/commands/</code> 3. Corregir o quitar el comando ilegal 4. Volver a arrancar</p>
+<h3>Permission denied con Poetry en Git Bash</h3>
+<p>Usa <code>./mos2.sh</code> o <code>./install.sh</code>. No ejecutes a mano el script <code>poetry</code> sin extensión del directorio Scripts de Python.</p>
+<h3>Mi comando de usuario no aparece</h3>
+<p>1. Archivo en <code>commands/</code> 2. Nombre <code>user_algo.py</code> 3. Define <code>execute</code> y <code>help</code> 4. Sin imports ilegales 5. Que no lo tape un comando de sistema o de app</p>
+<h3>Quiero un nombre corto y no funciona</h3>
+<p>Si existe un comando de sistema o de app con ese nombre, ese gana. Usa <code>user_...</code>.</p>
+<h3>Tras update no veo el código nuevo</h3>
+<p>Usa <code>update reiniciar</code> o sal y vuelve a entrar.</p>
+<hr>
+<h2>Dónde encontrar más documentación</h2>
+<table><thead><tr><th>Documento</th><th>Contenido</th></tr></thead><tbody><tr><td>docs/USER_MANUAL.md</td><td>Este manual</td></tr><tr><td>docs/ENVIRONMENTS.md</td><td>Perfiles de entorno y Poetry</td></tr><tr><td>docs/man/</td><td>Manual extendido por comando</td></tr><tr><td>docs/METHODOLOGY.md</td><td>Cómo se desarrolla el proyecto</td></tr><tr><td>docs/STYLE_GUIDE.md</td><td>Normas de código</td></tr><tr><td>docs/specs/</td><td>Especificaciones técnicas</td></tr><tr><td>docs/A11Y.md</td><td>Política de accesibilidad</td></tr><tr><td>README.md</td><td>Visión general del repositorio</td></tr><tr><td>CHANGELOG.md</td><td>Historial de releases</td></tr></tbody></table>
+<hr>
+<h2>Limitaciones de la fase Alpha</h2>
+<p>MetsuOS todavía no es un sistema operativo completo.</p>
+<ul><li>no sustituye tu sistema anfitrión</li><li>no es un kernel real</li><li>no permite paquetes Python arbitrarios dentro de comandos</li><li>no es la malla P2P ni una tienda remota de apps</li><li>está en evolución activa</li></ul>
+<p>Aun así es usable como shell modular con seguridad, espacio personal, apps locales, tareas, iarouter (off por defecto), tests y actualización controlada.</p>
+<hr>
+<h2>Salir</h2>
+<pre><code>exit</code></pre>
+</body></html>

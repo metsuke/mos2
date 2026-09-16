@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>10-ia-router</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>10 – Enrutador de IA</h1>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Estado:</strong> Normativo (mini campaña iarouter)   <strong>Baseline:</strong> v0.2.7 hacia v0.2.8   <strong>Documentos relacionados:</strong> docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/INCENTIVOS.md, docs/A11Y.md, docs/man/iarouter.md, docs/plans/2026-09-07-01-iarouter-modelos-lan.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Fachada única de MetsuOS para llamar a modelos <strong>sin</strong> que la IA fije la política.</p>
+<p>Proveedores de esta versión:</p>
+<table><thead><tr><th>Id</th><th>Tipo</th><th>Disponibilidad</th></tr></thead><tbody><tr><td>jan</td><td>local o LAN</td><td>HTTP en jan_url, localhost, cache o /24 privada puerto 1337</td></tr><tr><td>gpt4all</td><td>local o LAN</td><td>HTTP en gpt4all_url, localhost, cache o /24 privada puerto 4891</td></tr><tr><td>grok</td><td>remoto</td><td>clave en .mos o XAI_API_KEY (se ingiere al almacén)</td></tr><tr><td>openrouter</td><td>remoto</td><td>clave en .mos o OPENROUTER_API_KEY (se ingiere al almacén)</td></tr></tbody></table>
+<hr>
+<h2>Qué no es</h2>
+<ul><li>No es la suite de desarrollo (08).</li><li>No es un agente que commitea solo.</li><li>No lee <code>.mos</code> salvo allowlist explícita del humano.</li><li>No sustituye INCENTIVOS ni A11Y/SEC.</li><li>No es la malla P2P (campaña 10). El puente LAN es un HTTP local opcional.</li></ul>
+<hr>
+<h2>Contrato moslib.core.ia_router</h2>
+<table><thead><tr><th>Operación</th><th>Comportamiento</th></tr></thead><tbody><tr><td>status</td><td>proveedor, enabled, modelo, lista de detectados</td></tr><tr><td>detectar</td><td>jan/gpt4all HTTP + LAN; grok/openrouter por clave .mos o env</td></tr><tr><td>set_provider(id)</td><td>solo si detectar lo marca disponible; enabled=true</td></tr><tr><td>listar_modelos(id)</td><td>GET /v1/models del proveedor</td></tr><tr><td>set_modelo(id)</td><td>persiste jan_model / gpt4all_model / grok_model / openrouter_model</td></tr><tr><td>complete(prompt, meta)</td><td>envía o error claro en español</td></tr></tbody></table>
+<p><code>meta.provider</code> puede forzar el id de esa llamada. Si falta, usa la política.</p>
+<p>Errores (sin clave, sin red, off, <code>.mos</code> no autorizado): mensaje usable, sin volcar secretos, shell vivo.</p>
+<hr>
+<h2>Política</h2>
+<p>Ruta: <code>.mos/config/ia_router.json</code> (espacio del usuario).</p>
+<table><thead><tr><th>Campo</th><th>Default</th></tr></thead><tbody><tr><td>enabled</td><td>false</td></tr><tr><td>provider</td><td>jan</td></tr><tr><td>jan_url</td><td>http://127.0.0.1:1337/v1/chat/completions</td></tr><tr><td>jan_model</td><td>auto</td></tr><tr><td>gpt4all_url</td><td>http://127.0.0.1:4891/v1/chat/completions</td></tr><tr><td>gpt4all_model</td><td>auto</td></tr><tr><td>grok_url</td><td>https://api.x.ai/v1/chat/completions</td></tr><tr><td>grok_model</td><td>auto</td></tr><tr><td>openrouter_url</td><td>https://openrouter.ai/api/v1/chat/completions</td></tr><tr><td>openrouter_model</td><td>auto</td></tr><tr><td>allow_mos_paths</td><td>[]</td></tr><tr><td>cost_ceiling</td><td>null</td></tr><tr><td>project</td><td>null</td></tr></tbody></table>
+<p>La IA no escribe este fichero. Lo escribe <code>iarouter usar</code> / <code>iarouter modelo</code> o el humano.</p>
+<hr>
+<h2>Claves</h2>
+<p>moslib.core.ia_keys + moslib.core.secreto.</p>
+<p>Orden: almacén <code>.mos</code> → si falta, entorno → se copia al almacén.   Ficheros: <code>.mos/config/.ia_wrap</code> y <code>ia_keys.json</code> (no git, 0600).   HMAC detecta manipulación. Quien copie wrap+json puede recuperar.   <code>iarouter clave</code> pide sin eco. No se listan en status.</p>
+<hr>
+<h2>Transporte</h2>
+<p>Solo a través de moslib. <code>urllib</code> de la stdlib. Comandos no hacen HTTP directo.</p>
+<p>Cuerpo: chat completions (role user + content). Respuesta: <code>choices[0].message.content</code>.</p>
+<p>OpenRouter añade HTTP-Referer y X-Title.</p>
+<hr>
+<h2>LAN, share, publicar, puente</h2>
+<table><thead><tr><th>Pieza</th><th>Efecto</th></tr></thead><tbody><tr><td>resolver local</td><td>localhost → cache TTL 600 s → /24 privada</td></tr><tr><td>share</td><td>diagnóstico bind/puerto; guía por entorno; no cambia el anfitrión</td></tr><tr><td>publicar</td><td>autorización explícita; regla mínima LAN/privado</td></tr><tr><td>puente</td><td>HTTP MetsuOS :17337, proxy a Jan/GPT4All; off hasta puente on; rechaza .mos</td></tr></tbody></table>
+<hr>
+<h2>Comando de sistema</h2>
+<table><thead><tr><th>Subcomando</th><th>Efecto</th></tr></thead><tbody><tr><td>status</td><td>política + detección</td></tr><tr><td>detectar</td><td>solo detección</td></tr><tr><td>share</td><td>diagnóstico LAN</td></tr><tr><td>publicar</td><td>intenta abrir LAN (explícito)</td></tr><tr><td>puente on\</td><td>off\</td><td>status</td><td>endpoint 17337</td></tr><tr><td>usar ID</td><td>activa proveedor disponible; pide clave si falta</td></tr><tr><td>clave ID [borrar]</td><td>alta / baja en .mos</td></tr><tr><td>modelos [ID]</td><td>lista ids</td></tr><tr><td>modelo [ID] texto...</td><td>fija modelo (espacios permitidos)</td></tr><tr><td>preguntar TEXTO</td><td>complete explícito</td></tr></tbody></table>
+<p>Sin <code>preguntar</code> no hay envío.</p>
+<p>Salida: tabla corta + párrafo por ítem.</p>
+<hr>
+<h2>Criterios de aceptación</h2>
+<p>1. Spec 1.2 publicado. 2. enabled=false: no hay llamada de red (test). 3. Payload con <code>.mos</code> no allowlist: rechazo. 4. detectar distingue local caído y remoto sin clave. 5. usar un id no disponible: no cambia política. 6. preguntar con Jan/GPT4All/Grok/OpenRouter implementados en la fachada. 7. Fallo de red o clave: error usable, shell vivo. 8. listar/fijar modelo; id con espacios no se toma como proveedor. 9. clave en .mos no aparece en claro en ia_keys.json (test). 10. env se ingiere al almacén (test). 11. share no llama a publicar. 12. puente off por defecto. 13. <strong>Pruebas humanas antes del tag 0.2.8:</strong> pytest completo; en una máquina <code>preguntar</code> local; si hay segunda máquina, share o puente; Grok u OpenRouter con clave real al menos una vez.</p>
+<hr>
+<h2>Autoridad</h2>
+<p>Normativo para llamadas a modelos. Choca con SEC/A11Y → ganan esas.</p>
+</body></html>

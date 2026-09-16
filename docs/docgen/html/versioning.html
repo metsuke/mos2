@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>versioning</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>Política de versionado de MetsuOS</h1>
+<p><strong>Versión del documento:</strong> 1.1   <strong>Estado:</strong> Normativo   <strong>Documentos relacionados:</strong> docs/METHODOLOGY.md, docs/specs/07-SRelD-Release-Baseline.md, CHANGELOG.md, pyproject.toml</p>
+<hr>
+<h2>Propósito</h2>
+<p>Define cómo se asignan versiones de producto, tags Git y la relación con Poetry (<code>pyproject.toml</code>), para que código, documentación y releases no se desincronizen.</p>
+<hr>
+<h2>Fuente de verdad de la versión de producto</h2>
+<table><thead><tr><th>Elemento</th><th>Rol</th></tr></thead><tbody><tr><td>pyproject.toml → version</td><td>Versión de producto (Poetry)</td></tr><tr><td>Tag Git vX.Y.Z</td><td>Marca de release alineada con esa versión</td></tr><tr><td>CHANGELOG.md</td><td>Relato humano de lo que cambió en cada release</td></tr><tr><td>Comando version en MOSh</td><td>Muestra info basada en Git (tags/historial)</td></tr><tr><td>docs/specs/07-SRelD</td><td>Describe baselines y evolución</td></tr></tbody></table>
+<p>La versión en <code>pyproject.toml</code> debe coincidir con el tag de producto <strong>funcional</strong> correspondiente cuando se publica una release de código.</p>
+<hr>
+<h2>SemVer adaptado (alpha)</h2>
+<p>Formato: <code>MAJOR.MINOR.PATCH</code> (ejemplo actual: <code>0.2.2</code>).</p>
+<table><thead><tr><th>Parte</th><th>Cuándo subirla</th></tr></thead><tbody><tr><td>MAJOR</td><td>Cambios incompatibles de contrato o seguridad que rompan uso previo de forma consciente</td></tr><tr><td>MINOR</td><td>Nueva capacidad usable (comandos, espacio de usuario, guards de plataforma, etc.)</td></tr><tr><td>PATCH</td><td>Correcciones, ajustes menores de scripts, hardening sin feature nueva</td></tr></tbody></table>
+<p>En fase Alpha (<code>0.x.y</code>) la incompatibilidad ocasional es aceptable si queda documentada en SRelD, CHANGELOG y en el mensaje de release.</p>
+<hr>
+<h2>Tipos de tag</h2>
+<table><thead><tr><th>Tipo</th><th>Forma</th><th>¿Bump Poetry?</th><th>Uso</th></tr></thead><tbody><tr><td>Producto</td><td>vX.Y.Z</td><td>Sí</td><td>Código y/o comportamiento de runtime cambia</td></tr><tr><td>Solo docs</td><td>vX.Y.Z-docs</td><td>No</td><td>Documentación, onboarding, specs sin cambio de runtime</td></tr></tbody></table>
+<p>Ejemplos:</p>
+<ul><li><code>v0.2.2</code> — Poetry portable, entornos, bump a 0.2.2</li><li><code>v0.2.3-docs</code> — onboarding/VERSIONING sin tocar pyproject</li></ul>
+<p>No crear tags de producto si solo cambió markdown.</p>
+<hr>
+<h2>Cuándo actualizar pyproject.toml</h2>
+<p>Obligatorio actualizar <code>version</code> en <code>pyproject.toml</code> cuando:</p>
+<p>1. Se mergea a <code>main</code> un cambio de <strong>producto</strong> (fix/feat de runtime, scripts de lanzamiento, comandos, seguridad, tests de arranque que cambien comportamiento). 2. Se va a crear el tag <code>vX.Y.Z</code> de esa release.</p>
+<p>No actualizar Poetry cuando:</p>
+<ul><li>Solo hay docs, onboarding, STYLE, METHODOLOGY, man pages sin comando nuevo.</li><li>Solo hay commits <code>docs:</code> o <code>chore:</code> de mantenimiento documental.</li></ul>
+<p>La IA y el desarrollador deben, al cerrar una fase de producto, <strong>incluir el bump</strong> en el plan de merge y verificar que README/SRelD/CHANGELOG no queden con una versión mentira.</p>
+<hr>
+<h2>Flujo de release de producto</h2>
+<p>1. Trabajar en <code>feature/...</code>. 2. Tests en verde; arranque de MOSh OK. 3. Actualizar docs/specs afectadas <strong>antes o en el mismo merge</strong>. 4. Añadir entrada en <code>CHANGELOG.md</code> (arriba, bajo la versión nueva; vaciar o dejar “Sin publicar” vacío). 5. Bump en <code>pyproject.toml</code> al valor de la release. 6. Merge a <code>main</code>. 7. Tag anotado: <code>git tag -a vX.Y.Z -m &quot;...&quot;</code>. 8. <code>git push origin main</code> y <code>git push origin vX.Y.Z</code>. 9. Anotar la baseline en <code>07-SRelD</code> si el cambio lo merece.</p>
+<hr>
+<h2>Flujo de release solo documentación</h2>
+<p>1. Rama <code>feature/...</code> solo docs. 2. Entrada en <code>CHANGELOG.md</code> con el sufijo <code>-docs</code> si se etiqueta. 3. Merge a <code>main</code> <strong>sin</strong> cambiar <code>pyproject.toml</code>. 4. Tag opcional: <code>vX.Y.Z-docs</code>. 5. No exigir bump de Poetry.</p>
+<hr>
+<h2>Sincronización con documentación</h2>
+<p>Al asignar un tag de producto, revisar y actualizar si aplica:</p>
+<table><thead><tr><th>Documento</th><th>Qué alinear</th></tr></thead><tbody><tr><td>CHANGELOG.md</td><td>Entrada de la versión</td></tr><tr><td>README.md</td><td>Línea de versión / estado</td></tr><tr><td>docs/specs/07-SRelD</td><td>Capacidades y tags de la release</td></tr><tr><td>docs/USER_MANUAL.md</td><td>Baseline de referencia del manual</td></tr><tr><td>docs/ENVIRONMENTS.md</td><td>Solo si el comportamiento de entorno cambió</td></tr></tbody></table>
+<p>Al tag solo-docs, CHANGELOG + contenido nuevo; no hace falta subir Poetry.</p>
+<hr>
+<h2>Responsabilidad de la IA en el plan por fases</h2>
+<p>Cuando el plan cierre una capacidad de producto, la IA debe:</p>
+<p>1. Decir explícitamente si hay <strong>bump Poetry</strong> y a qué versión. 2. Listar docs a tocar (SRelD, README, CHANGELOG, etc.). 3. Proponer el texto del tag. 4. No dejar <code>pyproject.toml</code> en una versión antigua tras mergear features de runtime.</p>
+<p>Si la fase es solo documentación, debe decir: <strong>sin bump Poetry</strong>, actualizar CHANGELOG y sugerir tag <code>-docs</code> si se etiqueta.</p>
+<hr>
+<h2>Estado actual de referencia</h2>
+<table><thead><tr><th>Campo</th><th>Valor orientativo al escribir este doc</th></tr></thead><tbody><tr><td>Versión Poetry</td><td>0.2.2</td></tr><tr><td>Último tag de producto</td><td>v0.2.2</td></tr><tr><td>Último tag de docs</td><td>v0.2.3-docs</td></tr></tbody></table>
+<p>Comprobar siempre el repo (<code>pyproject.toml</code>, <code>git tag</code>, <code>CHANGELOG.md</code>) antes de decidir el siguiente número.</p>
+<hr>
+<h2>Autoridad</h2>
+<p>Este documento es normativo para versionado de producto y tags.</p>
+<p>Ante duda entre “¿es producto o solo docs?”, priorizar: <strong>si cambia el comportamiento al ejecutar mos2.sh / MOSh / comandos, es producto y lleva bump.</strong></p>
+</body></html>

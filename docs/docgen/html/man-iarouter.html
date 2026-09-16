@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>man-iarouter</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>iarouter</h1>
+<h2>NOMBRE</h2>
+<p>iarouter – enrutador de modelos (local y remoto)</p>
+<h2>SINOPSIS</h2>
+<p>iarouter iarouter status iarouter detectar iarouter check [jan|gpt4all|grok|openrouter|share] [twitter] [detalle] iarouter share iarouter publicar iarouter puente [on|off|status] iarouter usar jan|gpt4all|grok|openrouter iarouter clave &lt;proveedor&gt; [borrar] iarouter modelos [proveedor] iarouter modelo [proveedor] &lt;id del modelo...&gt; iarouter preguntar TEXTO</p>
+<h2>DESCRIPCIÓN</h2>
+<p>Muestra el proveedor activo, detecta cuáles están disponibles y, solo con <code>preguntar</code>, envía el texto al modelo y lo imprime.</p>
+<p><code>usar</code> escribe la política local (enabled=true y el proveedor). La IA no escribe esa política.</p>
+<p><code>modelos</code> lista los ids que publica el proveedor. <code>modelo</code> fija el id activo (puede llevar espacios; el proveedor solo si el primer token es jan, gpt4all, grok u openrouter).</p>
+<p><code>clave</code> guarda la clave en <code>.mos/config/</code> envuelta con moslib.core.secreto. No imprime la clave. Si existe XAI_API_KEY u OPENROUTER_API_KEY en el entorno y aún no hay valor en <code>.mos</code>, se copia al almacén.</p>
+<h2>CHECK</h2>
+<p><code>check</code> sin argumentos ejecuta todos los diagnósticos (LAN + cada proveedor). <code>check grok</code> valida DNS/TLS/clave/models de api.x.ai. <code>check grok twitter</code> centra el escenario del cliente Grok dentro de X (paths <code>/i/api/1.1/*</code>, 404/410, diferencias Windows/Mac) y lista acciones manuales que MOS2 no puede aplicar por código.</p>
+<h2>DETECCIÓN</h2>
+<ul><li>jan: HTTP local (127.0.0.1:1337) y, si falta, /24 privada con cache</li><li>gpt4all: HTTP local (127.0.0.1:4891) y, si falta, /24 privada con cache</li><li>grok: clave en .mos o XAI_API_KEY (se ingiere)</li><li>openrouter: clave en .mos o OPENROUTER_API_KEY (se ingiere)</li></ul>
+<p>Sin clave o sin servidor, el proveedor aparece como no disponible. <code>usar</code> un proveedor no disponible se rechaza. Si falta la clave de grok u openrouter, <code>usar</code> pide la clave (sin eco).</p>
+<h2>SHARE</h2>
+<p><code>share</code> no cambia el anfitrión. Comprueba si Jan y GPT4All escuchan en localhost y en la IPv4 privada, y escribe una guía por entorno (macos/native, windows, linux/native) si la LAN no alcanza el puerto.</p>
+<h2>PUBLICAR</h2>
+<p><code>publicar</code> es autorización explícita. Intenta una regla mínima de firewall hacia la LAN (perfil privado / no Internet). En macOS no puede crear la regla del Firewall de aplicaciones: deja la guía. No se ejecuta dentro de <code>share</code> ni de <code>usar</code>.</p>
+<h2>PUENTE</h2>
+<p><code>puente</code> no es la malla P2P. Abre un HTTP de este MetsuOS en el puerto 17337 (0.0.0.0) que reenvía /v1/models y /v1/chat/completions al Jan o GPT4All de esta máquina. Off hasta <code>puente on</code>. Off con <code>puente off</code>. Rechaza cuerpos que mencionen <code>.mos</code>. Otro MetsuOS de la LAN puede usar la URL que imprime <code>puente status</code> como jan_url.</p>
+<h2>SEGURIDAD</h2>
+<p>Off por defecto hasta <code>usar</code>. No incluye rutas <code>.mos</code> en el payload salvo allowlist del humano. Las claves no van a git. El JSON del almacén no lleva el texto en claro. Quien copie a la vez <code>.ia_wrap</code> e <code>ia_keys.json</code> puede recuperarlas. Solo stdlib y moslib.</p>
+<h2>VER TAMBIÉN</h2>
+<p>docs/specs/10-IA-ROUTER.md</p>
+<h2>HELP DEL COMANDO</h2>
+<p>Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X.</p>
+<h2>HELP DEL COMANDO</h2>
+<p>Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X.</p>
+</body></html>

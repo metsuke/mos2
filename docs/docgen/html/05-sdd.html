@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>05-sdd</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>05 – SDD · Arquitectura y diseño</h1>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Baseline de referencia:</strong> v0.2.7 (árbol hacia v0.2.8)   <strong>Estado:</strong> Normativo descriptivo alineado con el código actual   <strong>Documentos relacionados:</strong> docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Este documento describe la arquitectura y el diseño de MetsuOS tal como existen en la baseline de referencia.</p>
+<p>Sirve para:</p>
+<ul><li>entender el sistema sin leer todo el código</li><li>implementar cambios sin romper responsabilidades</li><li>mantener alineados diseño, specs y código</li></ul>
+<p>La v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter y red al diseño.</p>
+<hr>
+<h2>Vista general de arquitectura</h2>
+<p>MetsuOS se organiza en capas:</p>
+<p>1. <strong>Lanzamiento</strong> · scripts anfitrión y punto de entrada 2. <strong>Shell</strong> · interacción con el usuario y worker de tareas 3. <strong>Núcleo</strong> · usuario, seguridad, carga de comandos, apps, tareas, ia_router 4. <strong>Comandos</strong> · funciones de sistema, de app y de usuario 5. <strong>Persistencia local de usuario</strong> · espacio <code>.mos</code> 6. <strong>Verificación</strong> · tests de arranque y de desarrollo 7. <strong>Documentación</strong> · metodología, entornos, specs, manual y man</p>
+<p>Principio rector: el shell coordina; el núcleo decide; los comandos ejecutan acciones concretas bajo contrato y seguridad.</p>
+<hr>
+<h2>Estructura estática del producto</h2>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th><th>Nivel 4</th><th>Descripción de diseño</th></tr></thead><tbody><tr><td>moslib/</td><td></td><td></td><td></td><td>Paquete núcleo del producto</td></tr><tr><td></td><td>core/</td><td></td><td></td><td>Componentes estructurales</td></tr><tr><td></td><td></td><td>shell.py</td><td></td><td>MOSh: bucle interactivo, arranque, worker</td></tr><tr><td></td><td></td><td>cmd_loader.py</td><td></td><td>Resolución, seguridad y carga (sistema/app/user)</td></tr><tr><td></td><td></td><td>user.py</td><td></td><td>Identidad de usuario y espacio personal</td></tr><tr><td></td><td></td><td>security.py</td><td></td><td>Validación AST de imports (incl. app_dir)</td></tr><tr><td></td><td></td><td>apps.py</td><td></td><td>Install path/repo, ámbito usuario/sistema</td></tr><tr><td></td><td></td><td>tasks.py</td><td></td><td>Almacén GTD local y tick</td></tr><tr><td></td><td></td><td>ia_router.py</td><td></td><td>Fachada Jan/GPT4All/Grok/OpenRouter</td></tr><tr><td></td><td>commands/</td><td></td><td></td><td>Comandos oficiales de sistema</td></tr><tr><td>rootfs/</td><td></td><td></td><td></td><td>Árbol simulado tipo Unix</td></tr><tr><td></td><td>bin/</td><td>mos.py</td><td></td><td>Entrada del sistema</td></tr><tr><td></td><td>home/</td><td>usuario/.mos/</td><td></td><td>Espacio personal no versionado</td></tr><tr><td></td><td>opt/</td><td>apps/</td><td></td><td>Apps de ámbito sistema</td></tr><tr><td>apps/</td><td></td><td></td><td></td><td>Cunas de apps en el clone</td></tr><tr><td>tests/</td><td></td><td></td><td></td><td>Verificación automatizada</td></tr><tr><td>docs/</td><td></td><td></td><td></td><td>Metodología, ENVIRONMENTS, specs, manual y man</td></tr><tr><td>install.sh</td><td></td><td></td><td></td><td>Instalación, aliases y Poetry portable</td></tr><tr><td>mos2.sh</td><td></td><td></td><td></td><td>Lanzador principal con Poetry portable</td></tr><tr><td>pyproject.toml</td><td></td><td></td><td></td><td>Dependencias y metadata Poetry</td></tr></tbody></table>
+<hr>
+<h2>Responsabilidades por componente</h2>
+<h3>shell.py · MOSh</h3>
+<p>Responsabilidades:</p>
+<ul><li>resolver usuario y asegurar espacio personal</li><li>instanciar CommandManager</li><li>ejecutar tests de arranque</li><li>bloquear inicio si los tests fallan</li><li>leer líneas de comando</li><li>invocar comandos resueltos</li><li>manejar exit y errores de interacción</li><li>worker de sesión para tareas automáticas</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>implementar la lógica de cada comando</li><li>validar AST por sí mismo</li><li>gestionar git update</li><li>resolver el ejecutable de Poetry del anfitrión</li></ul>
+<h3>cmd_loader.py · CommandManager</h3>
+<p>Responsabilidades:</p>
+<ul><li>localizar comandos de sistema, de app y de usuario</li><li>aplicar seguridad antes de cargar (con app_dir si es app)</li><li>cargar módulos Python desde archivo</li><li>cachear por mtime para hot-reload</li><li>resolver nombres con la prioridad del ICD (sistema &gt; app sistema &gt; app usuario &gt; user_)</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>crear el espacio de usuario</li><li>decidir política de imports</li><li>imprimir el prompt</li></ul>
+<h3>security.py</h3>
+<p>Responsabilidades:</p>
+<ul><li>parsear fuente con AST</li><li>decidir si un import es legal</li><li>aceptar minimoslib solo con app_dir de esa app</li><li>devolver lista de errores legibles</li><li>validar archivos de comando</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>ejecutar comandos</li><li>conocer el prompt</li><li>gestionar homes de usuario</li></ul>
+<h3>user.py</h3>
+<p>Responsabilidades:</p>
+<ul><li>obtener usuario del anfitrión</li><li>calcular rutas de proyecto, rootfs y home</li><li>migrar home legacy si aplica</li><li>crear estructura <code>.mos</code></li></ul>
+<p>No responsabilidades:</p>
+<ul><li>cargar comandos</li><li>validar imports</li><li>ejecutar tests</li></ul>
+<h3>apps.py</h3>
+<p>Responsabilidades:</p>
+<ul><li>instalar desde path del clone o repo git</li><li>ámbito usuario o sistema</li><li>listar, mostrar y quitar apps</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>saltarse SEC o A11Y</li><li>ser tienda remota ni P2P</li></ul>
+<h3>tasks.py</h3>
+<p>Responsabilidades:</p>
+<ul><li>almacén local de tareas manuales y automáticas</li><li>tick / avance para el worker</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>malla P2P</li></ul>
+<h3>ia_router.py</h3>
+<p>Responsabilidades:</p>
+<ul><li>detectar proveedores (Jan, GPT4All, Grok, OpenRouter)</li><li>off por defecto; no listar claves</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>sustituir al shell</li><li>ser P2P</li></ul>
+<h3>commands/*</h3>
+<p>Responsabilidades:</p>
+<ul><li>implementar una acción concreta</li><li>ofrecer ayuda textual</li><li>respetar política de imports y estilo</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>descubrir otros comandos</li><li>administrar el ciclo de vida del shell</li></ul>
+<h3>mos2.sh e install.sh</h3>
+<p>Responsabilidades:</p>
+<ul><li>ubicarse respecto a la raíz del clone (<code>SCRIPT_DIR</code>)</li><li>detectar perfil de entorno (unix vs windows/git-bash)</li><li>resolver Poetry de forma portable (<code>docs/ENVIRONMENTS.md</code>)</li><li>lanzar MOSh o instalar dependencias con el comando resuelto</li></ul>
+<p>No responsabilidades:</p>
+<ul><li>lógica de negocio de comandos</li><li>hardcodear rutas home de un usuario concreto</li></ul>
+<hr>
+<h2>Diseño de lanzamiento y Poetry</h2>
+<p><code>mos2.sh</code> e <code>install.sh</code> comparten la misma política de resolución:</p>
+<ul><li><strong>windows/git-bash:</strong> priorizar <code>poetry.exe</code>, luego <code>py -m poetry</code> / <code>python -m poetry</code>; evitar el script <code>poetry</code> sin extensión cuando provoca Permission denied</li><li><strong>linux/native, macos/native, windows/wsl:</strong> priorizar <code>poetry</code>, luego <code>python3 -m poetry</code> / <code>python -m poetry</code></li></ul>
+<p>Tras resolver, todas las invocaciones de ese script usan el mismo comando. Detalle normativo: <code>docs/ENVIRONMENTS.md</code>.</p>
+<hr>
+<h2>Flujo de arranque</h2>
+<p>1. El usuario lanza <code>mos2</code>, <code>./mos2.sh</code> o <code>python rootfs/bin/mos.py</code> 2. Si usa <code>mos2.sh</code>, el script resuelve Poetry y ejecuta <code>... run python rootfs/bin/mos.py</code> 3. <code>mos.py</code> prepara el path e instancia <code>MOSh</code> 4. <code>MOSh.__init__</code>: username, espacio <code>.mos</code>, <code>CommandManager</code> 5. <code>MOSh.run()</code> ejecuta tests de arranque 6. Si fallan → mensaje de error y <code>sys.exit(1)</code> 7. Si pasan → banner, usuario, espacio personal y bucle REPL 8. Durante la sesión puede correr el worker de tareas</p>
+<hr>
+<h2>Flujo de ejecución de un comando</h2>
+<p>1. El usuario escribe una línea 2. El shell separa <code>cmd_name</code> y <code>args</code> 3. Si <code>cmd_name == exit</code> → termina 4. El shell pide el módulo a <code>CommandManager.get_command(cmd_name)</code> 5. El loader busca: sistema, app sistema, app usuario, user_ completo, user_ corto 6. Antes de cargar, valida seguridad del archivo (con app_dir si es app) 7. Si es ilegal → rechazo y no ejecución 8. Si es legal → carga/recarga módulo 9. El shell llama <code>module.execute(args)</code></p>
+<hr>
+<h2>Diseño de seguridad</h2>
+<h3>Enfoque</h3>
+<p>Validación estática por AST, no sandbox completo del intérprete.</p>
+<h3>Enforcement runtime</h3>
+<p><code>CommandManager._load_module()</code> llama a <code>validate_command_file()</code> antes de importlib.</p>
+<h3>Enforcement de arranque</h3>
+<p><code>MOSh._run_startup_tests()</code> lanza pytest; el inventario de seguridad debe fallar si hay comandos ilegales de sistema o del usuario actual.</p>
+<h3>Ventaja</h3>
+<ul><li>no ejecuta el comando para detectar el problema</li><li>errores explícitos</li><li>aplica a sistema, app y usuario</li></ul>
+<hr>
+<h2>Diseño del espacio de usuario</h2>
+<h3>Identidad</h3>
+<p>El usuario de MetsuOS es el usuario del sistema anfitrión.</p>
+<h3>Ruta canónica</h3>
+<pre><code>rootfs/home/&lt;usuario&gt;/.mos/</code></pre>
+<h3>Subestructura</h3>
+<table><thead><tr><th>Subdir</th><th>Uso de diseño</th></tr></thead><tbody><tr><td>commands/</td><td>extensión personal por comandos</td></tr><tr><td>apps/</td><td>apps de ámbito usuario</td></tr><tr><td>data/</td><td>datos persistentes del usuario</td></tr><tr><td>config/</td><td>configuración personal</td></tr><tr><td>packages/</td><td>reserva de empaquetado personal</td></tr><tr><td>repos/</td><td>reserva de repos personales</td></tr></tbody></table>
+<h3>Migración</h3>
+<p>Si existe home legacy y no la canónica, <code>user.py</code> migra el directorio.</p>
+<hr>
+<h2>Diseño de comandos de sistema de la baseline</h2>
+<table><thead><tr><th>Tipo</th><th>Comando</th><th>Rol de diseño</th></tr></thead><tbody><tr><td>accesibilidad</td><td>a11y</td><td>tests A11Y e informe</td></tr><tr><td>apps</td><td>apps</td><td>install / list / show / remove</td></tr><tr><td>ayuda</td><td>docs</td><td>consulta de docs/ y lista blanca de raíz</td></tr><tr><td>ayuda</td><td>help</td><td>descubrimiento y ayuda corta</td></tr><tr><td>ayuda</td><td>man</td><td>documentación extendida en docs/man y man de app</td></tr><tr><td>calidad</td><td>synccheck</td><td>HEAD vs origin/main</td></tr><tr><td>calidad</td><td>test</td><td>batería de tests</td></tr><tr><td>calidad</td><td>update</td><td>sincronización controlada; update reiniciar</td></tr><tr><td>host</td><td>sysinfo</td><td>inspección del anfitrión</td></tr><tr><td>host</td><td>uptime</td><td>tiempo de actividad del anfitrión</td></tr><tr><td>host</td><td>version</td><td>versión e historial git</td></tr><tr><td>ia</td><td>iarouter</td><td>off por defecto; proveedores locales/remotos</td></tr><tr><td>red</td><td>red</td><td>diagnóstico de red del anfitrión; no P2P</td></tr><tr><td>tareas</td><td>hilos</td><td>vista por clase</td></tr><tr><td>tareas</td><td>tareas</td><td>GTD local</td></tr><tr><td>utilidad</td><td>clear</td><td>higiene de terminal</td></tr><tr><td>utilidad</td><td>echo</td><td>salida de texto</td></tr></tbody></table>
+<hr>
+<h2>Diseño de hot-reload</h2>
+<p>CommandManager guarda cache de módulos y mtime del archivo. Si cambió, recarga; si no, reutiliza. La seguridad se reevalúa en la carga.</p>
+<p>Tras <code>update</code>, los módulos ya en memoria no cambian solos. Hace falta <code>update reiniciar</code> o salir y relanzar.</p>
+<hr>
+<h2>Diseño de actualización</h2>
+<p>El comando <code>update</code>:</p>
+<p>1. detectar working tree sucio 2. crear rama <code>backup/timestamp</code> si hay cambios 3. commit de preservación si procede 4. volver a main 5. fetch + reset hard a origin/main 6. alinear tags locales con origin 7. podar backups antiguos</p>
+<p>Prioriza no perder trabajo local y dejar main idéntico al remoto; no publica backups como release.</p>
+<hr>
+<h2>Diseño de verificación</h2>
+<h3>tests/</h3>
+<p>Validan seguridad, usuario, loader, contrato de comandos, estilo crítico, inventario, apps, tareas e iarouter.</p>
+<h3>Arranque bloqueante</h3>
+<p>La verificación es puerta de entrada a la sesión interactiva.</p>
+<hr>
+<h2>Diseño documental</h2>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Papel</th></tr></thead><tbody><tr><td>docs/</td><td>METHODOLOGY.md</td><td>proceso de evolución</td></tr><tr><td>docs/</td><td>ENVIRONMENTS.md</td><td>perfiles de entorno y Poetry</td></tr><tr><td>docs/</td><td>STYLE_GUIDE.md</td><td>normas de implementación</td></tr><tr><td>docs/</td><td>specs/</td><td>requisitos y diseño controlados</td></tr><tr><td>docs/</td><td>USER_MANUAL.md</td><td>visión de usuario</td></tr><tr><td>docs/</td><td>man/</td><td>ayuda extendida por comando</td></tr><tr><td>docs/</td><td>INCENTIVOS.md</td><td>dirección de trabajo</td></tr><tr><td>docs/</td><td>INTERACTION_REVIEW.md</td><td>cierre de interacción</td></tr><tr><td>docs/</td><td>DEUDA_Y_CAMPANAS.md</td><td>deuda y campañas</td></tr></tbody></table>
+<hr>
+<h2>Decisiones de diseño relevantes</h2>
+<table><thead><tr><th>Decisión</th><th>Motivo</th></tr></thead><tbody><tr><td>Comandos como archivos .py independientes</td><td>máxima modularidad</td></tr><tr><td>Seguridad por AST</td><td>detectar antes de ejecutar</td></tr><tr><td>Usuario = usuario del anfitrión</td><td>simplicidad y realismo alpha</td></tr><tr><td>rootfs/home para homes</td><td>escalabilidad y analogía Unix</td></tr><tr><td>Tests al arranque</td><td>no operar sobre base rota</td></tr><tr><td>update con backup local</td><td>reducir riesgo de pérdida de trabajo</td></tr><tr><td>docs/man + comando man</td><td>ayuda extendida estilo Unix</td></tr><tr><td>Poetry resuelto en shell scripts</td><td>portabilidad git-bash / wsl / native</td></tr><tr><td>Apps fuera de moslib/commands</td><td>extensión controlada, misma puerta SEC</td></tr><tr><td>iarouter off por defecto</td><td>no hay envío silencioso</td></tr><tr><td>Tareas locales + worker de sesión</td><td>GTD sin malla P2P</td></tr></tbody></table>
+<hr>
+<h2>Límites actuales de diseño</h2>
+<p>En esta baseline el diseño no incluye todavía:</p>
+<p>1. permisos internos ricos multi-usuario MetsuOS 2. IPC entre comandos 3. UI gráfica 4. sandbox OS-level de procesos 5. malla P2P ni tienda remota de apps 6. suite de desarrollo completa ni DepManager geo</p>
+<p>Las reservas <code>packages/</code> y <code>repos/</code> existen para no cerrar esas líneas de evolución.</p>
+<p>Apps locales (path/repo git), tareas e iarouter <strong>sí</strong> están en este árbol; dejan de ser “todavía no” de la v1.1.</p>
+<hr>
+<h2>Guía práctica para modificar el sistema</h2>
+<table><thead><tr><th>Si necesitas...</th><th>Toca principalmente...</th><th>No olvides...</th></tr></thead><tbody><tr><td>Cambiar el prompt o el REPL</td><td>shell.py</td><td>tests de arranque</td></tr><tr><td>Cambiar resolución de comandos</td><td>cmd_loader.py</td><td>ICD + tests loader</td></tr><tr><td>Cambiar política de imports</td><td>security.py</td><td>SEC + tests security</td></tr><tr><td>Cambiar homes/migración</td><td>user.py</td><td>USER reqs + tests user</td></tr><tr><td>Añadir comando de sistema</td><td>moslib/commands/cmd.py</td><td>contrato, man, tests, help</td></tr><tr><td>Añadir comando de usuario</td><td>rootfs/home/.../user_*.py</td><td>prefijo user_ y seguridad</td></tr><tr><td>Añadir o instalar app</td><td>apps.py + paquete de app</td><td>spec 08, SEC, A11Y</td></tr><tr><td>Cambiar tareas / worker</td><td>tasks.py / shell.py</td><td>spec 09</td></tr><tr><td>Cambiar iarouter</td><td>ia_router.py</td><td>spec 10, claves no listadas</td></tr><tr><td>Cambiar resolución de Poetry</td><td>mos2.sh / install.sh</td><td>ENVIRONMENTS + REQ-PLAT</td></tr><tr><td>Cambiar normas de producto</td><td>docs/specs/</td><td>luego código y tests</td></tr></tbody></table>
+<hr>
+<h2>Autoridad</h2>
+<p>Este SDD describe el diseño de la baseline actual.</p>
+<p>Si el código cambia de arquitectura, este documento debe actualizarse en la misma fase o inmediatamente después, antes de considerar el cambio cerrado.</p>
+</body></html>

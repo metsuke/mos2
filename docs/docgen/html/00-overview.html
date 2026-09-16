@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>00-overview</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>00 – Overview de especificaciones (ECSS-light)</h1>
+<p><strong>Versión del documento:</strong> 1.5   <strong>Baseline de referencia:</strong> v0.2.7 (árbol hacia v0.2.8)   <strong>Estado:</strong> Normativo   <strong>Documento relacionado:</strong> docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, AGENTS.md, docs/INCENTIVOS.md, docs/INTERACTION_REVIEW.md, docs/DEUDA_Y_CAMPANAS.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Este documento es el mapa de las especificaciones de MetsuOS.</p>
+<p>Define:</p>
+<ul><li>Qué documentos forman el conjunto ECSS-light</li><li>Para qué sirve cada uno</li><li>En qué orden se leen y se actualizan</li><li>Qué autoridad tiene cada tipo de norma</li></ul>
+<p>No describe el diseño detallado ni los requisitos individuales: solo organiza el marco.</p>
+<hr>
+<h2>Conjunto de especificaciones</h2>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th><th>Documento</th><th>Función</th></tr></thead><tbody><tr><td>docs/</td><td>specs/</td><td>00-OVERVIEW.md</td><td>Overview</td><td>Mapa y reglas del set de specs</td></tr><tr><td>docs/</td><td>specs/</td><td>01-SSS-System-Specification.md</td><td>SSS</td><td>Qué es el sistema y normas no negociables</td></tr><tr><td>docs/</td><td>specs/</td><td>02-SRS-Software-Requirements.md</td><td>SRS</td><td>Requisitos software numerados y verificables</td></tr><tr><td>docs/</td><td>specs/</td><td>03-ICD-Interfaces-and-Command-Contract.md</td><td>ICD</td><td>Interfaces internas y contrato de comandos</td></tr><tr><td>docs/</td><td>specs/</td><td>04-SEC-Security-Policy.md</td><td>SEC</td><td>Política de seguridad de imports y validaciones</td></tr><tr><td>docs/</td><td>specs/</td><td>05-SDD-Architecture-and-Design.md</td><td>SDD</td><td>Arquitectura y diseño alineados con el código</td></tr><tr><td>docs/</td><td>specs/</td><td>06-TEST-Verification-and-Validation.md</td><td>TEST</td><td>Estrategia de verificación y validación</td></tr><tr><td>docs/</td><td>specs/</td><td>07-SRelD-Release-Baseline.md</td><td>SRelD</td><td>Baseline de release</td></tr><tr><td>docs/</td><td>specs/</td><td>08-APPS.md</td><td>APPS</td><td>Apps locales, ámbitos y mini-moslib</td></tr><tr><td>docs/</td><td>specs/</td><td>09-TASKS.md</td><td>TASKS</td><td>Tareas e hilos locales, worker de sesión</td></tr><tr><td>docs/</td><td>specs/</td><td>10-IA-ROUTER.md</td><td>IA-ROUTER</td><td>Enrutador de modelos (off por defecto)</td></tr></tbody></table>
+<p>Documentos de soporte fuera de <code>specs/</code>:</p>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Función</th></tr></thead><tbody><tr><td>AGENTS.md</td><td></td><td>Entrada corta para agentes IA</td></tr><tr><td>CHANGELOG.md</td><td></td><td>Historial de cambios por release</td></tr><tr><td>docs/</td><td>A11Y.md</td><td>Política de accesibilidad</td></tr><tr><td>docs/</td><td>a11y/</td><td>Declaración e informe A11Y</td></tr><tr><td>docs/</td><td>AI_ONBOARDING.md</td><td>Protocolo de trabajo para IA</td></tr><tr><td>docs/</td><td>HUMAN_ONBOARDING.md</td><td>Arranque para personas</td></tr><tr><td>docs/</td><td>INCENTIVOS.md</td><td>Dirección de trabajo (vectores y roles)</td></tr><tr><td>docs/</td><td>INTERACTION_REVIEW.md</td><td>Cierre de interacción y deuda</td></tr><tr><td>docs/</td><td>DEUDA_Y_CAMPANAS.md</td><td>Deuda y campañas previstas</td></tr><tr><td>docs/</td><td>DEVELOPER_GUIDE.md</td><td>Flujo práctico de desarrollo</td></tr><tr><td>docs/</td><td>VERSIONING.md</td><td>Versiones, tags y Poetry</td></tr><tr><td>docs/</td><td>METHODOLOGY.md</td><td>Método de trabajo y proceso</td></tr><tr><td>docs/</td><td>ENVIRONMENTS.md</td><td>Perfiles de entorno, Poetry y contexto de sesión</td></tr><tr><td>docs/</td><td>STYLE_GUIDE.md</td><td>Normas de estilo de código</td></tr><tr><td>docs/</td><td>USER_MANUAL.md</td><td>Manual de usuario formal</td></tr><tr><td>docs/</td><td>man/</td><td>Páginas man por comando</td></tr><tr><td>docs/</td><td>plans/</td><td>Planes de campaña</td></tr></tbody></table>
+<hr>
+<h2>Precedencia normativa</h2>
+<p>De mayor a menor autoridad técnica:</p>
+<p>1. A11Y de interfaz (perfiles soportados) junto con <code>04-SEC</code> y <code>01-SSS</code> 2. <code>03-ICD</code> (contratos e interfaces) 3. <code>02-SRS</code> (requisitos software) 4. <code>05-SDD</code> (diseño) y specs de capacidad <code>08-APPS</code>, <code>09-TASKS</code>, <code>10-IA-ROUTER</code> 5. Código fuente 6. <code>USER_MANUAL</code>, páginas <code>man</code>, README</p>
+<p>Regla:</p>
+<ul><li>El código debe cumplir SEC, SSS, ICD, SRS y A11Y.</li><li>Si A11Y y SEC chocan, se aplica el procedimiento de SEC y A11Y.md. No hay excepción silenciosa.</li><li>Si un cambio de código exige alterar una norma, primero se actualiza la spec y después el código.</li><li>Tags y bump de Poetry: <code>docs/VERSIONING.md</code>.</li><li>Relato de releases: <code>CHANGELOG.md</code>.</li><li>Dirección de trabajo para IA: <code>docs/INCENTIVOS.md</code>.</li></ul>
+<hr>
+<h2>Relación con ECSS</h2>
+<p>Este conjunto es una adaptación ligera de ECSS-E-ST-40:</p>
+<table><thead><tr><th>ECSS</th><th>MetsuOS ECSS-light</th></tr></thead><tbody><tr><td>SSS</td><td>01-SSS</td></tr><tr><td>SRS</td><td>02-SRS</td></tr><tr><td>ICD</td><td>03-ICD</td></tr><tr><td>SDD</td><td>05-SDD</td></tr><tr><td>V&amp;V / test planning</td><td>06-TEST</td></tr><tr><td>SRelD</td><td>07-SRelD</td></tr></tbody></table>
+<p>La seguridad tiene documento propio (<code>04-SEC</code>). La accesibilidad tiene política y declaración propias (<code>docs/A11Y.md</code>, <code>docs/a11y/</code>).</p>
+<p>08, 09 y 10 no sustituyen a SSS/SRS/ICD: detallan capacidades ya reservadas o exigidas en el núcleo ECSS-light.</p>
+<hr>
+<h2>Cómo se usa este set en el desarrollo</h2>
+<h3>Para implementar una feature</h3>
+<p>1. Comprobar impacto en SSS / SEC / ICD / SRS / A11Y (y ENVIRONMENTS si afecta a perfiles o Poetry). 2. Si cambia arquitectura, actualizar SDD. Si toca apps, tareas o iarouter, actualizar 08, 09 o 10. 3. Implementar en rama <code>feature/...</code>. 4. Añadir o ajustar tests según 06-TEST y STYLE_GUIDE. 5. Actualizar manual/man/README/onboarding/CHANGELOG/declaración si afecta a uso, proceso, release o cumplimiento A11Y. 6. Merge solo con tests en verde. 7. Aplicar VERSIONING (bump/tag si es producto).</p>
+<h3>Para revisar un cambio</h3>
+<p>Preguntas mínimas:</p>
+<p>1. ¿Rompe SEC? 2. ¿Excluye un perfil A11Y? 3. ¿Rompe el contrato de comando (ICD)? 4. ¿Queda trazado a algún requisito (SRS) o es solo refactor? 5. ¿Los tests lo cubren? 6. ¿Hay que tocar SRelD en la siguiente baseline? 7. ¿Hay que bump de Poetry o es solo docs? 8. ¿Hay que anotar CHANGELOG?</p>
+<hr>
+<h2>Identificación de requisitos</h2>
+<p>En <code>02-SRS</code> los requisitos se numeran así:</p>
+<pre><code>REQ-&lt;AREA&gt;-&lt;NNN&gt;</code></pre>
+<table><thead><tr><th>Área</th><th>Significado</th></tr></thead><tbody><tr><td>SYS</td><td>Sistema</td></tr><tr><td>CMD</td><td>Comandos</td></tr><tr><td>USER</td><td>Espacio de usuario</td></tr><tr><td>SEC</td><td>Seguridad</td></tr><tr><td>BOOT</td><td>Arranque</td></tr><tr><td>TEST</td><td>Pruebas</td></tr><tr><td>DOC</td><td>Documentación</td></tr><tr><td>UPD</td><td>Actualización</td></tr><tr><td>PLAT</td><td>Plataforma / entornos</td></tr><tr><td>A11Y</td><td>Accesibilidad</td></tr><tr><td>APP</td><td>Apps</td></tr><tr><td>TASK</td><td>Tareas e hilos</td></tr><tr><td>IA</td><td>Enrutador de IA</td></tr></tbody></table>
+<p>Ejemplo: <code>REQ-SEC-001</code></p>
+<p>Cada requisito debe ser verificable por test, inspección o demostración.</p>
+<hr>
+<h2>Baseline</h2>
+<p>La baseline documental de partida de este marco es <strong>v0.2.1</strong>.   Producto de referencia actual: <strong>v0.2.7</strong>.   Árbol hacia <strong>v0.2.8</strong> (entrada en CHANGELOG; tag de producto pendiente de pruebas humanas).</p>
+<p><code>07-SRelD</code> describe la baseline.   <code>CHANGELOG.md</code> resume las evoluciones.   <code>docs/a11y/DECLARACION.md</code> e <code>informe.md</code> describen el cumplimiento A11Y adaptado a CLI.</p>
+<p>Esta versión 1.5 del Overview no borra el relato de 1.4: solo actualiza el mapa y la baseline de producto.</p>
+<hr>
+<h2>Norma de representación de directorios</h2>
+<p>En todos los documentos de <code>docs/specs/</code> las estructuras de directorios se escriben como tablas, con una columna por nivel.</p>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th><th>Descripción</th></tr></thead><tbody><tr><td>moslib/</td><td></td><td></td><td>Núcleo</td></tr><tr><td></td><td>core/</td><td></td><td>Componentes principales</td></tr><tr><td></td><td></td><td>shell.py</td><td>Shell MOSh</td></tr></tbody></table>
+<hr>
+<h2>Estado de este overview</h2>
+<p>Este overview es normativo para la organización de las especificaciones.</p>
+<p>Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING, CHANGELOG, A11Y, INCENTIVOS, INTERACTION_REVIEW, DEUDA, planes u onboarding) debe reflejarse aquí.</p>
+</body></html>

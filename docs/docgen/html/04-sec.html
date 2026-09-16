@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>04-sec</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>04 – SEC · Política de seguridad</h1>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Baseline de referencia:</strong> v0.2.7 (árbol hacia v0.2.8)   <strong>Estado:</strong> Normativo   <strong>Documentos relacionados:</strong> docs/specs/01-SSS-System-Specification.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/STYLE_GUIDE.md, docs/specs/08-APPS.md, docs/specs/10-IA-ROUTER.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Este documento define la política de seguridad de MetsuOS relativa a la carga y ejecución de comandos.</p>
+<p>La seguridad aquí no pretende cubrir todo el espectro de ciberseguridad de un sistema operativo real. Se centra en una norma férrea del producto:</p>
+<p>&gt; Ningún comando puede importar código fuera de la biblioteca estándar de Python y de moslib. &gt; Excepción tasada: un comando de app puede importar minimoslib de esa app, solo con app_dir de esa app.</p>
+<p>La v1.1 se conserva. Esta v1.2 documenta esa excepción y el tratamiento de claves de iarouter. No relaja el resto.</p>
+<hr>
+<h2>Alcance</h2>
+<p>Aplica a:</p>
+<table><thead><tr><th>Ámbito</th><th>¿Aplica?</th><th>Notas</th></tr></thead><tbody><tr><td>Comandos de sistema en moslib/commands/</td><td>Sí</td><td>Validación obligatoria</td></tr><tr><td>Comandos de app (ámbito usuario o sistema)</td><td>Sí</td><td>Validación obligatoria + app_dir</td></tr><tr><td>Comandos de usuario en rootfs/home/&lt;usuario&gt;/.mos/commands/</td><td>Sí</td><td>Validación obligatoria</td></tr><tr><td>Módulos de moslib/core/</td><td>Sí, como código de confianza del producto</td><td>Sujetos a estilo y revisión</td></tr><tr><td>tests/</td><td>Parcial</td><td>Pueden importar pytest y utilidades de test</td></tr><tr><td>Scripts de instalación del anfitrión</td><td>Fuera de esta política de comandos</td><td>Se gestionan aparte</td></tr></tbody></table>
+<hr>
+<h2>Objetivos de seguridad</h2>
+<p>1. Impedir que un comando cargue dependencias Python arbitrarias. 2. Mantener el modelo de extensión bajo control de mosLib. 3. Detectar violaciones antes de ejecutar el comando. 4. Detectar violaciones existentes en el arranque del sistema. 5. Dar mensajes de rechazo claros, auditables y usables (prefijo estable y pista de acción). 6. No listar secretos de iarouter.</p>
+<hr>
+<h2>Relación con accesibilidad</h2>
+<p>La accesibilidad de interfaz es mandatoria (<code>docs/A11Y.md</code>, SSS).</p>
+<p>Si un control de esta política y un perfil A11Y soportado chocan:</p>
+<p>1. No se excluye el perfil. 2. No se desactiva la validación AST ni se permite un import ilegal “por A11Y”. 3. Se busca una mitigación que conserve el control (mensaje más claro, mismo rechazo). 4. Si aun así hay que recortar SEC, el recorte se escribe aquí, en A11Y y en SRelD. Nunca en silencio.</p>
+<h3>Excepciones A11Y vigentes</h3>
+<p>Ninguna. Rechazar imports ilegales no impide usar teclado ni lector de terminal. El mensaje <code>[SEGURIDAD]</code> debe ser texto lineal comprensible.</p>
+<hr>
+<h2>Política de imports</h2>
+<h3>Permitido</h3>
+<p>Un comando puede importar únicamente:</p>
+<p>1. Módulos de la biblioteca estándar de Python 2. El paquete <code>moslib</code> y sus submódulos 3. Si es comando de app: <code>minimoslib</code> de <strong>esa</strong> app, y solo con <code>app_dir</code> de esa app</p>
+<p>Ejemplos permitidos:</p>
+<ul><li>import os</li><li>import sys</li><li>from pathlib import Path</li><li>import moslib</li><li>from moslib.core.user import get_username</li><li>import minimoslib (solo en comando de app, app_dir de esa app)</li></ul>
+<h3>Prohibido</h3>
+<p>Está prohibido:</p>
+<p>1. Importar cualquier paquete de terceros no estándar 2. Usar imports relativos en comandos (<code>from . import ...</code>, <code>from ..x import ...</code>) 3. Eludir la validación cargando código dinámico no autorizado 4. Usar <code>eval</code> o <code>exec</code> sobre entrada externa o para cargar lógica arbitraria 5. Que un comando de app importe minimoslib de otra app u otro app_dir 6. Que un comando de sistema o user_ importe minimoslib</p>
+<p>Ejemplos prohibidos:</p>
+<ul><li>import requests</li><li>import numpy</li><li>from flask import Flask</li><li>from . import utils</li></ul>
+<h3>Criterio de decisión</h3>
+<p>La validación se basa en análisis estático del código fuente mediante AST, sin ejecutar el comando.</p>
+<p>Para un nombre de módulo:</p>
+<ul><li>se toma el segmento de primer nivel</li><li>si pertenece a la stdlib → permitido</li><li>si es <code>moslib</code> o empieza por <code>moslib.</code> → permitido</li><li>si es comando de app y el import es minimoslib de esa app con app_dir de esa app → permitido</li><li>en cualquier otro caso → prohibido</li></ul>
+<hr>
+<h2>Momentos de validación</h2>
+<h3>Validación en runtime (carga de comando)</h3>
+<p>Cada vez que el sistema va a cargar un comando, debe validar el archivo antes de ejecutarlo.</p>
+<p>Si la validación falla:</p>
+<p>1. El comando no se carga 2. Se muestra un rechazo explícito con prefijo <code>[SEGURIDAD]</code> 3. Se listan los errores detectados 4. El shell no ejecuta <code>execute()</code></p>
+<p>Para un comando de app, el loader pasa <code>app_dir</code> a SEC.</p>
+<h3>Validación en arranque</h3>
+<p>Al iniciar MOSh, la batería de tests debe incluir comprobaciones de seguridad sobre:</p>
+<ul><li>todos los comandos de sistema</li><li>todos los comandos del usuario actual</li><li>comandos de apps instaladas del inventario cubierto por tests</li></ul>
+<p>Si cualquier comando existente viola la política, el arranque debe fallar y el sistema no iniciará la sesión interactiva.</p>
+<h3>Relación entre ambas</h3>
+<table><thead><tr><th>Momento</th><th>Qué cubre</th><th>Efecto si falla</th></tr></thead><tbody><tr><td>Runtime</td><td>El comando concreto que se intenta usar</td><td>Rechazo de ese comando</td></tr><tr><td>Arranque</td><td>Inventario actual de comandos sistema + usuario actual (+ apps en tests)</td><td>Bloqueo total de arranque</td></tr></tbody></table>
+<p>Ambas capas son obligatorias. Una no sustituye a la otra.</p>
+<hr>
+<h2>Comportamiento de rechazo</h2>
+<p>Mensaje mínimo esperado en runtime:</p>
+<pre><code>[SEGURIDAD] Comando &#x27;&lt;nombre&gt;&#x27; rechazado:
+  - Import prohibido: import &lt;modulo&gt;</code></pre>
+<p>El texto debe indicar qué ha pasado. No debe basarse solo en color ANSI.</p>
+<p>Después, el shell puede indicar que el comando no está disponible o no fue encontrado.</p>
+<p>El rechazo debe ser determinista: el mismo archivo ilegal produce el mismo resultado.</p>
+<hr>
+<h2>Responsabilidades por componente</h2>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th><th>Responsabilidad de seguridad</th></tr></thead><tbody><tr><td>moslib/</td><td>core/</td><td>security.py</td><td>Análisis AST y API de validación (incl. app_dir)</td></tr><tr><td>moslib/</td><td>core/</td><td>cmd_loader.py</td><td>Invocar validación antes de cargar</td></tr><tr><td>moslib/</td><td>core/</td><td>apps.py</td><td>Install path; no salta SEC</td></tr><tr><td>moslib/</td><td>core/</td><td>ia_router.py</td><td>No listar claves; off por defecto</td></tr><tr><td>moslib/</td><td>core/</td><td>shell.py</td><td>Ejecutar tests de arranque y bloquear si fallan</td></tr><tr><td>tests/</td><td></td><td>test_security.py</td><td>Casos unitarios de política</td></tr><tr><td>tests/</td><td></td><td>test_all_commands_security.py</td><td>Inventario real de comandos</td></tr><tr><td>moslib/</td><td>commands/</td><td>*</td><td>Cumplir la política en su código fuente</td></tr></tbody></table>
+<hr>
+<h2>Espacio de usuario y confianza</h2>
+<p>El espacio de usuario es controlado por el propio usuario del sistema anfitrión.</p>
+<p>Por tanto:</p>
+<ul><li>no se considera código de confianza del producto</li><li>siempre se valida</li><li>puede impedir el arranque local si contiene comandos ilegales</li><li>las apps de ámbito usuario se validan igual que un comando de usuario</li></ul>
+<p>Esto es intencional: protege el modelo de seguridad del sistema frente a extensiones inseguras del propio usuario.</p>
+<hr>
+<h2>Límites de esta política</h2>
+<p>Esta política NO cubre por sí sola:</p>
+<p>1. Integridad del filesystem del anfitrión 2. Secretos del usuario fuera de MetsuOS 3. Ataques con capacidad de modificar <code>moslib/</code> sin pasar por el proceso de desarrollo 4. Ejecución de binarios externos invocados por wrappers no contemplados 5. Vulnerabilidades de la stdlib o del intérprete Python 6. Protección de datos personales (RGPD / LOPDGDD): campaña futura, no este documento 7. El contenido de las respuestas de un modelo de IA (solo el almacén de claves y el off por defecto)</p>
+<p>Su alcance es el control de extensión por comandos dentro del modelo MetsuOS.</p>
+<hr>
+<h2>Claves de iarouter</h2>
+<ul><li>Off por defecto: no hay envío hasta <code>usar</code> / <code>preguntar</code>.</li><li>El almacén de claves vive en el espacio <code>.mos</code> del usuario.</li><li>Status y listados no muestran el valor de la clave.</li><li>El puente HTTP de iarouter, si existe, no es P2P y no relaja esta política de imports.</li></ul>
+<hr>
+<h2>Requisitos de seguridad derivados</h2>
+<p>Los siguientes requisitos son normativos y deben aparecer también en el SRS:</p>
+<ul><li>REQ-SEC-001: Todo comando se valida por AST antes de cargarse</li><li>REQ-SEC-002: Solo se permiten imports de stdlib y moslib</li><li>REQ-SEC-003: Los imports relativos en comandos están prohibidos</li><li>REQ-SEC-004: El rechazo debe mostrar motivo claro</li><li>REQ-SEC-005: El arranque debe fallar si existe cualquier comando ilegal en sistema o en el usuario actual</li><li>REQ-SEC-006: No se permite desactivar la seguridad en modo normal de operación</li><li>REQ-SEC-009: minimoslib solo de esa app y solo con app_dir de esa app</li><li>REQ-A11Y-002: Conflicto A11Y/SEC documentado; no exclusión de perfil</li><li>REQ-IA-001 / REQ-IA-005: iarouter off por defecto; claves no listadas</li></ul>
+<p>REQ-SEC-002 sigue Must para sistema y user_. REQ-SEC-009 es la excepción tasada de apps.</p>
+<hr>
+<h2>Verificación</h2>
+<p>La política se verifica por:</p>
+<p>1. Tests unitarios de <code>security.py</code> 2. Tests de inventario de comandos 3. Pruebas manuales de rechazo con un comando de usuario ilegal 4. Arranque bloqueado mientras exista el comando ilegal 5. Arranque correcto tras eliminar o corregir el comando ilegal 6. Inspección de que el mensaje de rechazo es texto usable 7. Tests de minimoslib / app_dir 8. Inspección de que status de iarouter no lista secretos</p>
+<hr>
+<h2>Cambios de política</h2>
+<p>Cualquier relajación o ampliación de esta política requiere:</p>
+<p>1. Actualización de este documento 2. Actualización de tests 3. Justificación en metodología o release notes de la baseline 4. Revisión de impacto sobre SSS, ICD y A11Y</p>
+<p>No se admiten flags ocultos para “saltar seguridad” en operación normal.</p>
+<hr>
+<h2>Autoridad</h2>
+<p><code>04-SEC</code> es documento de máxima prioridad técnica junto con las normas no negociables del SSS y la política A11Y.</p>
+<p>En caso de conflicto con conveniencia de implementación, prevalece esta política.</p>
+<p>En caso de conflicto con un perfil A11Y soportado, se aplica la sección «Relación con accesibilidad» de este mismo documento.</p>
+</body></html>

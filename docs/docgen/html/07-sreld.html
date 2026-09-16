@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>07-sreld</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>07 – SRelD · Baseline de release</h1>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Baseline descrita:</strong> v0.2.1 (congelada) + producto actual v0.2.7 (árbol hacia v0.2.8)   <strong>Estado:</strong> Normativo de referencia   <strong>Documentos relacionados:</strong> docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, CHANGELOG.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Este documento congela y describe la baseline de producto <strong>v0.2.1</strong> y registra evoluciones controladas posteriores hasta <strong>v0.2.7</strong>.</p>
+<p>Sirve para:</p>
+<ul><li>saber qué contiene exactamente la versión de referencia</li><li>comparar releases futuras sin ambigüedad</li><li>evitar regresiones respecto a capacidades ya aceptadas</li></ul>
+<p>La v1.1 no se borra: v0.2.1 sigue siendo la referencia histórica.</p>
+<hr>
+<h2>Identificación</h2>
+<table><thead><tr><th>Campo</th><th>v0.2.1</th><th>v0.2.7</th></tr></thead><tbody><tr><td>Nombre</td><td>MetsuOS / MOS2</td><td>MetsuOS / MOS2</td></tr><tr><td>Tag</td><td>v0.2.1</td><td>v0.2.7 (Poetry)</td></tr><tr><td>Tipo</td><td>Alpha funcional</td><td>Alpha funcional</td></tr><tr><td>Licencia</td><td>GPL-3.0</td><td>GPL-3.0</td></tr><tr><td>Python mínimo</td><td>3.10</td><td>3.10</td></tr><tr><td>Hacia</td><td>—</td><td>v0.2.8 (entrada CHANGELOG; tag producto pendiente de pruebas humanas)</td></tr></tbody></table>
+<hr>
+<h2>Capacidades incluidas en v0.2.1</h2>
+<h3>Núcleo</h3>
+<table><thead><tr><th>Capacidad</th><th>Estado en baseline</th></tr></thead><tbody><tr><td>Shell interactivo MOSh</td><td>Incluida</td></tr><tr><td>Carga dinámica de comandos</td><td>Incluida</td></tr><tr><td>Hot-reload por mtime</td><td>Incluida</td></tr><tr><td>Seguridad de imports por AST</td><td>Incluida</td></tr><tr><td>Validación de seguridad en runtime</td><td>Incluida</td></tr><tr><td>Tests de arranque bloqueantes</td><td>Incluida</td></tr><tr><td>Espacio de usuario por usuario anfitrión</td><td>Incluida</td></tr><tr><td>Migración automática de home legacy</td><td>Incluida</td></tr></tbody></table>
+<h3>Comandos de sistema (v0.2.1)</h3>
+<table><thead><tr><th>Comando</th><th>Estado en baseline</th></tr></thead><tbody><tr><td>help</td><td>Incluido</td></tr><tr><td>version</td><td>Incluido</td></tr><tr><td>sysinfo</td><td>Incluido</td></tr><tr><td>uptime</td><td>Incluido</td></tr><tr><td>echo</td><td>Incluido</td></tr><tr><td>clear</td><td>Incluido</td></tr><tr><td>test</td><td>Incluido</td></tr><tr><td>update</td><td>Incluido</td></tr><tr><td>exit</td><td>Incluido (builtin del shell)</td></tr></tbody></table>
+<h3>Comandos de usuario</h3>
+<table><thead><tr><th>Capacidad</th><th>Estado en baseline</th></tr></thead><tbody><tr><td>Archivos user_*.py</td><td>Incluida</td></tr><tr><td>Invocación con prefijo user_</td><td>Incluida</td></tr><tr><td>Invocación corta sin conflicto</td><td>Incluida</td></tr><tr><td>Rechazo por imports ilegales</td><td>Incluida</td></tr></tbody></table>
+<h3>Actualización (v0.2.1)</h3>
+<table><thead><tr><th>Capacidad</th><th>Estado en baseline</th></tr></thead><tbody><tr><td>update desde origin/main</td><td>Incluida</td></tr><tr><td>backup local automático</td><td>Incluida</td></tr><tr><td>poda de ramas backup</td><td>Incluida</td></tr><tr><td>mos2_forced_update.sh de emergencia</td><td>Incluido</td></tr></tbody></table>
+<hr>
+<h2>Estructura de producto de v0.2.1</h2>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th><th>Incluido</th></tr></thead><tbody><tr><td>moslib/</td><td>core/</td><td>shell.py</td><td>Sí</td></tr><tr><td>moslib/</td><td>core/</td><td>cmd_loader.py</td><td>Sí</td></tr><tr><td>moslib/</td><td>core/</td><td>user.py</td><td>Sí</td></tr><tr><td>moslib/</td><td>core/</td><td>security.py</td><td>Sí</td></tr><tr><td>moslib/</td><td>commands/</td><td>clear.py help.py echo.py</td><td>Sí</td></tr><tr><td>moslib/</td><td>commands/</td><td>sysinfo.py test.py update.py</td><td>Sí</td></tr><tr><td>moslib/</td><td>commands/</td><td>uptime.py version.py</td><td>Sí</td></tr><tr><td>rootfs/</td><td>bin/</td><td>mos.py</td><td>Sí</td></tr><tr><td>rootfs/</td><td>home/</td><td>.gitignore</td><td>Sí</td></tr><tr><td>tests/</td><td></td><td>test_*.py</td><td>Sí</td></tr><tr><td>install.sh / mos2.sh / pyproject.toml</td><td></td><td></td><td>Sí</td></tr></tbody></table>
+<hr>
+<h2>Dependencias</h2>
+<table><thead><tr><th>Dependencia</th><th>Alcance</th><th>Notas</th></tr></thead><tbody><tr><td>Python ^3.10</td><td>runtime</td><td>Obligatorio</td></tr><tr><td>pytest</td><td>producto</td><td>Disponible también en instalación normal</td></tr><tr><td>pytest-cov</td><td>producto</td><td>Disponible; cobertura formal no aún obligatoria</td></tr><tr><td>Poetry</td><td>desarrollo/instalación</td><td>Gestión de entorno y deps</td></tr></tbody></table>
+<p>No forman parte del modelo de comandos las dependencias arbitrarias de terceros.</p>
+<hr>
+<h2>Verificación asociada a v0.2.1</h2>
+<p>1. la batería de tests pasa 2. el arranque de MOSh pasa los tests de arranque 3. los comandos de sistema de esa baseline están disponibles 4. un comando de usuario con import ilegal es rechazado 5. un comando ilegal presente en el usuario actual bloquea arranque 6. <code>update</code> puede sincronizar con origin/main preservando cambios locales en backup</p>
+<hr>
+<h2>Limitaciones conocidas de v0.2.1</h2>
+<p>1. Fase Alpha: no es un sistema operativo completo. 2. No hay empaquetado multi-repo de usuario todavía operativo. 3. No hay CI externa obligatoria. 4. No hay métrica mínima obligatoria de cobertura. 5. El manual formal y el comando <code>man</code> se consolidan como evolución inmediata sobre esta baseline. 6. help puede requerir alineación continua con el loader y los comandos de usuario.</p>
+<hr>
+<h2>Evolución posterior (resumen)</h2>
+<table><thead><tr><th>Elemento</th><th>Destino</th></tr></thead><tbody><tr><td>man, USER_MANUAL, ENVIRONMENTS, A11Y, docs, synccheck</td><td>Post-0.2.1 hasta 0.2.5</td></tr><tr><td>Poetry portable en mos2.sh / install.sh</td><td>v0.2.2</td></tr><tr><td>Apps, tareas, iarouter, red, update reiniciar</td><td>v0.2.7 / árbol hacia v0.2.8</td></tr><tr><td>Specs 08, 09, 10</td><td>v0.2.7</td></tr></tbody></table>
+<hr>
+<h2>Producto actual v0.2.7</h2>
+<p>Además de v0.2.1 y de la evolución 0.2.2–0.2.5, el árbol incluye:</p>
+<table><thead><tr><th>Capacidad</th><th>Estado</th></tr></thead><tbody><tr><td>moslib/core/apps.py + comando apps</td><td>Incluida</td></tr><tr><td>moslib/core/tasks.py + tareas / hilos</td><td>Incluida</td></tr><tr><td>moslib/core/ia_router.py + comando iarouter</td><td>Incluida (off por defecto)</td></tr><tr><td>comando red</td><td>Incluida (no es P2P)</td></tr><tr><td>update reiniciar</td><td>Incluida</td></tr><tr><td>minimoslib / app_dir</td><td>Incluida</td></tr><tr><td>Prioridad sistema &gt; app sistema &gt; app usuario &gt; user_</td><td>Incluida</td></tr></tbody></table>
+<hr>
+<h2>Tags y referencias</h2>
+<table><thead><tr><th>Referencia</th><th>Uso</th></tr></thead><tbody><tr><td>v0.2.1</td><td>Baseline funcional histórica</td></tr><tr><td>v0.2.0-alpha-user-space</td><td>Baseline previa de espacio de usuario</td></tr><tr><td>v0.2.2</td><td>Poetry portable + ENVIRONMENTS</td></tr><tr><td>v0.2.5</td><td>A11Y + docs + synccheck (cierre de esa campaña)</td></tr><tr><td>v0.2.7</td><td>Poetry actual; apps, tareas, iarouter, red</td></tr><tr><td>v0.2.8</td><td>Prevista en CHANGELOG; tag de producto pendiente de pruebas humanas</td></tr><tr><td>main</td><td>Línea activa de integración</td></tr></tbody></table>
+<p>Detalle de relato: <code>CHANGELOG.md</code>. Tags y bump: <code>docs/VERSIONING.md</code>.</p>
+<p>Esta campaña de sync docs <strong>no</strong> hace bump de Poetry ni tag de producto.</p>
+<hr>
+<h2>Criterio de no regresión</h2>
+<p>Se considerará regresión cualquier pérdida de:</p>
+<p>1. arranque bloqueante por tests 2. seguridad de imports 3. espacio de usuario por usuario anfitrión 4. resolución de comandos de usuario sin pisar sistema 5. comando update con backup 6. disponibilidad de pytest en el producto 7. resolución portable de Poetry (desde v0.2.2) 8. a11y / docs / declaración (desde v0.2.5) 9. apps / tareas / iarouter off por defecto / red (desde v0.2.7)</p>
+<hr>
+<h2>Autoridad</h2>
+<p>Este SRelD fija el significado de la baseline v0.2.1 y el registro de evoluciones posteriores.</p>
+<p>Las releases futuras deben declarar qué mantienen, qué añaden y qué cambian respecto a esta referencia.</p>
+</body></html>

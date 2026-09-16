@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>agents</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>AGENTS.md — Punto de entrada para IA (MetsuOS / MOS2)</h1>
+<p>Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y sigue <code>docs/AI_ONBOARDING.md</code>.</p>
+<h2>Lectura mínima</h2>
+<p>1. Este archivo 2. docs/AI_ONBOARDING.md 3. docs/INCENTIVOS.md 4. docs/METHODOLOGY.md 5. docs/INTERACTION_REVIEW.md 6. docs/ENVIRONMENTS.md 7. docs/VERSIONING.md 8. docs/A11Y.md y docs/a11y/DECLARACION.md 9. docs/STYLE_GUIDE.md 10. docs/specs/00-OVERVIEW.md 11. docs/plans/ si hay campaña 12. Código y resto de specs según la tarea</p>
+<h2>Normas que no se improvisan</h2>
+<ul><li>Comandos: execute(args) y help() -&gt; str</li><li>Imports en comandos: solo biblioteca estándar y moslib</li><li>El usuario no sobrescribe comandos de sistema (prefijo user_)</li><li>Tests de arranque bloqueantes</li><li>Accesibilidad de interfaz mandatoria (docs/A11Y.md)</li><li>Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)</li><li>Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md</li><li>Sin rutas personales ni nombres de máquina en docs públicas</li><li>Encabezados de documentación sin numeración</li><li>Entregar archivos enteros; tablas ya montadas; un paso cada vez</li><li>No remitir a un pegado anterior: volver a pegar</li><li>Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso</li><li>Si el archivo nuevo es más corto, avisarlo</li><li>Directorios en tablas (una columna por nivel)</li><li>Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo</li><li>Breadcrumb de campaña en cada paso; explicar saltos de número</li><li>Git, no funciones exclusivas de un forge</li><li>Crear ficheros: mkdir -p / touch / editor</li><li>Estado del repo: comando synccheck y lectura por SHA</li><li>Psicología: acompañar; no dañar, desestabilizar ni engañar</li></ul>
+<h2>Documentación y docgen</h2>
+<ul><li>Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).</li><li>El markdown publicado se obtiene con <code>docgen generate</code>.</li><li>La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.</li><li>Flujo normal: editar el JSON (átomo) y decir <code>docgen generate &lt;id&gt;</code>.</li><li><code>docgen ingest</code> solo en la primera absorción o si hay que recuperar desde markdown/backup.</li><li><code>generate</code> no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.</li><li>Un fichero por mensaje; fichero entero; no parches sueltos.</li></ul>
+<h2>Contexto de sesión</h2>
+<pre><code>Contexto: &lt;sistema&gt; / &lt;entorno&gt; / &lt;rol&gt;</code></pre>
+<p>Si falta y hace falta para paths o Poetry, preguntar.</p>
+<h2>Versiones</h2>
+<p>Cambio de runtime → bump en pyproject.toml + tag vX.Y.Z. Solo docs → sin bump; tag vX.Y.Z-docs o vX.Y.Z-docs.N. Detalle: docs/VERSIONING.md.</p>
+<p>Producto de referencia: 0.2.7 / árbol 0.2.8. Comandos a11y, docs, synccheck, docgen.</p>
+<h2>Qué no hacer</h2>
+<ul><li>No inventar features ausentes en código o specs</li><li>No desactivar seguridad ni tests para hacer pasar un cambio</li><li>No excluir un perfil A11Y por comodidad</li><li>No asumir Mac, Git Bash o WSL sin contexto declarado</li><li>No diagnosticar el remoto solo con raw .../main/</li><li>No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)</li><li>No usar ingest como paso rutinario de edición</li></ul>
+</body></html>

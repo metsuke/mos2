@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>09-tasks</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>09 – Tareas</h1>
+<p><strong>Versión del documento:</strong> 1.0   <strong>Estado:</strong> Normativo (campaña 07, frente B)   <strong>Baseline:</strong> v0.2.5   <strong>Documentos relacionados:</strong> docs/specs/01-SSS-System-Specification.md, docs/specs/08-APPS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/plans/2026-09-01-02-campana-07-soporte-apps-tareas-ia.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Definir el sistema de tareas de MetsuOS (manual y automático), inspirado en GTD y ampliable.</p>
+<p>No describe la malla P2P (10) ni la suite de desarrollo (08). Las automáticas de la 07 son <strong>locales</strong>.</p>
+<hr>
+<h2>Principio</h2>
+<ul><li><strong>Manual:</strong> el usuario entra en un comando, resuelve, sale.</li><li><strong>Automática:</strong> segundo plano local; se consulta como “canales” (texto lineal).</li><li>Apps y núcleo <strong>encolan</strong> aquí. No inventan colas propias.</li></ul>
+<p>Si A11Y o SEC fallan, estado <code>bloqueada_a11y_sec</code>: <strong>no se ejecuta</strong>.</p>
+<hr>
+<h2>Campos estables</h2>
+<table><thead><tr><th>Campo</th><th>Obligatorio</th><th>Valores / notas</th></tr></thead><tbody><tr><td>id</td><td>sí</td><td>estable</td></tr><tr><td>origen</td><td>sí</td><td>sistema / app / usuario</td></tr><tr><td>modo</td><td>sí</td><td>manual / automatica</td></tr><tr><td>privilegio</td><td>sí</td><td>root / no-root</td></tr><tr><td>clase</td><td>sí</td><td>realtime / heavy / normal / sistema</td></tr><tr><td>proyecto</td><td>no</td><td>slug</td></tr><tr><td>prioridad</td><td>sí</td><td>entero ≥ 0; 0 = más urgente en 07</td></tr><tr><td>maslow</td><td>no</td><td>1–5; solo origen usuario; stub</td></tr><tr><td>recurrencia</td><td>sí</td><td>una_vez / cada_n_minutos / cada_n_dias</td></tr><tr><td>intervalo</td><td>no</td><td>N según recurrencia</td></tr><tr><td>estado</td><td>sí</td><td>pendiente / en_curso / hecha / fallida / bloqueada_a11y_sec</td></tr><tr><td>comando</td><td>sí</td><td>qué invocar</td></tr><tr><td>creado / actualizado</td><td>sí</td><td>timestamps</td></tr></tbody></table>
+<p>No renombrar estos campos. Se pueden añadir otros en v1.1+.</p>
+<hr>
+<h2>Clases y privilegio</h2>
+<table><thead><tr><th>Clase</th><th>Uso</th></tr></thead><tbody><tr><td>realtime</td><td>Poca latencia; no bloquear con trabajo heavy</td></tr><tr><td>heavy</td><td>Largo o mucha CPU/RAM</td></tr><tr><td>normal</td><td>Resto</td></tr><tr><td>sistema</td><td>Al vaciar la pila de esa clase, se <strong>reencola</strong></td></tr></tbody></table>
+<p>Root: puede usar fachada moslib para recursos/temperatura del anfitrión (stdlib). No-root: no.</p>
+<p>Intervalo de automáticas: en 07, función simple de <code>prioridad</code> (documentar la fórmula en ICD). No hace falta la fórmula final de producto.</p>
+<hr>
+<h2>Persistencia</h2>
+<table><thead><tr><th>origen</th><th>Dónde</th></tr></thead><tbody><tr><td>usuario</td><td><code>.mos/</code> (no versionar como producto)</td></tr><tr><td>app</td><td>datos de esa app, no el árbol público del núcleo salvo que la app sea de sistema</td></tr><tr><td>sistema</td><td>almacén de sistema local; no secretos en git</td></tr></tbody></table>
+<hr>
+<h2>Comandos (07)</h2>
+<table><thead><tr><th>Comando (nombre a fijar en ICD)</th><th>Función</th></tr></thead><tbody><tr><td>listar / filtrar</td><td>siempre las manuales del usuario; automáticas bajo filtro</td></tr><tr><td>entrar en manual</td><td>ejecutar el comando asociado</td></tr><tr><td>hilos (tele)</td><td>por tipo: estado, clase, privilegio; texto lineal, no solo color</td></tr><tr><td>tick</td><td>avanzar automáticas si aún no hay daemon</td></tr></tbody></table>
+<p>Shell síncrono: <code>tick</code> o proceso hijo documentado. No fingir red ni P2P.</p>
+<hr>
+<h2>Recurrencia</h2>
+<ul><li><code>una_vez</code>: al <code>hecha</code>, no vuelve.</li><li><code>cada_n_dias</code>: manual recurrente; reaparece.</li><li><code>cada_n_minutos</code>: automática; N ajustable por prioridad en ICD.</li></ul>
+<hr>
+<h2>Criterios de aceptación del frente B</h2>
+<p>1. Este spec publicado. 2. Se crea una manual <code>una_vez</code>, se lista, se entra, pasa a <code>hecha</code>. 3. Una automática <code>sistema</code> se reencola al vaciar (test unitario o tick). 4. <code>bloqueada_a11y_sec</code> no invoca <code>comando</code>. 5. Vista hilos usable con teclado y lector de terminal.</p>
+<hr>
+<h2>Autoridad</h2>
+<p>Normativo para tareas. Choca con SEC/A11Y/SSS → ganan esas.</p>
+</body></html>

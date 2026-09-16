@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>man-docs</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>docs</h1>
+<h2>NOMBRE</h2>
+<p>docs – consulta la documentación del clone desde MOSh</p>
+<h2>SINOPSIS</h2>
+<p>docs docs &lt;ruta&gt;</p>
+<h2>DESCRIPCIÓN</h2>
+<p>Sin argumentos, lista:</p>
+<ul><li>ficheros públicos de la raíz: README.md, CHANGELOG.md, AGENTS.md, LICENSE</li><li>todos los ficheros bajo docs/</li></ul>
+<p>Con argumento, muestra el contenido en texto plano si la ruta está permitida.</p>
+<p>Rutas válidas:</p>
+<ul><li>README.md, CHANGELOG.md, AGENTS.md, LICENSE</li><li>cualquier fichero bajo docs/ (A11Y.md, a11y/DECLARACION.md, specs/..., plans/..., man/...)</li><li>también se acepta el prefijo docs/ delante de una ruta interna</li></ul>
+<p>No se pueden leer rutas fuera de esa lista (por ejemplo el espacio de usuario o ficheros del anfitrión).</p>
+<p>Pensado para teclado y lector de terminal.</p>
+<h2>OPCIONES</h2>
+<p>Ninguna en esta baseline. La ruta es el resto de la línea.</p>
+<h2>EJEMPLOS</h2>
+<p>docs docs README.md docs A11Y.md docs a11y/DECLARACION.md docs a11y/informe.md</p>
+<h2>SEGURIDAD</h2>
+<p>Comando de sistema. Solo stdlib y moslib. Resuelve paths y rechaza lo que salga de docs/ o de la lista blanca de la raíz.</p>
+<h2>VÉASE TAMBIÉN</h2>
+<p>a11y, man, help</p>
+<h2>HELP DEL COMANDO</h2>
+<p>Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs &lt;ruta&gt; - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)</p>
+<h2>HELP DEL COMANDO</h2>
+<p>Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs &lt;ruta&gt; - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)</p>
+</body></html>

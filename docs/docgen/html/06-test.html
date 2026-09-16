@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>06-test</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>06 – TEST · Verificación y validación</h1>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Baseline de referencia:</strong> v0.2.7 (árbol hacia v0.2.8)   <strong>Estado:</strong> Normativo   <strong>Documentos relacionados:</strong> docs/specs/02-SRS-Software-Requirements.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/METHODOLOGY.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Este documento define cómo se verifica y valida MetsuOS.</p>
+<p>Objetivos:</p>
+<ul><li>demostrar que el sistema cumple los requisitos Must</li><li>impedir el arranque sobre una base rota</li><li>hacer de los tests una parte normal del producto, no solo del desarrollo</li><li>verificar accesibilidad automática y regenerar el informe A11Y</li><li>cubrir apps, prioridad de nombres, minimoslib, tareas e iarouter</li></ul>
+<p>La v1.1 se conserva. Esta v1.2 no relaja el arranque bloqueante.</p>
+<hr>
+<h2>Principios</h2>
+<p>1. Si un requisito Must es verificable por test, debe existir un test. 2. Los tests de arranque son puerta de calidad del sistema. 3. La seguridad se verifica tanto en runtime como en arranque. 4. Un cambio no está terminado hasta que la batería relevante pasa. 5. No se desactivan tests para forzar un merge. 6. Los tests A11Y forman parte del proceso habitual (desarrollo y producción).</p>
+<hr>
+<h2>Alcance de la verificación</h2>
+<table><thead><tr><th>Área</th><th>Qué se verifica</th></tr></thead><tbody><tr><td>Seguridad</td><td>Política de imports, minimoslib/app_dir y rechazo de comandos ilegales</td></tr><tr><td>Usuario</td><td>Resolución de usuario, rutas y espacio .mos</td></tr><tr><td>Loader</td><td>Resolución de nombres (incl. apps), carga y rechazo seguro</td></tr><tr><td>Contrato de comandos</td><td>execute/help en comandos de sistema</td></tr><tr><td>Estilo crítico</td><td>Docstrings de core, ausencia de eval/exec indebidos</td></tr><tr><td>Arranque</td><td>Ejecución de pytest y bloqueo si hay fallos</td></tr><tr><td>Documentación operativa</td><td>Existencia de man/manual/specs cuando el requisito lo exige</td></tr><tr><td>Accesibilidad</td><td>Prefijos, help, no solo-color, declaración, informe, comandos a11y y docs</td></tr><tr><td>Apps</td><td>install/list, prioridad, A11Y mínima</td></tr><tr><td>Tareas</td><td>almacén local y comandos tareas/hilos</td></tr><tr><td>IA</td><td>off por defecto; no listar claves</td></tr></tbody></table>
+<hr>
+<h2>Organización de tests</h2>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Función</th></tr></thead><tbody><tr><td>tests/</td><td>conftest.py</td><td>Path de proyecto y fixtures comunes</td></tr><tr><td>tests/</td><td>test_security.py</td><td>Casos unitarios de política de imports</td></tr><tr><td>tests/</td><td>test_all_commands_security.py</td><td>Inventario real sistema + usuario actual</td></tr><tr><td>tests/</td><td>test_system_commands_security.py</td><td>Seguridad y contrato básico de comandos de sistema</td></tr><tr><td>tests/</td><td>test_cmd_loader.py</td><td>Carga, resolución y rechazo en loader</td></tr><tr><td>tests/</td><td>test_user.py</td><td>Usuario y espacio personal</td></tr><tr><td>tests/</td><td>test_shell_basic.py</td><td>Propiedades básicas de shell/usuario</td></tr><tr><td>tests/</td><td>test_style_commands_contract.py</td><td>Contrato execute/help</td></tr><tr><td>tests/</td><td>test_style_core_modules.py</td><td>Docstrings de módulos core</td></tr><tr><td>tests/</td><td>test_style_no_forbidden_patterns.py</td><td>Patrones prohibidos</td></tr><tr><td>tests/</td><td>test_version_metadata.py</td><td>Formato SemVer de Poetry</td></tr><tr><td>tests/</td><td>test_a11y_*.py</td><td>Tests marcados a11y</td></tr><tr><td>tests/</td><td>test_apps*.py</td><td>Apps, ámbito, minimoslib (nombres reales del árbol)</td></tr><tr><td>tests/</td><td>test_tasks*.py</td><td>Tareas e hilos</td></tr><tr><td>tests/</td><td>test_ia_router<em>.py / test_iarouter</em>.py</td><td>iarouter off y claves</td></tr></tbody></table>
+<hr>
+<h2>Niveles de prueba</h2>
+<h3>Unitarias</h3>
+<p>Validan funciones y módulos aislados:</p>
+<ul><li>security.analyze_imports</li><li>user path helpers</li><li>contrato de comandos</li><li>estilo crítico</li><li>generación / lectura del informe A11Y</li><li>apps / minimoslib</li><li>tasks store</li><li>ia_router off por defecto</li></ul>
+<h3>Integración ligera</h3>
+<p>Validan colaboración entre piezas:</p>
+<ul><li>CommandManager + security</li><li>shell startup tests runner</li><li>inventario de comandos reales del workspace</li><li>comando a11y + escritura de informe</li><li>loader + comandos de app</li></ul>
+<h3>Demostración manual</h3>
+<p>Se usa cuando el requisito es interactivo:</p>
+<ul><li>prompt y exit</li><li>man &lt;comando&gt;</li><li>docs &lt;ruta&gt;</li><li>a11y</li><li>update con y sin cambios locales</li><li>update reiniciar</li><li>apps list / install</li><li>tareas / hilos</li><li>iarouter status (sin claves)</li><li>bloqueo de arranque con un user_*.py ilegal</li></ul>
+<hr>
+<h2>Tests de arranque</h2>
+<h3>Comportamiento obligatorio</h3>
+<p>Al iniciar MOSh:</p>
+<p>1. se ejecuta la batería de tests del proyecto 2. si return code != 0, se muestra error claro y accionable 3. el shell interactivo no arranca 4. el proceso termina con código de error</p>
+<h3>Qué deben cubrir como mínimo</h3>
+<ul><li>seguridad de todos los comandos de sistema</li><li>seguridad de los comandos del usuario actual</li><li>contrato execute/help de comandos de sistema</li><li>humo de usuario/espacio personal</li><li>ausencia de patrones prohibidos críticos</li></ul>
+<p>Los tests A11Y forman parte de la batería habitual. Si esa batería los incluye, el informe A11Y se regenera.</p>
+<h3>Mensaje de fallo</h3>
+<p>Debe indicar:</p>
+<ul><li>que el arranque ha sido bloqueado</li><li>que hay que revisar tests o comandos ilegales</li><li>la vía de diagnóstico (<code>poetry run pytest</code>)</li><li>sin basarse solo en color</li></ul>
+<hr>
+<h2>Verificación de seguridad</h2>
+<table><thead><tr><th>Caso</th><th>Resultado esperado</th></tr></thead><tbody><tr><td>import os / pathlib / moslib</td><td>permitido</td></tr><tr><td>import requests / numpy / jander</td><td>rechazado</td></tr><tr><td>from . import x</td><td>rechazado</td></tr><tr><td>minimoslib con app_dir de esa app</td><td>permitido en comando de app</td></tr><tr><td>minimoslib en comando de sistema o user_</td><td>rechazado</td></tr><tr><td>comando ilegal en runtime</td><td>no se ejecuta + mensaje [SEGURIDAD]</td></tr><tr><td>comando ilegal presente al arranque</td><td>arranque bloqueado</td></tr></tbody></table>
+<hr>
+<h2>Verificación del contrato de comandos</h2>
+<p>Para cada comando de sistema:</p>
+<p>1. existe archivo .py en moslib/commands/ 2. define execute callable 3. define help callable 4. help() devuelve str no vacío</p>
+<p>Para comandos de usuario:</p>
+<p>1. nombre de archivo user_*.py 2. también están sujetos a seguridad de imports 3. no pueden tapar un comando de sistema</p>
+<p>Para comandos de app:</p>
+<p>1. viven en commands/ de la app 2. misma puerta SEC/A11Y 3. no tapar un comando de sistema 4. invocación corta / id_cmd / app_id_cmd según ICD</p>
+<hr>
+<h2>Verificación de accesibilidad</h2>
+<p>Marca pytest: <code>a11y</code>.</p>
+<p>El comando de sistema <code>a11y</code> ejecuta solo esa marca y escribe:</p>
+<table><thead><tr><th>Nivel 1</th><th>Nivel 2</th><th>Nivel 3</th><th>Función</th></tr></thead><tbody><tr><td>docs/</td><td>a11y/</td><td>informe.md</td><td>Informe humano</td></tr><tr><td>docs/</td><td>a11y/</td><td>informe.json</td><td>Informe en datos</td></tr></tbody></table>
+<p>Situación de cumplimiento:</p>
+<table><thead><tr><th>Valor</th><th>Criterio alpha</th></tr></thead><tbody><tr><td>plenamente conforme</td><td>Tests a11y obligatorios en verde y sin no conformidades abiertas</td></tr><tr><td>no conforme</td><td>Falla un test a11y de requisito obligatorio</td></tr><tr><td>parcialmente conforme</td><td>Tests de requisito pasan o aún no hay ejecución automática; hay excepciones o implantación incompleta</td></tr></tbody></table>
+<p>Fuera de esta baseline (no se testea en laboratorio):</p>
+<ul><li>GUI</li><li>lectores de pantalla de escritorio</li><li>sello WCAG / RD 1112/2018</li></ul>
+<p>Sí se testea: existencia de declaración e informe, help no vacío, prefijo de seguridad, comando docs, A11Y mínima de comando de app.</p>
+<hr>
+<h2>Comando de sistema <code>test</code></h2>
+<p>El comando <code>test</code> debe:</p>
+<ul><li>lanzar pytest desde la raíz del proyecto</li><li>aceptar argumentos adicionales de pytest si se pasan</li><li>reportar éxito o fracaso de forma clara</li><li>regenerar el informe A11Y si la batería incluye tests marcados a11y</li></ul>
+<p>No sustituye los tests de arranque: los complementa para uso explícito dentro del shell.</p>
+<hr>
+<h2>Criterios de paso / fallo</h2>
+<h3>Paso</h3>
+<p>Una entrega se considera verificada cuando:</p>
+<p>1. <code>poetry run pytest</code> termina en verde 2. el arranque de MOSh pasa los tests de arranque 3. los requisitos Must tocados por el cambio tienen evidencia de verificación 4. no se ha desactivado seguridad ni arranque bloqueante</p>
+<h3>Fallo</h3>
+<p>Es fallo bloqueante:</p>
+<p>1. cualquier test rojo de la batería principal 2. existencia de comando ilegal en sistema o usuario actual 3. ruptura del contrato execute/help en un comando de sistema 4. imposibilidad de arrancar por tests y “resolverlo” saltándolos</p>
+<hr>
+<h2>Cómo añadir tests en una feature nueva</h2>
+<p>Checklist:</p>
+<p>1. ¿Qué requisito SRS cubre este cambio? 2. ¿Hace falta test unitario nuevo o extender uno existente? 3. ¿Afecta seguridad? → cubrir caso legal e ilegal 4. ¿Añade comando de sistema? → contrato + man + inventario 5. ¿Cambia arranque/loader/user? → probar regresión de arranque 6. ¿Afecta A11Y? → marca a11y e informe 7. ¿Afecta apps / tareas / iarouter? → tests de esa área 8. Ejecutar <code>poetry run pytest</code> antes del commit</p>
+<hr>
+<h2>Evidencias de validación</h2>
+<table><thead><tr><th>Tipo</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Test automatizado</td><td>assertions en tests/</td></tr><tr><td>Salida de arranque</td><td>banner de tests OK / bloqueo</td></tr><tr><td>Informe A11Y</td><td>docs/a11y/informe.md e informe.json</td></tr><tr><td>Demostración manual</td><td>secuencia de comandos y resultado</td></tr><tr><td>Inspección</td><td>presencia de archivos docs/ o estructura de dirs</td></tr></tbody></table>
+<p>Para requisitos Must, preferir test automatizado siempre que sea razonable.</p>
+<hr>
+<h2>Relación con la metodología</h2>
+<p>Según docs/METHODOLOGY.md:</p>
+<ul><li>no hay merge a main con tests rojos</li><li>la IA debe proponer tests junto con el código cuando el cambio lo requiera</li><li>el humano valida en máquina real</li><li>update/backup no eximen de verificar después de integrar cambios</li></ul>
+<hr>
+<h2>Limitaciones actuales</h2>
+<p>La baseline no exige todavía:</p>
+<p>1. cobertura métrica mínima obligatoria de pytest-cov 2. CI externa en un forge 3. tests de rendimiento 4. tests end-to-end completos de todos los comandos interactivos 5. laboratorio de lectores de pantalla</p>
+<p>Sí exige una batería local fiable y bloqueante en arranque, incluida la cobertura Must de apps, tareas e iarouter.</p>
+<hr>
+<h2>Autoridad</h2>
+<p>Este documento es normativo para la estrategia de verificación.</p>
+<p>Cualquier cambio que debilite el arranque bloqueante o la validación de seguridad debe actualizar primero SEC, SRS y este documento TEST.</p>
+<p>Cualquier cambio que debilite A11Y debe actualizar A11Y, SRS y este documento.</p>
+</body></html>

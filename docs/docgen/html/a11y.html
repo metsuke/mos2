@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>a11y</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>Accesibilidad de MetsuOS (A11Y)</h1>
+<p><strong>Versión del documento:</strong> 1.0   <strong>Estado:</strong> Normativo   <strong>Documentos relacionados:</strong> docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/06-TEST-Verification-and-Validation.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md</p>
+<hr>
+<h2>Propósito</h2>
+<p>Definir la accesibilidad de MetsuOS como <strong>obligatoria</strong>.</p>
+<p>La interfaz actual es MOSh (línea de comandos) más los scripts de lanzamiento e instalación. No hay GUI. Este documento adapta WCAG 2.2 y, donde encaja, EN 301 549 e ISO 9241-171 a ese contexto. No afirma conformidad de sitio web.</p>
+<hr>
+<h2>Precedencia</h2>
+<p>1. No excluir los perfiles de discapacidad declarados en este documento. 2. Seguridad (SEC) y normas de sistema (SSS). 3. Resto de specs y código.</p>
+<p>Si A11Y y SEC chocan:</p>
+<ul><li>Prevalece A11Y para no dejar fuera un perfil soportado.</li><li>No se recorta SEC en silencio.</li><li>Se escribe el debate: riesgo, mitigación, dónde vive la excepción (SEC + este archivo + SRelD).</li></ul>
+<p>Muchos supuestos conflictos no lo son. Rechazar <code>import requests</code> no impide usar un lector de terminal. Un conflicto real sería un mensaje incomprensible “por no filtrar datos” frente a un mensaje accionable.</p>
+<hr>
+<h2>Referencias (adaptación, no sello)</h2>
+<table><thead><tr><th>Fuente</th><th>Uso en MetsuOS</th></tr></thead><tbody><tr><td>WCAG 2.2 Perceptible</td><td>Texto plano; no basar el significado solo en color o en ANSI</td></tr><tr><td>WCAG 2.2 Operable</td><td>Todo por teclado; help, man, exit predecibles</td></tr><tr><td>WCAG 2.2 Comprensible</td><td>Español consistente; help() no vacío; errores con siguiente acción</td></tr><tr><td>WCAG 2.2 Robusto</td><td>Prefijos estables; salida estructurada en líneas</td></tr><tr><td>EN 301 549 / ISO 9241-171</td><td>Software interactivo y CLI: mensajes, teclado, no solo-color</td></tr></tbody></table>
+<p>Nivel de ambición: equivalencia <strong>AA adaptada a CLI</strong>.</p>
+<hr>
+<h2>Perfiles soportados</h2>
+<table><thead><tr><th>Perfil</th><th>Qué debe cumplir el sistema</th><th>Qué no aplica aún</th></tr></thead><tbody><tr><td>Solo teclado</td><td>MOSh y scripts se usan sin ratón</td><td>Atajos de GUI</td></tr><tr><td>Lector de pantalla de terminal</td><td>Mensajes en texto; prefijos; sin información solo en color</td><td>APIs de lectores de escritorio</td></tr><tr><td>Baja visión</td><td>No depender de contraste de color del terminal</td><td>Temas visuales propios</td></tr><tr><td>Daltonismo</td><td>Color no es la única señal</td><td>Paletas de un TUI gráfico</td></tr><tr><td>Carga cognitiva</td><td>help/man; un comando = un contrato; errores con pista</td><td>Tutoriales multimedia</td></tr><tr><td>Sordera / sin audio</td><td>El producto no usa sonido</td><td>N/A explícito</td></tr></tbody></table>
+<p>Un perfil no listado aquí no está “cubierto” hasta que se añada con requisito y verificación.</p>
+<hr>
+<h2>Requisitos operativos (resumen)</h2>
+<p>La numeración formal vive en el SRS (<code>REQ-A11Y-*</code>). Aquí la política:</p>
+<ul><li>Todo comando de sistema o usuario tiene <code>help()</code> que devuelve texto no vacío.</li><li>Los comandos de sistema tienen página en <code>docs/man/</code> cuando se añaden.</li><li>Los mensajes de error y de seguridad llevan un prefijo estable (por ejemplo <code>[SEGURIDAD]</code> o <code>Error:</code>).</li><li>El texto dice qué ha pasado y qué puede hacer la persona (comando, documento o ruta relativa).</li><li>Los scripts <code>mos2.sh</code> e <code>install.sh</code> fallan con texto guiado, no con un código mudo.</li><li>No se usa solo color ANSI para distinguir ok / error / aviso.</li><li>El arranque que bloquea por tests explica que no hay sesión y cómo lanzar pytest.</li></ul>
+<hr>
+<h2>Cómo se registra un conflicto A11Y ↔ SEC</h2>
+<p>1. Describir el perfil afectado y el control de seguridad. 2. Alternativas (mensaje más claro, mismo rechazo; no desactivar el control). 3. Decisión. 4. Anotar en SEC, en este archivo (sección de excepciones) y en SRelD si cambia la baseline.</p>
+<h3>Excepciones vigentes</h3>
+<p>Ninguna. El rechazo de imports ilegales se mantiene; el mensaje debe ser comprensible.</p>
+<hr>
+<h2>Verificación</h2>
+<ul><li>Tests automáticos donde sea posible (help no vacío, prefijos, pista en fallos de arranque).</li><li>Inspección de scripts y de help/man.</li><li>No se exige laboratorio de lectores de pantalla en esta baseline; sí se exige que la salida sea texto lineal.</li></ul>
+<p>Detalle: docs/specs/06-TEST-Verification-and-Validation.md (se actualizará en el paso 1.5).</p>
+<hr>
+<h2>Fuera de esta baseline</h2>
+<ul><li>Interfaz gráfica</li><li>Localización a otros idiomas</li><li>Widgets, foco y contraste de una TUI rica</li><li>Certificado formal WCAG / EN 301 549</li></ul>
+<hr>
+<h2>Autoridad</h2>
+<p>Este documento es normativo para accesibilidad de MetsuOS.</p>
+<p>SSS y SRS concretan requisitos numerados. SEC no puede anular este archivo sin el procedimiento de conflicto.</p>
+</body></html>
