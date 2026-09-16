@@ -1,6 +1,6 @@
 # Guía de estilo de programación de MetsuOS (MOS2)
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Baseline de referencia:** v0.2.1  
 **Estado:** Normativo  
 **Documento relacionado:** docs/METHODOLOGY.md
@@ -8,7 +8,6 @@
 ---
 
 ## 1. Propósito
-
 Esta guía unifica la forma de escribir código en MetsuOS.
 
 Objetivos:
@@ -23,7 +22,6 @@ Si el código contradice esta guía, se corrige el código o se actualiza esta g
 ---
 
 ## 2. Alcance
-
 Aplica a:
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Aplica |
@@ -39,7 +37,6 @@ Los comandos de usuario en `rootfs/home/<usuario>/.mos/commands/` también deben
 ---
 
 ## 3. Principios generales
-
 1. Claridad antes que cleverness.
 2. Una responsabilidad por función/módulo.
 3. Fallar de forma explícita y con mensaje útil.
@@ -49,7 +46,6 @@ Los comandos de usuario en `rootfs/home/<usuario>/.mos/commands/` también deben
 ---
 
 ## 4. Lenguaje y nombres
-
 ### 4.1 Idioma
 
 - Identificadores de código (funciones, variables, módulos): **inglés**, `snake_case`.
@@ -74,7 +70,6 @@ Nombres descriptivos. Evitar abreviaturas oscuras.
 ---
 
 ## 5. Imports
-
 ### 5.1 Regla de seguridad (obligatoria en comandos)
 
 Solo se permiten:
@@ -110,7 +105,6 @@ from moslib.core.security import validate_command_file
 ---
 
 ## 6. Tipado
-
 - Anotar firmas de funciones públicas.
 - Usar `pathlib.Path` para rutas.
 - Preferir `str | Path` cuando se acepten ambos.
@@ -124,7 +118,6 @@ def validate_command_file(file_path: str | Path) -> tuple[bool, list[str]]:
 ---
 
 ## 7. Docstrings
-
 ### 7.1 Módulo
 
 Todo módulo de `moslib/core` y `moslib/commands` debe tener docstring de módulo describiendo su propósito.
@@ -149,7 +142,6 @@ que devuelve el texto de ayuda de usuario.
 ---
 
 ## 8. Contrato de comandos (obligatorio)
-
 Todo comando de sistema y de usuario debe exponer:
 
 def execute(args):
@@ -169,7 +161,6 @@ Reglas:
 ---
 
 ## 9. Rutas y ficheros
-
 - Usar `pathlib.Path` en lugar de concatenar strings a mano.
 - Resolver la raíz del proyecto de forma relativa al archivo actual cuando sea necesario.
 - No asumir un cwd concreto salvo que el diseño lo documente.
@@ -182,7 +173,6 @@ Reglas:
 ---
 
 ## 10. Errores y salida
-
 - Mensajes de error comprensibles en español.
 - Prefijos útiles cuando ayuden: `[SEGURIDAD]`, `[MetsuOS]`, `[update]`.
 - No silenciar excepciones genéricas sin dejar rastro.
@@ -191,7 +181,6 @@ Reglas:
 ---
 
 ## 11. Seguridad de código
-
 Prohibido en comandos y en rutas de ejecución de comandos:
 
 - `eval(...)`
@@ -205,7 +194,6 @@ La validación AST de imports es parte del sistema, no un adorno opcional.
 ---
 
 ## 12. Estructura recomendada de un comando
-
 Orden típico de un archivo en `moslib/commands/`:
 
 1. Docstring de módulo
@@ -225,7 +213,6 @@ def help():
 ---
 
 ## 13. Estructura recomendada de un módulo core
-
 1. Docstring de módulo
 2. Imports
 3. Constantes
@@ -237,7 +224,6 @@ Las clases públicas (`CommandManager`, `MOSh`) mantienen métodos claros y resp
 ---
 
 ## 14. Tests
-
 - Todo cambio de comportamiento relevante lleva test.
 - Los tests viven en `tests/` con nombres `test_*.py`.
 - Se prueban al menos:
@@ -257,7 +243,6 @@ Estilo en tests:
 ---
 
 ## 15. Comentarios
-
 - Comentar el porqué, no el qué obvio.
 - Evitar comentarios decorativos o ruido.
 - Si un bloque es complejo, explicar la intención en una o dos líneas.
@@ -265,7 +250,6 @@ Estilo en tests:
 ---
 
 ## 16. Formato
-
 - Indentación: 4 espacios.
 - Evitar líneas extremadamente largas; priorizar legibilidad.
 - Una sentencia lógica por línea en general.
@@ -276,7 +260,6 @@ No se impone un formateador automático obligatorio en esta baseline, pero el es
 ---
 
 ## 17. Validación automática de esta guía
-
 Deben existir tests que comprueben, como mínimo:
 
 1. Todo comando de sistema tiene `execute` y `help` callables.
@@ -290,7 +273,6 @@ Si estos tests fallan, el cambio no es aceptable para `main`.
 ---
 
 ## 18. Excepciones
-
 Cualquier excepción a esta guía debe:
 
 1. Estar justificada.
@@ -302,7 +284,6 @@ No existen excepciones silenciosas.
 ---
 
 ## 19. Checklist rápido antes de commit
-
 1. ¿Imports legales?
 2. ¿Contrato execute/help si es comando?
 3. ¿Nombres y docstrings coherentes?

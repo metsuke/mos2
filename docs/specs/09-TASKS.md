@@ -1,6 +1,6 @@
 # 09 – Tareas
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Normativo (campaña 07, frente B)  
 **Baseline:** v0.2.5  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/08-APPS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/plans/2026-09-01-02-campana-07-soporte-apps-tareas-ia.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Definir el sistema de tareas de MetsuOS (manual y automático), inspirado en GTD y ampliable.
 
 No describe la malla P2P (10) ni la suite de desarrollo (08). Las automáticas de la 07 son **locales**.
@@ -16,7 +15,6 @@ No describe la malla P2P (10) ni la suite de desarrollo (08). Las automáticas d
 ---
 
 ## Principio
-
 - **Manual:** el usuario entra en un comando, resuelve, sale.
 - **Automática:** segundo plano local; se consulta como “canales” (texto lineal).
 - Apps y núcleo **encolan** aquí. No inventan colas propias.
@@ -26,7 +24,6 @@ Si A11Y o SEC fallan, estado `bloqueada_a11y_sec`: **no se ejecuta**.
 ---
 
 ## Campos estables
-
 | Campo | Obligatorio | Valores / notas |
 |-------|-------------|-----------------|
 | id | sí | estable |
@@ -48,7 +45,6 @@ No renombrar estos campos. Se pueden añadir otros en v1.1+.
 ---
 
 ## Clases y privilegio
-
 | Clase | Uso |
 |-------|-----|
 | realtime | Poca latencia; no bloquear con trabajo heavy |
@@ -63,7 +59,6 @@ Intervalo de automáticas: en 07, función simple de `prioridad` (documentar la 
 ---
 
 ## Persistencia
-
 | origen | Dónde |
 |--------|--------|
 | usuario | `.mos/` (no versionar como producto) |
@@ -73,7 +68,6 @@ Intervalo de automáticas: en 07, función simple de `prioridad` (documentar la 
 ---
 
 ## Comandos (07)
-
 | Comando (nombre a fijar en ICD) | Función |
 |---------------------------------|---------|
 | listar / filtrar | siempre las manuales del usuario; automáticas bajo filtro |
@@ -86,7 +80,6 @@ Shell síncrono: `tick` o proceso hijo documentado. No fingir red ni P2P.
 ---
 
 ## Recurrencia
-
 - `una_vez`: al `hecha`, no vuelve.
 - `cada_n_dias`: manual recurrente; reaparece.
 - `cada_n_minutos`: automática; N ajustable por prioridad en ICD.
@@ -94,7 +87,6 @@ Shell síncrono: `tick` o proceso hijo documentado. No fingir red ni P2P.
 ---
 
 ## Criterios de aceptación del frente B
-
 1. Este spec publicado.
 2. Se crea una manual `una_vez`, se lista, se entra, pasa a `hecha`.
 3. Una automática `sistema` se reencola al vaciar (test unitario o tick).
@@ -104,5 +96,4 @@ Shell síncrono: `tick` o proceso hijo documentado. No fingir red ni P2P.
 ---
 
 ## Autoridad
-
 Normativo para tareas. Choca con SEC/A11Y/SSS → ganan esas.

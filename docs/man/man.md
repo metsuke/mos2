@@ -31,3 +31,6 @@ help, docs/USER_MANUAL.md
 
 ## HELP DEL COMANDO
 Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/).
+
+## HELP DEL COMANDO
+Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/).

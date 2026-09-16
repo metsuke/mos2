@@ -30,3 +30,6 @@ help, man
 
 ## HELP DEL COMANDO
 Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala.
+
+## HELP DEL COMANDO
+Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala.

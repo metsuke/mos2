@@ -29,3 +29,6 @@ update, help, man
 
 ## HELP DEL COMANDO
 Uso: test [args...] - Ejecuta la batería de tests unitarios y de seguridad (pytest). Regenera también docs/a11y/informe.md e informe.json.
+
+## HELP DEL COMANDO
+Uso: test [args...] - Ejecuta la batería de tests unitarios y de seguridad (pytest). Regenera también docs/a11y/informe.md e informe.json.

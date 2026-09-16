@@ -23,3 +23,6 @@ sysinfo, version, help
 
 ## HELP DEL COMANDO
 Uso: uptime - Muestra el tiempo que lleva encendido el sistema operativo anfitrión.
+
+## HELP DEL COMANDO
+Uso: uptime - Muestra el tiempo que lleva encendido el sistema operativo anfitrión.

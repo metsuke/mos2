@@ -1,13 +1,12 @@
 # Metodología de MetsuOS (MOS2)
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.4  
 **Baseline de referencia:** v0.2.4  
 **Estado:** Normativo
 
 ---
 
 ## Propósito
-
 Este documento define **cómo se desarrolla, documenta y evoluciona MetsuOS**.
 
 Su objetivo es:
@@ -22,7 +21,6 @@ Si existe conflicto entre este documento y el código, **se resuelve actualizand
 ---
 
 ## Qué es MetsuOS (marco de referencia)
-
 MetsuOS (MOS2) es un sistema operativo **simulado y modular** escrito en Python.
 
 Características estructurales no negociables:
@@ -43,7 +41,6 @@ MetsuOS **no** pretende ser un kernel real ni un sustituto completo de un sistem
 ---
 
 ## Por qué ECSS-light
-
 La metodología de especificación se inspira en **ECSS-E-ST-40** (ingeniería de software de la ESA), adaptada a la escala de un proyecto alpha modular.
 
 Se adopta de ECSS:
@@ -64,7 +61,6 @@ El resultado se denomina **ECSS-light** y vive en `docs/specs/`.
 ---
 
 ## Mapa de documentación
-
 | Nivel 1 | Nivel 2 | Nivel 3 | Descripción |
 |---------|---------|---------|-------------|
 | AGENTS.md | | | Entrada corta para agentes IA |
@@ -110,7 +106,6 @@ Versionado de producto y tags: `docs/VERSIONING.md`.
 ---
 
 ## Método de trabajo (humano + IA)
-
 ### Principios
 
 - **No romper** lo que ya funciona.
@@ -226,7 +221,6 @@ Antes de mergear a `main`:
 ---
 
 ## Ciclo de vida de una funcionalidad
-
 Idea → impacto en SSS / SRS / SEC / ICD / A11Y (si aplica) → diseño breve (SDD si cambia arquitectura) → implementación en rama feature → tests → documentación (USER_MANUAL / man / README / ENVIRONMENTS / onboarding / declaración A11Y si aplica) → merge a main → VERSIONING (bump/tag si es producto) → mención en SRelD si la baseline lo requiere.
 
 No se implementa una feature solo en código si rompe una norma documentada.
@@ -234,7 +228,6 @@ No se implementa una feature solo en código si rompe una norma documentada.
 ---
 
 ## Seguridad, accesibilidad y calidad como parte del proceso
-
 - Validación de imports obligatoria en carga de comandos.
 - Batería de tests al arrancar MOSh; si falla, no inicia.
 - Comandos de usuario sujetos a seguridad y a revisión en arranque del usuario actual.
@@ -244,7 +237,6 @@ No se implementa una feature solo en código si rompe una norma documentada.
 ---
 
 ## Documentos de usuario, desarrollador e IA
-
 - Manual: `docs/USER_MANUAL.md`
 - Humano: `docs/HUMAN_ONBOARDING.md`
 - Desarrollador: `docs/DEVELOPER_GUIDE.md`
@@ -263,7 +255,6 @@ Todo comando de sistema nuevo debería incorporar su página man en el mismo cam
 ---
 
 ## Estilo de código
-
 Las normas de escritura están en `docs/STYLE_GUIDE.md`.
 
 Este documento obliga a respetar la guía, mantener tests de contrato/normas críticas y no introducir excepciones ad hoc sin actualizar la guía.
@@ -271,7 +262,6 @@ Este documento obliga a respetar la guía, mantener tests de contrato/normas cr�
 ---
 
 ## Representación de estructuras de directorios
-
 Las estructuras de directorios siempre se representan como tablas markdown, con una columna por nivel y una columna final de descripción.
 
 Está prohibido usar árboles ASCII como forma principal en documentos normativos.
@@ -279,7 +269,6 @@ Está prohibido usar árboles ASCII como forma principal en documentos normativo
 ---
 
 ## Baseline y evolución
-
 - Baseline funcional de partida de este marco: v0.2.1.
 - Producto actual de referencia: v0.2.4.
 - Cierre A11Y de esta campaña: v0.2.5 previsto.
@@ -289,7 +278,6 @@ Está prohibido usar árboles ASCII como forma principal en documentos normativo
 ---
 
 ## Cierre de grupo de bloques
-
 Al terminar un grupo de bloques de una campaña:
 
 - Revisión de interacción humano↔IA (incidentes → normas).
@@ -301,7 +289,6 @@ Plantilla formal: Grupo III de la campaña 05 (`docs/INTERACTION_REVIEW.md`).
 ---
 
 ## Resumen operativo (checklist rápido)
-
 1. ¿Parto de main actualizado?
 2. ¿Tengo rama feature/...?
 3. ¿Contexto de sesión declarado si hay multi-entorno?
@@ -320,7 +307,6 @@ Si alguna respuesta es no y el cambio es relevante, no se mergea.
 ---
 
 ## Autoridad de este documento
-
 METHODOLOGY.md es normativo para el proceso de desarrollo de MetsuOS.
 
 Cualquier excepción debe documentarse explícitamente, nunca como práctica silenciosa.

@@ -1,13 +1,12 @@
 # Onboarding humano de MetsuOS
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Estado:** Guía de entrada  
 **Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md
 
 ---
 
 ## Para quién es este documento
-
 Personas que clonan el repo por primera vez y quieren:
 
 - instalar y arrancar MOSh
@@ -19,7 +18,6 @@ No sustituye al manual de usuario ni a las specs. Es el “por dónde empiezo”
 ---
 
 ## Arranque rápido
-
 Desde la raíz del clone:
 
 ```text
@@ -34,7 +32,6 @@ Detalle de uso cotidiano: docs/USER_MANUAL.md.
 ---
 
 ## Elige un solo clone
-
 No mezcles dos copias del mismo proyecto (por ejemplo una en disco Windows montado y otra en home Linux). Cada clone tiene su propio `.venv`.
 
 En WSL usa un clone en filesystem Linux (por ejemplo bajo $HOME), no bajo /mnt/c/...  
@@ -43,7 +40,6 @@ Si lanzas install.sh o mos2.sh desde /mnt/... en WSL, el sistema debe rechazarlo
 ---
 
 ## Perfiles de entorno
-
 Declara (en chat con IA o en notas de trabajo):
 
 ```text
@@ -62,7 +58,6 @@ Normativa: docs/ENVIRONMENTS.md.
 ---
 
 ## Dirección de trabajo (sin karma)
-
 docs/INCENTIVOS.md explica hacia dónde empuja el proyecto.
 
 Para ti como persona **no es un examen ni un ranking**. El sistema intenta poner fácil lo alineado (tu carpeta `.mos`, help, no pisar comandos de sistema).
@@ -72,7 +67,6 @@ Para una IA que te ayude **sí es obligatorio**.
 ---
 
 ## Mapa corto de documentación
-
 | Documento | Para qué |
 |-----------|----------|
 | README.md | Visión del repo |
@@ -97,7 +91,6 @@ Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo e
 ---
 
 ## Qué puedes hacer como usuario
-
 - Crear comandos personales `user_*.py` en tu espacio `.mos/commands/`
 - Invocarlos como `user_algo` o `algo` si no choca con un comando de sistema
 - No puedes pisar comandos oficiales
@@ -108,7 +101,6 @@ Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo e
 ---
 
 ## Si algo falla
-
 | Síntoma | Qué mirar |
 |---------|-----------|
 | Tests de arranque en rojo | Comando con import ilegal o pytest no instalado en ESE clone |
@@ -120,7 +112,6 @@ Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo e
 ---
 
 ## Siguiente lectura
-
 1. docs/USER_MANUAL.md
 2. docs/A11Y.md si te interesa accesibilidad
 3. docs/INCENTIVOS.md si te interesa la dirección del proyecto

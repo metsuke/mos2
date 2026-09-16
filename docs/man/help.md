@@ -30,3 +30,6 @@ man, version, test
 
 ## HELP DEL COMANDO
 Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen.
+
+## HELP DEL COMANDO
+Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen.

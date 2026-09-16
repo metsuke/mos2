@@ -1,6 +1,6 @@
 # 08 – Apps
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Normativo (campaña 07, frente A)  
 **Baseline:** v0.2.5  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/plans/2026-09-01-02-campana-07-soporte-apps-tareas-ia.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Definir qué es una **app** en MetsuOS, cómo se relaciona con el núcleo y qué debe cumplir para cargarse.
 
 No describe la suite de desarrollo (08), ni la malla (10), ni DepManager.
@@ -16,7 +15,6 @@ No describe la suite de desarrollo (08), ni la malla (10), ni DepManager.
 ---
 
 ## Qué es y qué no es
-
 Una app es un paquete con **identidad propia**, **repo propio** (o árbol equivalente) y **uno o más comandos** que se ejecutan dentro de MOSh.
 
 No es un archivo suelto en `moslib/commands/`.  
@@ -26,7 +24,6 @@ No puede importar fuera de stdlib + moslib + su mini-moslib declarado.
 ---
 
 ## Metadatos estables
-
 | Campo | Obligatorio | Notas |
 |-------|-------------|-------|
 | id | sí | slug estable |
@@ -43,7 +40,6 @@ Ampliar campos en versiones posteriores de este spec. No renombrar estos.
 ---
 
 ## Ciclo de vida (07)
-
 | Acción | 07 implementa |
 |--------|----------------|
 | Instalar desde path local | sí |
@@ -57,7 +53,6 @@ Directorio de instalación: se fija en ICD al implementar. Candidatos: `rootfs/h
 ---
 
 ## Carga y normas férreas
-
 El núcleo descubre apps instaladas y carga sus comandos con **la misma** validación que un comando de sistema:
 
 - `execute(args)` y `help()` → str
@@ -72,7 +67,6 @@ Mini-moslib: el resto del sistema **no** importa esa mini-lib. Solo comandos de 
 ---
 
 ## Acceso (mínimo 07)
-
 | Valor | Significado |
 |-------|-------------|
 | local-owner | Solo el usuario anfitrión de este clone |
@@ -83,7 +77,6 @@ Quién “tiene la app” lo decide el desarrollador de la app en metadatos; el 
 ---
 
 ## Criterios de aceptación del frente A
-
 1. Spec publicado (este archivo).
 2. Fixture de app de prueba instala, lista, ejecuta un comando legal, se desinstala.
 3. Fixture con import ilegal no carga.
@@ -93,5 +86,4 @@ Quién “tiene la app” lo decide el desarrollador de la app en metadatos; el 
 ---
 
 ## Autoridad
-
 Normativo para apps. Choca con SEC/A11Y/SSS → ganan esas y se versiona este archivo.

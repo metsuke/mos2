@@ -1,6 +1,6 @@
 # 00 – Overview de especificaciones (ECSS-light)
 
-**Versión del documento:** 1.5  
+**Versión del documento:** 1.6  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, AGENTS.md, docs/INCENTIVOS.md, docs/INTERACTION_REVIEW.md, docs/DEUDA_Y_CAMPANAS.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento es el mapa de las especificaciones de MetsuOS.
 
 Define:
@@ -23,7 +22,6 @@ No describe el diseño detallado ni los requisitos individuales: solo organiza e
 ---
 
 ## Conjunto de especificaciones
-
 | Nivel 1 | Nivel 2 | Nivel 3 | Documento | Función |
 |---------|---------|---------|-----------|---------|
 | docs/ | specs/ | 00-OVERVIEW.md | Overview | Mapa y reglas del set de specs |
@@ -63,7 +61,6 @@ Documentos de soporte fuera de `specs/`:
 ---
 
 ## Precedencia normativa
-
 De mayor a menor autoridad técnica:
 
 1. A11Y de interfaz (perfiles soportados) junto con `04-SEC` y `01-SSS`
@@ -85,7 +82,6 @@ Regla:
 ---
 
 ## Relación con ECSS
-
 Este conjunto es una adaptación ligera de ECSS-E-ST-40:
 
 | ECSS | MetsuOS ECSS-light |
@@ -104,7 +100,6 @@ La seguridad tiene documento propio (`04-SEC`). La accesibilidad tiene política
 ---
 
 ## Cómo se usa este set en el desarrollo
-
 ### Para implementar una feature
 
 1. Comprobar impacto en SSS / SEC / ICD / SRS / A11Y (y ENVIRONMENTS si afecta a perfiles o Poetry).
@@ -131,7 +126,6 @@ Preguntas mínimas:
 ---
 
 ## Identificación de requisitos
-
 En `02-SRS` los requisitos se numeran así:
 
 ```text
@@ -161,7 +155,6 @@ Cada requisito debe ser verificable por test, inspección o demostración.
 ---
 
 ## Baseline
-
 La baseline documental de partida de este marco es **v0.2.1**.  
 Producto de referencia actual: **v0.2.7**.  
 Árbol hacia **v0.2.8** (entrada en CHANGELOG; tag de producto pendiente de pruebas humanas).
@@ -175,7 +168,6 @@ Esta versión 1.5 del Overview no borra el relato de 1.4: solo actualiza el mapa
 ---
 
 ## Norma de representación de directorios
-
 En todos los documentos de `docs/specs/` las estructuras de directorios se escriben como tablas, con una columna por nivel.
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Descripción |
@@ -187,7 +179,6 @@ En todos los documentos de `docs/specs/` las estructuras de directorios se escri
 ---
 
 ## Estado de este overview
-
 Este overview es normativo para la organización de las especificaciones.
 
 Cualquier alta, baja o renombrado de documentos del set ECSS-light (o de soporte como ENVIRONMENTS, VERSIONING, CHANGELOG, A11Y, INCENTIVOS, INTERACTION_REVIEW, DEUDA, planes u onboarding) debe reflejarse aquí.

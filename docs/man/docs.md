@@ -43,3 +43,6 @@ a11y, man, help
 
 ## HELP DEL COMANDO
 Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs <ruta> - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)
+
+## HELP DEL COMANDO
+Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs <ruta> - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)

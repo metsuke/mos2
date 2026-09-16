@@ -8,7 +8,6 @@
 ---
 
 ## Introducción
-
 MetsuOS (también llamado MOS2) es un sistema operativo simulado y modular escrito en Python.
 
 Su interfaz principal es el shell **MOSh**, donde puedes ejecutar:
@@ -31,7 +30,6 @@ La v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter, red y `update rein
 ---
 
 ## Qué necesitas
-
 - Python 3.10 o superior
 - Poetry
 - Git
@@ -40,7 +38,6 @@ La v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter, red y `update rein
 ---
 
 ## Instalación
-
 1. Clona el repositorio:
 
 ```text
@@ -73,7 +70,6 @@ El instalador:
 ---
 
 ## Entornos de ejecución
-
 | Sistema | Entorno | Notas |
 |---------|----------|-------|
 | linux | native | Poetry habitual en PATH |
@@ -89,7 +85,6 @@ Si en Git Bash aparece *Permission denied* con el script `poetry` sin extensión
 ---
 
 ## Arranque
-
 ```text
 ./mos2.sh
 ```
@@ -119,7 +114,6 @@ mosh/tu_usuario@metsuos:~$
 ---
 
 ## Conceptos básicos
-
 ### MOSh
 
 Es el shell de MetsuOS. Lees comandos, los ejecutas y ves el resultado.
@@ -153,7 +147,6 @@ Prioridad: sistema > app de sistema > app de usuario > comando `user_`.
 ---
 
 ## Comandos de sistema
-
 | Tipo | Comando | Descripción |
 |------|---------|-------------|
 | accesibilidad | a11y | Tests A11Y e informe |
@@ -201,7 +194,6 @@ update reiniciar
 ---
 
 ## Ayuda: help, man y docs
-
 ### help
 
 - `help` lista comandos y ayuda corta
@@ -223,7 +215,6 @@ Los manuales de sistema viven en `docs/man/`. Una app puede aportar el suyo.
 ---
 
 ## Crear tus propios comandos
-
 ### Dónde crearlos
 
 ```text
@@ -256,7 +247,6 @@ Tu comando **no puede** sustituir un comando oficial del sistema.
 ---
 
 ## Apps
-
 ```text
 apps list
 apps show <id>
@@ -269,7 +259,6 @@ Una app no es un `user_*.py`. Lleva `app.json` y comandos propios. Sin A11Y mín
 ---
 
 ## Tareas e hilos
-
 ```text
 tareas
 hilos
@@ -280,7 +269,6 @@ Son locales a tu sesión y a tu espacio. No son la malla P2P. Detalle: `docs/spe
 ---
 
 ## iarouter
-
 ```text
 iarouter
 ```
@@ -290,7 +278,6 @@ Va apagado hasta que lo actives (`usar` / `preguntar`). No lista claves. Jan y G
 ---
 
 ## Seguridad de comandos
-
 Solo se permiten imports de:
 
 - biblioteca estándar de Python
@@ -303,7 +290,6 @@ Un import ilegal hace que el comando se rechace; si sigue presente, el arranque 
 ---
 
 ## Tests
-
 ### Desde fuera del shell
 
 Con Poetry operativo en el PATH:
@@ -333,7 +319,6 @@ a11y
 ---
 
 ## Actualizar MetsuOS
-
 Dentro del shell:
 
 ```text
@@ -366,7 +351,6 @@ Emergencia desde fuera del shell: `mos2_forced_update.sh` (solo si sabes lo que 
 ---
 
 ## Flujo de trabajo recomendado
-
 1. Arranca MetsuOS
 2. Consulta `help`, `man` o `docs`
 3. Trabaja con comandos de sistema
@@ -377,7 +361,6 @@ Emergencia desde fuera del shell: `mos2_forced_update.sh` (solo si sabes lo que 
 ---
 
 ## Problemas frecuentes
-
 ### El sistema no arranca
 
 Causa habitual: tests en rojo o un comando de usuario con import ilegal.
@@ -411,7 +394,6 @@ Usa `update reiniciar` o sal y vuelve a entrar.
 ---
 
 ## Dónde encontrar más documentación
-
 | Documento | Contenido |
 |-----------|-----------|
 | docs/USER_MANUAL.md | Este manual |
@@ -427,7 +409,6 @@ Usa `update reiniciar` o sal y vuelve a entrar.
 ---
 
 ## Limitaciones de la fase Alpha
-
 MetsuOS todavía no es un sistema operativo completo.
 
 - no sustituye tu sistema anfitrión
@@ -441,7 +422,6 @@ Aun así es usable como shell modular con seguridad, espacio personal, apps loca
 ---
 
 ## Salir
-
 ```text
 exit
 ```

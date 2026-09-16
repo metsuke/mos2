@@ -1,6 +1,6 @@
 # 03 – ICD · Interfaces y contrato de comandos
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento define las interfaces internas principales de MetsuOS y el contrato obligatorio de los comandos.
 
 Su función es evitar que núcleo, comandos y espacio de usuario se acoplen de forma implícita o incompatible.
@@ -18,7 +17,6 @@ La v1.1 se conserva. Esta v1.2 añade prioridad de apps, contratos de apps/tarea
 ---
 
 ## Alcance
-
 Cubre:
 
 1. Contrato de todo comando (sistema, app o usuario)
@@ -37,7 +35,6 @@ No cubre el detalle interno de cada comando concreto, salvo su contrato común.
 ---
 
 ## Contrato de comando
-
 Todo comando válido, de sistema, de app o de usuario, debe ser un módulo Python que exponga:
 
 ### execute(args)
@@ -68,7 +65,6 @@ Todo comando válido, de sistema, de app o de usuario, debe ser un módulo Pytho
 ---
 
 ## Ubicación de comandos
-
 | Tipo | Ubicación | Patrón de archivo |
 |------|-----------|-------------------|
 | Sistema | moslib/commands/ | `<nombre>.py` |
@@ -88,7 +84,6 @@ Las rutas de instalación reales las fija `moslib/core/apps.py`. Esta tabla es e
 ---
 
 ## Resolución de nombres de comando
-
 El orden de resolución es obligatorio:
 
 ### Prioridad 1 · Comando de sistema
@@ -132,7 +127,6 @@ Formas de invocación de un comando de app: nombre corto, `id_cmd`, `app_id_cmd`
 ---
 
 ## Interfaz Shell ↔ CommandManager
-
 ### Componentes
 
 | Componente | Módulo | Responsabilidad |
@@ -163,7 +157,6 @@ Para un comando de app, el loader debe pasar a SEC el `app_dir` de esa app.
 ---
 
 ## Interfaz CommandManager ↔ Security
-
 ### Componente de seguridad
 
 | Componente | Módulo | Responsabilidad |
@@ -187,7 +180,6 @@ Reglas:
 ---
 
 ## Interfaz de usuario y espacio personal
-
 ### Componente
 
 | Componente | Módulo | Responsabilidad |
@@ -215,7 +207,6 @@ rootfs/home/<usuario>/
 ---
 
 ## Punto de entrada del sistema
-
 | Nivel 1 | Nivel 2 | Nivel 3 | Descripción |
 |---------|---------|---------|-------------|
 | rootfs/ | bin/ | mos.py | Entrada principal del shell |
@@ -231,7 +222,6 @@ No debe contener lógica de negocio que pertenezca a `moslib/core`.
 ---
 
 ## Interfaz de ayuda
-
 ### help de sistema
 
 El comando `help` debe poder:
@@ -259,7 +249,6 @@ Si una app aporta `man/`, `man` debe poder mostrar esa página para el comando d
 ---
 
 ## Interfaz de documentación general
-
 El comando de sistema `docs` consulta el árbol `docs/` del clone.
 
 Comportamiento de interfaz:
@@ -273,7 +262,6 @@ Comportamiento de interfaz:
 ---
 
 ## Interfaz de accesibilidad
-
 El comando de sistema `a11y`:
 
 - ejecuta solo tests con marca `a11y`
@@ -285,7 +273,6 @@ El comando `test` (batería completa) regenera el mismo informe si esa batería 
 ---
 
 ## Interfaz de actualización
-
 El comando `update` interactúa con el repositorio git del producto (Git, no un forge).
 
 Contrato de comportamiento a nivel de interfaz de sistema:
@@ -312,7 +299,6 @@ Esta interfaz no publica automáticamente las ramas backup al remoto.
 ---
 
 ## Interfaz de tests de arranque
-
 Antes de entrar en modo interactivo, el shell debe invocar la batería de tests del proyecto.
 
 Interfaz conceptual:
@@ -327,7 +313,6 @@ run_startup_tests() -> bool
 ---
 
 ## Interfaz de apps
-
 | Componente | Módulo | Responsabilidad |
 |------------|--------|-----------------|
 | Apps | moslib/core/apps.py | Install desde path o repo git, ámbito, list/show/remove |
@@ -340,7 +325,6 @@ Una app declara identidad en `app.json`. Detalle normativo: spec 08.
 ---
 
 ## Interfaz de tareas
-
 | Componente | Módulo | Responsabilidad |
 |------------|--------|-----------------|
 | Tasks | moslib/core/tasks.py | Almacén GTD local y tick |
@@ -352,7 +336,6 @@ No es la malla P2P. Detalle: spec 09.
 ---
 
 ## Interfaz de iarouter
-
 | Componente | Módulo | Responsabilidad |
 |------------|--------|-----------------|
 | Fachada | moslib/core/ia_router.py | Off por defecto; Jan, GPT4All, Grok, OpenRouter |
@@ -363,13 +346,11 @@ No envía hasta activación explícita. Las claves no se listan. El puente HTTP 
 ---
 
 ## Interfaz de red
-
 El comando de sistema `red` diagnostica la red del anfitrión. No es P2P ni sustituye a iarouter.
 
 ---
 
 ## Datos intercambiados en la ejecución de un comando
-
 | Dato | Dirección | Formato | Notas |
 |------|-----------|---------|-------|
 | Línea de entrada | Usuario → Shell | str | Texto crudo |
@@ -381,7 +362,6 @@ El comando de sistema `red` diagnostica la red del anfitrión. No es P2P ni sust
 ---
 
 ## Invariantes de interfaz
-
 1. El shell no ejecuta un comando sin pasar por el loader en operación normal.
 2. El loader no entrega un comando ilegal si la seguridad está activa.
 3. El nombre corto de usuario nunca gana a un comando de sistema ni de app con más prioridad.
@@ -395,7 +375,6 @@ El comando de sistema `red` diagnostica la red del anfitrión. No es P2P ni sust
 ---
 
 ## Verificación de este ICD
-
 Se verifica mediante:
 
 1. Tests de contrato execute/help
@@ -410,7 +389,6 @@ Se verifica mediante:
 ---
 
 ## Autoridad
-
 Este ICD es normativo para cualquier cambio en la forma de descubrir, cargar, nombrar o invocar comandos.
 
 Romper este contrato requiere actualización explícita del documento y de sus tests asociados.

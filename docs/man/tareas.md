@@ -19,3 +19,6 @@ Comando de sistema. stdlib + moslib.
 
 ## HELP DEL COMANDO
 Uso: tareas [list|add <comando>|hecha <id>|tick] - Tareas locales. bloqueada_a11y_sec no se ejecuta.
+
+## HELP DEL COMANDO
+Uso: tareas [list|add <comando>|hecha <id>|tick] - Tareas locales. bloqueada_a11y_sec no se ejecuta.

@@ -28,3 +28,6 @@ update, version
 
 ## HELP DEL COMANDO
 Uso: synccheck - Fetch origin y compara HEAD local con origin/main. Muestra SHAs, si coinciden, versión Poetry/README en origin/main y la URL raw por SHA.
+
+## HELP DEL COMANDO
+Uso: synccheck - Fetch origin y compara HEAD local con origin/main. Muestra SHAs, si coinciden, versión Poetry/README en origin/main y la URL raw por SHA.

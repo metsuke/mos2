@@ -43,3 +43,6 @@ version, test, help, synccheck
 
 ## HELP DEL COMANDO
 Uso: update [reiniciar] - Trae origin/main. Los módulos de esta sesión no cambian hasta relanzar MOSh. update reiniciar relanza el proceso tras el pull (o solo relanza si no hay pull pendiente).
+
+## HELP DEL COMANDO
+Uso: update [reiniciar] - Trae origin/main. Los módulos de esta sesión no cambian hasta relanzar MOSh. update reiniciar relanza el proceso tras el pull (o solo relanza si no hay pull pendiente).

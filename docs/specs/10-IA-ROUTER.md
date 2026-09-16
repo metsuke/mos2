@@ -1,6 +1,6 @@
 # 10 – Enrutador de IA
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Estado:** Normativo (mini campaña iarouter)  
 **Baseline:** v0.2.7 hacia v0.2.8  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/INCENTIVOS.md, docs/A11Y.md, docs/man/iarouter.md, docs/plans/2026-09-07-01-iarouter-modelos-lan.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Fachada única de MetsuOS para llamar a modelos **sin** que la IA fije la política.
 
 Proveedores de esta versión:
@@ -23,7 +22,6 @@ Proveedores de esta versión:
 ---
 
 ## Qué no es
-
 - No es la suite de desarrollo (08).
 - No es un agente que commitea solo.
 - No lee `.mos` salvo allowlist explícita del humano.
@@ -33,7 +31,6 @@ Proveedores de esta versión:
 ---
 
 ## Contrato moslib.core.ia_router
-
 | Operación | Comportamiento |
 |-----------|----------------|
 | status | proveedor, enabled, modelo, lista de detectados |
@@ -50,7 +47,6 @@ Errores (sin clave, sin red, off, `.mos` no autorizado): mensaje usable, sin vol
 ---
 
 ## Política
-
 Ruta: `.mos/config/ia_router.json` (espacio del usuario).
 
 | Campo | Default |
@@ -74,7 +70,6 @@ La IA no escribe este fichero. Lo escribe `iarouter usar` / `iarouter modelo` o 
 ---
 
 ## Claves
-
 moslib.core.ia_keys + moslib.core.secreto.
 
 Orden: almacén `.mos` → si falta, entorno → se copia al almacén.  
@@ -85,7 +80,6 @@ HMAC detecta manipulación. Quien copie wrap+json puede recuperar.
 ---
 
 ## Transporte
-
 Solo a través de moslib. `urllib` de la stdlib. Comandos no hacen HTTP directo.
 
 Cuerpo: chat completions (role user + content). Respuesta: `choices[0].message.content`.
@@ -95,7 +89,6 @@ OpenRouter añade HTTP-Referer y X-Title.
 ---
 
 ## LAN, share, publicar, puente
-
 | Pieza | Efecto |
 |-------|--------|
 | resolver local | localhost → cache TTL 600 s → /24 privada |
@@ -106,7 +99,6 @@ OpenRouter añade HTTP-Referer y X-Title.
 ---
 
 ## Comando de sistema
-
 | Subcomando | Efecto |
 |------------|--------|
 | status | política + detección |
@@ -127,7 +119,6 @@ Salida: tabla corta + párrafo por ítem.
 ---
 
 ## Criterios de aceptación
-
 1. Spec 1.2 publicado.
 2. enabled=false: no hay llamada de red (test).
 3. Payload con `.mos` no allowlist: rechazo.
@@ -145,5 +136,4 @@ Salida: tabla corta + párrafo por ítem.
 ---
 
 ## Autoridad
-
 Normativo para llamadas a modelos. Choca con SEC/A11Y → ganan esas.

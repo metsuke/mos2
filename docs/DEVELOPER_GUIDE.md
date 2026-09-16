@@ -1,13 +1,12 @@
 # Guía del desarrollador de MetsuOS
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Estado:** Normativo de proceso  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/specs/00-OVERVIEW.md, docs/plans/README.md
 
 ---
 
 ## Propósito
-
 Cómo contribuir código y documentación sin romper normas férreas ni desincronizar versiones.
 
 El método general está en docs/METHODOLOGY.md. Aquí está el flujo práctico día a día.
@@ -15,7 +14,6 @@ El método general está en docs/METHODOLOGY.md. Aquí está el flujo práctico 
 ---
 
 ## Requisitos de trabajo
-
 - Python 3.10+
 - Poetry
 - Git
@@ -31,7 +29,6 @@ Instalación:
 ---
 
 ## Contexto de sesión
-
 ```text
 Contexto: <sistema> / <entorno> / <rol>
 ```
@@ -41,7 +38,6 @@ Detalle: docs/ENVIRONMENTS.md.
 ---
 
 ## Flujo de una feature
-
 1. git checkout main && git pull origin main
 2. git checkout -b feature/nombre-descriptivo
 3. Acordar plan por fases (humano + IA); si es campaña, docs/plans/
@@ -54,7 +50,6 @@ Detalle: docs/ENVIRONMENTS.md.
 ---
 
 ## Dónde tocar qué
-
 | Si necesitas... | Toca principalmente... | No olvides... |
 |-----------------|------------------------|---------------|
 | Prompt o REPL | moslib/core/shell.py | tests de arranque |
@@ -72,7 +67,6 @@ Detalle: docs/ENVIRONMENTS.md.
 ---
 
 ## Contrato de comando
-
 Todo comando de sistema o de usuario:
 
 - execute(args) callable
@@ -84,7 +78,6 @@ Todo comando de sistema o de usuario:
 ---
 
 ## Tests
-
 Obligatorios en desarrollo y en producción (arranque de MOSh).
 
 ```text
@@ -110,13 +103,11 @@ En 0.2.5: `a11y` solo corre tests de accesibilidad y regenera docs/a11y/informe.
 ---
 
 ## Estilo
-
 Normas en docs/STYLE_GUIDE.md. Hay tests que comprueban contrato y patrones prohibidos (eval/exec, etc.).
 
 ---
 
 ## Versionado (resumen)
-
 | Cambio | pyproject.toml | Tag | CHANGELOG |
 |--------|----------------|-----|-----------|
 | Runtime / scripts / comandos / seguridad | Bump X.Y.Z | vX.Y.Z | Entrada de producto |
@@ -129,7 +120,6 @@ Detalle: docs/VERSIONING.md.
 ---
 
 ## Documentación al cambiar algo
-
 - Encabezados sin numeración
 - Directorios en tablas (una columna por nivel)
 - Comandos de sistema: columna Tipo A–Z y comandos A–Z dentro del tipo
@@ -142,7 +132,6 @@ Detalle: docs/VERSIONING.md.
 ---
 
 ## Trabajo con IA
-
 La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:
 
 - un archivo por bloque copiable
@@ -155,7 +144,6 @@ La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:
 ---
 
 ## Checklist pre-merge
-
 1. Tests en verde
 2. Arranque de MOSh OK
 3. SEC / SSS / ICD / A11Y respetados
@@ -167,5 +155,4 @@ La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:
 ---
 
 ## Autoridad
-
 Esta guía no sustituye a SEC, SSS, A11Y ni STYLE_GUIDE. Si hay conflicto, prevalecen las specs de seguridad, sistema y accesibilidad.

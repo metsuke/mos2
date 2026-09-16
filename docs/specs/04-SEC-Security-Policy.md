@@ -1,6 +1,6 @@
 # 04 – SEC · Política de seguridad
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/STYLE_GUIDE.md, docs/specs/08-APPS.md, docs/specs/10-IA-ROUTER.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento define la política de seguridad de MetsuOS relativa a la carga y ejecución de comandos.
 
 La seguridad aquí no pretende cubrir todo el espectro de ciberseguridad de un sistema operativo real. Se centra en una norma férrea del producto:
@@ -21,7 +20,6 @@ La v1.1 se conserva. Esta v1.2 documenta esa excepción y el tratamiento de clav
 ---
 
 ## Alcance
-
 Aplica a:
 
 | Ámbito | ¿Aplica? | Notas |
@@ -36,7 +34,6 @@ Aplica a:
 ---
 
 ## Objetivos de seguridad
-
 1. Impedir que un comando cargue dependencias Python arbitrarias.
 2. Mantener el modelo de extensión bajo control de mosLib.
 3. Detectar violaciones antes de ejecutar el comando.
@@ -47,7 +44,6 @@ Aplica a:
 ---
 
 ## Relación con accesibilidad
-
 La accesibilidad de interfaz es mandatoria (`docs/A11Y.md`, SSS).
 
 Si un control de esta política y un perfil A11Y soportado chocan:
@@ -65,7 +61,6 @@ Ninguna. Rechazar imports ilegales no impide usar teclado ni lector de terminal.
 ---
 
 ## Política de imports
-
 ### Permitido
 
 Un comando puede importar únicamente:
@@ -116,7 +111,6 @@ Para un nombre de módulo:
 ---
 
 ## Momentos de validación
-
 ### Validación en runtime (carga de comando)
 
 Cada vez que el sistema va a cargar un comando, debe validar el archivo antes de ejecutarlo.
@@ -153,7 +147,6 @@ Ambas capas son obligatorias. Una no sustituye a la otra.
 ---
 
 ## Comportamiento de rechazo
-
 Mensaje mínimo esperado en runtime:
 
 ```text
@@ -170,7 +163,6 @@ El rechazo debe ser determinista: el mismo archivo ilegal produce el mismo resul
 ---
 
 ## Responsabilidades por componente
-
 | Nivel 1 | Nivel 2 | Nivel 3 | Responsabilidad de seguridad |
 |---------|---------|---------|------------------------------|
 | moslib/ | core/ | security.py | Análisis AST y API de validación (incl. app_dir) |
@@ -185,7 +177,6 @@ El rechazo debe ser determinista: el mismo archivo ilegal produce el mismo resul
 ---
 
 ## Espacio de usuario y confianza
-
 El espacio de usuario es controlado por el propio usuario del sistema anfitrión.
 
 Por tanto:
@@ -200,7 +191,6 @@ Esto es intencional: protege el modelo de seguridad del sistema frente a extensi
 ---
 
 ## Límites de esta política
-
 Esta política NO cubre por sí sola:
 
 1. Integridad del filesystem del anfitrión
@@ -217,7 +207,6 @@ Su alcance es el control de extensión por comandos dentro del modelo MetsuOS.
 ---
 
 ## Claves de iarouter
-
 - Off por defecto: no hay envío hasta `usar` / `preguntar`.
 - El almacén de claves vive en el espacio `.mos` del usuario.
 - Status y listados no muestran el valor de la clave.
@@ -226,7 +215,6 @@ Su alcance es el control de extensión por comandos dentro del modelo MetsuOS.
 ---
 
 ## Requisitos de seguridad derivados
-
 Los siguientes requisitos son normativos y deben aparecer también en el SRS:
 
 - REQ-SEC-001: Todo comando se valida por AST antes de cargarse
@@ -244,7 +232,6 @@ REQ-SEC-002 sigue Must para sistema y user_. REQ-SEC-009 es la excepción tasada
 ---
 
 ## Verificación
-
 La política se verifica por:
 
 1. Tests unitarios de `security.py`
@@ -259,7 +246,6 @@ La política se verifica por:
 ---
 
 ## Cambios de política
-
 Cualquier relajación o ampliación de esta política requiere:
 
 1. Actualización de este documento
@@ -272,7 +258,6 @@ No se admiten flags ocultos para “saltar seguridad” en operación normal.
 ---
 
 ## Autoridad
-
 `04-SEC` es documento de máxima prioridad técnica junto con las normas no negociables del SSS y la política A11Y.
 
 En caso de conflicto con conveniencia de implementación, prevalece esta política.

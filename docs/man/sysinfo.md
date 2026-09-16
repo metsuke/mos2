@@ -25,3 +25,6 @@ uptime, version, help
 
 ## HELP DEL COMANDO
 Uso: sysinfo - Muestra hardware, memoria y estado de la CPU sin requerir privilegios de administrador.
+
+## HELP DEL COMANDO
+Uso: sysinfo - Muestra hardware, memoria y estado de la CPU sin requerir privilegios de administrador.

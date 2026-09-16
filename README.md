@@ -14,7 +14,6 @@ Proyecto personal de Metsuke.
 ---
 
 ## Características principales
-
 - Shell interactivo propio (MOSh) con prompt personalizado
 - Carga dinámica de comandos con **hot-reload** automático
 - Estructura de directorios inspirada en Linux (`rootfs/`)
@@ -36,7 +35,6 @@ Proyecto personal de Metsuke.
 ---
 
 ## Estructura del proyecto
-
 | Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción |
 |---------|---------|---------|---------|-------------|
 | moslib/ | | | | Núcleo del sistema |
@@ -115,14 +113,12 @@ Proyecto personal de Metsuke.
 ---
 
 ## Requisitos
-
 - Python 3.10 o superior
 - Poetry instalado
 
 ---
 
 ## Instalación
-
 ```text
 git clone https://github.com/metsuke/mos2.git
 cd mos2
@@ -148,7 +144,6 @@ El script `install.sh`:
 ---
 
 ## Uso
-
 ```text
 ./mos2.sh
 ```
@@ -174,7 +169,6 @@ mosh/tu_usuario_real@metsuos:~$
 ---
 
 ## Comandos del sistema
-
 | Tipo | Comando | Descripción |
 |------|---------|-------------|
 | accesibilidad | a11y | Validación A11Y e informe |
@@ -198,7 +192,6 @@ mosh/tu_usuario_real@metsuos:~$
 ---
 
 ## Cómo añadir comandos
-
 ### Comandos del sistema (oficiales)
 
 Crea un archivo en `moslib/commands/` (ejemplo `hola.py`):
@@ -251,7 +244,6 @@ Estructura: `app.json`, `commands/`, `minimoslib/`, `man/`.
 ---
 
 ## IA
-
 ```text
 iarouter detectar
 iarouter usar jan
@@ -265,7 +257,6 @@ Off hasta `usar`. Spec: `docs/specs/10-IA-ROUTER.md`.
 ---
 
 ## Tests
-
 Los scripts `./install.sh` y `./mos2.sh` resuelven Poetry según el perfil de entorno.  
 Ver `docs/ENVIRONMENTS.md`.
 
@@ -290,7 +281,6 @@ poetry run pytest
 ---
 
 ## Accesibilidad
-
 Política: `docs/A11Y.md`  
 Declaración: `docs/a11y/DECLARACION.md`  
 Informe automático: `docs/a11y/informe.md`
@@ -300,7 +290,6 @@ A11Y es mandatoria para humano e IA. No es un incentivo opcional.
 ---
 
 ## Desarrollo
-
 Activar entorno:
 
 ```text
@@ -322,7 +311,6 @@ Dirección: `docs/INCENTIVOS.md`.
 ---
 
 ## Documentación
-
 | Documento | Contenido |
 |-----------|-----------|
 | AGENTS.md | Entrada corta para agentes IA |
@@ -350,7 +338,6 @@ Estudiar el repo (humano): `docs/HUMAN_ONBOARDING.md`.
 ---
 
 ## Licencia
-
 Este proyecto está licenciado bajo la **GNU General Public License v3.0**.  
 Consulta el archivo `LICENSE` para más detalles.
 
@@ -359,7 +346,6 @@ Copyright (C) 2026 Metsuke
 ---
 
 ## Autor
-
 **Metsuke**  
 Sitio web: https://metsuke.com  
 Repositorio: https://github.com/metsuke/mos2

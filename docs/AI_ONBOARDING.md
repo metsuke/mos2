@@ -1,13 +1,12 @@
 # Onboarding para agentes IA (MetsuOS)
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.4  
 **Estado:** Normativo de proceso  
 **Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md
 
 ---
 
 ## Propósito
-
 Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.
 
 Punto de entrada corto: `AGENTS.md`.  
@@ -16,7 +15,6 @@ Dirección de trabajo: `docs/INCENTIVOS.md` (mandatorio para la IA).
 ---
 
 ## Orden de lectura
-
 1. AGENTS.md
 2. Este archivo
 3. docs/INCENTIVOS.md
@@ -35,7 +33,6 @@ No inventar features que no estén en código o specs.
 ---
 
 ## Qué es MetsuOS (férreo)
-
 - SO simulado modular en Python; shell MOSh.
 - Núcleo moslib/; rootfs/ simulado.
 - Contrato: execute(args) y help() -> str no vacío.
@@ -51,7 +48,6 @@ No inventar features que no estén en código o specs.
 ---
 
 ## Contexto de sesión
-
 ```text
 Contexto: <sistema> / <entorno> / <rol>
 ```
@@ -61,7 +57,6 @@ Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas hom
 ---
 
 ## Cómo entregar trabajo al humano
-
 - Un paso / un fichero por mensaje, salvo pareja inseparable avisada.
 - Fichero **entero**. Prohibido “añade esta fila”: las tablas van montadas.
 - Prohibido “usa lo que te di antes”: volver a pegar el documento.
@@ -81,7 +76,6 @@ Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas hom
 ---
 
 ## Estado real del repositorio
-
 1. Pedir `synccheck` cuando haya duda.
 2. Leer por SHA (`git show origin/main:archivo` o raw con SHA).
 3. No diagnosticar solo con `.../main/` en CDN.
@@ -92,7 +86,6 @@ Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `sy
 ---
 
 ## Antes de tocar código
-
 1. Leer el repo real (SHA).
 2. Impacto SEC / SSS / ICD / SRS / A11Y / INCENTIVOS.
 3. STYLE_GUIDE e imports.
@@ -105,7 +98,6 @@ Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `sy
 ---
 
 ## Versionado
-
 | Cambio | Poetry | Tag |
 |--------|--------|-----|
 | Runtime / comandos / scripts | Bump X.Y.Z | vX.Y.Z |
@@ -114,7 +106,6 @@ Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `sy
 ---
 
 ## Plataforma
-
 - Poetry: un candidato solo si `--version` se puede ejecutar.
 - windows/git-bash: `py -m poetry`.
 - windows/wsl: clone en FS Linux; rechazo bajo `/mnt/<letra>/`.
@@ -122,19 +113,16 @@ Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `sy
 ---
 
 ## Accesibilidad
-
 docs/A11Y.md es mandatoria. Conflicto con SEC: procedimiento escrito.
 
 ---
 
 ## Cierre de grupo
-
 docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditoría.
 
 ---
 
 ## Checklist de cada mensaje de trabajo
-
 1. ¿Breadcrumb?
 2. ¿Un paso / un fichero?
 3. ¿Fichero entero?
@@ -146,6 +134,5 @@ docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditorí
 ---
 
 ## Autoridad
-
 Este documento manda sobre el estilo de asistencia.
 Si choca con SEC, SSS, A11Y o INCENTIVOS, prevalecen esas normas y luego se actualiza este archivo.

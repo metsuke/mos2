@@ -1,6 +1,6 @@
 # 06 – TEST · Verificación y validación
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/specs/02-SRS-Software-Requirements.md, docs/specs/04-SEC-Security-Policy.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/METHODOLOGY.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento define cómo se verifica y valida MetsuOS.
 
 Objetivos:
@@ -24,7 +23,6 @@ La v1.1 se conserva. Esta v1.2 no relaja el arranque bloqueante.
 ---
 
 ## Principios
-
 1. Si un requisito Must es verificable por test, debe existir un test.
 2. Los tests de arranque son puerta de calidad del sistema.
 3. La seguridad se verifica tanto en runtime como en arranque.
@@ -35,7 +33,6 @@ La v1.1 se conserva. Esta v1.2 no relaja el arranque bloqueante.
 ---
 
 ## Alcance de la verificación
-
 | Área | Qué se verifica |
 |------|-----------------|
 | Seguridad | Política de imports, minimoslib/app_dir y rechazo de comandos ilegales |
@@ -53,7 +50,6 @@ La v1.1 se conserva. Esta v1.2 no relaja el arranque bloqueante.
 ---
 
 ## Organización de tests
-
 | Nivel 1 | Nivel 2 | Función |
 |---------|---------|---------|
 | tests/ | conftest.py | Path de proyecto y fixtures comunes |
@@ -76,7 +72,6 @@ La v1.1 se conserva. Esta v1.2 no relaja el arranque bloqueante.
 ---
 
 ## Niveles de prueba
-
 ### Unitarias
 
 Validan funciones y módulos aislados:
@@ -118,7 +113,6 @@ Se usa cuando el requisito es interactivo:
 ---
 
 ## Tests de arranque
-
 ### Comportamiento obligatorio
 
 Al iniciar MOSh:
@@ -150,7 +144,6 @@ Debe indicar:
 ---
 
 ## Verificación de seguridad
-
 | Caso | Resultado esperado |
 |------|--------------------|
 | import os / pathlib / moslib | permitido |
@@ -165,7 +158,6 @@ Debe indicar:
 ---
 
 ## Verificación del contrato de comandos
-
 Para cada comando de sistema:
 
 1. existe archivo .py en moslib/commands/
@@ -189,7 +181,6 @@ Para comandos de app:
 ---
 
 ## Verificación de accesibilidad
-
 Marca pytest: `a11y`.
 
 El comando de sistema `a11y` ejecuta solo esa marca y escribe:
@@ -218,7 +209,6 @@ Sí se testea: existencia de declaración e informe, help no vacío, prefijo de 
 ---
 
 ## Comando de sistema `test`
-
 El comando `test` debe:
 
 - lanzar pytest desde la raíz del proyecto
@@ -231,7 +221,6 @@ No sustituye los tests de arranque: los complementa para uso explícito dentro d
 ---
 
 ## Criterios de paso / fallo
-
 ### Paso
 
 Una entrega se considera verificada cuando:
@@ -254,7 +243,6 @@ Es fallo bloqueante:
 ---
 
 ## Cómo añadir tests en una feature nueva
-
 Checklist:
 
 1. ¿Qué requisito SRS cubre este cambio?
@@ -269,7 +257,6 @@ Checklist:
 ---
 
 ## Evidencias de validación
-
 | Tipo | Ejemplo |
 |------|---------|
 | Test automatizado | assertions en tests/ |
@@ -283,7 +270,6 @@ Para requisitos Must, preferir test automatizado siempre que sea razonable.
 ---
 
 ## Relación con la metodología
-
 Según docs/METHODOLOGY.md:
 
 - no hay merge a main con tests rojos
@@ -294,7 +280,6 @@ Según docs/METHODOLOGY.md:
 ---
 
 ## Limitaciones actuales
-
 La baseline no exige todavía:
 
 1. cobertura métrica mínima obligatoria de pytest-cov
@@ -308,7 +293,6 @@ Sí exige una batería local fiable y bloqueante en arranque, incluida la cobert
 ---
 
 ## Autoridad
-
 Este documento es normativo para la estrategia de verificación.
 
 Cualquier cambio que debilite el arranque bloqueante o la validación de seguridad debe actualizar primero SEC, SRS y este documento TEST.

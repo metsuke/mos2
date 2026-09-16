@@ -1,6 +1,6 @@
 # 02 – SRS · Requisitos software
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.4  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/06-TEST-Verification-and-Validation.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento enumera los requisitos software de MetsuOS de forma numerada y verificable.
 
 Cada requisito tiene:
@@ -23,7 +22,6 @@ La v1.2 permanece Must. Esta v1.3 añade áreas APP, TASK, IA y comandos del ár
 ---
 
 ## Convenciones
-
 ### Identificadores
 
 Formato: `REQ-<AREA>-<NNN>`
@@ -64,7 +62,6 @@ Formato: `REQ-<AREA>-<NNN>`
 ---
 
 ## Requisitos de sistema y shell
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must | Demo / Test |
@@ -78,7 +75,6 @@ Formato: `REQ-<AREA>-<NNN>`
 ---
 
 ## Requisitos de comandos
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-CMD-001 | Todo comando debe exponer execute(args) callable | Must | Test |
@@ -100,7 +96,6 @@ Formato: `REQ-<AREA>-<NNN>`
 ---
 
 ## Requisitos de resolución de nombres
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-CMD-011 | Si existe comando de sistema con el nombre solicitado, debe usarse ese | Must | Test |
@@ -113,7 +108,6 @@ Formato: `REQ-<AREA>-<NNN>`
 ---
 
 ## Requisitos de espacio de usuario
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
@@ -129,7 +123,6 @@ Formato: `REQ-<AREA>-<NNN>`
 ---
 
 ## Requisitos de seguridad
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
@@ -147,7 +140,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de arranque
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must | Demo / Test |
@@ -158,7 +150,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de pruebas
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
@@ -174,7 +165,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de actualización
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
@@ -189,7 +179,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de documentación
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
@@ -207,7 +196,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de plataforma
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
@@ -221,7 +209,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de estilo y mantenibilidad
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-SYS-008 | El código de core y comandos debe cumplir docs/STYLE_GUIDE.md en las normas verificables por tests | Must | Test |
@@ -233,7 +220,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de accesibilidad
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-A11Y-001 | La accesibilidad de MOSh, launchers y docs consultables es mandatoria | Must | Inspection |
@@ -253,7 +239,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de pruebas A11Y
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-TEST-008 | Debe existir marca pytest a11y para aislar la validación de accesibilidad | Must | Test |
@@ -262,7 +247,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de apps
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must | Inspection / Test |
@@ -274,7 +258,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de tareas
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
@@ -286,7 +269,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Requisitos de iarouter
-
 | ID | Requisito | Prioridad | Verificación |
 |----|-----------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must | Test / Demo |
@@ -299,7 +281,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Trazabilidad mínima
-
 | Spec de origen | Requisitos principales |
 |----------------|------------------------|
 | SSS | REQ-SYS-*, REQ-USER-*, REQ-PLAT-*, REQ-CMD-010, REQ-CMD-016 a REQ-CMD-020, REQ-A11Y-001 |
@@ -316,7 +297,6 @@ REQ-SEC-002 sigue Must para comandos de sistema y de usuario. REQ-SEC-009 es la 
 ---
 
 ## Autoridad
-
 Este SRS es normativo para la aceptación de cambios software.
 
 Un cambio que viole un requisito Must no puede mergearse a main sin actualizar explícitamente este documento y su justificación.

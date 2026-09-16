@@ -1,13 +1,12 @@
 # Planes de campaña de MetsuOS
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.4  
 **Estado:** Normativo de proceso  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md
 
 ---
 
 ## Propósito
-
 Cada campaña de trabajo tiene un plan escrito **antes** de implementar (salvo las reconstruidas a posteriori).
 
 Sirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si ese día hubo más de una.
@@ -15,7 +14,6 @@ Sirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si es
 ---
 
 ## Nombre de archivo
-
 ```text
 YYYY-MM-DD-NN-slug.md
 ```
@@ -31,7 +29,6 @@ El número de campañas del proyecto se ve contando ficheros y este índice. No 
 ---
 
 ## Índice
-
 | Fecha | NN del día | Archivo | Estado |
 |-------|------------|---------|--------|
 | 2026-08-12 | 01 | 2026-08-12-01-espacio-usuario.md | Cerrada |
@@ -51,7 +48,6 @@ Este índice no lista todos los ficheros de `docs/plans/` (hay planes de septiem
 ---
 
 ## Ciclo
-
 1. Diseñar la campaña en el chat.
 2. Crear el plan en esta carpeta **antes** del primer cambio de código.
 3. Ejecutar por bloques/pasos (un archivo o paso cada vez).
@@ -61,7 +57,6 @@ Este índice no lista todos los ficheros de `docs/plans/` (hay planes de septiem
 ---
 
 ## Contenido mínimo de un plan
-
 - Fecha y NN del día
 - Objetivo y fuera de alcance
 - Estado
@@ -74,5 +69,4 @@ Este índice no lista todos los ficheros de `docs/plans/` (hay planes de septiem
 ---
 
 ## Autoridad
-
 No se inicia una campaña amplia sin su plan en esta carpeta.

@@ -1,6 +1,6 @@
 # 05 – SDD · Arquitectura y diseño
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo descriptivo alineado con el código actual  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento describe la arquitectura y el diseño de MetsuOS tal como existen en la baseline de referencia.
 
 Sirve para:
@@ -22,7 +21,6 @@ La v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter y red al diseño.
 ---
 
 ## Vista general de arquitectura
-
 MetsuOS se organiza en capas:
 
 1. **Lanzamiento** · scripts anfitrión y punto de entrada
@@ -38,7 +36,6 @@ Principio rector: el shell coordina; el núcleo decide; los comandos ejecutan ac
 ---
 
 ## Estructura estática del producto
-
 | Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción de diseño |
 |---------|---------|---------|---------|------------------------|
 | moslib/ | | | | Paquete núcleo del producto |
@@ -66,7 +63,6 @@ Principio rector: el shell coordina; el núcleo decide; los comandos ejecutan ac
 ---
 
 ## Responsabilidades por componente
-
 ### shell.py · MOSh
 
 Responsabilidades:
@@ -201,7 +197,6 @@ No responsabilidades:
 ---
 
 ## Diseño de lanzamiento y Poetry
-
 `mos2.sh` e `install.sh` comparten la misma política de resolución:
 
 - **windows/git-bash:** priorizar `poetry.exe`, luego `py -m poetry` / `python -m poetry`; evitar el script `poetry` sin extensión cuando provoca Permission denied
@@ -212,7 +207,6 @@ Tras resolver, todas las invocaciones de ese script usan el mismo comando. Detal
 ---
 
 ## Flujo de arranque
-
 1. El usuario lanza `mos2`, `./mos2.sh` o `python rootfs/bin/mos.py`
 2. Si usa `mos2.sh`, el script resuelve Poetry y ejecuta `... run python rootfs/bin/mos.py`
 3. `mos.py` prepara el path e instancia `MOSh`
@@ -225,7 +219,6 @@ Tras resolver, todas las invocaciones de ese script usan el mismo comando. Detal
 ---
 
 ## Flujo de ejecución de un comando
-
 1. El usuario escribe una línea
 2. El shell separa `cmd_name` y `args`
 3. Si `cmd_name == exit` → termina
@@ -239,7 +232,6 @@ Tras resolver, todas las invocaciones de ese script usan el mismo comando. Detal
 ---
 
 ## Diseño de seguridad
-
 ### Enfoque
 
 Validación estática por AST, no sandbox completo del intérprete.
@@ -261,7 +253,6 @@ Validación estática por AST, no sandbox completo del intérprete.
 ---
 
 ## Diseño del espacio de usuario
-
 ### Identidad
 
 El usuario de MetsuOS es el usuario del sistema anfitrión.
@@ -291,7 +282,6 @@ Si existe home legacy y no la canónica, `user.py` migra el directorio.
 ---
 
 ## Diseño de comandos de sistema de la baseline
-
 | Tipo | Comando | Rol de diseño |
 |------|---------|---------------|
 | accesibilidad | a11y | tests A11Y e informe |
@@ -315,7 +305,6 @@ Si existe home legacy y no la canónica, `user.py` migra el directorio.
 ---
 
 ## Diseño de hot-reload
-
 CommandManager guarda cache de módulos y mtime del archivo. Si cambió, recarga; si no, reutiliza. La seguridad se reevalúa en la carga.
 
 Tras `update`, los módulos ya en memoria no cambian solos. Hace falta `update reiniciar` o salir y relanzar.
@@ -323,7 +312,6 @@ Tras `update`, los módulos ya en memoria no cambian solos. Hace falta `update r
 ---
 
 ## Diseño de actualización
-
 El comando `update`:
 
 1. detectar working tree sucio
@@ -339,7 +327,6 @@ Prioriza no perder trabajo local y dejar main idéntico al remoto; no publica ba
 ---
 
 ## Diseño de verificación
-
 ### tests/
 
 Validan seguridad, usuario, loader, contrato de comandos, estilo crítico, inventario, apps, tareas e iarouter.
@@ -351,7 +338,6 @@ La verificación es puerta de entrada a la sesión interactiva.
 ---
 
 ## Diseño documental
-
 | Nivel 1 | Nivel 2 | Papel |
 |---------|---------|-------|
 | docs/ | METHODOLOGY.md | proceso de evolución |
@@ -368,7 +354,6 @@ La verificación es puerta de entrada a la sesión interactiva.
 ---
 
 ## Decisiones de diseño relevantes
-
 | Decisión | Motivo |
 |----------|--------|
 | Comandos como archivos .py independientes | máxima modularidad |
@@ -386,7 +371,6 @@ La verificación es puerta de entrada a la sesión interactiva.
 ---
 
 ## Límites actuales de diseño
-
 En esta baseline el diseño no incluye todavía:
 
 1. permisos internos ricos multi-usuario MetsuOS
@@ -403,7 +387,6 @@ Apps locales (path/repo git), tareas e iarouter **sí** están en este árbol; d
 ---
 
 ## Guía práctica para modificar el sistema
-
 | Si necesitas... | Toca principalmente... | No olvides... |
 |-----------------|------------------------|---------------|
 | Cambiar el prompt o el REPL | shell.py | tests de arranque |
@@ -421,7 +404,6 @@ Apps locales (path/repo git), tareas e iarouter **sí** están en este árbol; d
 ---
 
 ## Autoridad
-
 Este SDD describe el diseño de la baseline actual.
 
 Si el código cambia de arquitectura, este documento debe actualizarse en la misma fase o inmediatamente después, antes de considerar el cambio cerrado.

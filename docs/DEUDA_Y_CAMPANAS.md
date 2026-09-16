@@ -1,6 +1,6 @@
 # Deuda técnica y campañas futuras previstas
 
-**Versión del documento:** 1.8
+**Versión del documento:** 1.9
 **Estado:** Inventario
 **Producto:** código LAN/puente/check usable en win, wsl y mac; cierre documental en curso
 **SHA de código de referencia:** f2c512d
@@ -8,13 +8,11 @@
 ---
 
 ## Propósito
-
 No perder lo aplazado. No es spec. Mandan SEC, SSS, A11Y e INCENTIVOS.
 
 ---
 
 ## Lectura de dirección (metsuke.com, 2026-09-11)
-
 No es spec. Sirve para no perder el vector.
 
 - En la web pública el lenguaje contextual se llama MCL (MetsuOS Context Language). En esta conversación el humano lo nombra MPL (Metsu Programming Language). Unificar nombre en una sola campaña; hasta entonces: MPL/MCL.
@@ -26,7 +24,6 @@ No es spec. Sirve para no perder el vector.
 ---
 
 ## Deuda abierta
-
 | Ítem | Destino |
 |------|---------|
 | Rama habitual de pruebas (p. ej. devtest) y `update` con parámetro de rama/origen, no solo origin/main | Calidad / comando update |
@@ -54,7 +51,6 @@ No es spec. Sirve para no perder el vector.
 ---
 
 ## Orden de campañas a partir de ahora (férreo)
-
 | Orden | Id | Tema | Estado |
 |-------|----|------|--------|
 | 0 | — | Cierre documental (specs ESA, man, manual, README, CHANGELOG, onboarding) | En curso, 20 pasos |
@@ -74,7 +70,6 @@ No se “empieza la app un poco”. Si 1–3 no están, 08 reproduce este chat d
 ---
 
 ## Campaña prevista: tareas e hilos (post-docs)
-
 Objetivo: que `tareas` y `hilos` dejen de ser código de escaparate.
 
 - Ejecutar en win, wsl y mac listas manuales y automáticas reales.
@@ -84,14 +79,12 @@ Objetivo: que `tareas` y `hilos` dejen de ser código de escaparate.
 - Criterio de salida: un humano puede encargar una tarea manual, ver un hilo automático y no perder el trabajo al salir de MOSh, o queda escrito por qué aún no y qué se parchea antes de skills.
 
 ## Campaña prevista: atomización y skills (previa a 08)
-
 - Toda campaña futura se parte en microtareas que quepan en un comando o función moslib con `execute`/`help`.
 - Cada skill es código revisable, testeable, con A11Y y SEC. La IA no implementa la skill en el momento; solo la invoca.
 - Equivale a no dejar que la IA “escriba el commit a ciegas”: el humano autoriza; el código hace el gesto.
 - Sin catálogo de skills no se construye la app de desarrollo.
 
 ## Campaña prevista: MPL/MCL (previa a 08)
-
 - Nombre a unificar con el humano (MPL vs MCL de metsuke.com).
 - Spec + plan propios. No meter un compilador entero en la misma tanda que el arreglo de hilos.
 - Dirección ya conocida: layers, activación por contexto, backends (Python primero; C después encaja con la deuda dual).
@@ -100,7 +93,6 @@ Objetivo: que `tareas` y `hilos` dejen de ser código de escaparate.
 ---
 
 ## Mini iarouter (estado)
-
 | Ítem | Estado |
 |------|--------|
 | M0–M7 código (modelos, claves, LAN, share, publicar, puente, check) | Hecho y probado win+wsl+mac |
@@ -115,5 +107,4 @@ Flujo que debe quedar escrito:
 ---
 
 ## Cómo se actualiza
-
 Al cierre: hecho / se mantiene / se mueve a docs/plans/.

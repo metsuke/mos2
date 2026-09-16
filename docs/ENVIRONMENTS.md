@@ -1,13 +1,12 @@
 # Entornos de ejecución de MetsuOS
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/USER_MANUAL.md, docs/specs/01-SSS-System-Specification.md, .gitattributes
 
 ---
 
 ## Propósito
-
 Este documento describe los perfiles de entorno soportados por MetsuOS y cómo se comportan el lanzador y el instalador respecto a Poetry y al sistema anfitrión.
 
 Normas:
@@ -20,7 +19,6 @@ Normas:
 ---
 
 ## Contexto de sesión (protocolo)
-
 Formato obligatorio cuando se trabaja por fases (humano o IA):
 
 ```text
@@ -77,7 +75,6 @@ La asistencia por IA debe adaptar comandos al contexto declarado y preguntar si 
 ---
 
 ## Perfiles soportados
-
 | Sistema | Entorno | Poetry típico | Notas |
 |---------|---------|---------------|-------|
 | linux | native | poetry o python3 -m poetry | Referencia Unix |
@@ -88,7 +85,6 @@ La asistencia por IA debe adaptar comandos al contexto declarado y preguntar si 
 ---
 
 ## Resolución de Poetry (launcher e installer)
-
 mos2.sh e install.sh usan la misma función de resolución. Un candidato solo cuenta si responde a `--version`.
 
 ### windows / git-bash (MINGW, MSYS, CYGWIN)
@@ -118,7 +114,6 @@ Orden:
 ---
 
 ## Fin de línea (Git)
-
 `.gitattributes` en la raíz marca `*.sh` y textos habituales con `eol=lf`.
 
 Es una función de **Git**, no de GitHub u otro forge. Evita el error `/bin/bash^M` en WSL y Linux cuando el clone pasó por Windows.
@@ -126,7 +121,6 @@ Es una función de **Git**, no de GitHub u otro forge. Evita el error `/bin/bash
 ---
 
 ## Rutas del repositorio
-
 | Regla | Descripción |
 |-------|-------------|
 | Raíz del proyecto | Directorio que contiene pyproject.toml, moslib/, rootfs/ |
@@ -139,7 +133,6 @@ En windows/wsl el clone objetivo está en el filesystem Linux, no como único mo
 ---
 
 ## windows/wsl y rutas /mnt/
-
 En WSL el clone debe vivir en el filesystem Linux (por ejemplo bajo $HOME), no bajo /mnt/c/... ni otros montajes del disco Windows.
 
 Motivos:
@@ -162,7 +155,6 @@ cd "$HOME/mos2"
 ---
 
 ## Lanzamiento e instalación
-
 | Acción | Comando relativo al clone |
 |--------|---------------------------|
 | Instalar deps y aliases opcionales | ./install.sh |
@@ -174,7 +166,6 @@ Dentro de MOSh, los tests de arranque y el comando test usan sys.executable -m p
 ---
 
 ## Diferencias prácticas entre perfiles
-
 | Tema | git-bash | wsl / linux / macos native |
 |------|----------|----------------------------|
 | Ejecutable Poetry | py -m poetry; poetry.exe solo si --version ok | poetry en PATH si --version ok |
@@ -186,7 +177,6 @@ Dentro de MOSh, los tests de arranque y el comando test usan sys.executable -m p
 ---
 
 ## Requisitos derivados (trazabilidad)
-
 | ID orientativo | Enunciado |
 |----------------|-----------|
 | REQ-PLAT-ENV-001 | El lanzador debe resolver Poetry de forma portable según el perfil |
@@ -201,7 +191,6 @@ La formalización numerada vive en el SRS; este documento es la política operat
 ---
 
 ## Verificación manual por perfil
-
 | Perfil | Comprobación mínima |
 |--------|---------------------|
 | macos/native | ./install.sh y ./mos2.sh resuelven Poetry y arrancan |
@@ -212,7 +201,6 @@ La formalización numerada vive en el SRS; este documento es la política operat
 ---
 
 ## Autoridad
-
 Este documento es normativo para perfiles de entorno, resolución de Poetry en scripts de shell y protocolo de contexto de sesión genérico.
 
 Cualquier nuevo perfil soportado debe añadirse aquí y reflejarse en lanzador/instalador cuando aplique.

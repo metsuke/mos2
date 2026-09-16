@@ -3,7 +3,6 @@
 Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.
 
 ## 0.2.8 — pendiente de pruebas humanas
-
 ### Añadido
 
 - iarouter modelos / modelo (id con espacios)
@@ -23,7 +22,6 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - Sin bump de Poetry ni tag de producto en esta campaña
 
 ## 0.2.7 — 2026-09-06
-
 ### Añadido
 
 - Apps: mini-moslib, install desde clone o repo git, ámbito usuario o sistema
@@ -39,7 +37,6 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - SEC permite `minimoslib` solo con app_dir de esa app
 
 ## 0.2.6 — 2026-09-03
-
 ### Añadido
 
 - Specs 08-APPS, 09-TASKS, 10-IA-ROUTER y reserva en SSS 1.4
@@ -48,7 +45,6 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - Comando iarouter y fachada moslib.core.ia_router (off por defecto)
 
 ## 0.2.5-docs.2 — 2026-08-31
-
 ### Documentación
 
 - Plan de campaña 06 (incentivos, desarrollo en MOS2, datos)
@@ -56,7 +52,6 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - Enlaces en AGENTS, AI_ONBOARDING, HUMAN_ONBOARDING, README, DEUDA_Y_CAMPANAS
 
 ## 0.2.5 — 2026-08-30
-
 ### Añadido
 
 - Comando a11y (tests marcados a11y + informe en docs/a11y/)
@@ -71,7 +66,6 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - Mensajes de arranque y de test en texto, sin emoji como única señal
 
 ## 0.2.4 — 2026-08-28
-
 ### Añadido
 
 - Comando update: sincroniza tags locales con origin (fetch --tags --prune --prune-tags)
@@ -82,11 +76,9 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - Campaña 05: esta pieza sale del Cierre I (renombre de tags -docs), no del bloque A11Y
 
 ## Notas de etiquetas
-
 Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.2-docs.3` (docs sobre el producto 0.2.2).
 
 ## 0.2.3 — 2026-08-28
-
 ### Corregido
 
 - Poetry en Git Bash / Unix: un candidato solo se usa si `--version` se puede ejecutar
@@ -98,7 +90,6 @@ Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.
 - Planes de campaña en docs/plans/
 
 ## 0.2.4-docs — 2026-08-28
-
 ### Documentación
 
 - CHANGELOG.md como relato de releases
@@ -106,7 +97,6 @@ Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.
 - Test de formato SemVer de la versión Poetry
 
 ## 0.2.3-docs — 2026-08-27
-
 ### Documentación
 
 - Onboarding para IA (`AGENTS.md`, `docs/AI_ONBOARDING.md`)
@@ -116,7 +106,6 @@ Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.
 - Hotfix: `SCRIPT_DIR` antes del guard WSL `/mnt` (incluido en la rama de onboarding)
 
 ## 0.2.2 — 2026-08-25
-
 ### Añadido
 
 - `docs/ENVIRONMENTS.md` (perfiles, Poetry, contexto de sesión)
@@ -132,7 +121,6 @@ Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.
 - Manual, methodology y specs alineados con entornos multiplataforma
 
 ## 0.2.1
-
 ### Añadido
 
 - Tests unitarios y de seguridad; arranque bloqueante
@@ -146,7 +134,6 @@ Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.
 - Inventario de seguridad en arranque
 
 ## 0.2.0-alpha-user-space
-
 ### Añadido
 
 - Espacio personal por usuario del sistema anfitrión

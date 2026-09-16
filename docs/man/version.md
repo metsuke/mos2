@@ -33,3 +33,6 @@ update, help, man
 
 ## HELP DEL COMANDO
 Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (tags + commits).
+
+## HELP DEL COMANDO
+Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (tags + commits).

@@ -1,19 +1,17 @@
 # Política de versionado de MetsuOS
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.2  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/specs/07-SRelD-Release-Baseline.md, CHANGELOG.md, pyproject.toml
 
 ---
 
 ## Propósito
-
 Define cómo se asignan versiones de producto, tags Git y la relación con Poetry (`pyproject.toml`), para que código, documentación y releases no se desincronizen.
 
 ---
 
 ## Fuente de verdad de la versión de producto
-
 | Elemento | Rol |
 |----------|-----|
 | pyproject.toml → version | Versión de producto (Poetry) |
@@ -27,7 +25,6 @@ La versión en `pyproject.toml` debe coincidir con el tag de producto **funciona
 ---
 
 ## SemVer adaptado (alpha)
-
 Formato: `MAJOR.MINOR.PATCH` (ejemplo actual: `0.2.2`).
 
 | Parte | Cuándo subirla |
@@ -41,7 +38,6 @@ En fase Alpha (`0.x.y`) la incompatibilidad ocasional es aceptable si queda docu
 ---
 
 ## Tipos de tag
-
 | Tipo | Forma | ¿Bump Poetry? | Uso |
 |------|-------|---------------|-----|
 | Producto | vX.Y.Z | Sí | Código y/o comportamiento de runtime cambia |
@@ -57,7 +53,6 @@ No crear tags de producto si solo cambió markdown.
 ---
 
 ## Cuándo actualizar pyproject.toml
-
 Obligatorio actualizar `version` en `pyproject.toml` cuando:
 
 1. Se mergea a `main` un cambio de **producto** (fix/feat de runtime, scripts de lanzamiento, comandos, seguridad, tests de arranque que cambien comportamiento).
@@ -73,7 +68,6 @@ La IA y el desarrollador deben, al cerrar una fase de producto, **incluir el bum
 ---
 
 ## Flujo de release de producto
-
 1. Trabajar en `feature/...`.
 2. Tests en verde; arranque de MOSh OK.
 3. Actualizar docs/specs afectadas **antes o en el mismo merge**.
@@ -87,7 +81,6 @@ La IA y el desarrollador deben, al cerrar una fase de producto, **incluir el bum
 ---
 
 ## Flujo de release solo documentación
-
 1. Rama `feature/...` solo docs.
 2. Entrada en `CHANGELOG.md` con el sufijo `-docs` si se etiqueta.
 3. Merge a `main` **sin** cambiar `pyproject.toml`.
@@ -97,7 +90,6 @@ La IA y el desarrollador deben, al cerrar una fase de producto, **incluir el bum
 ---
 
 ## Sincronización con documentación
-
 Al asignar un tag de producto, revisar y actualizar si aplica:
 
 | Documento | Qué alinear |
@@ -113,7 +105,6 @@ Al tag solo-docs, CHANGELOG + contenido nuevo; no hace falta subir Poetry.
 ---
 
 ## Responsabilidad de la IA en el plan por fases
-
 Cuando el plan cierre una capacidad de producto, la IA debe:
 
 1. Decir explícitamente si hay **bump Poetry** y a qué versión.
@@ -126,7 +117,6 @@ Si la fase es solo documentación, debe decir: **sin bump Poetry**, actualizar C
 ---
 
 ## Estado actual de referencia
-
 | Campo | Valor orientativo al escribir este doc |
 |-------|----------------------------------------|
 | Versión Poetry | 0.2.2 |
@@ -138,7 +128,6 @@ Comprobar siempre el repo (`pyproject.toml`, `git tag`, `CHANGELOG.md`) antes de
 ---
 
 ## Autoridad
-
 Este documento es normativo para versionado de producto y tags.
 
 Ante duda entre “¿es producto o solo docs?”, priorizar: **si cambia el comportamiento al ejecutar mos2.sh / MOSh / comandos, es producto y lleva bump.**

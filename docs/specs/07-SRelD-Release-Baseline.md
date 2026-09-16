@@ -1,6 +1,6 @@
 # 07 – SRelD · Baseline de release
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Baseline descrita:** v0.2.1 (congelada) + producto actual v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo de referencia  
 **Documentos relacionados:** docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, CHANGELOG.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento congela y describe la baseline de producto **v0.2.1** y registra evoluciones controladas posteriores hasta **v0.2.7**.
 
 Sirve para:
@@ -22,7 +21,6 @@ La v1.1 no se borra: v0.2.1 sigue siendo la referencia histórica.
 ---
 
 ## Identificación
-
 | Campo | v0.2.1 | v0.2.7 |
 |-------|--------|--------|
 | Nombre | MetsuOS / MOS2 | MetsuOS / MOS2 |
@@ -35,7 +33,6 @@ La v1.1 no se borra: v0.2.1 sigue siendo la referencia histórica.
 ---
 
 ## Capacidades incluidas en v0.2.1
-
 ### Núcleo
 
 | Capacidad | Estado en baseline |
@@ -85,7 +82,6 @@ La v1.1 no se borra: v0.2.1 sigue siendo la referencia histórica.
 ---
 
 ## Estructura de producto de v0.2.1
-
 | Nivel 1 | Nivel 2 | Nivel 3 | Incluido |
 |---------|---------|---------|----------|
 | moslib/ | core/ | shell.py | Sí |
@@ -103,7 +99,6 @@ La v1.1 no se borra: v0.2.1 sigue siendo la referencia histórica.
 ---
 
 ## Dependencias
-
 | Dependencia | Alcance | Notas |
 |-------------|---------|-------|
 | Python ^3.10 | runtime | Obligatorio |
@@ -116,7 +111,6 @@ No forman parte del modelo de comandos las dependencias arbitrarias de terceros.
 ---
 
 ## Verificación asociada a v0.2.1
-
 1. la batería de tests pasa
 2. el arranque de MOSh pasa los tests de arranque
 3. los comandos de sistema de esa baseline están disponibles
@@ -127,7 +121,6 @@ No forman parte del modelo de comandos las dependencias arbitrarias de terceros.
 ---
 
 ## Limitaciones conocidas de v0.2.1
-
 1. Fase Alpha: no es un sistema operativo completo.
 2. No hay empaquetado multi-repo de usuario todavía operativo.
 3. No hay CI externa obligatoria.
@@ -138,7 +131,6 @@ No forman parte del modelo de comandos las dependencias arbitrarias de terceros.
 ---
 
 ## Evolución posterior (resumen)
-
 | Elemento | Destino |
 |----------|---------|
 | man, USER_MANUAL, ENVIRONMENTS, A11Y, docs, synccheck | Post-0.2.1 hasta 0.2.5 |
@@ -149,7 +141,6 @@ No forman parte del modelo de comandos las dependencias arbitrarias de terceros.
 ---
 
 ## Producto actual v0.2.7
-
 Además de v0.2.1 y de la evolución 0.2.2–0.2.5, el árbol incluye:
 
 | Capacidad | Estado |
@@ -166,7 +157,6 @@ Además de v0.2.1 y de la evolución 0.2.2–0.2.5, el árbol incluye:
 ---
 
 ## Tags y referencias
-
 | Referencia | Uso |
 |------------|-----|
 | v0.2.1 | Baseline funcional histórica |
@@ -184,7 +174,6 @@ Esta campaña de sync docs **no** hace bump de Poetry ni tag de producto.
 ---
 
 ## Criterio de no regresión
-
 Se considerará regresión cualquier pérdida de:
 
 1. arranque bloqueante por tests
@@ -200,7 +189,6 @@ Se considerará regresión cualquier pérdida de:
 ---
 
 ## Autoridad
-
 Este SRelD fija el significado de la baseline v0.2.1 y el registro de evoluciones posteriores.
 
 Las releases futuras deben declarar qué mantienen, qué añaden y qué cambian respecto a esta referencia.

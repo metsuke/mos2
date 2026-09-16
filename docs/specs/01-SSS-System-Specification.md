@@ -1,6 +1,6 @@
 # 01 – SSS · Especificación de sistema
 
-**Versión del documento:** 1.4  
+**Versión del documento:** 1.5  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/specs/00-OVERVIEW.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
@@ -8,7 +8,6 @@
 ---
 
 ## Propósito
-
 Este documento define qué es MetsuOS a nivel de sistema, sus objetivos, no-objetivos y normas no negociables.
 
 Todo diseño, requisito software e implementación debe ser compatible con esta especificación.
@@ -16,7 +15,6 @@ Todo diseño, requisito software e implementación debe ser compatible con esta 
 ---
 
 ## Identificación del sistema
-
 | Campo | Valor |
 |-------|-------|
 | Nombre | MetsuOS |
@@ -32,7 +30,6 @@ Todo diseño, requisito software e implementación debe ser compatible con esta 
 ---
 
 ## Definición del sistema
-
 MetsuOS es un entorno operativo simulado que proporciona:
 
 - Un shell interactivo propio (MOSh)
@@ -55,7 +52,6 @@ MetsuOS se ejecuta sobre un sistema operativo anfitrión y no reemplaza su kerne
 ---
 
 ## Objetivos del sistema
-
 1. Ofrecer un shell modular, extensible y auditable.
 2. Permitir comandos de sistema, de app y de usuario con reglas claras.
 3. Garantizar aislamiento del espacio personal del usuario.
@@ -67,7 +63,6 @@ MetsuOS se ejecuta sobre un sistema operativo anfitrión y no reemplaza su kerne
 ---
 
 ## No-objetivos
-
 MetsuOS, en esta baseline, **no** pretende:
 
 1. Ser un kernel real.
@@ -84,7 +79,6 @@ MetsuOS, en esta baseline, **no** pretende:
 ---
 
 ## Normas no negociables
-
 Las siguientes normas son férreas. No se pueden debilitar por comodidad.
 
 ### Accesibilidad
@@ -152,7 +146,6 @@ El enrutador de IA no envía peticiones hasta `iarouter usar` / `iarouter pregun
 ---
 
 ## Contexto operativo
-
 ### Sistema anfitrión
 
 MetsuOS usa el usuario real del sistema anfitrión para:
@@ -206,7 +199,6 @@ El contenido de `rootfs/home/` no se versiona como producto. No se documentan ru
 ---
 
 ## Capacidades de sistema requeridas
-
 ### Shell interactivo
 
 El sistema debe proporcionar un shell con:
@@ -310,7 +302,6 @@ Malla P2P, suite de desarrollo completa y DepManager geo no entran en esta basel
 ---
 
 ## Restricciones de diseño de sistema
-
 1. No introducir gestores de paquetes Python genéricos dentro del modelo de comandos.
 2. No permitir que el usuario reemplace el núcleo modificando solo su espacio personal.
 3. No acoplar el núcleo a una única distribución Linux.
@@ -324,7 +315,6 @@ Malla P2P, suite de desarrollo completa y DepManager geo no entran en esta basel
 ---
 
 ## Requisitos de calidad de sistema
-
 ### Modularidad
 
 Los comandos deben poder añadirse como archivos independientes sin reescribir el shell.
@@ -348,7 +338,6 @@ La salida debe ser texto lineal usable con teclado y con lector de terminal, sin
 ---
 
 ## Interfaces de sistema de alto nivel
-
 ### Interfaz humano-shell
 
 Entrada: línea de texto  
@@ -394,7 +383,6 @@ La fachada `moslib.core.ia_router` está off hasta activación explícita. No su
 ---
 
 ## Criterios de aceptación de sistema
-
 Se considera que una versión del sistema es aceptable para uso alpha cuando:
 
 1. Arranca solo si los tests de arranque pasan.
@@ -412,7 +400,6 @@ Se considera que una versión del sistema es aceptable para uso alpha cuando:
 ---
 
 ## Glosario mínimo
-
 | Término | Definición |
 |---------|------------|
 | MOSh | Shell interactivo de MetsuOS |
@@ -432,13 +419,11 @@ Se considera que una versión del sistema es aceptable para uso alpha cuando:
 ---
 
 ## Evolución respecto a SSS 1.3
-
 La v1.3 reservaba apps, tareas e iarouter como «campaña 07 / hueco 0.2.5». Esa reserva se conserva como historia: el código ya está en el árbol 0.2.7. Esta v1.4 no borra el SSS 1.3; declara esas capacidades como producto presente y añade `red` y `update reiniciar`.
 
 ---
 
 ## Autoridad
-
 Este SSS es normativo.
 
 Cualquier cambio en objetivos, no-objetivos o normas no negociables debe versionarse explícitamente en este documento antes o junto con el cambio de código correspondiente.

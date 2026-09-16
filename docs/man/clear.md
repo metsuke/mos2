@@ -25,3 +25,6 @@ help, man
 
 ## HELP DEL COMANDO
 Uso: clear - Limpia la pantalla de la terminal.
+
+## HELP DEL COMANDO
+Uso: clear - Limpia la pantalla de la terminal.
