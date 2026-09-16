@@ -1,7 +1,6 @@
 """
 Comando docgen de MetsuOS.
-Fuente: JSON en docs/docgen/. generate no ingiere.
-ingest solo primera vez o recuperación.
+Fuente: JSON. generate no ingiere.
 """
 
 from moslib.core import docgen as motor
@@ -13,10 +12,14 @@ def execute(args):
     if not args or args[0] in ("list", "ls"):
         _listar()
         return
-
     cmd = args[0]
     objetivo = args[1] if len(args) > 1 else ""
-
+    if cmd == "req":
+        _req(args[1:])
+        return
+    if cmd == "area":
+        _area(args[1:])
+        return
     if cmd == "ingest":
         _ingest(objetivo)
         return
@@ -45,9 +48,87 @@ def execute(args):
             return
         print(f"[docgen] Backup escrito en {dest}")
         return
-
     print(f"[docgen] Subcomando no disponible: {cmd}")
-    print("[docgen] Edita docs/docgen JSON y luego: docgen generate <id|man|specs|pages|all>")
+    print("[docgen] generate | req | area | ingest | list | backup")
+
+
+def _area(args):
+    if not args or args[0] == "list":
+        items = reqs.list_areas()
+        if not items:
+            print("[docgen] No hay áreas.")
+            return
+        for item in items:
+            print(f"  {item.get('id'):8} {item.get('nombre') or ''}")
+        return
+    accion = args[0]
+    try:
+        if accion == "add":
+            if len(args) < 2:
+                print("[docgen] Uso: docgen area add ID [nombre]")
+                return
+            dest = reqs.area_add(args[1], " ".join(args[2:]) if len(args) > 2 else "")
+            print(f"[docgen] Área en {dest}")
+            return
+        if accion == "set":
+            if len(args) < 3:
+                print("[docgen] Uso: docgen area set ID nombre")
+                return
+            dest = reqs.area_set(args[1], " ".join(args[2:]))
+            print(f"[docgen] Área actualizada {dest}")
+            return
+        if accion == "rm":
+            if len(args) < 2:
+                print("[docgen] Uso: docgen area rm ID")
+                return
+            dest = reqs.area_rm(args[1])
+            print(f"[docgen] Área eliminada. {dest}")
+            return
+    except Exception as exc:
+        print(f"[docgen] area: {exc}")
+        return
+    print("[docgen] Uso: docgen area list|add|set|rm")
+
+
+def _req(args):
+    if not args or args[0] == "list":
+        items = reqs.list_reqs()
+        if not items:
+            print("[docgen] No hay requisitos en docs/docgen/reqs/")
+            return
+        for item in items:
+            print(
+                f"  {item.get('id'):16} {item.get('area'):6} "
+                f"{item.get('prioridad') or '-':8} {item.get('texto') or ''}"
+            )
+        return
+    accion = args[0]
+    try:
+        if accion == "add":
+            if len(args) < 3:
+                print("[docgen] Uso: docgen req add REQ-AREA-000 texto")
+                return
+            dest = reqs.req_add(args[1], " ".join(args[2:]))
+            print(f"[docgen] Creado {dest}")
+            return
+        if accion == "set":
+            if len(args) < 4:
+                print("[docgen] Uso: docgen req set REQ-AREA-000 campo valor")
+                return
+            dest = reqs.req_set(args[1], args[2], " ".join(args[3:]))
+            print(f"[docgen] Actualizado {dest}")
+            return
+        if accion == "rm":
+            if len(args) < 2:
+                print("[docgen] Uso: docgen req rm REQ-AREA-000")
+                return
+            dest = reqs.req_rm(args[1])
+            print(f"[docgen] Eliminado {dest}")
+            return
+    except Exception as exc:
+        print(f"[docgen] req: {exc}")
+        return
+    print("[docgen] Uso: docgen req list|add|set|rm")
 
 
 def _mostrar(titulo, paths):
@@ -60,8 +141,7 @@ def _ingest(objetivo):
     print("[docgen] Ingesta: solo primera vez o recuperación.")
     try:
         if objetivo in ("reqs", "req", "requisitos"):
-            escritos = reqs.ingest_reqs_srs()
-            _mostrar("[docgen] Requisitos absorbidos:", escritos)
+            _mostrar("[docgen] Requisitos absorbidos:", reqs.ingest_reqs_srs())
             return
         if objetivo in ("", "man", "all-man"):
             _mostrar("[docgen] Absorbidos:", motor.ingest_man_todos(forzar=True))
@@ -118,7 +198,6 @@ def _listar():
 
 def help():
     return (
-        "Uso: docgen generate man|specs|pages|all|<id> - "
-        "Pinta markdown desde docs/docgen JSON. "
-        "ingest man|specs|pages|reqs|all solo primera vez o recuperación."
+        "Uso: docgen generate ... | docgen req list|add|set|rm | "
+        "docgen area list|add|set|rm | docgen ingest ... (recuperación)."
     )

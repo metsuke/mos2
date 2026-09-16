@@ -4,7 +4,7 @@
   "titulo": "docgen",
   "preambulo": "",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/man/docgen.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "NOMBRE",
@@ -12,19 +12,19 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "docgen\ndocgen list\ndocgen ingest man|specs|pages|all\ndocgen ingest <id>\ndocgen generate man|specs|pages|all\ndocgen generate <id>\ndocgen backup <id>\ndocgen backup-list <id>"
+      "cuerpo": "docgen list\ndocgen generate man|specs|pages|all|<id>\ndocgen req list|add|set|rm\ndocgen area list|add|set|rm\ndocgen ingest man|specs|pages|reqs|all\ndocgen backup <id>\ndocgen backup-list <id>"
     },
     {
       "titulo": "DESCRIPCIÓN",
-      "cuerpo": "Regenera markdown publicado a partir de json + plantilla implícita\n(secciones) + scan de help() en las páginas man.\n\nLa ingesta elige el origen más largo entre el fichero actual y los\nbackups de docs/docgen/backup/<id>/. Si falta el preámbulo (versión,\nbaseline, estado, documentos relacionados), lo busca en backups\nde más reciente a más antiguo.\n\nLos ficheros sin encabezados ## (por ejemplo LICENSE) se guardan\nenteros en cuerpo_completo y se vuelven a escribir iguales.\n\ngenerate hace backup del destino antes de pisarlo. Si el texto nuevo\n(sin contar el número de versión) no coincide con el último backup,\nincrementa **Versión del documento**."
+      "cuerpo": "La fuente de verdad es JSON en docs/docgen/.\ngenerate pinta markdown y HTML en docs/docgen/html/.\ningest solo primera vez o recuperación; generate no ingerir.\nRequisitos: un JSON por id en docs/docgen/reqs/.\nÁreas: CRUD sobre docs/docgen/areas.json.\nEl SRS se pinta con una tabla por área."
     },
     {
       "titulo": "EJEMPLOS",
-      "cuerpo": "docgen list\ndocgen ingest man\ndocgen generate man\ndocgen ingest 00-overview\ndocgen generate 00-overview\ndocgen ingest all\ndocgen generate all"
+      "cuerpo": "docgen area list\ndocgen req list\ndocgen req add REQ-CMD-021 texto del requisito\ndocgen generate 02-srs\ndocgen generate man-docgen"
     },
     {
       "titulo": "SEGURIDAD",
-      "cuerpo": "Comando de sistema. Solo stdlib y moslib. No envía red."
+      "cuerpo": "Comando de sistema. Solo stdlib y moslib."
     },
     {
       "titulo": "VÉASE TAMBIÉN",
