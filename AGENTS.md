@@ -38,6 +38,15 @@ Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y
 - Estado del repo: comando synccheck y lectura por SHA
 - Psicología: acompañar; no dañar, desestabilizar ni engañar
 
+## Documentación y docgen
+- Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).
+- El markdown publicado se obtiene con `docgen generate`.
+- La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.
+- Flujo normal: editar el JSON (átomo) y decir `docgen generate <id>`.
+- `docgen ingest` solo en la primera absorción o si hay que recuperar desde markdown/backup.
+- `generate` no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.
+- Un fichero por mensaje; fichero entero; no parches sueltos.
+
 ## Contexto de sesión
 ```text
 Contexto: <sistema> / <entorno> / <rol>
@@ -46,11 +55,11 @@ Contexto: <sistema> / <entorno> / <rol>
 Si falta y hace falta para paths o Poetry, preguntar.
 
 ## Versiones
-Cambio de runtime → bump en pyproject.toml + tag vX.Y.Z.  
-Solo docs → sin bump; tag vX.Y.Z-docs o vX.Y.Z-docs.N.  
+Cambio de runtime → bump en pyproject.toml + tag vX.Y.Z.
+Solo docs → sin bump; tag vX.Y.Z-docs o vX.Y.Z-docs.N.
 Detalle: docs/VERSIONING.md.
 
-Producto de referencia: 0.2.5. Comandos a11y, docs, synccheck.
+Producto de referencia: 0.2.7 / árbol 0.2.8. Comandos a11y, docs, synccheck, docgen.
 
 ## Qué no hacer
 - No inventar features ausentes en código o specs
@@ -59,3 +68,4 @@ Producto de referencia: 0.2.5. Comandos a11y, docs, synccheck.
 - No asumir Mac, Git Bash o WSL sin contexto declarado
 - No diagnosticar el remoto solo con raw .../main/
 - No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)
+- No usar ingest como paso rutinario de edición

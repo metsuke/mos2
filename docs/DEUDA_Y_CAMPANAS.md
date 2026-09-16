@@ -1,6 +1,6 @@
 # Deuda técnica y campañas futuras previstas
 
-**Versión del documento:** 1.9
+**Versión del documento:** 1.8
 **Estado:** Inventario
 **Producto:** código LAN/puente/check usable en win, wsl y mac; cierre documental en curso
 **SHA de código de referencia:** f2c512d

@@ -1,6 +1,6 @@
 # Incentivos y dirección de MetsuOS
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.1  
 **Estado:** Normativo de dirección  
 **No implementa código.**  
 **Documentos relacionados:** docs/A11Y.md, docs/specs/04-SEC-Security-Policy.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/INTERACTION_REVIEW.md, docs/DEUDA_Y_CAMPANAS.md, docs/plans/2026-08-31-01-incentivos-desarrollo-datos.md, docs/plans/2026-09-01-01-macro-apps-tareas-suite-rgpd-malla.md

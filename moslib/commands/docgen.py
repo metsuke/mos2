@@ -1,6 +1,7 @@
 """
 Comando docgen de MetsuOS.
-Fachada de moslib.core.docgen.
+Fuente: JSON en docs/docgen/. generate no ingiere.
+ingest solo primera vez o recuperación.
 """
 
 from moslib.core import docgen as motor
@@ -45,7 +46,7 @@ def execute(args):
         return
 
     print(f"[docgen] Subcomando no disponible: {cmd}")
-    print("[docgen] Pista: docgen list | ingest man|specs|pages|all | generate man|specs|pages|all")
+    print("[docgen] Edita docs/docgen JSON y luego: docgen generate <id|man|specs|pages|all>")
 
 
 def _mostrar(titulo, paths):
@@ -55,6 +56,7 @@ def _mostrar(titulo, paths):
 
 
 def _ingest(objetivo):
+    print("[docgen] Ingesta: solo primera vez o recuperación.")
     try:
         if objetivo in ("", "man", "all-man"):
             _mostrar("[docgen] Absorbidos:", motor.ingest_man_todos(forzar=True))
@@ -111,6 +113,7 @@ def _listar():
 
 def help():
     return (
-        "Uso: docgen [list|ingest man|specs|pages|all|generate man|specs|pages|all] - "
-        "Inventario, ingesta y regeneración de documentos."
+        "Uso: docgen generate man|specs|pages|all|<id> - "
+        "Pinta markdown desde docs/docgen JSON. "
+        "ingest solo primera vez o recuperación."
     )

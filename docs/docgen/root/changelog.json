@@ -4,11 +4,11 @@
   "titulo": "Changelog de MetsuOS",
   "preambulo": "Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/changelog/20260916_032325.md",
+  "origen": "/Users/Metsuke/mos2/CHANGELOG.md",
   "secciones": [
     {
       "titulo": "0.2.8 — pendiente de pruebas humanas",
-      "cuerpo": "### Añadido\n\n- iarouter modelos / modelo (id con espacios)\n- iarouter clave; almacén .mos con moslib.core.secreto\n- Ingestión de XAI_API_KEY y OPENROUTER_API_KEY al almacén\n- LAN Jan y GPT4All (localhost, cache, /24)\n- iarouter share y iarouter publicar\n- iarouter puente (HTTP :17337, no es P2P)\n- update reiniciar (módulos de la sesión no cambian solos)\n\n### Documentación\n\n- Spec 10 v1.2\n- man iarouter y man update\n- Campaña 2026-09-13-02-sync-docs-028: Overview, SSS, SRS, ICD, SEC, SDD, TEST, SRelD y USER_MANUAL alineados con el árbol 0.2.7 / 0.2.8\n- Plan: docs/plans/2026-09-13-02-sync-docs-028.md\n- Sin bump de Poetry ni tag de producto en esta campaña"
+      "cuerpo": "### Añadido\n\n- iarouter modelos / modelo (id con espacios)\n- iarouter clave; almacén .mos con moslib.core.secreto\n- Ingestión de XAI_API_KEY y OPENROUTER_API_KEY al almacén\n- LAN Jan y GPT4All (localhost, cache, /24)\n- iarouter share y iarouter publicar\n- iarouter puente (HTTP :17337, no es P2P)\n- update reiniciar (módulos de la sesión no cambian solos)\n- Comando docgen (ingesta, backup, regeneración de man/specs/pages)\n\n### Documentación\n\n- Spec 10 v1.2\n- man iarouter y man update\n- Campaña 2026-09-13-02-sync-docs-028: Overview, SSS, SRS, ICD, SEC, SDD, TEST, SRelD y USER_MANUAL alineados con el árbol 0.2.7 / 0.2.8\n- Plan: docs/plans/2026-09-13-02-sync-docs-028.md\n- Sin bump de Poetry ni tag de producto en esta campaña\n- docs/docgen/ (áreas, json por documento, backup no versionado)\n- man docgen\n- Campaña 2026-09-14-01-docgen"
     },
     {
       "titulo": "0.2.7 — 2026-09-06",

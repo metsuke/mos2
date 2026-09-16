@@ -1,6 +1,6 @@
 # Metodología de MetsuOS (MOS2)
 
-**Versión del documento:** 1.4  
+**Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.4  
 **Estado:** Normativo
 

@@ -1,18 +1,14 @@
 # Onboarding para agentes IA (MetsuOS)
 
-**Versión del documento:** 1.4  
-**Estado:** Normativo de proceso  
+**Versión del documento:** 1.6
+**Estado:** Normativo de proceso
 **Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md
-
----
 
 ## Propósito
 Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.
 
-Punto de entrada corto: `AGENTS.md`.  
+Punto de entrada corto: `AGENTS.md`.
 Dirección de trabajo: `docs/INCENTIVOS.md` (mandatorio para la IA).
-
----
 
 ## Orden de lectura
 1. AGENTS.md
@@ -30,8 +26,6 @@ Dirección de trabajo: `docs/INCENTIVOS.md` (mandatorio para la IA).
 
 No inventar features que no estén en código o specs.
 
----
-
 ## Qué es MetsuOS (férreo)
 - SO simulado modular en Python; shell MOSh.
 - Núcleo moslib/; rootfs/ simulado.
@@ -42,10 +36,16 @@ No inventar features que no estén en código o specs.
 - A11Y de interfaz mandatoria.
 - Poetry + mos2.sh / install.sh multi-entorno.
 - Git, no APIs de un forge.
-- Comandos de calidad actuales: test, update, synccheck.
+- Comandos de calidad actuales: test, update, synccheck, docgen.
 - Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma.
 
----
+## Documentación y docgen
+Fuente de verdad: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).
+El markdown publicado se pinta con `docgen generate`.
+Flujo normal de la IA: un JSON por mensaje, fichero entero, luego `docgen generate <id>`.
+`docgen ingest` solo primera absorción o recuperación desde markdown/backup.
+`generate` no ingerir: si ingerir al generar, el JSON se pisa con un md viejo o corto.
+Prohibido reescribir specs/manual/man enteros en el chat como vía habitual.
 
 ## Contexto de sesión
 ```text
@@ -53,8 +53,6 @@ Contexto: <sistema> / <entorno> / <rol>
 ```
 
 Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas home en el repo público.
-
----
 
 ## Cómo entregar trabajo al humano
 - Un paso / un fichero por mensaje, salvo pareja inseparable avisada.
@@ -73,17 +71,13 @@ Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas hom
 - Psicología: acompañar; prohibido dañar, desestabilizar o engañar.
 - Asimov (docs/INCENTIVOS.md): cita + nota de aplicación; no autocommit; no apagar tests.
 
----
-
 ## Estado real del repositorio
 1. Pedir `synccheck` cuando haya duda.
 2. Leer por SHA (`git show origin/main:archivo` o raw con SHA).
 3. No diagnosticar solo con `.../main/` en CDN.
 4. Si Poetry, README, CHANGELOG y comandos no cuadran: hotfix antes del siguiente bloque.
 
-Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `synccheck`.
-
----
+Producto de referencia al escribir esto: **0.2.7 / árbol 0.2.8**. Comandos `a11y`, `docs`, `synccheck`, `docgen`.
 
 ## Antes de tocar código
 1. Leer el repo real (SHA).
@@ -95,43 +89,32 @@ Producto de referencia al escribir esto: **0.2.5**. Comandos `a11y`, `docs`, `sy
 7. Comando nuevo: código + help + man + README + SSS + CHANGELOG.
 8. No abrir DepManager ni política geo real (solo dirección).
 
----
-
 ## Versionado
 | Cambio | Poetry | Tag |
 |--------|--------|-----|
 | Runtime / comandos / scripts | Bump X.Y.Z | vX.Y.Z |
 | Solo docs | No bump | vX.Y.Z-docs o vX.Y.Z-docs.N |
 
----
-
 ## Plataforma
 - Poetry: un candidato solo si `--version` se puede ejecutar.
 - windows/git-bash: `py -m poetry`.
 - windows/wsl: clone en FS Linux; rechazo bajo `/mnt/<letra>/`.
 
----
-
 ## Accesibilidad
 docs/A11Y.md es mandatoria. Conflicto con SEC: procedimiento escrito.
-
----
 
 ## Cierre de grupo
 docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditoría.
 
----
-
 ## Checklist de cada mensaje de trabajo
 1. ¿Breadcrumb?
 2. ¿Un paso / un fichero?
-3. ¿Fichero entero?
+3. ¿Fichero entero (JSON si es docs)?
 4. ¿Tablas ya hechas?
 5. ¿He vuelto a pegar en vez de remitir?
 6. ¿SHA o synccheck si hablo del remoto?
 7. ¿A11Y / SEC / INCENTIVOS / contrato intactos?
-
----
+8. ¿He evitado ingest de rutinario?
 
 ## Autoridad
 Este documento manda sobre el estilo de asistencia.

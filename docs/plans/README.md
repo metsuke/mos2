@@ -1,6 +1,6 @@
 # Planes de campaña de MetsuOS
 
-**Versión del documento:** 1.4  
+**Versión del documento:** 1.3  
 **Estado:** Normativo de proceso  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md
 

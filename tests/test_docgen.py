@@ -27,6 +27,7 @@ def test_comando_help_no_vacio():
     texto = cmd.help()
     assert isinstance(texto, str)
     assert "docgen" in texto
+    assert "ingest" in texto
 
 
 def test_comando_list_no_lanza():
@@ -58,6 +59,14 @@ def test_partir_con_preambulo():
 
 
 def test_render_man_echo_incluye_ayuda():
-    motor.ingest_man("echo")
+    if not motor.man_store_path("echo").is_file():
+        motor.ingest_man("echo")
     texto = motor.render_man("echo")
     assert "echo" in texto.lower()
+
+
+def test_generate_spec_todos_no_es_ingest():
+    assert "ingest" not in (motor.generate_spec_todos.__doc__ or "")
+    src = motor.generate_spec_todos.__code__.co_names
+    assert "ingest_spec_todos" not in src
+    assert "ingest_spec" not in src

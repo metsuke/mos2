@@ -12,6 +12,7 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - iarouter share y iarouter publicar
 - iarouter puente (HTTP :17337, no es P2P)
 - update reiniciar (módulos de la sesión no cambian solos)
+- Comando docgen (ingesta, backup, regeneración de man/specs/pages)
 
 ### Documentación
 
@@ -20,6 +21,9 @@ Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Chang
 - Campaña 2026-09-13-02-sync-docs-028: Overview, SSS, SRS, ICD, SEC, SDD, TEST, SRelD y USER_MANUAL alineados con el árbol 0.2.7 / 0.2.8
 - Plan: docs/plans/2026-09-13-02-sync-docs-028.md
 - Sin bump de Poetry ni tag de producto en esta campaña
+- docs/docgen/ (áreas, json por documento, backup no versionado)
+- man docgen
+- Campaña 2026-09-14-01-docgen
 
 ## 0.2.7 — 2026-09-06
 ### Añadido

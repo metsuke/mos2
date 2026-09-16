@@ -1,6 +1,6 @@
 # Onboarding humano de MetsuOS
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.2  
 **Estado:** Guía de entrada  
 **Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md
 

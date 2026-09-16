@@ -31,3 +31,6 @@ Uso: echo [texto] - Imprime texto en la salida estándar.
 
 ## HELP DEL COMANDO
 Uso: echo [texto] - Imprime texto en la salida estándar.
+
+## HELP DEL COMANDO
+Uso: echo [texto] - Imprime texto en la salida estándar.

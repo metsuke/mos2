@@ -1,6 +1,7 @@
 """
 moslib.core.docgen
 Motor de regeneración de documentos.
+Fuente: JSON en docs/docgen/. generate no ingiere.
 """
 
 from __future__ import annotations
@@ -208,7 +209,7 @@ def _sin_version(texto: str) -> str:
     )
 
 
-def _bump_preambulo(preambulo: str) -> str:
+def _bump_preambulo(texto: str) -> str:
     def _sub(match):
         piezas = match.group(1).split(".")
         piezas[-1] = str(int(piezas[-1]) + 1)
@@ -217,10 +218,10 @@ def _bump_preambulo(preambulo: str) -> str:
     nuevo, n = re.subn(
         r"\*\*Versión del documento:\*\*\s*([0-9.]+)",
         _sub,
-        preambulo,
+        texto,
         count=1,
     )
-    return nuevo if n else preambulo
+    return nuevo if n else texto
 
 
 def _ultimo_backup_texto(doc_id: str) -> str | None:
@@ -255,6 +256,15 @@ def scan_command_help(nombre: str) -> str:
     return texto.strip()
 
 
+def _guardar_json(dest: Path, payload: dict) -> Path:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return dest
+
+
 
 def man_store_path(nombre: str) -> Path:
     return get_docgen_dir() / "man" / f"{nombre}.json"
@@ -265,12 +275,6 @@ def list_man_nombres() -> list[str]:
     if not man_dir.is_dir():
         return []
     return [p.stem for p in sorted(man_dir.glob("*.md"))]
-
-
-def _guardar_json(dest: Path, payload: dict) -> Path:
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return dest
 
 
 def ingest_man(nombre: str) -> Path:
@@ -305,7 +309,9 @@ def render_man(nombre: str) -> str:
     if extra.get("preambulo"):
         bloques.extend([extra["preambulo"], ""])
     for sec in extra.get("secciones") or []:
-        bloques.extend([f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""])
+        bloques.extend(
+            [f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""]
+        )
     bloques.extend(["## HELP DEL COMANDO", scan_command_help(nombre), ""])
     return "\n".join(bloques)
 
@@ -326,7 +332,6 @@ def ingest_man_todos(forzar: bool = True) -> list:
 
 
 def generate_man_todos() -> list:
-    ingest_man_todos(forzar=True)
     escritos = []
     for nombre in list_man_nombres():
         try:
@@ -378,7 +383,9 @@ def render_spec(doc_id: str) -> str:
     if extra.get("preambulo"):
         bloques.extend([extra["preambulo"], ""])
     for sec in extra.get("secciones") or []:
-        bloques.extend([f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""])
+        bloques.extend(
+            [f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""]
+        )
     return "\n".join(bloques)
 
 
@@ -397,7 +404,6 @@ def ingest_spec_todos(forzar: bool = True) -> list:
 
 
 def generate_spec_todos() -> list:
-    ingest_spec_todos(forzar=True)
     escritos = []
     for doc_id in list_spec_ids():
         try:
@@ -470,7 +476,9 @@ def render_doc(doc_id: str) -> str:
     if extra.get("preambulo"):
         bloques.extend([extra["preambulo"], ""])
     for sec in extra.get("secciones") or []:
-        bloques.extend([f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""])
+        bloques.extend(
+            [f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""]
+        )
     return "\n".join(bloques)
 
 
@@ -493,7 +501,6 @@ def ingest_page_todos(forzar: bool = True) -> list:
 
 
 def generate_page_todos() -> list:
-    ingest_page_todos(forzar=True)
     escritos = []
     for doc_id in list_page_ids():
         try:
