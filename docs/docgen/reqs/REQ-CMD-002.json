@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-002",
+  "area": "CMD",
+  "titulo": "Todo comando debe exponer help() callable",
+  "texto": "Todo comando debe exponer help() callable",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

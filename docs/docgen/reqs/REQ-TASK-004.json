@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TASK-004",
+  "area": "TASK",
+  "titulo": "Durante la sesión MOSh puede haber un worker que avance tareas automáticas",
+  "texto": "Durante la sesión MOSh puede haber un worker que avance tareas automáticas",
+  "prioridad": "Should",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-019",
+  "area": "CMD",
+  "titulo": "Un comando de app no puede sobrescribir un comando de sistema",
+  "texto": "Un comando de app no puede sobrescribir un comando de sistema",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

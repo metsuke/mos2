@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-USER-007",
+  "area": "USER",
+  "titulo": "Si existe home legacy y no existe el nuevo, el sistema debe migrar automáticamente",
+  "texto": "Si existe home legacy y no existe el nuevo, el sistema debe migrar automáticamente",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

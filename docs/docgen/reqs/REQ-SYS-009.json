@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SYS-009",
+  "area": "SYS",
+  "titulo": "Los módulos core obligatorios deben tener docstring de módulo",
+  "texto": "Los módulos core obligatorios deben tener docstring de módulo",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

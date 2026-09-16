@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-018",
+  "area": "CMD",
+  "titulo": "man debe poder mostrar el man de un comando de app si la app lo aporta",
+  "texto": "man debe poder mostrar el man de un comando de app si la app lo aporta",
+  "prioridad": "Must",
+  "verificacion": "Demo",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

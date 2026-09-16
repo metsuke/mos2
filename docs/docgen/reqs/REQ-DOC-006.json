@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-DOC-006",
+  "area": "DOC",
+  "titulo": "Las estructuras de directorios en documentación normativa deben representarse como tablas por niveles",
+  "texto": "Las estructuras de directorios en documentación normativa deben representarse como tablas por niveles",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

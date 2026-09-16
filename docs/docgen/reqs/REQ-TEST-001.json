@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TEST-001",
+  "area": "TEST",
+  "titulo": "El proyecto debe disponer de tests automatizados en tests/",
+  "texto": "El proyecto debe disponer de tests automatizados en tests/",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

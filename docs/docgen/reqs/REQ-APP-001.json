@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-APP-001",
+  "area": "APP",
+  "titulo": "Una app debe identificarse con app.json (id, nombre, versión, comandos)",
+  "texto": "Una app debe identificarse con app.json (id, nombre, versión, comandos)",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

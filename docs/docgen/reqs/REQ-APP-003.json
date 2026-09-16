@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-APP-003",
+  "area": "APP",
+  "titulo": "El ámbito de instalación debe ser usuario o sistema",
+  "texto": "El ámbito de instalación debe ser usuario o sistema",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-APP-005",
+  "area": "APP",
+  "titulo": "Sin A11Y mínima el comando de app no se acepta ni se ejecuta",
+  "texto": "Sin A11Y mínima el comando de app no se acepta ni se ejecuta",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

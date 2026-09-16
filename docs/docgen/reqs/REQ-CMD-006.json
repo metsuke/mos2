@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-006",
+  "area": "CMD",
+  "titulo": "Los comandos deben poder descubrirse sin registro manual centralizado",
+  "texto": "Los comandos deben poder descubrirse sin registro manual centralizado",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-DOC-008",
+  "area": "DOC",
+  "titulo": "Debe existir docs/ENVIRONMENTS.md con perfiles de entorno y política de Poetry",
+  "texto": "Debe existir docs/ENVIRONMENTS.md con perfiles de entorno y política de Poetry",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

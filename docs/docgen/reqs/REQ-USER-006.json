@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-USER-006",
+  "area": "USER",
+  "titulo": "El contenido de rootfs/home/ no debe versionarse como producto",
+  "texto": "El contenido de rootfs/home/ no debe versionarse como producto",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

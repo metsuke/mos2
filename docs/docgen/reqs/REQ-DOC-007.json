@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-DOC-007",
+  "area": "DOC",
+  "titulo": "Todo comando de sistema nuevo debe documentarse en man en el mismo cambio o en el inmediato de la misma fase",
+  "texto": "Todo comando de sistema nuevo debe documentarse en man en el mismo cambio o en el inmediato de la misma fase",
+  "prioridad": "Should",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

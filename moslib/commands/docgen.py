@@ -5,6 +5,7 @@ ingest solo primera vez o recuperación.
 """
 
 from moslib.core import docgen as motor
+from moslib.core import docgen_req as reqs
 
 
 def execute(args):
@@ -58,6 +59,10 @@ def _mostrar(titulo, paths):
 def _ingest(objetivo):
     print("[docgen] Ingesta: solo primera vez o recuperación.")
     try:
+        if objetivo in ("reqs", "req", "requisitos"):
+            escritos = reqs.ingest_reqs_srs()
+            _mostrar("[docgen] Requisitos absorbidos:", escritos)
+            return
         if objetivo in ("", "man", "all-man"):
             _mostrar("[docgen] Absorbidos:", motor.ingest_man_todos(forzar=True))
             return
@@ -115,5 +120,5 @@ def help():
     return (
         "Uso: docgen generate man|specs|pages|all|<id> - "
         "Pinta markdown desde docs/docgen JSON. "
-        "ingest solo primera vez o recuperación."
+        "ingest man|specs|pages|reqs|all solo primera vez o recuperación."
     )

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SEC-008",
+  "area": "SEC",
+  "titulo": "Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad",
+  "texto": "Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

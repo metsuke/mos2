@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TEST-010",
+  "area": "TEST",
+  "titulo": "Debe existir cobertura de apps, prioridad de nombres y minimoslib",
+  "texto": "Debe existir cobertura de apps, prioridad de nombres y minimoslib",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

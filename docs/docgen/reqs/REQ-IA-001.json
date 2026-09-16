@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-IA-001",
+  "area": "IA",
+  "titulo": "iarouter debe estar apagado por defecto",
+  "texto": "iarouter debe estar apagado por defecto",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

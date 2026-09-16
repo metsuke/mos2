@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-014",
+  "area": "CMD",
+  "titulo": "La resolución de nombre corto de usuario nunca tiene prioridad sobre un comando de sistema",
+  "texto": "La resolución de nombre corto de usuario nunca tiene prioridad sobre un comando de sistema",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TASK-005",
+  "area": "TASK",
+  "titulo": "Tareas e hilos no son la malla P2P",
+  "texto": "Tareas e hilos no son la malla P2P",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

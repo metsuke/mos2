@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TEST-008",
+  "area": "TEST",
+  "titulo": "Debe existir marca pytest a11y para aislar la validación de accesibilidad",
+  "texto": "Debe existir marca pytest a11y para aislar la validación de accesibilidad",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

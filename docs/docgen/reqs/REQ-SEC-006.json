@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SEC-006",
+  "area": "SEC",
+  "titulo": "Si existe cualquier comando ilegal en ese inventario, el sistema no debe iniciar la sesión interactiva",
+  "texto": "Si existe cualquier comando ilegal en ese inventario, el sistema no debe iniciar la sesión interactiva",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

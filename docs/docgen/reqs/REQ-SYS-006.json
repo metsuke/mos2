@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SYS-006",
+  "area": "SYS",
+  "titulo": "La lógica de negocio del shell debe residir en moslib, no en scripts auxiliares del anfitrión",
+  "texto": "La lógica de negocio del shell debe residir en moslib, no en scripts auxiliares del anfitrión",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

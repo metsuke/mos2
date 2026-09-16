@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-BOOT-004",
+  "area": "BOOT",
+  "titulo": "Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal",
+  "texto": "Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal",
+  "prioridad": "Must",
+  "verificacion": "Demo",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

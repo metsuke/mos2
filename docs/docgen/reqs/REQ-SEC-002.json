@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SEC-002",
+  "area": "SEC",
+  "titulo": "Solo se permiten imports de la biblioteca estándar y de moslib",
+  "texto": "Solo se permiten imports de la biblioteca estándar y de moslib",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

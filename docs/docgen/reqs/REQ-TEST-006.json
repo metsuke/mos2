@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TEST-006",
+  "area": "TEST",
+  "titulo": "Debe existir un comando de sistema test que lance la batería",
+  "texto": "Debe existir un comando de sistema test que lance la batería",
+  "prioridad": "Must",
+  "verificacion": "Demo",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

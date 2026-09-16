@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TEST-005",
+  "area": "TEST",
+  "titulo": "Debe existir cobertura del contrato execute/help de comandos de sistema",
+  "texto": "Debe existir cobertura del contrato execute/help de comandos de sistema",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

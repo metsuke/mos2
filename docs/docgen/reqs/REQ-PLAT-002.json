@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-PLAT-002",
+  "area": "PLAT",
+  "titulo": "El sistema no debe depender de una única distribución Linux",
+  "texto": "El sistema no debe depender de una única distribución Linux",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-APP-004",
+  "area": "APP",
+  "titulo": "Los comandos de app deben invocarse por nombre corto, id_cmd o app_id_cmd según el loader",
+  "texto": "Los comandos de app deben invocarse por nombre corto, id_cmd o app_id_cmd según el loader",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

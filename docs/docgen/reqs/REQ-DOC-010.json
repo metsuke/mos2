@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-DOC-010",
+  "area": "DOC",
+  "titulo": "Debe existir docs/a11y/DECLARACION.md",
+  "texto": "Debe existir docs/a11y/DECLARACION.md",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

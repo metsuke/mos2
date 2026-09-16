@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-PLAT-007",
+  "area": "PLAT",
+  "titulo": "Un candidato Poetry solo debe usarse si --version se puede ejecutar",
+  "texto": "Un candidato Poetry solo debe usarse si --version se puede ejecutar",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

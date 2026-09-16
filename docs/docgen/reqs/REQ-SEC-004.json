@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SEC-004",
+  "area": "SEC",
+  "titulo": "Un comando ilegal debe rechazarse con mensaje [SEGURIDAD] y motivo",
+  "texto": "Un comando ilegal debe rechazarse con mensaje [SEGURIDAD] y motivo",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

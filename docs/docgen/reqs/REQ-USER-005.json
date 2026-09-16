@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-USER-005",
+  "area": "USER",
+  "titulo": "Los archivos de comando de usuario deben nombrarse user_*.py",
+  "texto": "Los archivos de comando de usuario deben nombrarse user_*.py",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

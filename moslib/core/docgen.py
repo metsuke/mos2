@@ -2,6 +2,7 @@
 moslib.core.docgen
 Motor de regeneración de documentos.
 Fuente: JSON en docs/docgen/. generate no ingiere.
+Tras escribir markdown, escribe HTML en docs/docgen/html/.
 """
 
 from __future__ import annotations
@@ -103,6 +104,8 @@ def ensure_docgen_dirs() -> None:
     (get_docgen_dir() / "man").mkdir(parents=True, exist_ok=True)
     (get_docgen_dir() / "pages").mkdir(parents=True, exist_ok=True)
     (get_docgen_dir() / "root").mkdir(parents=True, exist_ok=True)
+    (get_docgen_dir() / "html").mkdir(parents=True, exist_ok=True)
+    (get_docgen_dir() / "reqs").mkdir(parents=True, exist_ok=True)
 
 
 def backup_stamp() -> str:
@@ -243,6 +246,8 @@ def _escribir(doc_id: str, nuevo: str, dest: Path) -> Path:
         backup_document(doc_id)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(nuevo, encoding="utf-8")
+    from moslib.core.docgen_html import escribir_html
+    escribir_html(doc_id, nuevo)
     return dest
 
 
@@ -372,6 +377,7 @@ def ingest_spec(doc_id: str) -> Path:
     )
 
 
+
 def render_spec(doc_id: str) -> str:
     store = spec_store_path(doc_id)
     if not store.is_file():
@@ -382,10 +388,15 @@ def render_spec(doc_id: str) -> str:
     bloques = [f"# {extra.get('titulo', doc_id)}", ""]
     if extra.get("preambulo"):
         bloques.extend([extra["preambulo"], ""])
+    from moslib.core.docgen_req import list_reqs, tablas_por_area
+
+    hay_reqs = bool(list_reqs()) if doc_id == "02-srs" else False
     for sec in extra.get("secciones") or []:
-        bloques.extend(
-            [f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""]
-        )
+        titulo = sec.get("titulo") or "SECCIÓN"
+        cuerpo = sec.get("cuerpo") or ""
+        if hay_reqs and "requisito" in titulo.lower():
+            cuerpo = tablas_por_area()
+        bloques.extend([f"## {titulo}", cuerpo, ""])
     return "\n".join(bloques)
 
 

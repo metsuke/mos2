@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-UPD-007",
+  "area": "UPD",
+  "titulo": "Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar",
+  "texto": "Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

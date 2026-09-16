@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-USER-001",
+  "area": "USER",
+  "titulo": "El sistema debe resolver el usuario real del sistema anfitrión",
+  "texto": "El sistema debe resolver el usuario real del sistema anfitrión",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

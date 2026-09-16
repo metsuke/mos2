@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-DOC-005",
+  "area": "DOC",
+  "titulo": "Debe existir una página man por comando de sistema en docs/man/",
+  "texto": "Debe existir una página man por comando de sistema en docs/man/",
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

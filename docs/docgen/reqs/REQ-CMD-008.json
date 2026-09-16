@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-008",
+  "area": "CMD",
+  "titulo": "La baseline debe incluir al menos: help, man, version, sysinfo, uptime, echo, clear, test, update",
+  "texto": "La baseline debe incluir al menos: help, man, version, sysinfo, uptime, echo, clear, test, update",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-009",
+  "area": "CMD",
+  "titulo": "El sistema debe proporcionar un comando man para mostrar documentación extendida desde docs/man/",
+  "texto": "El sistema debe proporcionar un comando man para mostrar documentación extendida desde docs/man/",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SYS-002",
+  "area": "SYS",
+  "titulo": "El prompt debe incluir el nombre de usuario del sistema anfitrión",
+  "texto": "El prompt debe incluir el nombre de usuario del sistema anfitrión",
+  "prioridad": "Must",
+  "verificacion": "Demo",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

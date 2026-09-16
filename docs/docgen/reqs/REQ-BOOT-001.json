@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-BOOT-001",
+  "area": "BOOT",
+  "titulo": "El arranque debe ejecutar la batería de tests del proyecto",
+  "texto": "El arranque debe ejecutar la batería de tests del proyecto",
+  "prioridad": "Must",
+  "verificacion": "",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

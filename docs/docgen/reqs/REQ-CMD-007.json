@@ -1,0 +1,11 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-007",
+  "area": "CMD",
+  "titulo": "El sistema debe soportar hot-reload basado en cambio de archivo cuando el loader lo recargue",
+  "texto": "El sistema debe soportar hot-reload basado en cambio de archivo cuando el loader lo recargue",
+  "prioridad": "Should",
+  "verificacion": "Demo",
+  "notas": "",
+  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/02-srs/20260916_025234.md"
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-AREA-000",
+  "area": "SYS",
+  "titulo": "",
+  "texto": "",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}
