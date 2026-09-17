@@ -4,8 +4,11 @@
 version – muestra la versión de MetsuOS y su historial
 
 ## SINOPSIS
-version
-version -h [n]
+
+- version
+- version [-h [n]]
+- version = subprocess.check_output(
+- version = get_git_version()
 
 ## DESCRIPCIÓN
 Sin argumentos, muestra la versión actual basada en git describe.
@@ -21,9 +24,10 @@ El historial prioriza tags y puede completar con commits recientes según la imp
 | -h n | Muestra hasta n entradas de historial |
 
 ## EJEMPLOS
-version
-version -h
-version -h 20
+
+- version
+- version -h
+- version -h 20
 
 ## SEGURIDAD
 Comando de sistema. Consulta metadatos git del repositorio del producto.

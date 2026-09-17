@@ -1,0 +1,31 @@
+{
+  "schema": "metsuos-docgen-man-1",
+  "id": "code",
+  "titulo": "code",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "edicion-json",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "code – abre un fichero del clone en el editor del anfitrión"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Abre la ruta con el binario code (VS Code) o, si no está, cursor.\nLa ruta es relativa a la raíz del clone.\nSi el fichero no existe, lo crea vacío y después abre el editor."
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Rechaza rutas fuera del clone.\nEjecuta solo code o cursor del PATH del anfitrión, con cwd en la raíz del clone.\nComando de sistema. Solo stdlib y moslib."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "touch, git, docs"
+    }
+  ]
+}

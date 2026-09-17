@@ -1,0 +1,31 @@
+{
+  "schema": "metsuos-docgen-man-1",
+  "id": "touch",
+  "titulo": "touch",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "edicion-json",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "touch – crea un fichero vacío en el clone"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "Crea el fichero indicado si no existe. La ruta es relativa a la raíz del clone, no al directorio de trabajo del anfitrión.\nSi faltan directorios intermedios, los crea.\nNo pisa el contenido de un fichero que ya existe; solo actualiza la marca de tiempo."
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Rechaza rutas que salgan del clone.\nNo llama a la utilidad touch del anfitrión; usa pathlib.\nComando de sistema. Solo stdlib y moslib."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "code, git, docs"
+    }
+  ]
+}

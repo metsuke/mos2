@@ -4,18 +4,55 @@
 iarouter – enrutador de modelos (local y remoto)
 
 ## SINOPSIS
-iarouter
-iarouter status
-iarouter detectar
-iarouter check [jan|gpt4all|grok|openrouter|share] [twitter] [detalle]
-iarouter share
-iarouter publicar
-iarouter puente [on|off|status]
-iarouter usar jan|gpt4all|grok|openrouter
-iarouter clave <proveedor> [borrar]
-iarouter modelos [proveedor]
-iarouter modelo [proveedor] <id del modelo...>
-iarouter preguntar TEXTO
+
+- iarouter
+- iarouter modelo [proveedor] <id del modelo...>
+- iarouter status
+- iarouter detectar
+- iarouter check
+- iarouter check detalle
+- iarouter check jan|gpt4all|grok|openrouter|share
+- iarouter check grok twitter
+- iarouter check grok twitter detalle
+- iarouter share
+- iarouter publicar
+- iarouter puente [on|off|status]
+- iarouter usar jan|gpt4all|grok|openrouter
+- iarouter clave <proveedor> [borrar]
+- iarouter modelos [proveedor]
+- iarouter preguntar TEXTO
+- iarouter puente
+- iarouter detect
+- iarouter all
+- iarouter modelos
+- iarouter models
+- iarouter modelo
+- iarouter model
+- iarouter jan
+- iarouter gpt4all
+- iarouter on
+- iarouter start
+- iarouter arrancar
+- iarouter off
+- iarouter stop
+- iarouter parar
+- iarouter usar
+- iarouter use
+- iarouter clave
+- iarouter key
+- iarouter preguntar
+- iarouter ask
+- iarouter q
+- iarouter grok
+- iarouter openrouter
+- iarouter borrar
+- iarouter delete
+- iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar]
+- iarouter: estado, detección, check, proveedor, modelos, claves, share, publicar, puente, preguntar.
+- iarouter check grok
+- iarouter check grok detalle
+- iarouter check jan -v
+- iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] -
 
 ## DESCRIPCIÓN
 Muestra el proveedor activo, detecta cuáles están disponibles y, solo con

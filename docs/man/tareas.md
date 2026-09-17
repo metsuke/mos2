@@ -4,10 +4,15 @@
 tareas – lista y gestiona tareas locales
 
 ## SINOPSIS
-tareas list
-tareas add COMANDO
-tareas hecha ID
-tareas tick
+
+- tareas
+- tareas [list|add <comando>|hecha <id>|tick]
+- tareas tick
+- tareas add
+- tareas hecha
+- tareas list
+- tareas ls
+- tareas [list|add <comando>|hecha <id>|tick] -
 
 ## DESCRIPCIÓN
 Manuales y automáticas en .mos/data/tareas.json.

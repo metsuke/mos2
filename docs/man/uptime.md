@@ -4,7 +4,13 @@
 uptime – tiempo de actividad del sistema anfitrión
 
 ## SINOPSIS
-uptime
+
+- uptime
+- uptime_seconds = 0
+- uptime_seconds = float(f.readline().split()[0])
+- uptime_seconds = ctypes.windll.kernel32.GetTickCount64() / 1000.0
+- uptime_seconds = time.time() - boot_time
+- uptime_str = get_uptime()
 
 ## DESCRIPCIÓN
 Muestra cuánto tiempo lleva activo el sistema operativo anfitrión, no el tiempo de sesión de MOSh.
@@ -13,7 +19,8 @@ Muestra cuánto tiempo lleva activo el sistema operativo anfitrión, no el tiemp
 Ninguna en esta baseline.
 
 ## EJEMPLOS
-uptime
+
+- uptime
 
 ## SEGURIDAD
 Comando de sistema. Solo lectura de información del host.

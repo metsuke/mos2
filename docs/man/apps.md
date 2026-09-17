@@ -4,11 +4,15 @@
 apps – instala, lista y quita apps locales
 
 ## SINOPSIS
-apps
-apps list
-apps show ID
-apps install RUTA
-apps remove ID
+
+- apps
+- apps [list|show <id>|install <ruta|url> [ref]|remove <id>]
+- apps show
+- apps install
+- apps remove
+- apps list
+- apps ls
+- apps [list|show <id>|install <ruta|url> [ref]|remove <id>] -
 
 ## DESCRIPCIÓN
 Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala.
@@ -19,8 +23,9 @@ Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps d
 Ver help del comando.
 
 ## EJEMPLOS
-apps list
-apps install /ruta/a/mi-app
+
+- apps list
+- apps install /ruta/a/mi-app
 
 ## SEGURIDAD
 Comando de sistema. stdlib + moslib.

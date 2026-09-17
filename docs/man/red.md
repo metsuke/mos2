@@ -4,7 +4,10 @@
 red – inventario lícito de la red del anfitrión
 
 ## SINOPSIS
-red
+
+- red
+- red – inventario de red del anfitrión.
+- red - Muestra red local lícita: hostname, IP, DNS, pasarela y caché ARP.
 
 ## DESCRIPCIÓN
 Muestra lo que el sistema operativo ya conoce de esta máquina:

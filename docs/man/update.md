@@ -4,8 +4,12 @@
 update – actualiza MetsuOS desde origin/main con backup local y tags alineados
 
 ## SINOPSIS
-update
-update reiniciar
+
+- update
+- update reiniciar
+- update [reiniciar]
+- update [reiniciar] - Trae origin/main.
+- update reiniciar relanza el proceso tras el pull
 
 ## DESCRIPCIÓN
 Sincroniza la copia local del producto con origin/main de forma forzada.
@@ -32,8 +36,9 @@ El código nuevo no sustituye los módulos ya cargados en esta sesión de MOSh. 
 reiniciar – relanza MOSh sobre el árbol actual. Si se combina con update (sin haber hecho solo esa palabra), primero hace el pull y después relanza.
 
 ## EJEMPLOS
-update
-update reiniciar
+
+- update
+- update reiniciar
 
 ## SEGURIDAD
 Comando de sistema. Opera sobre el repositorio git del producto. Úsalo solo cuando quieras alinear tu árbol local y tus tags con el remoto.

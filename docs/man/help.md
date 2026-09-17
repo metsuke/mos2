@@ -4,8 +4,9 @@
 help – muestra ayuda corta de comandos
 
 ## SINOPSIS
-help
-help <comando>
+
+- help
+- help [comando]
 
 ## DESCRIPCIÓN
 Sin argumentos, lista comandos disponibles y una ayuda breve.
@@ -18,18 +19,13 @@ La ayuda corta se obtiene de la función help() de cada módulo de comando. Para
 Ninguna. El primer argumento se interpreta como nombre de comando.
 
 ## EJEMPLOS
-help
-help version
-help update
+
+- help
+- help version
+- help update
 
 ## SEGURIDAD
 Comando de sistema.
 
 ## VÉASE TAMBIÉN
 man, version, test
-
-## HELP DEL COMANDO
-Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen.
-
-## HELP DEL COMANDO
-Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen.

@@ -4,8 +4,16 @@
 man – muestra el manual extendido de un comando
 
 ## SINOPSIS
-man
-man <comando>
+
+- man
+- man: no hay páginas de manual
+- man <comando>
+- man: indica un comando
+- man: no existe página de manual para
+- man [comando]
+- man_dir = _system_man_dir()
+- man_dir = app_dir / "man
+- man [comando] - Manual de sistema (docs/man/)
 
 ## DESCRIPCIÓN
 man consulta las páginas de manual almacenadas en docs/man/.
@@ -19,9 +27,10 @@ A diferencia de help, man está pensado para explicación más completa: sinopsi
 Ninguna. El primer argumento se interpreta como nombre de comando.
 
 ## EJEMPLOS
-man
-man update
-man help
+
+- man
+- man update
+- man help
 
 ## SEGURIDAD
 Comando de sistema. Solo lee archivos de documentación del producto.

@@ -4,7 +4,8 @@
 hilos – vista por clase de las tareas
 
 ## SINOPSIS
-hilos
+
+- hilos
 
 ## DESCRIPCIÓN
 Uso: hilos - Lista tareas por clase (texto lineal, vista tele).
@@ -15,7 +16,8 @@ Uso: hilos - Lista tareas por clase (texto lineal, vista tele).
 Ver help del comando.
 
 ## EJEMPLOS
-hilos
+
+- hilos
 
 ## SEGURIDAD
 Comando de sistema. stdlib + moslib.

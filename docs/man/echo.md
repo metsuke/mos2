@@ -4,7 +4,9 @@
 echo – imprime texto en la salida estándar
 
 ## SINOPSIS
-echo [texto...]
+
+- echo
+- echo [texto]
 
 ## DESCRIPCIÓN
 Escribe en pantalla los argumentos recibidos, separados por espacios.
@@ -17,20 +19,12 @@ Uso: echo [texto] - Imprime texto en la salida estándar.
 Ninguna formal en esta baseline.
 
 ## EJEMPLOS
-echo hola
-echo Hola desde MetsuOS
+
+- echo hola
+- echo Hola desde MetsuOS
 
 ## SEGURIDAD
 Comando de sistema. No ejecuta el texto como código.
 
 ## VÉASE TAMBIÉN
 help, man
-
-## HELP DEL COMANDO
-Uso: echo [texto] - Imprime texto en la salida estándar.
-
-## HELP DEL COMANDO
-Uso: echo [texto] - Imprime texto en la salida estándar.
-
-## HELP DEL COMANDO
-Uso: echo [texto] - Imprime texto en la salida estándar.

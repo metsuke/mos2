@@ -4,6 +4,7 @@ Fuente: JSON. generate no ingiere.
 """
 
 from moslib.core import docgen as motor
+from moslib.core import docgen_plan as planes
 from moslib.core import docgen_req as reqs
 
 
@@ -19,6 +20,9 @@ def execute(args):
         return
     if cmd == "area":
         _area(args[1:])
+        return
+    if cmd in ("plan", "planes"):
+        _plan(args[1:])
         return
     if cmd == "ingest":
         _ingest(objetivo)
@@ -49,7 +53,49 @@ def execute(args):
         print(f"[docgen] Backup escrito en {dest}")
         return
     print(f"[docgen] Subcomando no disponible: {cmd}")
-    print("[docgen] generate | req | area | ingest | list | backup")
+    print("[docgen] generate | req | area | plan | ingest | list | backup")
+
+
+def _plan(args):
+    if not args or args[0] == "list":
+        items = planes.list_planes()
+        if not items:
+            print("[docgen] No hay planes en docs/docgen/plans/")
+            print("[docgen] Primera vez: docgen ingest plans")
+            return
+        for item in items:
+            print(
+                f"  {item.get('id'):36} {item.get('estado') or '-'}"
+            )
+        return
+    accion = args[0]
+    try:
+        if accion == "add":
+            if len(args) < 2:
+                print("[docgen] Uso: docgen plan add YYYY-MM-DD-NN-slug.md [estado]")
+                return
+            estado = args[2] if len(args) > 2 else "Diseñada"
+            dest = planes.plan_add(args[1], estado)
+            print(f"[docgen] Plan en {dest}")
+            return
+        if accion == "set":
+            if len(args) < 3:
+                print("[docgen] Uso: docgen plan set <id> estado")
+                return
+            dest = planes.plan_set(args[1], "estado", " ".join(args[2:]))
+            print(f"[docgen] Plan actualizado {dest}")
+            return
+        if accion == "rm":
+            if len(args) < 2:
+                print("[docgen] Uso: docgen plan rm <id>")
+                return
+            dest = planes.plan_rm(args[1])
+            print(f"[docgen] Plan metadato eliminado {dest}")
+            return
+    except Exception as exc:
+        print(f"[docgen] plan: {exc}")
+        return
+    print("[docgen] Uso: docgen plan list|add|set|rm")
 
 
 def _area(args):
@@ -140,6 +186,9 @@ def _mostrar(titulo, paths):
 def _ingest(objetivo):
     print("[docgen] Ingesta: solo primera vez o recuperación.")
     try:
+        if objetivo in ("plans", "plan", "planes"):
+            _mostrar("[docgen] Planes absorbidos:", planes.ingest_planes())
+            return
         if objetivo in ("reqs", "req", "requisitos"):
             _mostrar("[docgen] Requisitos absorbidos:", reqs.ingest_reqs_srs())
             return
@@ -198,6 +247,19 @@ def _listar():
 
 def help():
     return (
-        "Uso: docgen generate ... | docgen req list|add|set|rm | "
-        "docgen area list|add|set|rm | docgen ingest ... (recuperación)."
+        "Uso: docgen generate ... | docgen req ... | docgen area ... | "
+        "docgen plan list|add|set|rm | docgen ingest plans|... "
+        "(ingest solo recuperación)."
     )
+
+def sinopsis():
+    return [
+        "docgen list",
+        "docgen generate man|specs|pages|all|<id>",
+        "docgen req list|add|set|rm",
+        "docgen area list|add|set|rm",
+        "docgen plan list|add|set|rm",
+        "docgen ingest man|specs|pages|reqs|plans|all|<id>",
+        "docgen backup <id>",
+        "docgen backup-list <id>",
+    ]

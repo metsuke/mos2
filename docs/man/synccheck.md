@@ -4,7 +4,11 @@
 synccheck – compara el clone local con origin/main
 
 ## SINOPSIS
-synccheck
+
+- synccheck
+- synccheck Versión:
+- synccheck Version:
+- synccheck - Fetch origin y compara HEAD local con origin/main.
 
 ## DESCRIPCIÓN
 Hace git fetch origin y muestra:
@@ -18,7 +22,8 @@ Hace git fetch origin y muestra:
 No usa APIs de un forge. Solo Git.
 
 ## EJEMPLOS
-synccheck
+
+- synccheck
 
 ## SEGURIDAD
 Comando de sistema. stdlib + moslib. Requiere red para fetch.

@@ -4,8 +4,13 @@
 docs – consulta la documentación del clone desde MOSh
 
 ## SINOPSIS
-docs
-docs <ruta>
+
+- docs
+- docs/:
+- docs <ruta>
+- docs = _docs_root()
+- docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE).
+- docs <ruta> - Muestra un fichero permitido
 
 ## DESCRIPCIÓN
 Sin argumentos, lista:
@@ -29,11 +34,12 @@ Pensado para teclado y lector de terminal.
 Ninguna en esta baseline. La ruta es el resto de la línea.
 
 ## EJEMPLOS
-docs
-docs README.md
-docs A11Y.md
-docs a11y/DECLARACION.md
-docs a11y/informe.md
+
+- docs
+- docs README.md
+- docs A11Y.md
+- docs a11y/DECLARACION.md
+- docs a11y/informe.md
 
 ## SEGURIDAD
 Comando de sistema. Solo stdlib y moslib. Resuelve paths y rechaza lo que salga de docs/ o de la lista blanca de la raíz.

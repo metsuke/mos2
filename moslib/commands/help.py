@@ -201,3 +201,11 @@ def help():
         "Uso: help [comando] - Lista sistema, apps y usuario, "
         "o la ayuda de uno indicando el origen."
     )
+
+
+
+def sinopsis():
+    return [
+        "help",
+        "help [comando]",
+    ]
