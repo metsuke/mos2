@@ -4,15 +4,13 @@
 <h2>NOMBRE</h2>
 <p>docgen – ingesta y regenera la documentación de MetsuOS</p>
 <h2>SINOPSIS</h2>
-<p>docgen list docgen generate man|specs|pages|all|&lt;id&gt; docgen req list|add|set|rm docgen area list|add|set|rm docgen ingest man|specs|pages|reqs|all docgen backup &lt;id&gt; docgen backup-list &lt;id&gt;</p>
+<ul><li>docgen list</li><li>docgen generate man|specs|pages|all|&lt;id&gt;</li><li>docgen req list|add|set|rm</li><li>docgen area list|add|set|rm</li><li>docgen plan list|add|set|rm</li><li>docgen ingest man|specs|pages|reqs|plans|all|&lt;id&gt;</li><li>docgen backup &lt;id&gt;</li><li>docgen backup-list &lt;id&gt;</li></ul>
 <h2>DESCRIPCIÓN</h2>
-<p>La fuente de verdad es JSON en docs/docgen/. generate pinta markdown y HTML en docs/docgen/html/. ingest solo primera vez o recuperación; generate no ingerir. Requisitos: un JSON por id en docs/docgen/reqs/. Áreas: CRUD sobre docs/docgen/areas.json. El SRS se pinta con una tabla por área.</p>
+<p>La fuente de verdad es JSON en docs/docgen/. generate pinta markdown y HTML en docs/docgen/html/. ingest solo primera vez o recuperación; generate no ingerir. Requisitos: un JSON por id en docs/docgen/reqs/. Áreas: CRUD sobre docs/docgen/areas.json. Planes: un JSON por plan en docs/docgen/plans/. El índice de docs/plans/README.md se pinta con generate plans-readme. El SRS se pinta con una tabla por área.</p>
 <h2>EJEMPLOS</h2>
-<p>docgen area list docgen req list docgen req add REQ-CMD-021 texto del requisito docgen generate 02-srs docgen generate man-docgen</p>
+<ul><li>docgen plan list</li><li>docgen plan add 2026-09-14-01-docgen.md En curso</li><li>docgen plan set 2026-09-14-01-docgen Cerrada</li><li>docgen generate plans-readme</li><li>docgen generate man-docgen</li></ul>
 <h2>SEGURIDAD</h2>
 <p>Comando de sistema. Solo stdlib y moslib.</p>
 <h2>VÉASE TAMBIÉN</h2>
 <p>docs, man, help</p>
-<h2>HELP DEL COMANDO</h2>
-<p>Uso: docgen generate ... | docgen req list|add|set|rm | docgen area list|add|set|rm | docgen ingest ... (recuperación).</p>
 </body></html>

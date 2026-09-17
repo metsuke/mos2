@@ -12,7 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "tareas list\ntareas add COMANDO\ntareas hecha ID\ntareas tick"
+      "cuerpo": "(generado desde el código del comando; no editar)",
+      "fuente": "codigo"
     },
     {
       "titulo": "DESCRIPCIÓN",

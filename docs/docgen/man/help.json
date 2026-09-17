@@ -12,7 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "help\nhelp <comando>"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -33,10 +34,6 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "man, version, test"
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: help [comando] - Lista sistema, apps y usuario, o la ayuda de uno indicando el origen."
     }
   ]
 }

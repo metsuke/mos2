@@ -2,7 +2,7 @@
 moslib.core.docgen
 Motor de regeneración de documentos.
 Fuente: JSON en docs/docgen/. generate no ingiere.
-Tras escribir markdown, escribe HTML en docs/docgen/html/.
+Man SINOPSIS: código del comando (docgen_man).
 """
 
 from __future__ import annotations
@@ -106,6 +106,7 @@ def ensure_docgen_dirs() -> None:
     (get_docgen_dir() / "root").mkdir(parents=True, exist_ok=True)
     (get_docgen_dir() / "html").mkdir(parents=True, exist_ok=True)
     (get_docgen_dir() / "reqs").mkdir(parents=True, exist_ok=True)
+    (get_docgen_dir() / "plans").mkdir(parents=True, exist_ok=True)
 
 
 def backup_stamp() -> str:
@@ -235,6 +236,9 @@ def _ultimo_backup_texto(doc_id: str) -> str | None:
 
 
 def _escribir(doc_id: str, nuevo: str, dest: Path) -> Path:
+    from moslib.core.docgen_html import estructurar_listas_de_opciones, escribir_html
+
+    nuevo = estructurar_listas_de_opciones(nuevo)
     anterior = _ultimo_backup_texto(doc_id)
     if anterior is None and dest.is_file():
         anterior = dest.read_text(encoding="utf-8")
@@ -246,7 +250,6 @@ def _escribir(doc_id: str, nuevo: str, dest: Path) -> Path:
         backup_document(doc_id)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(nuevo, encoding="utf-8")
-    from moslib.core.docgen_html import escribir_html
     escribir_html(doc_id, nuevo)
     return dest
 
@@ -283,13 +286,15 @@ def list_man_nombres() -> list[str]:
 
 
 def ingest_man(nombre: str) -> Path:
+    from moslib.core.docgen_man import marcar_sinopsis_en_store
+
     doc_id = f"man-{nombre}"
     origen = _mejor_origen(doc_id, get_project_root() / "docs" / "man" / f"{nombre}.md")
     titulo, preambulo, secciones, cuerpo = _partir_markdown(
         origen.read_text(encoding="utf-8"), nombre
     )
     preambulo = _recuperar_preambulo(doc_id, preambulo)
-    return _guardar_json(
+    dest = _guardar_json(
         man_store_path(nombre),
         {
             "schema": "metsuos-docgen-man-1",
@@ -301,27 +306,24 @@ def ingest_man(nombre: str) -> Path:
             "secciones": secciones,
         },
     )
+    marcar_sinopsis_en_store(nombre)
+    return dest
 
 
 def render_man(nombre: str) -> str:
-    store = man_store_path(nombre)
-    if not store.is_file():
-        raise FileNotFoundError(f"no hay json de {nombre}")
-    extra = json.loads(store.read_text(encoding="utf-8"))
-    if extra.get("cuerpo_completo"):
-        return extra["cuerpo_completo"]
-    bloques = [f"# {extra.get('titulo', nombre)}", ""]
-    if extra.get("preambulo"):
-        bloques.extend([extra["preambulo"], ""])
-    for sec in extra.get("secciones") or []:
-        bloques.extend(
-            [f"## {sec.get('titulo') or 'SECCIÓN'}", sec.get("cuerpo") or "", ""]
-        )
-    bloques.extend(["## HELP DEL COMANDO", scan_command_help(nombre), ""])
-    return "\n".join(bloques)
+    from moslib.core.docgen_man import armar_man, marcar_sinopsis_en_store
 
+    marcar_sinopsis_en_store(nombre)
+    store = man_store_path(nombre)
+    extra = {}
+    if store.is_file():
+        extra = json.loads(store.read_text(encoding="utf-8"))
+    return armar_man(nombre, extra)
 
 def generate_man(nombre: str) -> Path:
+    from moslib.core.docgen_man import marcar_sinopsis_en_store
+
+    marcar_sinopsis_en_store(nombre)
     return _escribir(
         f"man-{nombre}",
         render_man(nombre),
@@ -377,7 +379,6 @@ def ingest_spec(doc_id: str) -> Path:
     )
 
 
-
 def render_spec(doc_id: str) -> str:
     store = spec_store_path(doc_id)
     if not store.is_file():
@@ -422,6 +423,7 @@ def generate_spec_todos() -> list:
         except Exception as exc:
             print(f"[docgen] {doc_id}: {exc}")
     return escritos
+
 
 
 def store_path_doc(doc_id: str) -> Path:
@@ -497,6 +499,13 @@ def generate_doc(doc_id: str) -> Path:
     item = get_documento(doc_id)
     if item is None:
         raise FileNotFoundError(doc_id)
+    if doc_id == "plans-readme":
+        from moslib.core.docgen_plan import render_plans_readme
+        return _escribir(
+            doc_id,
+            render_plans_readme(),
+            get_project_root() / item["rel"],
+        )
     if item["rel"].startswith("docs/specs/"):
         return generate_spec(doc_id)
     if item["id"].startswith("man-"):

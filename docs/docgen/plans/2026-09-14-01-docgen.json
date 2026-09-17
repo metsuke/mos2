@@ -1,0 +1,9 @@
+{
+  "schema": "metsuos-docgen-plan-1",
+  "id": "2026-09-14-01-docgen",
+  "fecha": "2026-09-14",
+  "nn": "01",
+  "slug": "docgen",
+  "archivo": "2026-09-14-01-docgen.md",
+  "estado": "Cerrada en alcance de motor (pendiente pruebas humanas y bump)"
+}

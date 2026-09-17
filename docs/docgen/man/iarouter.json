@@ -12,7 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "iarouter\niarouter status\niarouter detectar\niarouter check [jan|gpt4all|grok|openrouter|share] [twitter] [detalle]\niarouter share\niarouter publicar\niarouter puente [on|off|status]\niarouter usar jan|gpt4all|grok|openrouter\niarouter clave <proveedor> [borrar]\niarouter modelos [proveedor]\niarouter modelo [proveedor] <id del modelo...>\niarouter preguntar TEXTO"
+      "cuerpo": "(generado desde el código del comando; no editar)",
+      "fuente": "codigo"
     },
     {
       "titulo": "DESCRIPCIÓN",

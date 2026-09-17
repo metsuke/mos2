@@ -2,29 +2,29 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "plans-readme",
   "titulo": "Planes de campaña de MetsuOS",
-  "preambulo": "**Versión del documento:** 1.3  \n**Estado:** Normativo de proceso  \n**Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md\n\n---",
+  "preambulo": "**Versión del documento:** 1.4\n**Estado:** Normativo de proceso\n**Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/plans-readme/20260916_033021.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Propósito",
-      "cuerpo": "Cada campaña de trabajo tiene un plan escrito **antes** de implementar (salvo las reconstruidas a posteriori).\n\nSirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si ese día hubo más de una.\n\n---"
+      "cuerpo": "Cada campaña de trabajo tiene un plan escrito **antes** de implementar (salvo las reconstruidas a posteriori).\n\nSirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si ese día hubo más de una.\n\nLa tabla del índice no se edita a mano. Sale de docs/docgen/plans/ (un JSON por plan) con `docgen plan` y `docgen generate plans-readme`."
     },
     {
       "titulo": "Nombre de archivo",
-      "cuerpo": "```text\nYYYY-MM-DD-NN-slug.md\n```\n\n| Pieza | Significado |\n|-------|-------------|\n| YYYY-MM-DD | Día en que se escribió o arrancó el plan |\n| NN | Orden dentro de ese día (01, 02, …). No es un id global |\n| slug | Título corto en humano |\n\nEl número de campañas del proyecto se ve contando ficheros y este índice. No hay contador global en el nombre.\n\n---"
+      "cuerpo": "```text\nYYYY-MM-DD-NN-slug.md\n```\n\n| Pieza | Significado |\n|-------|-------------|\n| YYYY-MM-DD | Día en que se escribió o arrancó el plan |\n| NN | Orden dentro de ese día (01, 02, …). No es un id global |\n| slug | Título corto en humano |\n\nEl número de campañas del proyecto se ve contando ficheros y este índice. No hay contador global en el nombre."
     },
     {
       "titulo": "Índice",
-      "cuerpo": "| Fecha | NN del día | Archivo | Estado |\n|-------|------------|---------|--------|\n| 2026-08-12 | 01 | 2026-08-12-01-espacio-usuario.md | Cerrada |\n| 2026-08-16 | 01 | 2026-08-16-01-tests-seguridad-update.md | Cerrada |\n| 2026-08-20 | 01 | 2026-08-20-01-ecss-man-manual.md | Cerrada |\n| 2026-08-25 | 01 | 2026-08-25-01-entornos-onboarding-versionado.md | Cerrada |\n| 2026-08-28 | 01 | 2026-08-28-01-higiene-a11y-cierre.md | Diseñada |\n| 2026-09-13 | 01 | 2026-09-13-01-iarouter-check-scopes.md | En curso |\n| 2026-09-13 | 02 | 2026-09-13-02-sync-docs-028.md | Cerrada |\n| 2026-09-14 | 01 | 2026-09-14-01-docgen.md | En curso |\n\n\nFechas de las cerradas: aproximadas al trabajo real; cada plan lo indica si es reconstrucción.\n\nEste índice no lista todos los ficheros de `docs/plans/` (hay planes de septiembre previos al 13). Completarlo es deuda aparte; no forma parte de este paso.\n\n---"
+      "cuerpo": "(se pinta al generate desde docs/docgen/plans/)"
     },
     {
       "titulo": "Ciclo",
-      "cuerpo": "1. Diseñar la campaña en el chat.\n2. Crear el plan en esta carpeta **antes** del primer cambio de código.\n3. Ejecutar por bloques/pasos (un archivo o paso cada vez).\n4. Si el plan cambia, actualizar el fichero.\n5. Al cerrar: estado, tags, bump Poetry sí/no.\n\n---"
+      "cuerpo": "1. Diseñar la campaña en el chat.\n2. Crear el plan en esta carpeta **antes** del primer cambio de código.\n3. Registrar metadato: `docgen plan add YYYY-MM-DD-NN-slug.md`.\n4. Ejecutar por bloques/pasos.\n5. Cambiar estado: `docgen plan set <id> Cerrada` y `docgen generate plans-readme`.\n6. Si el plan cambia, actualizar el fichero del plan y regenerar el índice."
     },
     {
       "titulo": "Contenido mínimo de un plan",
-      "cuerpo": "- Fecha y NN del día\n- Objetivo y fuera de alcance\n- Estado\n- Producto al inicio y al cierre\n- Bloques y pasos\n- Tags\n- Cierres de grupo (interacción + deuda) si aplica\n- Nota si es reconstrucción\n\n---"
+      "cuerpo": "- Fecha y NN del día\n- Objetivo y fuera de alcance\n- Estado\n- Producto al inicio y al cierre\n- Bloques y pasos\n- Tags\n- Cierres de grupo (interacción + deuda) si aplica\n- Nota si es reconstrucción"
     },
     {
       "titulo": "Autoridad",

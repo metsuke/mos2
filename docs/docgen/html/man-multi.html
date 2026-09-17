@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>man-multi</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>multi</h1>
+<h2>NOMBRE</h2>
+<p>multi – pega un lote de comandos y luego los ejecuta</p>
+<h2>SINOPSIS</h2>
+<ul><li>multi</li><li>m</li></ul>
+<h2>DESCRIPCIÓN</h2>
+<p>Entra en un prompt multi&gt;. Ahí se pegan o escriben comandos, uno por línea. No se ejecutan al pegar. :e o :w lanza el lote en orden. :q cancela sin ejecutar. El alias m hace lo mismo. No se puede anidar multi dentro del lote. Las rutas de touch, code y git siguen siendo la raíz del clone.</p>
+<h2>SEGURIDAD</h2>
+<p>Cada línea del lote pasa por el mismo CommandManager que el prompt normal. Mismos imports y política SEC. Comando de sistema. Solo stdlib y moslib.</p>
+<h2>VÉASE TAMBIÉN</h2>
+<p>m, touch, code, git, help</p>
+</body></html>

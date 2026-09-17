@@ -12,15 +12,16 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "docgen list\ndocgen generate man|specs|pages|all|<id>\ndocgen req list|add|set|rm\ndocgen area list|add|set|rm\ndocgen ingest man|specs|pages|reqs|all\ndocgen backup <id>\ndocgen backup-list <id>"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
-      "cuerpo": "La fuente de verdad es JSON en docs/docgen/.\ngenerate pinta markdown y HTML en docs/docgen/html/.\ningest solo primera vez o recuperación; generate no ingerir.\nRequisitos: un JSON por id en docs/docgen/reqs/.\nÁreas: CRUD sobre docs/docgen/areas.json.\nEl SRS se pinta con una tabla por área."
+      "cuerpo": "La fuente de verdad es JSON en docs/docgen/.\ngenerate pinta markdown y HTML en docs/docgen/html/.\ningest solo primera vez o recuperación; generate no ingerir.\nRequisitos: un JSON por id en docs/docgen/reqs/.\nÁreas: CRUD sobre docs/docgen/areas.json.\nPlanes: un JSON por plan en docs/docgen/plans/. El índice de docs/plans/README.md se pinta con generate plans-readme.\nEl SRS se pinta con una tabla por área."
     },
     {
       "titulo": "EJEMPLOS",
-      "cuerpo": "docgen area list\ndocgen req list\ndocgen req add REQ-CMD-021 texto del requisito\ndocgen generate 02-srs\ndocgen generate man-docgen"
+      "cuerpo": "- docgen plan list\n- docgen plan add 2026-09-14-01-docgen.md En curso\n- docgen plan set 2026-09-14-01-docgen Cerrada\n- docgen generate plans-readme\n- docgen generate man-docgen"
     },
     {
       "titulo": "SEGURIDAD",

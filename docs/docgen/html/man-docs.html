@@ -4,7 +4,7 @@
 <h2>NOMBRE</h2>
 <p>docs – consulta la documentación del clone desde MOSh</p>
 <h2>SINOPSIS</h2>
-<p>docs docs &lt;ruta&gt;</p>
+<ul><li>docs</li><li>docs/:</li><li>docs &lt;ruta&gt;</li><li>docs = _docs_root()</li><li>docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE).</li><li>docs &lt;ruta&gt; - Muestra un fichero permitido</li></ul>
 <h2>DESCRIPCIÓN</h2>
 <p>Sin argumentos, lista:</p>
 <ul><li>ficheros públicos de la raíz: README.md, CHANGELOG.md, AGENTS.md, LICENSE</li><li>todos los ficheros bajo docs/</li></ul>
@@ -16,7 +16,7 @@
 <h2>OPCIONES</h2>
 <p>Ninguna en esta baseline. La ruta es el resto de la línea.</p>
 <h2>EJEMPLOS</h2>
-<p>docs docs README.md docs A11Y.md docs a11y/DECLARACION.md docs a11y/informe.md</p>
+<ul><li>docs</li><li>docs README.md</li><li>docs A11Y.md</li><li>docs a11y/DECLARACION.md</li><li>docs a11y/informe.md</li></ul>
 <h2>SEGURIDAD</h2>
 <p>Comando de sistema. Solo stdlib y moslib. Resuelve paths y rechaza lo que salga de docs/ o de la lista blanca de la raíz.</p>
 <h2>VÉASE TAMBIÉN</h2>

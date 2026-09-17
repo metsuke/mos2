@@ -1,7 +1,6 @@
 """
 moslib.core.docgen_html
-HTML de lectura ágil a partir del markdown recién generado.
-Solo stdlib.
+HTML de lectura ágil y listas automáticas en SINOPSIS/EJEMPLOS/USO.
 """
 
 from __future__ import annotations
@@ -11,6 +10,15 @@ import re
 from pathlib import Path
 
 from moslib.core import docgen as motor
+
+SECCIONES_LISTA = {
+    "sinopsis",
+    "synopsis",
+    "ejemplos",
+    "examples",
+    "uso",
+    "comandos",
+}
 
 
 def html_dir() -> Path:
@@ -23,6 +31,50 @@ def html_path_for(doc_id: str) -> Path:
     return html_dir() / f"{doc_id}.html"
 
 
+def _clave_seccion(titulo: str) -> str:
+    raw = titulo.strip().lower()
+    return (
+        raw.replace("ó", "o")
+        .replace("í", "i")
+        .replace("á", "a")
+        .replace("é", "e")
+        .replace("ú", "u")
+    )
+
+
+def estructurar_listas_de_opciones(md: str) -> str:
+    lineas = md.splitlines()
+    out = []
+    i = 0
+    while i < len(lineas):
+        linea = lineas[i]
+        if linea.startswith("## "):
+            out.append(linea)
+            clave = _clave_seccion(linea[3:])
+            i += 1
+            bloque = []
+            while i < len(lineas) and not lineas[i].startswith("#"):
+                bloque.append(lineas[i])
+                i += 1
+            if clave in SECCIONES_LISTA:
+                out.append("")
+                for fila in bloque:
+                    texto = fila.strip()
+                    if not texto or texto == "---":
+                        continue
+                    if texto.startswith("- ") or texto.startswith("* "):
+                        out.append(texto)
+                    else:
+                        out.append("- " + texto)
+                out.append("")
+            else:
+                out.extend(bloque)
+            continue
+        out.append(linea)
+        i += 1
+    return "\n".join(out)
+
+
 def _inline(texto: str) -> str:
     texto = html.escape(texto)
     texto = re.sub(r"`([^`]+)`", r"<code>\1</code>", texto)
@@ -32,6 +84,7 @@ def _inline(texto: str) -> str:
 
 
 def markdown_a_html(md: str, titulo: str) -> str:
+    md = estructurar_listas_de_opciones(md)
     lineas = md.splitlines()
     cuerpo = []
     i = 0
@@ -98,7 +151,14 @@ def markdown_a_html(md: str, titulo: str) -> str:
             continue
         par = [linea]
         i += 1
-        while i < len(lineas) and lineas[i].strip() and not lineas[i].startswith("#") and not lineas[i].strip().startswith("|") and not lineas[i].startswith("```"):
+        while (
+            i < len(lineas)
+            and lineas[i].strip()
+            and not lineas[i].startswith("#")
+            and not lineas[i].strip().startswith("|")
+            and not lineas[i].startswith("```")
+            and not lineas[i].startswith("- ")
+        ):
             par.append(lineas[i])
             i += 1
         cuerpo.append("<p>" + _inline(" ".join(par)) + "</p>")

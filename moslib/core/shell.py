@@ -30,6 +30,16 @@ from moslib.core.user import (
 )
 
 
+def _mostrar_tope(texto: str) -> None:
+    lineas = [l for l in (texto or "").splitlines() if l.startswith("[tope]")]
+    if not lineas:
+        return
+    print()
+    for linea in lineas:
+        print(linea)
+    print()
+
+
 class MOSh:
     def __init__(self):
         self.username = get_username()
@@ -48,11 +58,12 @@ class MOSh:
     def _run_startup_tests(self) -> bool:
         print("[MetsuOS] Ejecutando tests de arranque (unitarios + seguridad)...")
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", "-q", "--tb=line"],
+            [sys.executable, "-m", "pytest", "-q", "--tb=line", "-s"],
             cwd=str(project_root),
             capture_output=True,
             text=True,
         )
+        _mostrar_tope((result.stdout or "") + "\n" + (result.stderr or ""))
         if result.returncode == 0:
             print("[MetsuOS] Tests de arranque: OK\n")
             return True
@@ -86,7 +97,7 @@ class MOSh:
         print(f"Usuario: {self.username}")
         print(f"Entorno: {self.env_tag} ({descripcion(self.env_tag)})")
         print(f"Espacio personal: {self.mos_dir}")
-        print("Historial: flechas arriba/abajo. Pegado multilínea activo.")
+        print("Historial: flechas. Lote: multi o m.")
         print("Usa 'exit' para salir, 'help', 'docs', 'a11y'")
         print()
         try:

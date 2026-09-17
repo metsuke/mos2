@@ -12,7 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "echo [texto...]"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -33,14 +34,6 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "help, man"
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: echo [texto] - Imprime texto en la salida estándar."
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: echo [texto] - Imprime texto en la salida estándar."
     }
   ]
 }
