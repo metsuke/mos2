@@ -1,4 +1,4 @@
-"""Humo de docgen, requisitos y HTML."""
+"""Humo de docgen, requisitos, áreas y HTML."""
 
 from moslib.commands import docgen as cmd
 from moslib.core import docgen as motor
@@ -23,10 +23,11 @@ def test_id_desconocido():
     assert motor.get_documento("no-existe") is None
 
 
-def test_comando_help_no_vacio():
+def test_comando_help_incluye_req_y_area():
     texto = cmd.help()
     assert "docgen" in texto
-    assert "ingest" in texto
+    assert "req" in texto
+    assert "area" in texto
 
 
 def test_comando_list_no_lanza():
@@ -71,3 +72,14 @@ def test_markdown_a_html_titulos_y_tabla():
 def test_tablas_por_area_no_lanza():
     texto = reqs.tablas_por_area()
     assert isinstance(texto, str)
+
+
+def test_parse_req_id():
+    ident, area = reqs.parse_req_id("REQ-CMD-021")
+    assert ident == "REQ-CMD-021"
+    assert area == "CMD"
+
+
+def test_list_areas_es_lista():
+    items = reqs.list_areas()
+    assert isinstance(items, list)
