@@ -13,7 +13,13 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from moslib.core.cmd_loader import CommandManager
-from moslib.core.entorno import descripcion, etiqueta
+from moslib.core.entorno import (
+    debe_bloquear_locale,
+    descripcion,
+    etiqueta,
+    mensaje_locale_bloqueado,
+    pide_simular_bloqueo,
+)
 from moslib.core.tasks import start_worker, stop_worker
 from moslib.core.user import (
     get_username,
@@ -72,7 +78,11 @@ class MOSh:
         print("Documentación: docs TEST.md vía 'docs specs/06-TEST-Verification-and-Validation.md'")
         return False
 
-    def run(self):
+    def run(self, argv=None):
+        if debe_bloquear_locale(argv):
+            print(mensaje_locale_bloqueado(prueba=pide_simular_bloqueo(argv)))
+            sys.exit(1)
+
         if not self._run_startup_tests():
             sys.exit(1)
 

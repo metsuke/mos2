@@ -9,4 +9,4 @@ from moslib.core.shell import MOSh
 
 if __name__ == "__main__":
     shell = MOSh()
-    shell.run()
+    shell.run(sys.argv[1:])
