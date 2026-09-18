@@ -1,9 +1,10 @@
-"""Lote de líneas: pegar primero, ejecutar con :e, cancelar con :q."""
+"""Lote: pegar, :e ejecuta, :q cancela. write consume hasta el punto."""
 
 import shlex
 from pathlib import Path
 
 from moslib.core.cmd_loader import CommandManager
+from moslib.core import write_b64
 from moslib.core.user import (
     get_user_apps_dir,
     get_system_apps_dir,
@@ -39,11 +40,8 @@ def execute(args):
     while True:
         try:
             bruto = input("multi> ")
-        except EOFError:
+        except (EOFError, KeyboardInterrupt):
             print("[multi] Cancelado.")
-            return
-        except KeyboardInterrupt:
-            print("\n[multi] Cancelado.")
             return
         for line in _partir(bruto):
             if line in (":q", ":Q"):
@@ -61,29 +59,53 @@ def _lanzar(lote: list[str]) -> None:
         print("[multi] Lote vacío.")
         return
     mgr = _manager()
-    print(f"[multi] Ejecutando {len(lote)} línea(s).")
-    for line in lote:
+    print(f"[multi] Ejecutando lote ({len(lote)} línea(s)).")
+    i = 0
+    while i < len(lote):
+        line = lote[i]
         try:
             parts = shlex.split(line, posix=True)
         except ValueError as exc:
             print(f"[multi] comillas rotas: {exc}")
+            i += 1
             continue
         if not parts:
+            i += 1
             continue
         nombre, args = parts[0], parts[1:]
         print(f"mosh$ {line}")
         if nombre in ("multi", "m"):
             print("[multi] ignorado (no anidar).")
+            i += 1
+            continue
+        if nombre in ("write", "w"):
+            payload = []
+            i += 1
+            while i < len(lote) and lote[i].strip() != ".":
+                payload.append(lote[i])
+                i += 1
+            if i < len(lote) and lote[i].strip() == ".":
+                i += 1
+            write_b64.PERMISO_MULTI = True
+            try:
+                mod = mgr.get_command(nombre)
+                if mod and hasattr(mod, "execute"):
+                    mod.execute(args, payload)
+                else:
+                    print("mosh: write no encontrado")
+            finally:
+                write_b64.PERMISO_MULTI = False
             continue
         mod = mgr.get_command(nombre)
         if mod and hasattr(mod, "execute"):
             mod.execute(args)
         else:
             print(f"mosh: comando no encontrado: {nombre}")
+        i += 1
 
 
 def help():
-    return "Uso: multi (o m) - Entra en lote. Pega líneas, :e ejecuta, :q cancela."
+    return "Uso: multi (o m) - Lote. :e ejecuta, :q cancela. write lee hasta ."
 
 
 def sinopsis():

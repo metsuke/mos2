@@ -1,4 +1,4 @@
-"""Tests de arranque: barra, x/y, %, nombre, hasta 7 hilos."""
+"""Tests de arranque: integridad, barra, x/y, %, nombre, hasta 7 hilos."""
 
 from __future__ import annotations
 
@@ -6,6 +6,8 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+
+from moslib.core.integridad import cargar_local, copiar_repo_a_local, fallos, repo_path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 HILOS = 7
@@ -46,25 +48,37 @@ def _pinta(hecho: int, total: int, nombre: str) -> None:
     print(f"\r[tests] {barra} {xy} {pct:3d}% {corto:<48}", end="", flush=True)
 
 
+def _integridad() -> bool:
+    if not repo_path().is_file() and not cargar_local():
+        print("[integridad] sin manifiesto; ejecuta: integridad sembrar")
+        return True
+    if not cargar_local() and repo_path().is_file():
+        copiar_repo_a_local()
+    problemas = fallos("local")
+    if not problemas:
+        print("[integridad] OK")
+        return True
+    print("[integridad] FALLÓ. El sistema no arranca.")
+    for linea in problemas[:30]:
+        print(f"  {linea}")
+    print("[integridad] write en multi, o: integridad aceptar <ruta> / recargar")
+    return False
+
+
 def run_startup_tests() -> tuple[bool, str]:
+    if not _integridad():
+        return False, ""
     workers = _xdist()
-    modo = f"{HILOS} hilos" if workers else "1 hilo (instala pytest-xdist para 7)"
+    modo = f"{HILOS} hilos" if workers else "1 hilo (pytest-xdist)"
     print(f"[MetsuOS] Tests de arranque ({modo})...")
     total = _contar_tests()
     cmd = [sys.executable, "-m", "pytest", "-v", "--tb=line", "-s"]
     if workers:
         cmd.extend(["-n", str(HILOS), "--dist", "load"])
     proc = subprocess.Popen(
-        cmd,
-        cwd=str(ROOT),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        bufsize=1,
+        cmd, cwd=str(ROOT), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1
     )
-    buf = []
-    hecho = 0
-    actual = "recogiendo…"
+    buf, hecho, actual = [], 0, "recogiendo…"
     _pinta(0, total, actual)
     assert proc.stdout is not None
     for raw in proc.stdout:
@@ -88,5 +102,4 @@ def run_startup_tests() -> tuple[bool, str]:
         return True, texto
     print("[MetsuOS] Error: fallo en los tests de arranque.")
     print(texto)
-    print("El sistema no arrancará hasta que todos los tests pasen.")
     return False, texto

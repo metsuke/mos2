@@ -13,9 +13,28 @@ from moslib.core.docgen_index import (
     resolve_path,
 )
 
+MAX_BACKUPS = 8
+
 
 def backup_stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
+
+def list_backups(doc_id: str) -> list[Path]:
+    folder = get_backup_dir() / doc_id
+    if not folder.is_dir():
+        return []
+    return sorted(p for p in folder.iterdir() if p.is_file())
+
+
+def podar_backups(doc_id: str, keep: int = MAX_BACKUPS) -> None:
+    files = list_backups(doc_id)
+    extra = files[:-keep] if keep else files
+    for path in extra:
+        try:
+            path.unlink()
+        except OSError:
+            pass
 
 
 def backup_document(doc_id: str) -> Path | None:
@@ -27,14 +46,8 @@ def backup_document(doc_id: str) -> Path | None:
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / f"{backup_stamp()}{src.suffix or '.md'}"
     shutil.copy2(src, dest)
+    podar_backups(doc_id)
     return dest
-
-
-def list_backups(doc_id: str) -> list[Path]:
-    folder = get_backup_dir() / doc_id
-    if not folder.is_dir():
-        return []
-    return sorted(p for p in folder.iterdir() if p.is_file())
 
 
 def mejor_origen(doc_id: str, fallback: Path | None) -> Path:

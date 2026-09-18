@@ -118,6 +118,9 @@ def execute(args):
         _prune_old_backups(cwd, keep=10)
         print()
         print("[update] Actualización completada.")
+        from moslib.core.integridad import copiar_repo_a_local
+        dest = copiar_repo_a_local()
+        print(f"[update] integridad local ← repo  {dest}")
         print("[update] El árbol main y los tags locales coinciden con origin.")
         _avisar_reinicio()
 

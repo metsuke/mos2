@@ -1,0 +1,1 @@
+from moslib.commands.write import execute, help, sinopsis
