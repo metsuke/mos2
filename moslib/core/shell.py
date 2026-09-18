@@ -3,8 +3,8 @@ moslib.core.shell
 Shell principal de MetsuOS (MOSh)
 """
 
+import shlex
 import sys
-import subprocess
 from pathlib import Path
 
 current_dir = Path(__file__).resolve().parent
@@ -20,6 +20,7 @@ from moslib.core.entorno import (
     mensaje_locale_bloqueado,
     pide_simular_bloqueo,
 )
+from moslib.core.shell_boot import run_startup_tests
 from moslib.core.shell_hist import cargar_historial
 from moslib.core.tasks import start_worker, stop_worker
 from moslib.core.user import (
@@ -28,16 +29,6 @@ from moslib.core.user import (
     get_user_apps_dir,
     get_system_apps_dir,
 )
-
-
-def _mostrar_tope(texto: str) -> None:
-    lineas = [l for l in (texto or "").splitlines() if l.startswith("[tope]")]
-    if not lineas:
-        return
-    print()
-    for linea in lineas:
-        print(linea)
-    print()
 
 
 class MOSh:
@@ -55,26 +46,14 @@ class MOSh:
         self.running = True
         self.prompt = f"mosh/{self.env_tag}/{self.username}@metsuos:~$ "
 
-    def _run_startup_tests(self) -> bool:
-        print("[MetsuOS] Ejecutando tests de arranque (unitarios + seguridad)...")
-        result = subprocess.run(
-            [sys.executable, "-m", "pytest", "-q", "--tb=line", "-s"],
-            cwd=str(project_root),
-            capture_output=True,
-            text=True,
-        )
-        _mostrar_tope((result.stdout or "") + "\n" + (result.stderr or ""))
-        if result.returncode == 0:
-            print("[MetsuOS] Tests de arranque: OK\n")
-            return True
-        print("[MetsuOS] Error: fallo en los tests de arranque.")
-        print(result.stdout or "")
-        print(result.stderr or "")
-        print("El sistema no arrancará hasta que todos los tests pasen.")
-        return False
-
     def _una_linea(self, line: str) -> None:
-        parts = line.split()
+        try:
+            parts = shlex.split(line, posix=True)
+        except ValueError as exc:
+            print(f"mosh: comillas rotas: {exc}")
+            return
+        if not parts:
+            return
         cmd_name, args = parts[0], parts[1:]
         if cmd_name == "exit":
             self.running = False
@@ -89,7 +68,8 @@ class MOSh:
         if debe_bloquear_locale(argv):
             print(mensaje_locale_bloqueado(prueba=pide_simular_bloqueo(argv)))
             sys.exit(1)
-        if not self._run_startup_tests():
+        ok, _txt = run_startup_tests()
+        if not ok:
             sys.exit(1)
         cargar_historial(self.mos_dir)
         start_worker(30.0)

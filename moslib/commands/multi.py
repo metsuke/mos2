@@ -1,5 +1,6 @@
 """Lote de líneas: pegar primero, ejecutar con :e, cancelar con :q."""
 
+import shlex
 from pathlib import Path
 
 from moslib.core.cmd_loader import CommandManager
@@ -62,7 +63,13 @@ def _lanzar(lote: list[str]) -> None:
     mgr = _manager()
     print(f"[multi] Ejecutando {len(lote)} línea(s).")
     for line in lote:
-        parts = line.split()
+        try:
+            parts = shlex.split(line, posix=True)
+        except ValueError as exc:
+            print(f"[multi] comillas rotas: {exc}")
+            continue
+        if not parts:
+            continue
         nombre, args = parts[0], parts[1:]
         print(f"mosh$ {line}")
         if nombre in ("multi", "m"):
@@ -76,9 +83,7 @@ def _lanzar(lote: list[str]) -> None:
 
 
 def help():
-    return (
-        "Uso: multi (o m) - Entra en lote. Pega líneas, :e ejecuta, :q cancela."
-    )
+    return "Uso: multi (o m) - Entra en lote. Pega líneas, :e ejecuta, :q cancela."
 
 
 def sinopsis():
