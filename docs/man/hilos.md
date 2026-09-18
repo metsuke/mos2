@@ -24,9 +24,3 @@ Comando de sistema. stdlib + moslib.
 
 ## VÉASE TAMBIÉN
 help, man
-
-## HELP DEL COMANDO
-Uso: hilos - Lista tareas por clase (texto lineal, vista tele).
-
-## HELP DEL COMANDO
-Uso: hilos - Lista tareas por clase (texto lineal, vista tele).

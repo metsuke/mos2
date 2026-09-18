@@ -144,29 +144,23 @@ El script `install.sh`:
 ---
 
 ## Uso
-```text
-./mos2.sh
-```
 
-o, si tienes el alias:
-
-```text
-mos2
-```
-
-Se abrirá el shell:
-
-```text
-Iniciando MOSh para MetsuOS...
-Usuario: tu_usuario_real
-Espacio personal: .../rootfs/home/tu_usuario_real/.mos
-Worker de tareas: activo mientras dure esta sesión.
-Usa 'exit' para salir, 'help' para ayuda
-
-mosh/tu_usuario_real@metsuos:~$
-```
-
----
+- ```text
+- ./mos2.sh
+- ```
+- o, si tienes el alias:
+- ```text
+- mos2
+- ```
+- Se abrirá el shell:
+- ```text
+- Iniciando MOSh para MetsuOS...
+- Usuario: tu_usuario_real
+- Espacio personal: .../rootfs/home/tu_usuario_real/.mos
+- Worker de tareas: activo mientras dure esta sesión.
+- Usa 'exit' para salir, 'help' para ayuda
+- mosh/tu_usuario_real@metsuos:~$
+- ```
 
 ## Comandos del sistema
 | Tipo | Comando | Descripción |

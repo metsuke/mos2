@@ -6,7 +6,6 @@ clear – limpia la pantalla del terminal
 ## SINOPSIS
 
 - clear
-- clear nt
 
 ## DESCRIPCIÓN
 Borra el contenido visible de la terminal y deja el cursor arriba del todo.
@@ -25,9 +24,3 @@ Comando de sistema. No realiza imports fuera de la política de MetsuOS.
 
 ## VÉASE TAMBIÉN
 help, man
-
-## HELP DEL COMANDO
-Uso: clear - Limpia la pantalla de la terminal.
-
-## HELP DEL COMANDO
-Uso: clear - Limpia la pantalla de la terminal.

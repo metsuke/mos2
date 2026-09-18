@@ -6,11 +6,6 @@ docs – consulta la documentación del clone desde MOSh
 ## SINOPSIS
 
 - docs
-- docs/:
-- docs <ruta>
-- docs = _docs_root()
-- docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE).
-- docs <ruta> - Muestra un fichero permitido
 
 ## DESCRIPCIÓN
 Sin argumentos, lista:
@@ -46,9 +41,3 @@ Comando de sistema. Solo stdlib y moslib. Resuelve paths y rechaza lo que salga 
 
 ## VÉASE TAMBIÉN
 a11y, man, help
-
-## HELP DEL COMANDO
-Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs <ruta> - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)
-
-## HELP DEL COMANDO
-Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs <ruta> - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)

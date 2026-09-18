@@ -112,6 +112,7 @@ fi
 echo "Poetry resuelto como: $POETRY_CMD"
 
 eval "$POETRY_CMD config virtualenvs.in-project true"
+eval "$POETRY_CMD lock"
 eval "$POETRY_CMD install"
 
 ALIAS_NAMES=(

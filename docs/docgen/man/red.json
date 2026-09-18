@@ -12,8 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "(generado desde el código del comando; no editar)",
-      "fuente": "codigo"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -26,10 +26,6 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "iarouter, sysinfo"
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: red - Muestra red local lícita: hostname, IP, DNS, pasarela y caché ARP. No barre la LAN."
     }
   ]
 }

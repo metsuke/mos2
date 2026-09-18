@@ -6,14 +6,6 @@ man – muestra el manual extendido de un comando
 ## SINOPSIS
 
 - man
-- man: no hay páginas de manual
-- man <comando>
-- man: indica un comando
-- man: no existe página de manual para
-- man [comando]
-- man_dir = _system_man_dir()
-- man_dir = app_dir / "man
-- man [comando] - Manual de sistema (docs/man/)
 
 ## DESCRIPCIÓN
 man consulta las páginas de manual almacenadas en docs/man/.
@@ -37,9 +29,3 @@ Comando de sistema. Solo lee archivos de documentación del producto.
 
 ## VÉASE TAMBIÉN
 help, docs/USER_MANUAL.md
-
-## HELP DEL COMANDO
-Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/).
-
-## HELP DEL COMANDO
-Uso: man [comando] - Manual de sistema (docs/man/) o de app (<app>/man/).

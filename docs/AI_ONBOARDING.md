@@ -1,6 +1,6 @@
 # Onboarding para agentes IA (MetsuOS)
 
-**Versión del documento:** 1.5
+**Versión del documento:** 1.6
 **Estado:** Normativo de proceso
 **Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md
 

@@ -12,8 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "(generado desde el código del comando; no editar)",
-      "fuente": "codigo"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -22,10 +22,6 @@
     {
       "titulo": "SEGURIDAD",
       "cuerpo": "Comando de sistema. stdlib + moslib."
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: tareas [list|add <comando>|hecha <id>|tick] - Tareas locales. bloqueada_a11y_sec no se ejecuta."
     }
   ]
 }

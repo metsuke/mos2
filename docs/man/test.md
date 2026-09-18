@@ -7,7 +7,6 @@ test – ejecuta la batería de tests de MetsuOS
 
 - test
 - test [args...]
-- test [args...] - Ejecuta la batería de tests unitarios y de seguridad (pytest).
 
 ## DESCRIPCIÓN
 Lanza pytest sobre el proyecto.
@@ -30,9 +29,3 @@ Comando de sistema. No reduce la política de seguridad; la verifica.
 
 ## VÉASE TAMBIÉN
 update, help, man
-
-## HELP DEL COMANDO
-Uso: test [args...] - Ejecuta la batería de tests unitarios y de seguridad (pytest). Regenera también docs/a11y/informe.md e informe.json.
-
-## HELP DEL COMANDO
-Uso: test [args...] - Ejecuta la batería de tests unitarios y de seguridad (pytest). Regenera también docs/a11y/informe.md e informe.json.

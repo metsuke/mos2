@@ -12,8 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "(generado desde el código del comando; no editar)",
-      "fuente": "codigo"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -34,10 +34,6 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "uptime, version, help"
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: sysinfo - Muestra hardware, memoria y estado de la CPU sin requerir privilegios de administrador."
     }
   ]
 }

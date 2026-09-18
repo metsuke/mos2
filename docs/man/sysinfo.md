@@ -24,9 +24,3 @@ Comando de sistema. Solo consulta información; no modifica el host.
 
 ## VÉASE TAMBIÉN
 uptime, version, help
-
-## HELP DEL COMANDO
-Uso: sysinfo - Muestra hardware, memoria y estado de la CPU sin requerir privilegios de administrador.
-
-## HELP DEL COMANDO
-Uso: sysinfo - Muestra hardware, memoria y estado de la CPU sin requerir privilegios de administrador.

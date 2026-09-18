@@ -12,8 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "(generado desde el código del comando; no editar)",
-      "fuente": "codigo"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -34,10 +34,6 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "sysinfo, version, help"
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: uptime - Muestra el tiempo que lleva encendido el sistema operativo anfitrión."
     }
   ]
 }

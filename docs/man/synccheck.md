@@ -6,9 +6,6 @@ synccheck – compara el clone local con origin/main
 ## SINOPSIS
 
 - synccheck
-- synccheck Versión:
-- synccheck Version:
-- synccheck - Fetch origin y compara HEAD local con origin/main.
 
 ## DESCRIPCIÓN
 Hace git fetch origin y muestra:
@@ -30,9 +27,3 @@ Comando de sistema. stdlib + moslib. Requiere red para fetch.
 
 ## VÉASE TAMBIÉN
 update, version
-
-## HELP DEL COMANDO
-Uso: synccheck - Fetch origin y compara HEAD local con origin/main. Muestra SHAs, si coinciden, versión Poetry/README en origin/main y la URL raw por SHA.
-
-## HELP DEL COMANDO
-Uso: synccheck - Fetch origin y compara HEAD local con origin/main. Muestra SHAs, si coinciden, versión Poetry/README en origin/main y la URL raw por SHA.

@@ -12,8 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "(generado desde el código del comando; no editar)",
-      "fuente": "codigo"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -30,10 +30,6 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "update, version"
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: synccheck - Fetch origin y compara HEAD local con origin/main. Muestra SHAs, si coinciden, versión Poetry/README en origin/main y la URL raw por SHA."
     }
   ]
 }

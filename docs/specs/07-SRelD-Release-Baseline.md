@@ -1,6 +1,6 @@
 # 07 – SRelD · Baseline de release
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.3  
 **Baseline descrita:** v0.2.1 (congelada) + producto actual v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo de referencia  
 **Documentos relacionados:** docs/specs/00-OVERVIEW.md, docs/specs/01-SSS-System-Specification.md, docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, CHANGELOG.md

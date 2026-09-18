@@ -12,8 +12,8 @@
     },
     {
       "titulo": "SINOPSIS",
-      "cuerpo": "(generado desde el código del comando; no editar)",
-      "fuente": "codigo"
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
     },
     {
       "titulo": "DESCRIPCIÓN",
@@ -34,10 +34,6 @@
     {
       "titulo": "VÉASE TAMBIÉN",
       "cuerpo": "a11y, man, help"
-    },
-    {
-      "titulo": "HELP DEL COMANDO",
-      "cuerpo": "Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). Uso: docs <ruta> - Muestra un fichero permitido (ejemplo: docs README.md, docs A11Y.md)"
     }
   ]
 }

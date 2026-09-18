@@ -4,7 +4,7 @@
 <h2>NOMBRE</h2>
 <p>iarouter – enrutador de modelos (local y remoto)</p>
 <h2>SINOPSIS</h2>
-<ul><li>iarouter</li><li>iarouter modelo [proveedor] &lt;id del modelo...&gt;</li><li>iarouter status</li><li>iarouter detectar</li><li>iarouter check</li><li>iarouter check detalle</li><li>iarouter check jan|gpt4all|grok|openrouter|share</li><li>iarouter check grok twitter</li><li>iarouter check grok twitter detalle</li><li>iarouter share</li><li>iarouter publicar</li><li>iarouter puente [on|off|status]</li><li>iarouter usar jan|gpt4all|grok|openrouter</li><li>iarouter clave &lt;proveedor&gt; [borrar]</li><li>iarouter modelos [proveedor]</li><li>iarouter preguntar TEXTO</li><li>iarouter puente</li><li>iarouter detect</li><li>iarouter all</li><li>iarouter modelos</li><li>iarouter models</li><li>iarouter modelo</li><li>iarouter model</li><li>iarouter jan</li><li>iarouter gpt4all</li><li>iarouter on</li><li>iarouter start</li><li>iarouter arrancar</li><li>iarouter off</li><li>iarouter stop</li><li>iarouter parar</li><li>iarouter usar</li><li>iarouter use</li><li>iarouter clave</li><li>iarouter key</li><li>iarouter preguntar</li><li>iarouter ask</li><li>iarouter q</li><li>iarouter grok</li><li>iarouter openrouter</li><li>iarouter borrar</li><li>iarouter delete</li><li>iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar]</li><li>iarouter: estado, detección, check, proveedor, modelos, claves, share, publicar, puente, preguntar.</li><li>iarouter check grok</li><li>iarouter check grok detalle</li><li>iarouter check jan -v</li><li>iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] -</li></ul>
+<ul><li>iarouter</li><li>iarouter detectar</li><li>iarouter estado</li><li>iarouter usar jan|gpt4all|grok|openrouter</li><li>iarouter check [all|share|jan|gpt4all|grok|openrouter] [twitter] [detalle]</li><li>iarouter share</li><li>iarouter publicar</li><li>iarouter clave grok|openrouter [borrar]</li><li>iarouter modelos [prov]</li><li>iarouter modelo [prov] [id]</li><li>iarouter preguntar &lt;texto&gt;</li><li>iarouter puente on|off|estado</li></ul>
 <h2>DESCRIPCIÓN</h2>
 <p>Muestra el proveedor activo, detecta cuáles están disponibles y, solo con <code>preguntar</code>, envía el texto al modelo y lo imprime.</p>
 <p><code>usar</code> escribe la política local (enabled=true y el proveedor). La IA no escribe esa política.</p>
@@ -25,8 +25,4 @@
 <p>Off por defecto hasta <code>usar</code>. No incluye rutas <code>.mos</code> en el payload salvo allowlist del humano. Las claves no van a git. El JSON del almacén no lleva el texto en claro. Quien copie a la vez <code>.ia_wrap</code> e <code>ia_keys.json</code> puede recuperarlas. Solo stdlib y moslib.</p>
 <h2>VER TAMBIÉN</h2>
 <p>docs/specs/10-IA-ROUTER.md</p>
-<h2>HELP DEL COMANDO</h2>
-<p>Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X.</p>
-<h2>HELP DEL COMANDO</h2>
-<p>Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X.</p>
 </body></html>

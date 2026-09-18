@@ -6,9 +6,6 @@ version – muestra la versión de MetsuOS y su historial
 ## SINOPSIS
 
 - version
-- version [-h [n]]
-- version = subprocess.check_output(
-- version = get_git_version()
 
 ## DESCRIPCIÓN
 Sin argumentos, muestra la versión actual basada en git describe.
@@ -34,9 +31,3 @@ Comando de sistema. Consulta metadatos git del repositorio del producto.
 
 ## VÉASE TAMBIÉN
 update, help, man
-
-## HELP DEL COMANDO
-Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (tags + commits).
-
-## HELP DEL COMANDO
-Uso: version [-h [n]] - Muestra la versión actual. Con -h muestra el historial de 'n' versiones (tags + commits).

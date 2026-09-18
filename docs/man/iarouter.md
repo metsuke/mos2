@@ -6,53 +6,17 @@ iarouter – enrutador de modelos (local y remoto)
 ## SINOPSIS
 
 - iarouter
-- iarouter modelo [proveedor] <id del modelo...>
-- iarouter status
 - iarouter detectar
-- iarouter check
-- iarouter check detalle
-- iarouter check jan|gpt4all|grok|openrouter|share
-- iarouter check grok twitter
-- iarouter check grok twitter detalle
+- iarouter estado
+- iarouter usar jan|gpt4all|grok|openrouter
+- iarouter check [all|share|jan|gpt4all|grok|openrouter] [twitter] [detalle]
 - iarouter share
 - iarouter publicar
-- iarouter puente [on|off|status]
-- iarouter usar jan|gpt4all|grok|openrouter
-- iarouter clave <proveedor> [borrar]
-- iarouter modelos [proveedor]
-- iarouter preguntar TEXTO
-- iarouter puente
-- iarouter detect
-- iarouter all
-- iarouter modelos
-- iarouter models
-- iarouter modelo
-- iarouter model
-- iarouter jan
-- iarouter gpt4all
-- iarouter on
-- iarouter start
-- iarouter arrancar
-- iarouter off
-- iarouter stop
-- iarouter parar
-- iarouter usar
-- iarouter use
-- iarouter clave
-- iarouter key
-- iarouter preguntar
-- iarouter ask
-- iarouter q
-- iarouter grok
-- iarouter openrouter
-- iarouter borrar
-- iarouter delete
-- iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar]
-- iarouter: estado, detección, check, proveedor, modelos, claves, share, publicar, puente, preguntar.
-- iarouter check grok
-- iarouter check grok detalle
-- iarouter check jan -v
-- iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] -
+- iarouter clave grok|openrouter [borrar]
+- iarouter modelos [prov]
+- iarouter modelo [prov] [id]
+- iarouter preguntar <texto>
+- iarouter puente on|off|estado
 
 ## DESCRIPCIÓN
 Muestra el proveedor activo, detecta cuáles están disponibles y, solo con
@@ -113,9 +77,3 @@ Solo stdlib y moslib.
 
 ## VER TAMBIÉN
 docs/specs/10-IA-ROUTER.md
-
-## HELP DEL COMANDO
-Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X.
-
-## HELP DEL COMANDO
-Uso: iarouter [status|detectar|check|share|publicar|puente|usar|clave|modelos|modelo|preguntar] - Proveedor, LAN, puente, claves, modelos, check por fuente (grok/jan/...) y Grok-in-X.

@@ -1,6 +1,6 @@
 # 09 – Tareas
 
-**Versión del documento:** 1.0  
+**Versión del documento:** 1.1  
 **Estado:** Normativo (campaña 07, frente B)  
 **Baseline:** v0.2.5  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/08-APPS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/plans/2026-09-01-02-campana-07-soporte-apps-tareas-ia.md

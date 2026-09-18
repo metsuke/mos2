@@ -1,6 +1,6 @@
 # Política de versionado de MetsuOS
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.2  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/specs/07-SRelD-Release-Baseline.md, CHANGELOG.md, pyproject.toml
 
