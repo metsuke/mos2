@@ -18,10 +18,13 @@ def test_moslib_no_supera_120(capsys):
         n = _lineas(path)
         if n > TOPE:
             excesos.append(f"{n:4}  {path.relative_to(RAIZ).as_posix()}")
+    total = len(excesos)
     if excesos:
-        print(f"[tope] {len(excesos)} fichero(s) por encima de {TOPE} líneas:")
+        print(f"[tope] {total} fichero(s) por encima de {TOPE} líneas:")
         for fila in excesos:
             print(f"[tope] {fila}")
+        print(f"[tope] total a corregir: {total}")
     else:
         print(f"[tope] ok: ningún .py de moslib supera {TOPE} líneas")
+        print("[tope] total a corregir: 0")
     assert True
