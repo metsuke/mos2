@@ -5,9 +5,18 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from moslib.core.docgen_index import DOCUMENTOS, get_documento, get_docgen_dir, get_project_root
-from moslib.core.docgen_io import escribir, mejor_origen, partir_markdown, recuperar_preambulo
-from moslib.core.docgen_man_run import guardar_json
+from moslib.core.docgen_index import (
+    DOCUMENTOS,
+    get_documento,
+    get_docgen_dir,
+    get_project_root,
+)
+from moslib.core.docgen_io import (
+    escribir,
+    mejor_origen,
+    partir_markdown,
+    recuperar_preambulo,
+)
 
 
 def list_spec_ids() -> list[str]:
@@ -18,6 +27,12 @@ def spec_store_path(doc_id: str) -> Path:
     return get_docgen_dir() / "specs" / f"{doc_id}.json"
 
 
+def _guardar_json(dest: Path, payload: dict) -> Path:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return dest
+
+
 def ingest_spec(doc_id: str) -> Path:
     item = get_documento(doc_id)
     if item is None or not item["rel"].startswith("docs/specs/"):
@@ -26,13 +41,14 @@ def ingest_spec(doc_id: str) -> Path:
     titulo, preambulo, secciones, cuerpo = partir_markdown(
         origen.read_text(encoding="utf-8"), doc_id
     )
-    return guardar_json(
+    preambulo = recuperar_preambulo(doc_id, preambulo)
+    return _guardar_json(
         spec_store_path(doc_id),
         {
             "schema": "metsuos-docgen-spec-1",
             "id": doc_id,
             "titulo": titulo,
-            "preambulo": recuperar_preambulo(doc_id, preambulo),
+            "preambulo": preambulo,
             "cuerpo_completo": cuerpo,
             "origen": str(origen),
             "secciones": secciones,

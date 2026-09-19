@@ -1,8 +1,4 @@
-"""
-moslib.core.docgen_plan
-Un JSON por plan en docs/docgen/plans/.
-El índice docs/plans/README.md se pinta desde esos JSON.
-"""
+"""Un JSON por plan. El índice README se pinta desde esos JSON."""
 
 from __future__ import annotations
 
@@ -11,6 +7,7 @@ import re
 from pathlib import Path
 
 from moslib.core import docgen as motor
+from moslib.core.docgen_plan_crud import ingest_planes, plan_add, plan_rm, plan_set
 
 NOMBRE = re.compile(r"^(\d{4}-\d{2}-\d{2})-(\d{2})-(.+)\.md$")
 
@@ -45,10 +42,7 @@ def load_plan(plan_id: str) -> dict:
 
 def guardar_plan(payload: dict) -> Path:
     dest = plan_path(payload["id"])
-    dest.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    dest.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return dest
 
 
@@ -60,90 +54,6 @@ def list_planes() -> list[dict]:
         out.append(json.loads(path.read_text(encoding="utf-8")))
     out.sort(key=lambda p: (p.get("fecha") or "", p.get("nn") or "", p.get("id") or ""))
     return out
-
-
-def _estado_desde_md(texto: str) -> str:
-    for linea in texto.splitlines():
-        baja = linea.strip()
-        if baja.lower().startswith("**estado:**"):
-            return baja.split(":", 1)[1].strip().strip("*").strip()
-        if baja.lower().startswith("estado:"):
-            return baja.split(":", 1)[1].strip()
-    return "Diseñada"
-
-
-def ingest_planes() -> list[Path]:
-    escritos = []
-    carpeta = plan_md_dir()
-    if not carpeta.is_dir():
-        return escritos
-    for path in sorted(carpeta.glob("*.md")):
-        if path.name.upper() == "README.MD":
-            continue
-        partes = parse_nombre(path.name)
-        if partes is None:
-            continue
-        fecha, nn, slug = partes
-        plan_id = path.stem
-        estado = "Diseñada"
-        try:
-            estado = _estado_desde_md(path.read_text(encoding="utf-8"))
-        except OSError:
-            pass
-        escritos.append(
-            guardar_plan(
-                {
-                    "schema": "metsuos-docgen-plan-1",
-                    "id": plan_id,
-                    "fecha": fecha,
-                    "nn": nn,
-                    "slug": slug,
-                    "archivo": path.name,
-                    "estado": estado,
-                }
-            )
-        )
-    return escritos
-
-
-def plan_add(archivo: str, estado: str = "Diseñada") -> Path:
-    nombre = Path(archivo).name
-    if not nombre.endswith(".md"):
-        nombre = f"{nombre}.md"
-    partes = parse_nombre(nombre)
-    if partes is None:
-        raise ValueError(f"nombre no cumple YYYY-MM-DD-NN-slug.md: {nombre}")
-    fecha, nn, slug = partes
-    plan_id = Path(nombre).stem
-    if plan_path(plan_id).is_file():
-        raise FileExistsError(plan_id)
-    return guardar_plan(
-        {
-            "schema": "metsuos-docgen-plan-1",
-            "id": plan_id,
-            "fecha": fecha,
-            "nn": nn,
-            "slug": slug,
-            "archivo": nombre,
-            "estado": estado,
-        }
-    )
-
-
-def plan_set(plan_id: str, campo: str, valor: str) -> Path:
-    data = load_plan(plan_id)
-    if campo != "estado":
-        raise ValueError("solo se asigna estado por CRUD")
-    data["estado"] = valor
-    return guardar_plan(data)
-
-
-def plan_rm(plan_id: str) -> Path:
-    path = plan_path(plan_id)
-    if not path.is_file():
-        raise FileNotFoundError(plan_id)
-    path.unlink()
-    return path
 
 
 def tabla_planes() -> str:

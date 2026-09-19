@@ -1,18 +1,13 @@
-"""
-moslib.core.tasks
-Tareas manuales y automáticas locales.
-Worker en segundo plano: hilo daemon mientras dura la sesión.
-"""
+"""Tareas locales. Worker en segundo plano."""
 
 from __future__ import annotations
 
 import json
-import threading
-import time
-import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from moslib.core.tasks_crud import create_task, get_task, set_estado
+from moslib.core.tasks_worker import start_worker, stop_worker, worker_running
 from moslib.core.user import ensure_user_space, get_user_mos_dir
 
 MODOS = ("manual", "automatica")
@@ -20,10 +15,6 @@ PRIV = ("root", "no-root")
 CLASES = ("realtime", "heavy", "normal", "sistema")
 ESTADOS = ("pendiente", "en_curso", "hecha", "fallida", "bloqueada_a11y_sec")
 RECUR = ("una_vez", "cada_n_minutos", "cada_n_dias")
-
-_worker_thread: threading.Thread | None = None
-_stop = threading.Event()
-_interval = 30.0
 
 
 def _now() -> str:
@@ -45,77 +36,11 @@ def load_all() -> list[dict]:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return []
-    if not isinstance(data, list):
-        return []
-    return data
+    return data if isinstance(data, list) else []
 
 
 def save_all(items: list[dict]) -> None:
-    path = _store_path()
-    path.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
-
-
-def create_task(
-    *,
-    origen: str = "usuario",
-    modo: str = "manual",
-    privilegio: str = "no-root",
-    clase: str = "normal",
-    proyecto: str | None = None,
-    prioridad: int = 10,
-    maslow: int | None = None,
-    recurrencia: str = "una_vez",
-    intervalo: int | None = None,
-    comando: str,
-    estado: str = "pendiente",
-) -> dict:
-    if modo not in MODOS or privilegio not in PRIV or clase not in CLASES:
-        raise ValueError("modo, privilegio o clase no válidos")
-    if recurrencia not in RECUR or estado not in ESTADOS:
-        raise ValueError("recurrencia o estado no válidos")
-    task = {
-        "id": uuid.uuid4().hex[:12],
-        "origen": origen,
-        "modo": modo,
-        "privilegio": privilegio,
-        "clase": clase,
-        "proyecto": proyecto,
-        "prioridad": int(prioridad),
-        "maslow": maslow,
-        "recurrencia": recurrencia,
-        "intervalo": intervalo,
-        "estado": estado,
-        "comando": comando,
-        "creado": _now(),
-        "actualizado": _now(),
-    }
-    items = load_all()
-    items.append(task)
-    save_all(items)
-    return task
-
-
-def get_task(task_id: str) -> dict | None:
-    for t in load_all():
-        if t.get("id") == task_id:
-            return t
-    return None
-
-
-def set_estado(task_id: str, estado: str) -> dict | None:
-    if estado not in ESTADOS:
-        raise ValueError("estado no válido")
-    items = load_all()
-    found = None
-    for t in items:
-        if t.get("id") == task_id:
-            t["estado"] = estado
-            t["actualizado"] = _now()
-            found = t
-            break
-    if found:
-        save_all(items)
-    return found
+    _store_path().write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def can_run(task: dict) -> bool:
@@ -147,34 +72,3 @@ def format_line(task: dict) -> str:
         f"{task['id']}  {task['estado']}  {task['modo']}/{task['clase']}  "
         f"{task['privilegio']}  prio={task['prioridad']}  {task['comando']}"
     )
-
-
-def worker_running() -> bool:
-    return _worker_thread is not None and _worker_thread.is_alive()
-
-
-def _loop() -> None:
-    while not _stop.is_set():
-        try:
-            tick()
-        except Exception:
-            pass
-        _stop.wait(_interval)
-
-
-def start_worker(interval: float = 30.0) -> bool:
-    global _worker_thread, _interval
-    _interval = max(5.0, float(interval))
-    if worker_running():
-        return False
-    _stop.clear()
-    _worker_thread = threading.Thread(target=_loop, name="mos-tareas", daemon=True)
-    _worker_thread.start()
-    return True
-
-
-def stop_worker() -> None:
-    _stop.set()
-    t = _worker_thread
-    if t is not None:
-        t.join(timeout=2.0)

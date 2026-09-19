@@ -1,14 +1,19 @@
-"""Ingesta y generate de pages y root."""
+"""Ingesta y generate de pages/root."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from moslib.core.docgen_index import DOCUMENTOS, get_documento, get_docgen_dir, get_project_root
+from moslib.core.docgen_index import (
+    DOCUMENTOS,
+    get_documento,
+    get_docgen_dir,
+    get_project_root,
+)
 from moslib.core.docgen_io import escribir, mejor_origen, partir_markdown, recuperar_preambulo
-from moslib.core.docgen_man_run import guardar_json, ingest_man, render_man, generate_man
-from moslib.core.docgen_spec_run import ingest_spec, render_spec, generate_spec, spec_store_path
+from moslib.core.docgen_man_run import man_store_path
+from moslib.core.docgen_spec_run import spec_store_path
 
 
 def store_path_doc(doc_id: str) -> Path:
@@ -19,7 +24,6 @@ def store_path_doc(doc_id: str) -> Path:
     if rel.startswith("docs/specs/"):
         return spec_store_path(doc_id)
     if rel.startswith("docs/man/"):
-        from moslib.core.docgen_man_run import man_store_path
         return man_store_path(doc_id.replace("man-", "", 1))
     if rel.startswith("docs/"):
         return get_docgen_dir() / "pages" / f"{doc_id}.json"
@@ -30,7 +34,16 @@ def list_page_ids() -> list[str]:
     return [d["id"] for d in DOCUMENTOS if not d["rel"].startswith("docs/specs/")]
 
 
+def _guardar_json(dest: Path, payload: dict) -> Path:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return dest
+
+
 def ingest_doc(doc_id: str) -> Path:
+    from moslib.core.docgen_man_run import ingest_man
+    from moslib.core.docgen_spec_run import ingest_spec
+
     item = get_documento(doc_id)
     if item is None:
         raise FileNotFoundError(doc_id)
@@ -42,13 +55,14 @@ def ingest_doc(doc_id: str) -> Path:
     titulo, preambulo, secciones, cuerpo = partir_markdown(
         origen.read_text(encoding="utf-8"), doc_id
     )
-    return guardar_json(
+    preambulo = recuperar_preambulo(doc_id, preambulo)
+    return _guardar_json(
         store_path_doc(doc_id),
         {
             "schema": "metsuos-docgen-doc-1",
             "id": doc_id,
             "titulo": titulo,
-            "preambulo": recuperar_preambulo(doc_id, preambulo),
+            "preambulo": preambulo,
             "cuerpo_completo": cuerpo,
             "origen": str(origen),
             "secciones": secciones,
@@ -57,6 +71,9 @@ def ingest_doc(doc_id: str) -> Path:
 
 
 def render_doc(doc_id: str) -> str:
+    from moslib.core.docgen_man_run import render_man
+    from moslib.core.docgen_spec_run import render_spec
+
     item = get_documento(doc_id)
     if item is None:
         raise FileNotFoundError(doc_id)
@@ -79,6 +96,9 @@ def render_doc(doc_id: str) -> str:
 
 
 def generate_doc(doc_id: str) -> Path:
+    from moslib.core.docgen_man_run import generate_man
+    from moslib.core.docgen_spec_run import generate_spec
+
     item = get_documento(doc_id)
     if item is None:
         raise FileNotFoundError(doc_id)
@@ -90,20 +110,3 @@ def generate_doc(doc_id: str) -> Path:
     if item["id"].startswith("man-"):
         return generate_man(item["id"][4:])
     return escribir(doc_id, render_doc(doc_id), get_project_root() / item["rel"])
-
-
-def ingest_page_todos(forzar: bool = True) -> list:
-    ids = list_page_ids()
-    if not forzar:
-        ids = [i for i in ids if not store_path_doc(i).is_file()]
-    return [ingest_doc(i) for i in ids]
-
-
-def generate_page_todos() -> list:
-    escritos = []
-    for doc_id in list_page_ids():
-        try:
-            escritos.append(generate_doc(doc_id))
-        except Exception as exc:
-            print(f"[docgen] {doc_id}: {exc}")
-    return escritos

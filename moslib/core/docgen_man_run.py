@@ -1,4 +1,4 @@
-"""Ingesta y generate de páginas man."""
+"""Ingesta y generate de man."""
 
 from __future__ import annotations
 
@@ -25,9 +25,12 @@ def list_man_nombres() -> list[str]:
     return [p.stem for p in sorted(man_dir.glob("*.md"))]
 
 
-def guardar_json(dest: Path, payload: dict) -> Path:
+def _guardar_json(dest: Path, payload: dict) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    dest.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     return dest
 
 
@@ -39,13 +42,14 @@ def ingest_man(nombre: str) -> Path:
     titulo, preambulo, secciones, cuerpo = partir_markdown(
         origen.read_text(encoding="utf-8"), nombre
     )
-    dest = guardar_json(
+    preambulo = recuperar_preambulo(doc_id, preambulo)
+    dest = _guardar_json(
         man_store_path(nombre),
         {
             "schema": "metsuos-docgen-man-1",
             "id": nombre,
             "titulo": titulo,
-            "preambulo": recuperar_preambulo(doc_id, preambulo),
+            "preambulo": preambulo,
             "cuerpo_completo": cuerpo,
             "origen": str(origen),
             "secciones": secciones,
@@ -92,12 +96,3 @@ def generate_man_todos() -> list:
         except Exception as exc:
             print(f"[docgen] man-{nombre}: {exc}")
     return escritos
-
-
-def scan_command_help(nombre: str) -> str:
-    import importlib
-
-    texto = importlib.import_module(f"moslib.commands.{nombre}").help()
-    if not isinstance(texto, str) or not texto.strip():
-        raise ValueError(f"help() vacío en {nombre}")
-    return texto.strip()
