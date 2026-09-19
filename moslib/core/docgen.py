@@ -15,18 +15,7 @@ from moslib.core.docgen_index import (
     resolve_path,
     todos_documentos,
 )
-from moslib.core.docgen_io import (
-    backup_document,
-    backup_stamp,
-    bump_preambulo,
-    escribir,
-    list_backups,
-    mejor_origen,
-    partir_markdown,
-    preambulo_completo,
-    recuperar_preambulo,
-    sin_version,
-)
+from moslib.core.docgen_io import backup_document, list_backups, escribir
 from moslib.core.docgen_man_run import (
     generate_man,
     generate_man_todos,
@@ -53,13 +42,24 @@ from moslib.core.docgen_spec_run import (
     spec_store_path,
 )
 
+try:
+    from moslib.core.docgen_io import backup_stamp
+except ImportError:
+    backup_stamp = None
+
+try:
+    from moslib.core.docgen_md import (
+        partir_markdown,
+        recuperar_preambulo,
+        bump_preambulo,
+        sin_version,
+    )
+except ImportError:
+    partir_markdown = recuperar_preambulo = bump_preambulo = sin_version = None
+
 _escribir = escribir
 _partir_markdown = partir_markdown
 _recuperar_preambulo = recuperar_preambulo
-_mejor_origen = mejor_origen
-_bump_preambulo = bump_preambulo
-_sin_version = sin_version
-_preambulo_completo = preambulo_completo
 
 
 def scan_command_help(nombre: str) -> str:
