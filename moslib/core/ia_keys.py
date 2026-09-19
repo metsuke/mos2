@@ -1,18 +1,13 @@
-"""
-moslib.core.ia_keys
-Claves en el espacio de usuario, envueltas con moslib.core.secreto.
-Si hay variable de entorno y no hay clave en .mos, se copia al almacén.
-"""
+"""Claves en .mos, envueltas con secreto. Env se copia al almacén."""
 
 from __future__ import annotations
 
 import base64
-import json
 import os
 from pathlib import Path
 
-from moslib.core.secreto import desenvolver, envolver, leer_wrap
-from moslib.core.user import ensure_user_space, get_user_mos_dir
+from moslib.core.secreto import desenvolver, envolver
+from moslib.core import ia_keys_store as _S
 
 ENV_KEY = {
     "grok": "XAI_API_KEY",
@@ -21,49 +16,18 @@ ENV_KEY = {
     "gpt4all": "GPT4ALL_API_KEY",
 }
 
+keys_path = _S.keys_path
+wrap_path = _S.wrap_path
+load_store = _S.load_store
+save_store = _S.save_store
+wrap_bytes = _S.wrap_bytes
+_load_store = _S.load_store
+_save_store = _S.save_store
+_wrap_bytes = _S.wrap_bytes
+
 
 def _dir() -> Path:
-    ensure_user_space()
-    d = get_user_mos_dir() / "config"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
-
-
-def wrap_path() -> Path:
-    return _dir() / ".ia_wrap"
-
-
-def keys_path() -> Path:
-    return _dir() / "ia_keys.json"
-
-
-def _chmod_private(path: Path) -> None:
-    try:
-        os.chmod(path, 0o600)
-    except OSError:
-        pass
-
-
-def _wrap_bytes() -> bytes:
-    return leer_wrap(wrap_path())
-
-
-def _load_store() -> dict:
-    path = keys_path()
-    if not path.is_file():
-        return {}
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return data if isinstance(data, dict) else {}
-
-
-def _save_store(data: dict) -> None:
-    path = keys_path()
-    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
-    _chmod_private(path)
-    _chmod_private(wrap_path())
+    return _S._dir()
 
 
 def save_key(provider: str, raw: str) -> tuple[bool, str]:
@@ -73,37 +37,36 @@ def save_key(provider: str, raw: str) -> tuple[bool, str]:
     texto = raw.strip()
     if not texto:
         return False, "La clave no puede estar vacía."
-    blob = envolver(texto.encode("utf-8"), _wrap_bytes())
-    store = _load_store()
+    blob = envolver(texto.encode("utf-8"), wrap_bytes())
+    store = load_store()
     store[pid] = base64.b64encode(blob).decode("ascii")
-    _save_store(store)
+    save_store(store)
     return True, f"Clave de {pid} guardada en el espacio de usuario."
 
 
 def delete_key(provider: str) -> tuple[bool, str]:
     pid = provider.lower().strip()
-    store = _load_store()
+    store = load_store()
     if pid not in store:
         return False, f"No hay clave guardada para {pid}."
     del store[pid]
-    _save_store(store)
+    save_store(store)
     return True, f"Clave de {pid} eliminada."
 
 
 def load_key(provider: str) -> str | None:
     pid = provider.lower().strip()
-    token = _load_store().get(pid)
+    token = load_store().get(pid)
     if not token:
         return None
     try:
         blob = base64.b64decode(str(token).encode("ascii"))
-        return desenvolver(blob, _wrap_bytes()).decode("utf-8")
+        return desenvolver(blob, wrap_bytes()).decode("utf-8")
     except Exception:
         return None
 
 
 def ingest_env() -> list[str]:
-    """Copia al .mos las claves que estén en el entorno y aún no guardadas."""
     hechos = []
     for pid, env in ENV_KEY.items():
         if load_key(pid):
