@@ -1,22 +1,12 @@
-"""
-moslib.core.user
-Gestión del usuario del sistema anfitrión y de su espacio personal en MetsuOS.
-
-El espacio personal vive en:
-    rootfs/home/<usuario>/.mos/
-
-Incluye migración automática desde la ubicación antigua
-(<project_root>/home/<usuario>/) para no romper instalaciones alpha existentes.
-"""
+"""Usuario del anfitrión y rutas de su espacio personal en MetsuOS."""
 
 import os
 import getpass
-import shutil
 from pathlib import Path
 
 
 def get_username() -> str:
-    """Devuelve el nombre de usuario real del sistema operativo anfitrión."""
+    """Nombre de usuario real del SO anfitrión."""
     try:
         return getpass.getuser()
     except Exception:
@@ -39,52 +29,21 @@ def get_rootfs() -> Path:
 
 
 def get_user_home(username: str | None = None) -> Path:
-    """Ruta nueva (correcta): rootfs/home/<username>/"""
+    """Ruta nueva: rootfs/home/<username>/"""
     if username is None:
         username = get_username()
     return get_rootfs() / "home" / username
 
 
 def get_old_user_home(username: str | None = None) -> Path:
-    """Ruta antigua (legacy): <project_root>/home/<username>/"""
+    """Ruta antigua: <project_root>/home/<username>/"""
     if username is None:
         username = get_username()
     return get_project_root() / "home" / username
 
 
 def get_user_mos_dir(username: str | None = None) -> Path:
-    """Ruta de la carpeta .mos del usuario (siempre la nueva)."""
     return get_user_home(username) / ".mos"
-
-
-def _migrate_user_home_if_needed(username: str) -> None:
-    """
-    Migra automáticamente la carpeta de usuario desde la ubicación antigua
-    a la nueva si es necesario.
-    """
-    old_home = get_old_user_home(username)
-    new_home = get_user_home(username)
-
-    if not old_home.exists():
-        return
-
-    if not new_home.exists():
-        print("[MetsuOS] Migrando espacio de usuario de:")
-        print(f"          {old_home}")
-        print(f"          → {new_home}")
-        try:
-            new_home.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(old_home), str(new_home))
-            print("[MetsuOS] Migración completada correctamente.")
-        except Exception as e:
-            print(f"[MetsuOS] ERROR al migrar el espacio de usuario: {e}")
-            print("[MetsuOS] Se continuará usando la ubicación antigua temporalmente.")
-        return
-
-    print("[MetsuOS] Aviso: existen tanto la carpeta antigua como la nueva de usuario.")
-    print(f"          Antigua: {old_home}")
-    print(f"          Nueva:   {new_home}")
-    print("[MetsuOS] Se usará la nueva. Puedes borrar la antigua manualmente si lo deseas.")
 
 
 def get_user_apps_dir(username: str | None = None) -> Path:
@@ -92,49 +51,20 @@ def get_user_apps_dir(username: str | None = None) -> Path:
 
 
 def get_system_apps_dir() -> Path:
-    """Apps de sistema: rootfs/opt/apps/"""
     d = get_rootfs() / "opt" / "apps"
     d.mkdir(parents=True, exist_ok=True)
     return d
 
 
-def ensure_user_space(username: str | None = None) -> Path:
-    """
-    1. Realiza la migración automática si es necesario.
-    2. Crea la estructura completa de carpetas del usuario en la ubicación correcta.
+def _migrate_user_home_if_needed(username: str) -> None:
+    from moslib.core.user_space import migrate_user_home_if_needed as _fn
+    return _fn(username)
 
-    Estructura final:
-    rootfs/home/<username>/
-    └── .mos/
-        ├── apps/
-        ├── commands/
-        ├── data/
-        ├── config/
-        ├── packages/
-        └── repos/
-    """
-    if username is None:
-        username = get_username()
 
-    _migrate_user_home_if_needed(username)
-
-    mos_dir = get_user_mos_dir(username)
-
-    subdirs = [
-        mos_dir / "apps",
-        mos_dir / "commands",
-        mos_dir / "data",
-        mos_dir / "config",
-        mos_dir / "packages",
-        mos_dir / "repos",
-    ]
-
-    for d in subdirs:
-        d.mkdir(parents=True, exist_ok=True)
-
-    return mos_dir
+def ensure_user_space(username: str | None = None):
+    from moslib.core.user_space import ensure_user_space as _fn
+    return _fn(username)
 
 
 def is_valid_user_command_name(name: str) -> bool:
-    """Solo se permiten comandos de usuario que empiecen por 'user_'."""
     return isinstance(name, str) and name.startswith("user_") and len(name) > 5
