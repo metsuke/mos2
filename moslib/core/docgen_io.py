@@ -7,6 +7,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
+from moslib.core.docgen_hash import registrar_destino
 from moslib.core.docgen_index import (
     ensure_docgen_dirs,
     get_backup_dir,
@@ -167,4 +168,5 @@ def escribir(doc_id: str, nuevo: str, dest: Path) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(nuevo, encoding="utf-8")
     escribir_html(doc_id, nuevo)
+    registrar_destino(dest)
     return dest

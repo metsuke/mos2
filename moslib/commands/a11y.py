@@ -1,13 +1,12 @@
-"""
-Comando a11y de MetsuOS.
-Ejecuta solo los tests marcados a11y y regenera el informe de accesibilidad.
-"""
+"""Comando a11y. Tests marcados y regenera el informe."""
 
 import json
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+from moslib.core.docgen_hash import registrar_destino
 
 
 def _project_root() -> Path:
@@ -17,7 +16,6 @@ def _project_root() -> Path:
 def _write_report(root: Path, passed: int, failed: int, skipped: int, returncode: int) -> str:
     ran = passed + failed + skipped
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
     if ran == 0:
         compliance = "parcialmente conforme"
         reason = "No ha habido tests a11y en esta ejecucion (marca ausente o sin casos)."
@@ -27,7 +25,6 @@ def _write_report(root: Path, passed: int, failed: int, skipped: int, returncode
     else:
         compliance = "plenamente conforme"
         reason = "Los tests a11y ejecutados han pasado."
-
     data = {
         "schema": "metsuos-a11y-informe-1",
         "generated_by": "a11y",
@@ -43,17 +40,12 @@ def _write_report(root: Path, passed: int, failed: int, skipped: int, returncode
             "returncode": returncode,
         },
         "findings": [],
-        "refs": [
-            "docs/A11Y.md",
-            "docs/a11y/DECLARACION.md",
-        ],
+        "refs": ["docs/A11Y.md", "docs/a11y/DECLARACION.md"],
     }
-
     json_path = root / "docs" / "a11y" / "informe.json"
     md_path = root / "docs" / "a11y" / "informe.md"
     json_path.parent.mkdir(parents=True, exist_ok=True)
     json_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-
     md = (
         "# Informe automático de accesibilidad de MetsuOS\n\n"
         f"**Estado:** Generado por el comando a11y\n"
@@ -78,6 +70,8 @@ def _write_report(root: Path, passed: int, failed: int, skipped: int, returncode
         "- docs/a11y/informe.json\n"
     )
     md_path.write_text(md, encoding="utf-8")
+    registrar_destino(json_path)
+    registrar_destino(md_path)
     return compliance
 
 
@@ -94,14 +88,8 @@ def execute(args):
         print(result.stdout.rstrip())
     if result.stderr:
         print(result.stderr.rstrip())
-
     passed = failed = skipped = 0
-    # pytest -q imprime "N passed" / "N failed" en la última línea típica
     text = (result.stdout or "") + "\n" + (result.stderr or "")
-    for token, name in (("passed", "passed"), ("failed", "failed"), ("skipped", "skipped")):
-        for part in text.replace(",", " ").split():
-            pass
-    # Conteo robusto mínimo: si returncode != 0 hay fallo; si no hay tests, ran=0
     if "no tests ran" in text.lower() or "collected 0 items" in text.lower():
         passed = failed = skipped = 0
     elif result.returncode == 0:
@@ -110,7 +98,6 @@ def execute(args):
     else:
         passed = 0
         failed = 1
-
     compliance = _write_report(root, passed, failed, skipped, result.returncode)
     print()
     print(f"[a11y] Situación de cumplimiento: {compliance}")
@@ -118,7 +105,8 @@ def execute(args):
 
 
 def help():
-    return (
-        "Uso: a11y - Ejecuta solo los tests de accesibilidad "
-        "y regenera docs/a11y/informe.md e informe.json"
-    )
+    return "Uso: a11y - Tests de accesibilidad y regenera docs/a11y/informe.*"
+
+
+def sinopsis():
+    return ["a11y"]

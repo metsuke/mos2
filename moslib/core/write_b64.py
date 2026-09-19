@@ -11,12 +11,22 @@ from moslib.core.integridad import registrar, sha256_bytes
 from moslib.core.user import ensure_user_space, get_username, get_user_mos_dir
 
 PERMISO_MULTI = False
+BORDE = "─" * 52
 
 
 def _tmp_dir() -> Path:
     d = get_user_mos_dir(get_username()) / "tmp" / "write"
     d.mkdir(parents=True, exist_ok=True)
     return d
+
+
+def _preview(datos: bytes) -> str:
+    texto = datos.decode("utf-8", errors="replace").splitlines()
+    cabeza = "\n".join(texto[:3])
+    cola = "\n".join(texto[-3:])
+    return (
+        f"{BORDE}\n{cabeza}\n{BORDE}\n…\n{BORDE}\n{cola}\n{BORDE}"
+    )
 
 
 def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
@@ -56,7 +66,4 @@ def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
         return False, f"escritura fallida, restaurado: {exc}"
     if bak is not None:
         bak.unlink(missing_ok=True)
-    texto = datos.decode("utf-8", errors="replace").splitlines()
-    cabeza = "\n".join(texto[:3])
-    cola = "\n".join(texto[-3:])
-    return True, f"OK {real}\n{cabeza}\n...\n{cola}"
+    return True, f"OK {real}\n{_preview(datos)}"
