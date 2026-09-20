@@ -1,6 +1,5 @@
 #!/bin/bash
-# setLocale.sh — solo si el anfitrión está en C/POSIX (caso MOS: "C, C, C").
-# Instala y fija es_ES.UTF-8. Pide aceptación. Idempotente en ~/.bashrc.
+# setLocale.sh — solo el caso MOS "C, C, C" (C/POSIX). Fija es_ES.UTF-8.
 
 set -euo pipefail
 
@@ -8,6 +7,7 @@ DESTINO="es_ES.UTF-8"
 BASHRC="${HOME}/.bashrc"
 EXPORT_LANG="export LANG=${DESTINO}"
 EXPORT_ALL="export LC_ALL=${DESTINO}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 es_wsl() {
     if [ -n "${WSL_DISTRO_NAME:-}" ]; then
@@ -19,25 +19,29 @@ es_wsl() {
     return 1
 }
 
-locales_vistos() {
-    local crudos="" clave valor
+env_locales() {
+    local clave valor out=""
     for clave in LC_ALL LC_MESSAGES LANG LANGUAGE; do
         eval "valor=\${${clave}-}"
         if [ -n "${valor}" ]; then
-            crudos="${crudos} ${valor}"
+            out="${out} ${valor}"
         fi
     done
-    if command -v locale >/dev/null 2>&1; then
-        crudos="${crudos} $(locale 2>/dev/null | awk -F= '/^(LANG|LC_ALL|LC_MESSAGES)=/{gsub(/\"/,\"\"); print $2}')"
-    fi
-    echo "${crudos}" | tr '[:upper:]' '[:lower:]' | tr ':-' '  ' | tr -s ' '
+    echo "${out}"
 }
 
-solo_c_o_posix() {
+normaliza_token() {
+    local t="$1"
+    t="${t%%.*}"
+    t="${t%%@*}"
+    t="$(printf '%s' "${t}" | tr '[:upper:]' '[:lower:]' | tr '-' '_')"
+    printf '%s' "${t}"
+}
+
+solo_c_o_posix_env() {
     local token hay=0
-    for token in $(locales_vistos); do
-        token="${token%%.*}"
-        token="${token%%@*}"
+    for token in $(env_locales); do
+        token="$(normaliza_token "${token}")"
         [ -z "${token}" ] && continue
         hay=1
         case "${token}" in
@@ -46,6 +50,55 @@ solo_c_o_posix() {
         esac
     done
     [ "${hay}" -eq 1 ]
+}
+
+mos_detectados=""
+mos_ok=""
+
+mos_consulta() {
+    local py=""
+    if command -v python3 >/dev/null 2>&1; then
+        py="python3"
+    elif command -v python >/dev/null 2>&1; then
+        py="python"
+    else
+        return 1
+    fi
+    mos_detectados="$(
+        cd "${ROOT}" && PYTHONPATH="${ROOT}" "${py}" -c \
+            "from moslib.core.entorno import locales_detectados; print(', '.join(locales_detectados()) or '(ninguno)')" \
+            2>/dev/null
+    )" || return 1
+    if cd "${ROOT}" && PYTHONPATH="${ROOT}" "${py}" -c \
+        "from moslib.core.entorno import locale_permitido; import sys; sys.exit(0 if locale_permitido() else 1)" \
+        2>/dev/null
+    then
+        mos_ok="si"
+    else
+        mos_ok="no"
+    fi
+}
+
+es_caso_c() {
+    if [ "${mos_ok}" = "si" ]; then
+        return 1
+    fi
+    if [ -n "${mos_detectados}" ]; then
+        local t hay=0
+        local IFS=','
+        for t in ${mos_detectados}; do
+            t="$(normaliza_token "${t}")"
+            [ -z "${t}" ] || [ "${t}" = "(ninguno)" ] && continue
+            hay=1
+            case "${t}" in
+                c|posix) ;;
+                *) return 1 ;;
+            esac
+        done
+        [ "${hay}" -eq 1 ]
+        return
+    fi
+    solo_c_o_posix_env
 }
 
 ya_en_bashrc() {
@@ -64,9 +117,16 @@ anadir_export() {
     echo "[setLocale] Añadido a ${BASHRC}: ${linea}"
 }
 
-echo "[setLocale] Locales vistos: $(locales_vistos | tr -s ' ' ',')"
+mos_consulta || true
+echo "[setLocale] Env:$(env_locales | tr -s ' ' ',') "
+echo "[setLocale] MOS detectado: ${mos_detectados:-n/d} permitido=${mos_ok:-n/d}"
 
-if ! solo_c_o_posix; then
+if [ "${mos_ok}" = "si" ]; then
+    echo "[setLocale] MOS ya acepta el locale. No se toca nada."
+    exit 0
+fi
+
+if ! es_caso_c; then
     echo "[setLocale] No es el caso C/POSIX. No se toca nada."
     exit 0
 fi
@@ -76,19 +136,10 @@ if ! es_wsl && [ "$(uname -s 2>/dev/null)" != "Linux" ]; then
     exit 1
 fi
 
-if [ ! -d "${HOME}" ] || [[ "${PWD}" == /mnt/[a-zA-Z]/* ]]; then
-    echo "[setLocale] Aviso: si el clone de MOS está bajo /mnt/<letra>/, muévelo a \$HOME."
-fi
-
 echo
-echo "[setLocale] Este sistema está en locale C/POSIX."
-echo "[setLocale] MetsuOS oficial solo arranca con es_ES."
-echo "[setLocale] Se va a:"
-echo "  1. Instalar/generar ${DESTINO} (apt + locale-gen; pide sudo)."
-echo "  2. Fijar LANG y LC_ALL en esta sesión."
-echo "  3. Añadir esos export a ${BASHRC} si no existen."
-echo
-echo "[setLocale] No cambia otros idiomas. No se ejecuta si el locale ya no es C."
+echo "[setLocale] Caso C/POSIX (el de 'Locale detectado: C, C, C')."
+echo "[setLocale] Se va a generar ${DESTINO}, fijar LANG/LC_ALL y escribir ${BASHRC}."
+echo "[setLocale] Pide sudo para apt/locale-gen."
 printf "[setLocale] ¿Aceptas? Escribe s y Enter: "
 read -r resp
 case "${resp}" in
@@ -118,6 +169,7 @@ anadir_export "${EXPORT_LANG}"
 anadir_export "${EXPORT_ALL}"
 
 echo
-echo "[setLocale] Sesión actual: LANG=${LANG} LC_ALL=${LC_ALL}"
-echo "[setLocale] Abre otra terminal WSL o: source ${BASHRC}"
-echo "[setLocale] Luego, en el clone Linux (no /mnt/c): ./mos2.sh"
+echo "[setLocale] Sesión: LANG=${LANG} LC_ALL=${LC_ALL}"
+mos_consulta || true
+echo "[setLocale] MOS tras el cambio: ${mos_detectados:-n/d} permitido=${mos_ok:-n/d}"
+echo "[setLocale] source ${BASHRC}  y  ./mos2.sh"
