@@ -27,7 +27,9 @@ def _reiniciar(cwd: Path):
 def _integridad():
     try:
         from moslib.core.integridad import copiar_repo_a_local
-        print(copiar_repo_a_local())
+
+        dest = copiar_repo_a_local()
+        print(f"[update] integridad local ← repo  {dest}")
     except Exception as exc:
         print(f"[update] integridad local: {exc}")
 

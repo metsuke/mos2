@@ -98,7 +98,7 @@ resolve_poetry() {
         return 0
     fi
     if command -v python >/dev/null 2>&1 && python -m poetry --version >/dev/null 2>&1; then
-        echo "python -m poetry"
+        echo "python"
         return 0
     fi
     return 1
@@ -121,5 +121,16 @@ if [[ ! -f "rootfs/bin/mos.py" ]]; then
     exit 1
 fi
 
+# Emergencia integridad: el flag no debe depender de que mos.py conserve argv.
+FILTERED=()
+for arg in "$@"; do
+    if [[ "$arg" == "--integridad-recargar" ]]; then
+        export MOS_INTEGRIDAD=recargar
+        echo "Integridad: MOS_INTEGRIDAD=recargar"
+        continue
+    fi
+    FILTERED+=("$arg")
+done
+
 echo "Lanzando MetsuOS a través de Poetry..."
-eval "$POETRY_CMD run python rootfs/bin/mos.py \"\$@\""
+eval "$POETRY_CMD run python rootfs/bin/mos.py \"\${FILTERED[@]}\""
