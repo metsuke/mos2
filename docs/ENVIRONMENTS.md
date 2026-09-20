@@ -1,6 +1,6 @@
 # Entornos de ejecución de MetsuOS
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.2  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/USER_MANUAL.md, docs/specs/01-SSS-System-Specification.md, .gitattributes
 

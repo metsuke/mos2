@@ -65,7 +65,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -81,7 +81,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -106,7 +106,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -120,7 +120,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -134,7 +134,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -143,7 +143,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -159,7 +159,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -175,7 +175,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -187,7 +187,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -199,7 +199,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -209,7 +209,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -219,7 +219,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -231,7 +231,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -247,7 +247,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -272,7 +272,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -286,7 +286,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -300,7 +300,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -309,7 +309,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -325,7 +325,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -341,7 +341,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -353,7 +353,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -365,7 +365,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -375,7 +375,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -385,7 +385,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -397,7 +397,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -413,7 +413,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -438,7 +438,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -452,7 +452,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -466,7 +466,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -475,7 +475,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -491,7 +491,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -507,7 +507,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -519,7 +519,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -531,7 +531,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -541,7 +541,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -551,7 +551,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -563,7 +563,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -579,7 +579,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -604,7 +604,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -618,7 +618,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -632,7 +632,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -641,7 +641,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -657,7 +657,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -673,7 +673,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -685,7 +685,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -697,7 +697,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -707,7 +707,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -717,7 +717,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -729,7 +729,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -745,7 +745,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -770,7 +770,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -784,7 +784,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -798,7 +798,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -807,7 +807,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -823,7 +823,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -839,7 +839,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -851,7 +851,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -863,7 +863,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -873,7 +873,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -883,7 +883,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -895,7 +895,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -911,7 +911,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -936,7 +936,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -950,7 +950,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -964,7 +964,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -973,7 +973,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -989,7 +989,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -1005,7 +1005,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -1017,7 +1017,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -1029,7 +1029,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -1039,7 +1039,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -1049,7 +1049,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -1061,7 +1061,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -1077,7 +1077,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -1102,7 +1102,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -1116,7 +1116,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -1130,7 +1130,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -1139,7 +1139,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -1155,7 +1155,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -1171,7 +1171,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -1183,7 +1183,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -1195,7 +1195,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -1205,7 +1205,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -1215,7 +1215,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -1227,7 +1227,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -1243,7 +1243,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -1268,7 +1268,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -1282,7 +1282,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -1296,7 +1296,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -1305,7 +1305,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -1321,7 +1321,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -1337,7 +1337,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -1349,7 +1349,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -1361,7 +1361,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -1371,7 +1371,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -1381,7 +1381,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -1393,7 +1393,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -1409,7 +1409,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -1434,7 +1434,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -1448,7 +1448,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -1462,7 +1462,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -1471,7 +1471,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -1487,7 +1487,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -1503,7 +1503,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -1515,7 +1515,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -1527,7 +1527,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -1537,7 +1537,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -1547,7 +1547,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -1559,7 +1559,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -1575,7 +1575,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -1600,7 +1600,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -1614,7 +1614,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -1628,7 +1628,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -1637,7 +1637,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -1653,7 +1653,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -1669,7 +1669,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -1681,7 +1681,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -1693,7 +1693,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -1703,7 +1703,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -1713,7 +1713,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -1725,7 +1725,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -1741,7 +1741,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -1766,7 +1766,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -1780,7 +1780,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -1794,7 +1794,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -1803,7 +1803,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -1819,7 +1819,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -1835,7 +1835,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -1847,7 +1847,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -1859,7 +1859,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -1869,7 +1869,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -1879,7 +1879,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -1891,7 +1891,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -1907,7 +1907,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -1932,7 +1932,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -1946,7 +1946,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -1960,7 +1960,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -1969,7 +1969,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -1985,7 +1985,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -2001,7 +2001,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -2013,7 +2013,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -2025,7 +2025,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -2035,7 +2035,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -2045,7 +2045,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -2057,7 +2057,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -2073,7 +2073,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -2098,7 +2098,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -2112,7 +2112,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -2126,7 +2126,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -2135,7 +2135,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -2151,7 +2151,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -2167,7 +2167,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -2179,7 +2179,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -2191,7 +2191,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -2201,7 +2201,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -2211,7 +2211,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -2223,7 +2223,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -2239,7 +2239,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -2264,7 +2264,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -2278,7 +2278,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -2292,7 +2292,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -2301,7 +2301,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -2317,7 +2317,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -2333,7 +2333,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -2345,7 +2345,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -2357,7 +2357,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -2367,7 +2367,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -2377,7 +2377,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -2389,7 +2389,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -2405,7 +2405,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -2430,7 +2430,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -2444,7 +2444,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -2458,7 +2458,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -2467,7 +2467,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -2483,7 +2483,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -2499,7 +2499,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -2511,7 +2511,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -2523,7 +2523,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -2533,7 +2533,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -2543,7 +2543,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |
@@ -2555,7 +2555,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Sistema / shell
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SYS-001 | MOSh debe proporcionar un bucle interactivo de lectura y ejecución de comandos | Must |  |
 | REQ-SYS-002 | El prompt debe incluir el nombre de usuario del sistema anfitrión | Must | Demo |
 | REQ-SYS-003 | El comando exit debe terminar la sesión interactiva | Must | Demo |
@@ -2571,7 +2571,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Comandos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-CMD-001 | ICD |  |  |
 | REQ-CMD-002 | Todo comando debe exponer help() callable | Must | Test |
 | REQ-CMD-003 | help() debe devolver un str no vacío | Must | Test |
@@ -2596,7 +2596,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Espacio de usuario
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-USER-001 | El sistema debe resolver el usuario real del sistema anfitrión | Must | Test |
 | REQ-USER-002 | El espacio personal debe ubicarse en rootfs/home/usuario/.mos/ | Must |  |
 | REQ-USER-003 | ensure_user_space debe crear commands, data, config, packages y repos si no existen | Must | Test |
@@ -2610,7 +2610,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Seguridad
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-SEC-001 | Todo comando debe validarse por AST antes de cargarse en operación normal | Must | Test |
 | REQ-SEC-002 | Solo se permiten imports de la biblioteca estándar y de moslib | Must | Test |
 | REQ-SEC-003 | Los imports relativos en comandos están prohibidos | Must | Test |
@@ -2624,7 +2624,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Arranque
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-BOOT-001 | El arranque debe ejecutar la batería de tests del proyecto | Must |  |
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
@@ -2633,7 +2633,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Pruebas
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TEST-001 | El proyecto debe disponer de tests automatizados en tests/ | Must | Inspection |
 | REQ-TEST-002 | Debe existir cobertura de seguridad de imports | Must | Test |
 | REQ-TEST-003 | Debe existir cobertura del loader de comandos | Must | Test |
@@ -2649,7 +2649,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Documentación
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-DOC-001 | Debe existir docs/METHODOLOGY.md | Must | Inspection |
 | REQ-DOC-002 | Debe existir docs/STYLE_GUIDE.md | Must | Inspection |
 | REQ-DOC-003 | Debe existir el set ECSS-light en docs/specs/ | Must | Inspection |
@@ -2665,7 +2665,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Actualización
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-UPD-001 | Debe existir un comando update para sincronizar con origin/main | Must | Demo |
 | REQ-UPD-002 | Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS | Must | Demo |
 | REQ-UPD-003 | update debe forzar la sincronización de main con origin/main | Must | Demo |
@@ -2677,7 +2677,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Plataforma / entornos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-PLAT-001 | El sistema debe poder ejecutarse con Python 3.10 o superior | Must | Demo |
 | REQ-PLAT-002 | El sistema no debe depender de una única distribución Linux | Must |  |
 | REQ-PLAT-003 | La instalación y lanzamiento deben contemplar linux/native, macos/native, windows/git-bash y windows/wsl | Must | Demo |
@@ -2689,7 +2689,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Apps
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-APP-001 | Una app debe identificarse con app.json (id, nombre, versión, comandos) | Must |  |
 | REQ-APP-002 | apps debe permitir list, show, install (ruta o repo git) y remove | Must |  |
 | REQ-APP-003 | El ámbito de instalación debe ser usuario o sistema | Must | Test |
@@ -2699,7 +2699,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Tareas e hilos
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-TASK-001 | Debe existir un almacén local de tareas (manuales y automáticas) | Must | Test |
 | REQ-TASK-002 | El comando tareas debe listar y gestionar tareas | Must |  |
 | REQ-TASK-003 | El comando hilos debe mostrar vista por clase en texto lineal | Must | Demo |
@@ -2709,7 +2709,7 @@ Formato: `REQ-<AREA>-<NNN>`
 ### Enrutador de IA
 
 | Id | Texto | Prioridad | Verificación |
-|----|-------|-----------|--------------|
+|-----|-------|-----------|--------------|
 | REQ-IA-001 | iarouter debe estar apagado por defecto | Must |  |
 | REQ-IA-002 | No debe enviar a un modelo hasta usar / preguntar (u operación equivalente implementada) | Must |  |
 | REQ-IA-003 | Debe poder detectar y usar proveedores locales Jan y GPT4All | Must |  |

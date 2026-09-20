@@ -1,6 +1,6 @@
 # Revisión de interacción humano ↔ IA
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.0  
 **Estado:** Normativo de proceso  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/HUMAN_ONBOARDING.md, docs/plans/README.md
 

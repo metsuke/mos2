@@ -1,6 +1,6 @@
 # 10 – Enrutador de IA
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.2  
 **Estado:** Normativo (mini campaña iarouter)  
 **Baseline:** v0.2.7 hacia v0.2.8  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/04-SEC-Security-Policy.md, docs/INCENTIVOS.md, docs/A11Y.md, docs/man/iarouter.md, docs/plans/2026-09-07-01-iarouter-modelos-lan.md

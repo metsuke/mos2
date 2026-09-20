@@ -1,6 +1,6 @@
 # Guía de estilo de programación de MetsuOS (MOS2)
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.0  
 **Baseline de referencia:** v0.2.1  
 **Estado:** Normativo  
 **Documento relacionado:** docs/METHODOLOGY.md
