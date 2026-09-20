@@ -1,26 +1,21 @@
-"""update: trae origin/main. Relanzar MOSh para cargar código nuevo."""
+"""update: main limpio, o update dev para probar una rama."""
 
 import os
 import sys
 from pathlib import Path
 
-from moslib.core.update_git import (
-    create_backup_branch,
-    has_pending_changes,
-    prune_old_backups,
-    run,
-    sync_tags_with_origin,
-)
+from moslib.core.dev_git import checkout_rama, ramas_remotas, sucio
+from moslib.core.update_git import prune_old_backups, run, sync_tags_with_origin
 
 
-def _get_project_root() -> Path:
+def _root() -> Path:
     return Path(__file__).resolve().parent.parent.parent
 
 
-def _avisar_reinicio():
+def _avisar():
     print()
     print("[update] El código nuevo no entra en esta sesión.")
-    print("[update] Escribe exit y vuelve a lanzar mos2, o: update reiniciar")
+    print("[update] exit y vuelve a lanzar mos2, o: update reiniciar")
 
 
 def _reiniciar(cwd: Path):
@@ -29,7 +24,7 @@ def _reiniciar(cwd: Path):
     os.execv(sys.executable, [sys.executable, str(entrada)])
 
 
-def _sincronizar_integridad():
+def _integridad():
     try:
         from moslib.core.integridad import copiar_repo_a_local
         print(copiar_repo_a_local())
@@ -37,48 +32,65 @@ def _sincronizar_integridad():
         print(f"[update] integridad local: {exc}")
 
 
+def _a_main(cwd: Path):
+    if sucio(cwd):
+        print("[update] Hay cambios locales. Usa dev publicar o limpia el árbol.")
+        sys.exit(1)
+    print("[update] origin/main...")
+    run(["git", "fetch", "origin"], cwd)
+    run(["git", "checkout", "main"], cwd, check=False)
+    sync_tags_with_origin(cwd)
+    run(["git", "reset", "--hard", "origin/main"], cwd)
+    prune_old_backups(cwd, keep=10)
+    _integridad()
+    print("[update] Completado. Árbol = origin/main.")
+    _avisar()
+
+
+def _dev(cwd: Path):
+    ramas = ramas_remotas(cwd)
+    if not ramas:
+        print("[update] No hay ramas remotas aparte de main.")
+        return
+    print("[update] Ramas de desarrollo:")
+    for i, name in enumerate(ramas, 1):
+        print(f"  {i}. {name}")
+    try:
+        raw = input("[update] Número (vacío cancela): ").strip()
+    except EOFError:
+        return
+    if not raw:
+        return
+    if not raw.isdigit() or not (1 <= int(raw) <= len(ramas)):
+        print("[update] Número no válido.")
+        return
+    rama = ramas[int(raw) - 1]
+    if sucio(cwd):
+        print("[update] Árbol sucio. Publica o limpia antes.")
+        return
+    checkout_rama(cwd, rama)
+    _integridad()
+    print(f"[update] Estás en {rama}. Relanza MOSh.")
+    _avisar()
+
+
 def execute(args):
     args = list(args or [])
-    solo_reiniciar = args == ["reiniciar"]
-    cwd = _get_project_root()
-    if not solo_reiniciar:
-        print("[update] Iniciando actualización forzada desde origin/main...")
-        print(f"[update] Directorio: {cwd}")
-        print()
-        result = run(["git", "rev-parse", "--is-inside-work-tree"], cwd, check=False)
-        if result.returncode != 0:
-            print("Error: no se está dentro de un repositorio git.")
-            sys.exit(1)
-        if has_pending_changes(cwd):
-            print("[update] Se han detectado cambios locales pendientes.")
-            backup_branch = create_backup_branch(cwd)
-            print(f"[update] Cambios guardados en la rama: {backup_branch}")
-            run(["git", "checkout", "main"], cwd, check=False)
-        else:
-            print("[update] No hay cambios locales pendientes.")
-            run(["git", "checkout", "main"], cwd, check=False)
-        print("[update] Descargando cambios de origin...")
-        run(["git", "fetch", "origin"], cwd)
-        sync_tags_with_origin(cwd)
-        print("[update] Forzando sincronización con origin/main...")
-        run(["git", "reset", "--hard", "origin/main"], cwd)
-        print("[update] Limpiando ramas de backup antiguas (máx. 10)...")
-        prune_old_backups(cwd, keep=10)
-        _sincronizar_integridad()
-        print()
-        print("[update] Actualización completada.")
-        print("[update] El árbol main y los tags locales coinciden con origin.")
-        _avisar_reinicio()
+    cwd = _root()
+    if args == ["reiniciar"]:
+        _reiniciar(cwd)
+        return
+    if args[:1] == ["dev"]:
+        _dev(cwd)
+        return
+    _a_main(cwd)
     if "reiniciar" in args:
         _reiniciar(cwd)
 
 
 def help():
-    return (
-        "Uso: update [reiniciar] - Trae origin/main. "
-        "Los módulos de esta sesión no cambian hasta relanzar MOSh."
-    )
+    return "Uso: update | update dev | update reiniciar"
 
 
 def sinopsis():
-    return ["update", "update reiniciar"]
+    return ["update", "update dev", "update reiniciar"]

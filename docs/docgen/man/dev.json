@@ -1,0 +1,35 @@
+{
+  "schema": "metsuos-docgen-man-1",
+  "id": "dev",
+  "titulo": "dev",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "edicion-json",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "dev — publicar o consolidar una rama de desarrollo"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
+    },
+    {
+      "titulo": "DESCRIPCIÓN",
+      "cuerpo": "dev publicar hace commit automático si hay cambios (mensaje wip de prueba en otras máquinas) y push de la rama actual.\n\ndev consolidar sube la rama, la fusiona en main solo con fast-forward, hace push de main y borra la rama local y remota. Si no hay fast-forward, no borra nada.\n\nProhibido sobre main."
+    },
+    {
+      "titulo": "EJEMPLOS",
+      "cuerpo": "dev publicar\ndev consolidar"
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "No force-push. No trabaja sobre main. El merge a main es solo --ff-only."
+    },
+    {
+      "titulo": "VÉASE TAMBIÉN",
+      "cuerpo": "update, git"
+    }
+  ]
+}

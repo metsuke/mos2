@@ -2,23 +2,19 @@
 <html lang="es"><head><meta charset="utf-8"><title>man-update</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
 <h1>update</h1>
 <h2>NOMBRE</h2>
-<p>update – actualiza MetsuOS desde origin/main con backup local y tags alineados</p>
+<p>update — trae origin/main o una rama de desarrollo</p>
 <h2>SINOPSIS</h2>
-<ul><li>update</li></ul>
+<ul><li>update</li><li>update dev</li><li>update reiniciar</li></ul>
 <h2>DESCRIPCIÓN</h2>
-<p>Sincroniza la copia local del producto con origin/main de forma forzada.</p>
-<p>Si hay cambios locales pendientes:</p>
-<p>1. crea una rama backup/YYYYMMDD_HHMMSS 2. preserva ahí el trabajo local 3. vuelve a main 4. hace fetch de origin 5. sincroniza tags con origin (alta y baja) 6. hace reset hard a origin/main 7. elimina ramas backup antiguas dejando un máximo de 10</p>
-<p>Las ramas backup son locales y no se publican como parte del producto.</p>
-<p>Los tags locales pasan a coincidir con los de origin. Desaparecen tags que el remoto ya no tiene. También desaparecen tags que solo existían en este clone y nunca se empujaron.</p>
-<p>Esto usa Git (fetch --tags --prune --prune-tags), no una función de un forge concreto.</p>
-<p>El código nuevo no sustituye los módulos ya cargados en esta sesión de MOSh. Tras update hay que salir y volver a entrar, o usar update reiniciar, que relanza rootfs/bin/mos.py (vuelve a pasar los tests de arranque).</p>
+<p>Sin argumentos alinea el clon con origin/main (fetch + checkout main + reset --hard). Se niega si el árbol está sucio: publica con dev publicar o limpia.</p>
+<p>update dev lista ramas remotas que no son main, pide un número y hace checkout + pull de esa rama para probar en otra máquina.</p>
+<p>El código nuevo no entra en la sesión actual. Sal y entra, o update reiniciar.</p>
 <h2>OPCIONES</h2>
-<p>reiniciar – relanza MOSh sobre el árbol actual. Si se combina con update (sin haber hecho solo esa palabra), primero hace el pull y después relanza.</p>
+<p>dev — elige rama remota distinta de main. reiniciar — relanza MOSh sobre el árbol actual.</p>
 <h2>EJEMPLOS</h2>
-<ul><li>update</li><li>update reiniciar</li></ul>
+<ul><li>update</li><li>update dev</li><li>update reiniciar</li></ul>
 <h2>SEGURIDAD</h2>
-<p>Comando de sistema. Opera sobre el repositorio git del producto. Úsalo solo cuando quieras alinear tu árbol local y tus tags con el remoto.</p>
+<p>No avanza main. No hace force-push. Sincroniza integridad local desde el repo.</p>
 <h2>VÉASE TAMBIÉN</h2>
-<p>version, test, help, synccheck</p>
+<p>dev, git, test, version</p>
 </body></html>

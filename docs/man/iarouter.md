@@ -11,6 +11,7 @@ iarouter – enrutador de modelos (local y remoto)
 - iarouter usar jan|gpt4all|grok|openrouter
 - iarouter check [all|share|jan|gpt4all|grok|openrouter] [twitter] [detalle]
 - iarouter share
+- iarouter connect
 - iarouter publicar
 - iarouter clave grok|openrouter [borrar]
 - iarouter modelos [prov]

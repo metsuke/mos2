@@ -1,7 +1,7 @@
 # git
 
 ## NOMBRE
-git – git del anfitrión sobre la raíz del clone
+git — git del anfitrión sobre la raíz del clone
 
 ## SINOPSIS
 
@@ -13,13 +13,10 @@ git – git del anfitrión sobre la raíz del clone
 
 ## DESCRIPCIÓN
 Reenvía los argumentos a git del PATH. El cwd es siempre la raíz del clone.
-No interpreta el mensaje de commit ni añade flags por su cuenta.
-Para evitar el pager: git --no-pager status
+En main están bloqueados commit, push, merge y rebase. Usa una rama y luego dev publicar o dev consolidar.
 
 ## SEGURIDAD
-Es el git del anfitrión. Puede escribir el repo.
-No escapa del clone como cwd.
-Comando de sistema. Solo stdlib y moslib.
+Es el git del anfitrión. Puede escribir el repo. No escapa del clone como cwd.
 
 ## VÉASE TAMBIÉN
-touch, code, docs
+dev, update, touch, code

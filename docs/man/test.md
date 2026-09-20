@@ -7,6 +7,7 @@ test – ejecuta la batería de tests de MetsuOS
 
 - test
 - test [args...]
+- test 120
 
 ## DESCRIPCIÓN
 Lanza pytest sobre el proyecto.

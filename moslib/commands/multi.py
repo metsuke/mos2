@@ -1,4 +1,4 @@
-"""Lote: pegar, :e ejecuta, :q cancela. write consume hasta el punto."""
+"""Lote: pegar, :e ejecuta, :q cancela. ;e y ;q valen igual. write consume hasta el punto."""
 
 import shlex
 from pathlib import Path
@@ -33,9 +33,16 @@ def _partir(bruto: str) -> list[str]:
     return out
 
 
+def _meta(line: str) -> str:
+    s = line.strip()
+    if s.startswith(";"):
+        return ":" + s[1:]
+    return s
+
+
 def execute(args):
     print("[multi] Pega comandos, uno por línea.")
-    print("[multi] :e  ejecuta el lote   |   :q  cancela")
+    print("[multi] :e  ejecuta el lote   |   :q  cancela   |   ;e ;q valen igual")
     lote = []
     while True:
         try:
@@ -44,10 +51,11 @@ def execute(args):
             print("[multi] Cancelado.")
             return
         for line in _partir(bruto):
-            if line in (":q", ":Q"):
+            meta = _meta(line).lower()
+            if meta in (":q",):
                 print("[multi] Cancelado.")
                 return
-            if line in (":e", ":E", ":w"):
+            if meta in (":e", ":w"):
                 _lanzar(lote)
                 return
             lote.append(line)
@@ -105,7 +113,7 @@ def _lanzar(lote: list[str]) -> None:
 
 
 def help():
-    return "Uso: multi (o m) - Lote. :e ejecuta, :q cancela. write lee hasta ."
+    return "Uso: multi (o m) - Lote. :e o ;e ejecuta, :q o ;q cancela. write lee hasta ."
 
 
 def sinopsis():

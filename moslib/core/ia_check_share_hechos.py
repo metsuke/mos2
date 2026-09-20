@@ -1,6 +1,4 @@
-"""Recolección de hechos LAN/share."""
-
-from __future__ import annotations
+"""Sondeo LAN/share de iarouter."""
 
 from moslib.core import ia_bridge
 from moslib.core.ia_check_host import ips_windows, listen, pasarela, perfil_windows
@@ -63,5 +61,5 @@ def hechos_share() -> dict:
         "pasarela": extra,
         "urls": urls,
         "pruebas": pruebas,
-        "probadas": [f"{o}:{i}" for i, o in destinos],
+        "probadas": [f"{i}:{o}" for i, o in destinos],
     }

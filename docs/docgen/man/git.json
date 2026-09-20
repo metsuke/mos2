@@ -8,7 +8,7 @@
   "secciones": [
     {
       "titulo": "NOMBRE",
-      "cuerpo": "git – git del anfitrión sobre la raíz del clone"
+      "cuerpo": "git — git del anfitrión sobre la raíz del clone"
     },
     {
       "titulo": "SINOPSIS",
@@ -17,15 +17,15 @@
     },
     {
       "titulo": "DESCRIPCIÓN",
-      "cuerpo": "Reenvía los argumentos a git del PATH. El cwd es siempre la raíz del clone.\nNo interpreta el mensaje de commit ni añade flags por su cuenta.\nPara evitar el pager: git --no-pager status"
+      "cuerpo": "Reenvía los argumentos a git del PATH. El cwd es siempre la raíz del clone.\nEn main están bloqueados commit, push, merge y rebase. Usa una rama y luego dev publicar o dev consolidar."
     },
     {
       "titulo": "SEGURIDAD",
-      "cuerpo": "Es el git del anfitrión. Puede escribir el repo.\nNo escapa del clone como cwd.\nComando de sistema. Solo stdlib y moslib."
+      "cuerpo": "Es el git del anfitrión. Puede escribir el repo. No escapa del clone como cwd."
     },
     {
       "titulo": "VÉASE TAMBIÉN",
-      "cuerpo": "touch, code, docs"
+      "cuerpo": "dev, update, touch, code"
     }
   ]
 }

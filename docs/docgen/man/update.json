@@ -4,11 +4,11 @@
   "titulo": "update",
   "preambulo": "",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/man/update.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "NOMBRE",
-      "cuerpo": "update – actualiza MetsuOS desde origin/main con backup local y tags alineados"
+      "cuerpo": "update — trae origin/main o una rama de desarrollo"
     },
     {
       "titulo": "SINOPSIS",
@@ -17,23 +17,23 @@
     },
     {
       "titulo": "DESCRIPCIÓN",
-      "cuerpo": "Sincroniza la copia local del producto con origin/main de forma forzada.\n\nSi hay cambios locales pendientes:\n\n1. crea una rama backup/YYYYMMDD_HHMMSS\n2. preserva ahí el trabajo local\n3. vuelve a main\n4. hace fetch de origin\n5. sincroniza tags con origin (alta y baja)\n6. hace reset hard a origin/main\n7. elimina ramas backup antiguas dejando un máximo de 10\n\nLas ramas backup son locales y no se publican como parte del producto.\n\nLos tags locales pasan a coincidir con los de origin. Desaparecen tags que el remoto ya no tiene. También desaparecen tags que solo existían en este clone y nunca se empujaron.\n\nEsto usa Git (fetch --tags --prune --prune-tags), no una función de un forge concreto.\n\nEl código nuevo no sustituye los módulos ya cargados en esta sesión de MOSh. Tras update hay que salir y volver a entrar, o usar update reiniciar, que relanza rootfs/bin/mos.py (vuelve a pasar los tests de arranque)."
+      "cuerpo": "Sin argumentos alinea el clon con origin/main (fetch + checkout main + reset --hard). Se niega si el árbol está sucio: publica con dev publicar o limpia.\n\nupdate dev lista ramas remotas que no son main, pide un número y hace checkout + pull de esa rama para probar en otra máquina.\n\nEl código nuevo no entra en la sesión actual. Sal y entra, o update reiniciar."
     },
     {
       "titulo": "OPCIONES",
-      "cuerpo": "reiniciar – relanza MOSh sobre el árbol actual. Si se combina con update (sin haber hecho solo esa palabra), primero hace el pull y después relanza."
+      "cuerpo": "dev — elige rama remota distinta de main.\nreiniciar — relanza MOSh sobre el árbol actual."
     },
     {
       "titulo": "EJEMPLOS",
-      "cuerpo": "update\nupdate reiniciar"
+      "cuerpo": "update\nupdate dev\nupdate reiniciar"
     },
     {
       "titulo": "SEGURIDAD",
-      "cuerpo": "Comando de sistema. Opera sobre el repositorio git del producto. Úsalo solo cuando quieras alinear tu árbol local y tus tags con el remoto."
+      "cuerpo": "No avanza main. No hace force-push. Sincroniza integridad local desde el repo."
     },
     {
       "titulo": "VÉASE TAMBIÉN",
-      "cuerpo": "version, test, help, synccheck"
+      "cuerpo": "dev, git, test, version"
     }
   ]
 }

@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from moslib.core import docgen as motor
+from moslib.core.docgen_hash import registrar_destino
 
 SECCIONES_LISTA = {
     "sinopsis",
@@ -79,4 +80,5 @@ def markdown_a_html(md: str, titulo: str) -> str:
 def escribir_html(doc_id: str, markdown: str) -> Path:
     dest = html_path_for(doc_id)
     dest.write_text(markdown_a_html(markdown, doc_id), encoding="utf-8")
+    registrar_destino(dest)
     return dest

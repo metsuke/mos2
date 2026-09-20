@@ -6,9 +6,9 @@ from moslib.core.iarouter_cmd import (
     cmd_clave,
     cmd_modelos,
     cmd_publicar,
-    cmd_share,
     proveedor_y_resto,
 )
+from moslib.core.iarouter_cmd_share import cmd_connect, cmd_share
 from moslib.core.iarouter_print import ofrecer_destino, print_detect, print_puente
 
 
@@ -43,6 +43,9 @@ def execute(args):
         return
     if cmd == "share":
         cmd_share()
+        return
+    if cmd == "connect":
+        cmd_connect()
         return
     if cmd == "publicar":
         cmd_publicar()
@@ -88,8 +91,8 @@ def execute(args):
 def help():
     return (
         "Uso: iarouter detectar|estado|usar <prov>|check [ámbito] [twitter] [detalle]| "
-        "share|publicar|clave grok|openrouter [borrar]|modelos [prov]|modelo [prov] [id]| "
-        "preguntar <texto>|puente on|off|estado"
+        "share|connect|publicar|clave grok|openrouter [borrar]|modelos [prov]| "
+        "modelo [prov] [id]|preguntar <texto>|puente on|off|estado"
     )
 
 
@@ -101,6 +104,7 @@ def sinopsis():
         "iarouter usar jan|gpt4all|grok|openrouter",
         "iarouter check [all|share|jan|gpt4all|grok|openrouter] [twitter] [detalle]",
         "iarouter share",
+        "iarouter connect",
         "iarouter publicar",
         "iarouter clave grok|openrouter [borrar]",
         "iarouter modelos [prov]",
