@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-022",
+  "area": "CMD",
+  "titulo": "write.sh replica el lote write fuera de MOS",
+  "texto": "En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

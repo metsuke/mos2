@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SYS-012",
+  "area": "SYS",
+  "titulo": "Tope de 120 líneas en módulos Python de moslib",
+  "texto": "Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": "Consulta: test 120"
+}

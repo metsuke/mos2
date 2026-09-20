@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SEC-010",
+  "area": "SEC",
+  "titulo": "Copia local del manifiesto de integridad al arrancar si falta",
+  "texto": "Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

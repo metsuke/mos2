@@ -77,6 +77,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -102,6 +103,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -130,6 +133,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -183,6 +187,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -243,6 +248,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -268,6 +274,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -296,6 +304,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -349,6 +358,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -409,6 +419,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -434,6 +445,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -462,6 +475,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -515,6 +529,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -575,6 +590,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -600,6 +616,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -628,6 +646,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -681,6 +700,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -741,6 +761,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -766,6 +787,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -794,6 +817,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -847,6 +871,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -907,6 +932,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -932,6 +958,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -960,6 +988,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -1013,6 +1042,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1073,6 +1103,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -1098,6 +1129,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1126,6 +1159,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -1179,6 +1213,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1239,6 +1274,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -1264,6 +1300,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1292,6 +1330,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -1345,6 +1384,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1405,6 +1445,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -1430,6 +1471,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1458,6 +1501,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -1511,6 +1555,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1571,6 +1616,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -1596,6 +1642,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1624,6 +1672,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -1677,6 +1726,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1737,6 +1787,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -1762,6 +1813,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1790,6 +1843,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -1843,6 +1897,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1903,6 +1958,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -1928,6 +1984,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1956,6 +2014,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -2009,6 +2068,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2069,6 +2129,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -2094,6 +2155,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2122,6 +2185,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -2175,6 +2239,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2235,6 +2300,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -2260,6 +2326,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2288,6 +2356,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -2341,6 +2410,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2401,6 +2471,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -2426,6 +2497,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2454,6 +2527,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -2507,6 +2581,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2567,6 +2642,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-009 | Los módulos core obligatorios deben tener docstring de módulo | Must | Test |
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
+| REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
 
 ### Comandos
 
@@ -2592,6 +2668,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-018 | man debe poder mostrar el man de un comando de app si la app lo aporta | Must | Demo |
 | REQ-CMD-019 | Un comando de app no puede sobrescribir un comando de sistema | Must | Test |
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
+| REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
+| REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2620,6 +2698,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-007 | No debe existir un modo normal de operación con la seguridad desactivada | Must | Inspection |
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
+| REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
 
 ### Arranque
 
@@ -2673,6 +2752,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-005 | Las ramas backup no se consideran artefactos de publicación del producto | Must | Inspection |
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
+| REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
 
 ### Plataforma / entornos
 

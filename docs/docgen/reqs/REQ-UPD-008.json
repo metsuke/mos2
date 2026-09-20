@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-UPD-008",
+  "area": "UPD",
+  "titulo": "Flujo de ramas: update, update dev, dev publicar y consolidar",
+  "texto": "No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}
