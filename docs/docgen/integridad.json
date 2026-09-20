@@ -22,8 +22,8 @@
   "docs/USER_MANUAL.md": "8f0d6f4ae1d14cb6dd3d96f3a58403de137661bdfddeeff1abba5f33a14e9ed2",
   "docs/VERSIONING.md": "b2ba7f47e4f992490192448eb3927b46bbb5246cb8fcbb728597f764d8ccf27a",
   "docs/a11y/DECLARACION.md": "fc38919619af52628695281514c060f4c11d177281e5a9309f2cc08daf43c069",
-  "docs/a11y/informe.json": "b37914120e532cdb4d7a012785109e7bc284c0d2185cf366e4c97e0fdeeb3a77",
-  "docs/a11y/informe.md": "ce937cb60e664130f3d2a21e659962007f6fa386a349cb0edd6a4b144005c523",
+  "docs/a11y/informe.json": "4e76c35b39903b8a67ffbe91d907a11cf0c8796191bf313959e3ed8581f291c9",
+  "docs/a11y/informe.md": "a9d737a083c4bf8fd55ffaf511a6e90629c6686f164386358b0b57b5100b9e44",
   "docs/docgen/README.md": "7da8b94eaed3f8076a5d8ca4b7810d51c69854e65022ce427069f55dd9c12220",
   "docs/docgen/areas.json": "3cb5071cda8645a07c06a66833ad7dd02b3c51e0537879b643164497c64ab432",
   "docs/docgen/backup/.gitignore": "5c89a8a9c5af258d02d0bfd3582c75963bea53baa1f5f5132662b80020a63452",
@@ -384,6 +384,7 @@
   "moslib/core/iarouter_cmd.py": "aacf135681e7e7dba61ae33453218bf8b82eae099bb07f207defdf864a2e4e3c",
   "moslib/core/iarouter_cmd_share.py": "c0698dc5b38c5aaaa5cae0ed1904ac227b92fc7e0a35495552aebc8b06ee1a79",
   "moslib/core/iarouter_print.py": "77558c9630f7f4a4bebf35a1c292ffd939cd0199c2af576ac236b5a9011389a4",
+  "moslib/core/integridad.py": "6a38d0273757f2102ca97391cec8d9729b8acb3ff9c23ba7700bf0e8d521ca34",
   "moslib/core/red_data.py": "90bab89bdfd64ee436e43d8a3f10927a60220efc350360fb450a9e9fb1d3cd3e",
   "moslib/core/secreto.py": "c7f5776eaa50b8cfa4091d459586af3c6bab3d9b5a7cde8dd53d910b489cdb73",
   "moslib/core/security.py": "5768273dd976e0d24d86c8a25cc3334ea26832eba2cb152bac96fd389f9aeee9",
@@ -430,5 +431,6 @@
   "tests/test_tasks.py": "c0edfb5d3d118381f3cf535b8933eca9494468035c90efc0b88f8d58e96f0a95",
   "tests/test_tope_lineas.py": "5c3df1393447862e9b0ab9e84981b7aa11d0ff32f6465c7f8965f99fb134a353",
   "tests/test_user.py": "be39376b97186d53d8b195e3bab02ab12abdbbaf191e7be4712c05655c79ddf7",
-  "tests/test_version_metadata.py": "4a6670e20a02de3b49aced87e329d907693227223412f9219d3f99278a98e0b8"
+  "tests/test_version_metadata.py": "4a6670e20a02de3b49aced87e329d907693227223412f9219d3f99278a98e0b8",
+  "write.sh": "a5e111fd714790dcd71cad6ca991684ac01736aa82f8f6c2b91e69ba84fa507a"
 }

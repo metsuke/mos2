@@ -6,7 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from moslib.core.integridad_sello import comprobar_sello, escribir_sello
+from moslib.core.integridad_sello import comprobar_sello, escribir_sello, sello_path
 from moslib.core.user import ensure_user_space, get_username, get_user_mos_dir
 
 MANIFIESTO_REL = Path("docs/docgen/integridad.json")
@@ -50,7 +50,10 @@ def _leer(path: Path) -> dict:
 def _escribir(path: Path, mapa: dict) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     ordenado = {k: mapa[k] for k in sorted(mapa)}
-    path.write_text(json.dumps(ordenado, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(ordenado, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     escribir_sello(path)
     return path
 
@@ -69,9 +72,15 @@ def guardar_ambos(mapa: dict) -> None:
 
 
 def copiar_repo_a_local() -> Path:
-    mapa = cargar_repo()
-    dest = _escribir(local_path(), mapa)
-    return dest
+    return _escribir(local_path(), cargar_repo())
+
+
+def asegurar_local() -> Path:
+    dest = local_path()
+    if dest.is_file() and sello_path(dest).is_file():
+        return dest
+    print("[integridad] Sin copia local. Se toma la del repositorio.")
+    return copiar_repo_a_local()
 
 
 def registrar(rel: str, digest: str | None = None) -> str:
@@ -88,6 +97,7 @@ def registrar(rel: str, digest: str | None = None) -> str:
 
 
 def fallos(contra: str = "local") -> list[str]:
+    asegurar_local()
     root = project_root()
     out = []
     for path in (repo_path(), local_path()):
@@ -96,11 +106,11 @@ def fallos(contra: str = "local") -> list[str]:
             out.append(msg)
     mapa = cargar_local() if contra == "local" else cargar_repo()
     for rel, esperado in mapa.items():
-        path = root / rel
-        if not path.is_file():
+        f = root / rel
+        if not f.is_file():
             out.append(f"falta {rel}")
             continue
-        real = sha256_fichero(path)
+        real = sha256_fichero(f)
         if real != esperado:
             out.append(f"{rel} esperado={esperado} real={real}")
     return out
