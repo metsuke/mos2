@@ -1,0 +1,31 @@
+{
+  "schema": "metsuos-docgen-man-1",
+  "id": "write",
+  "titulo": "write",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "edicion-json",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "write - escribe un fichero del clone con hash y Base64 (solo multi)"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
+    },
+    {
+      "titulo": "DESCRIPCION",
+      "cuerpo": "Solo funciona dentro de multi o m.\nLote: write RUTA, linea sha256 hex, Base64 del fichero entero, linea con un punto.\nSi el hash no coincide no se toca el destino.\nTras OK abre code sobre la ruta.\nAlias: w.\nFuera de MOS usar ./write.sh con el mismo lote."
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "Ruta relativa a la raiz del clone.\nNo escribe si el SHA-256 no coincide.\nComando de sistema. Solo stdlib y moslib."
+    },
+    {
+      "titulo": "VEASE TAMBIEN",
+      "cuerpo": "multi, m, w, code, hash"
+    }
+  ]
+}

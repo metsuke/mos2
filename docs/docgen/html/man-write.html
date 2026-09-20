@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>man-write</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>write</h1>
+<h2>NOMBRE</h2>
+<p>write - escribe un fichero del clone con hash y Base64 (solo multi)</p>
+<h2>SINOPSIS</h2>
+<ul><li>write &lt;ruta&gt;</li><li>w &lt;ruta&gt;</li></ul>
+<h2>DESCRIPCION</h2>
+<p>Solo funciona dentro de multi o m. Lote: write RUTA, linea sha256 hex, Base64 del fichero entero, linea con un punto. Si el hash no coincide no se toca el destino. Tras OK abre code sobre la ruta. Alias: w. Fuera de MOS usar ./write.sh con el mismo lote.</p>
+<h2>SEGURIDAD</h2>
+<p>Ruta relativa a la raiz del clone. No escribe si el SHA-256 no coincide. Comando de sistema. Solo stdlib y moslib.</p>
+<h2>VEASE TAMBIEN</h2>
+<p>multi, m, w, code, hash</p>
+</body></html>
