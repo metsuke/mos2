@@ -1,6 +1,6 @@
 # 02 – SRS · Requisitos software
 
-**Versión del documento:** 1.4  
+**Versión del documento:** 1.3  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/06-TEST-Verification-and-Validation.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
