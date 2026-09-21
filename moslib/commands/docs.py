@@ -1,110 +1,89 @@
-"""
-Comando docs de MetsuOS.
-Lista o muestra documentación de docs/ y de ficheros públicos de la raíz.
-"""
+"""Comando docs: menu por categoria y visualizacion."""
 
 from pathlib import Path
 
-ROOT_DOCS = (
-    "README.md",
-    "CHANGELOG.md",
-    "AGENTS.md",
-    "LICENSE",
+ROOT_DOCS = ("README.md", "CHANGELOG.md", "AGENTS.md", "LICENSE")
+CATS = (
+    ("raiz", "Raiz del clone"),
+    ("docs", "Paginas en docs/"),
+    ("specs", "Especificaciones"),
+    ("man", "Manuales"),
+    ("planes", "Planes"),
 )
 
 
-def _project_root() -> Path:
+def _root() -> Path:
     return Path(__file__).resolve().parent.parent.parent
 
 
-def _docs_root() -> Path:
-    return _project_root() / "docs"
+def _docs() -> Path:
+    return _root() / "docs"
 
 
-def _norm(rel: str) -> str:
-    raw = rel.strip().replace("\\", "/").lstrip("/")
-    if raw.lower().startswith("./"):
-        raw = raw[2:]
-    return raw
+def _archivos(cat: str) -> list:
+    root, docs = _root(), _docs()
+    if cat == "raiz":
+        return [root / n for n in ROOT_DOCS if (root / n).is_file()]
+    if cat == "docs":
+        if not docs.is_dir():
+            return []
+        return sorted(p for p in docs.iterdir() if p.is_file())
+    mapa = {"specs": docs / "specs", "man": docs / "man", "planes": docs / "plans"}
+    base = mapa.get(cat)
+    if base is None or not base.is_dir():
+        return []
+    return sorted(base.glob("*.md"))
 
 
-def _resolve(rel: str) -> Path | None:
-    raw = _norm(rel)
-    root = _project_root()
-    docs = _docs_root()
-
-    if raw in ROOT_DOCS or raw.upper() == "LICENSE":
-        name = "LICENSE" if raw.upper() == "LICENSE" else raw
-        target = (root / name).resolve()
-        try:
-            target.relative_to(root.resolve())
-        except ValueError:
-            return None
-        return target
-
-    if raw.lower().startswith("docs/"):
-        raw = raw[5:]
-    target = (docs / raw).resolve()
-    try:
-        target.relative_to(docs.resolve())
-    except ValueError:
+def _elige(titulo: str, filas: list) -> int | None:
+    print("[docs] " + titulo)
+    for i, texto in enumerate(filas, 1):
+        print(f"  {i}) {texto}")
+    print("  0) salir")
+    bruto = input("[docs] numero: ").strip().lower()
+    if bruto in ("", "0", "q"):
         return None
-    return target
+    if not bruto.isdigit():
+        print("[docs] no es un numero")
+        return None
+    n = int(bruto)
+    if n < 1 or n > len(filas):
+        print("[docs] fuera de rango")
+        return None
+    return n - 1
 
 
-def _list_docs() -> None:
-    root = _project_root()
-    docs = _docs_root()
-    print("Documentación disponible:")
-    print()
-    print("Raíz del proyecto:")
-    for name in ROOT_DOCS:
-        path = root / name
-        mark = name if path.is_file() else f"{name} (no está en este clone)"
-        print(f"  {mark}")
-    print()
-    print("docs/:")
-    if not docs.is_dir():
-        print("  Error: no existe docs/")
-        print("  Comprueba que estás en la raíz del proyecto MetsuOS.")
-        return
-    files = sorted(p for p in docs.rglob("*") if p.is_file())
-    if not files:
-        print("  (vacío)")
-    else:
-        for path in files:
-            print(f"  {path.relative_to(docs).as_posix()}")
-    print()
-    print("Uso: docs <ruta>")
-    print("Ejemplo: docs README.md")
-    print("Ejemplo: docs A11Y.md")
-    print("Ejemplo: docs a11y/DECLARACION.md")
-
-
-def _show_docs(rel: str) -> None:
-    target = _resolve(rel)
-    if target is None:
-        print("Error: la ruta no está permitida.")
-        print("Puedes abrir ficheros bajo docs/ o README.md, CHANGELOG.md, AGENTS.md, LICENSE.")
-        return
-    if not target.is_file():
-        print(f"Error: no existe el documento: {rel}")
-        print("Usa: docs    (sin argumentos) para listar.")
-        return
-    text = target.read_text(encoding="utf-8", errors="replace")
-    print(text.rstrip())
+def _mostrar(path: Path) -> None:
+    texto = path.read_text(encoding="utf-8", errors="replace")
+    print(texto.rstrip())
 
 
 def execute(args):
-    if not args:
-        _list_docs()
+    if args:
+        bruto = " ".join(args).strip()
+        cand = _root() / bruto
+        if not cand.is_file():
+            cand = _docs() / bruto
+        if not cand.is_file():
+            print("[docs] no existe: " + bruto)
+            return
+        _mostrar(cand)
         return
-    _show_docs(" ".join(args).strip())
+    presentes = [c for c in CATS if _archivos(c[0])]
+    i = _elige("Categorias", [f"{c[1]} ({len(_archivos(c[0]))})" for c in presentes])
+    if i is None:
+        return
+    cat = presentes[i][0]
+    files = _archivos(cat)
+    j = _elige(presentes[i][1], [p.name for p in files])
+    if j is None:
+        return
+    _mostrar(files[j])
 
 
 def help():
-    return (
-        "Uso: docs - Lista documentación (docs/ y README, CHANGELOG, AGENTS, LICENSE). "
-        "Uso: docs <ruta> - Muestra un fichero permitido "
-        "(ejemplo: docs README.md, docs A11Y.md)"
-    )
+    return "Uso: docs  (menu)  |  docs <ruta>  (abre directo)"
+
+
+def sinopsis():
+    return ["docs", "docs <ruta>"]

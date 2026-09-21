@@ -333,7 +333,7 @@
   "moslib/commands/code.py": "5013b4ee010f5728be71219fee16978dd562d385c431bd5f5f46b155d53d2c1d",
   "moslib/commands/dev.py": "e0c83c6abe096012e222eee4077c097b9d1758ea110d4665927c208874272ed5",
   "moslib/commands/docgen.py": "e08e7f5bfcc780c167b3a55aff99db25c74e08f9fe5913484b8ea5588b2b7e61",
-  "moslib/commands/docs.py": "439ec8827ff510648718e2a60dd131d94806c0bcfc1b0ab837e2c778800cfe9c",
+  "moslib/commands/docs.py": "4f51526d16a0f7fbfd344637a2258504ab33f0f25b5aa4f94d7886b89baed175",
   "moslib/commands/echo.py": "00260561b47e51176d8971fd99370b7b3f7e867772ceb81bf136b9c1d2b7d919",
   "moslib/commands/echo.pydocgen": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "moslib/commands/git.py": "38cf11d18a957d14544defc2b94aaafa7e664bf51546e657d9227861edb47091",
