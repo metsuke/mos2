@@ -2,15 +2,15 @@
   "schema": "metsuos-docgen-page-1",
   "id": "ia-write",
   "titulo": "Ritual write y multi para IA",
-  "preambulo": "La IA no entrega parches parciales. Entrega ficheros enteros por write con SHA-256 y base64. Si el lote toca un documento, docgen generate va en el mismo lote.",
+  "preambulo": "Fichero entero. Hash SHA-256 del contenido en claro. Payload Base64 o gz:+Base64(gzip). generate en el mismo lote.",
   "secciones": [
     {
-      "titulo": "Dentro de MOS",
-      "cuerpo": "m o multi. write ruta / hash / base64 / punto. Si hay generate: linea docgen generate <id> despues del punto. :e ejecuta (;e vale). :q cancela. Maximo tres writes por lote. write registra integridad."
+      "titulo": "Lote",
+      "cuerpo": "write ruta\nhash\n[gz:]base64\n.\ndocgen generate <id>\n:e\n\nEl hash es del fichero descomprimido. gz: solo si el receptor ya decodifica gzip (write_b64._decodificar). Si no acorta, Base64 plano."
     },
     {
-      "titulo": "Fuera de MOS",
-      "cuerpo": "./write.sh pega el mismo lote. Las lineas que no son write (docgen generate, dev publicar) se ejecutan. :e aplica y sale. :q cancela. registrar del rel escrito."
+      "titulo": "Donde",
+      "cuerpo": "Dentro: multi/m. Fuera: ./write.sh lanza multi real. Maximo tres writes. write registra integridad."
     }
   ]
 }
