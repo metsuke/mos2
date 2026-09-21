@@ -1,8 +1,9 @@
-"""Escritura Base64 con hash y backup. Solo vía multi."""
+"""Escritura Base64/gzip con hash y backup. Solo via multi."""
 
 from __future__ import annotations
 
 import base64
+import gzip
 import time
 from pathlib import Path
 
@@ -24,9 +25,18 @@ def _preview(datos: bytes) -> str:
     texto = datos.decode("utf-8", errors="replace").splitlines()
     cabeza = "\n".join(texto[:3])
     cola = "\n".join(texto[-3:])
-    return (
-        f"{BORDE}\n{cabeza}\n{BORDE}\n…\n{BORDE}\n{cola}\n{BORDE}"
-    )
+    return f"{BORDE}\n{cabeza}\n{BORDE}\n…\n{BORDE}\n{cola}\n{BORDE}"
+
+
+def _decodificar(bruto: str) -> bytes:
+    s = bruto.strip()
+    gz = s.startswith("gz:")
+    if gz:
+        s = s[3:]
+    crudo = base64.b64decode(s, validate=True)
+    if gz:
+        return gzip.decompress(crudo)
+    return crudo
 
 
 def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
@@ -36,12 +46,12 @@ def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
         return False, "falta hash esperado y Base64"
     esperado = lineas[0].strip().lower().replace("sha256:", "").replace("esperado:", "").strip()
     if len(esperado) != 64 or any(c not in "0123456789abcdef" for c in esperado):
-        return False, "la primera línea debe ser el sha256 hex"
+        return False, "la primera linea debe ser el sha256 hex"
     b64 = "".join(x.strip() for x in lineas[1:] if x.strip() and x.strip() != ".")
     try:
-        datos = base64.b64decode(b64, validate=True)
+        datos = _decodificar(b64)
     except Exception as exc:
-        return False, f"Base64 inválido: {exc}"
+        return False, f"payload invalido: {exc}"
     real = sha256_bytes(datos)
     if real != esperado:
         return False, f"NO COINCIDE esperado={esperado} real={real}"
@@ -50,8 +60,8 @@ def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
     dest.relative_to(root)
     ensure_user_space(get_username())
     bak = None
-    existed = dest.is_file()
-    if existed:
+    existia = dest.is_file()
+    if existia:
         bak = _tmp_dir() / f"{int(time.time())}-{dest.name}"
         bak.write_bytes(dest.read_bytes())
     try:
@@ -61,7 +71,7 @@ def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
     except Exception as exc:
         if bak is not None and bak.is_file():
             dest.write_bytes(bak.read_bytes())
-        elif dest.is_file() and not existed:
+        elif dest.is_file() and not existia:
             dest.unlink()
         return False, f"escritura fallida, restaurado: {exc}"
     if bak is not None:
