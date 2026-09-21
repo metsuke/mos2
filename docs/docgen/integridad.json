@@ -350,7 +350,7 @@
   "moslib/commands/iarouter.py": "8a239cbebcdae290d6f6c6990e716cc1d5872bcbbdb68509eed7e4a30e0575ed",
   "moslib/commands/m.py": "7f1a0c19bbc451bfac5cd8569a16d4c78970dbb5239dc346e5a755bf0f2fd6df",
   "moslib/commands/man.py": "31b5ca45294c51d471bc0dd6aceb713e4773ffda83c4ee73791dedf0ab70c42d",
-  "moslib/commands/multi.py": "35c6925daffe7469a9a5d2a1f9d9a1627abfe56506b4010f537cd4af97c45ef4",
+  "moslib/commands/multi.py": "be8f8e918acf0ada348f0e576d565ea7e2cc2a0ba95bce257a01c88273248063",
   "moslib/commands/red.py": "2264cf0eae25fb87c40977dca47fb62fea55a63494b409684a3dbd0f77fd137e",
   "moslib/commands/synccheck.py": "40cd6fcbf2fd47252c8ead84b45461b78975651e3a9660702f99825b66090217",
   "moslib/commands/sysinfo.py": "6d67e44e323645ee905ba2e9f9e4e19c169499b6e6857105fe7f2ec51375e82d",
@@ -374,8 +374,9 @@
   "moslib/core/docgen_hash.py": "ad9a9be109aa760d0664d03d5807a0dc268ede466dff84488c574a30ba884a52",
   "moslib/core/docgen_html.py": "472a0d360c46492e200e9f6b3119f062087c5a24dcc3e76bcac611accef5ebaf",
   "moslib/core/docgen_html_md.py": "6547b158092527c86ce439aa3e2aea031d1891cbb7847245aeccb188181f85c4",
-  "moslib/core/docgen_index.py": "506fda97b477e84c47ad8705c60fc08c4dac56597c6eb5eb3639e1dc800ce49d",
-  "moslib/core/docgen_index_crud.py": "46b994b05bfbb5012ef72b872d66b36bdc0b6c8111d07a7a602b1b65902386ea",
+  "moslib/core/docgen_index.py": "9b1742e65b56e8c6bfb2ce62bc07a1cf5e456dfc286ad78880b3bd5283015478",
+  "moslib/core/docgen_index_crud.py": "7329eae3fc0b5939e0ba18dc07df7de130b0db2129eef93169c376e554e9df2d",
+  "moslib/core/docgen_index_paths.py": "f713b3f54920486c0b453fd73bbf8be2ce18d488803e1a0558e4f3b4737a79e7",
   "moslib/core/docgen_io.py": "1a9e5b6ad81c5d10e221fcc868f0e0ca6fdc6115b9b1d1d1f4dd84af44645205",
   "moslib/core/docgen_man.py": "7d5a18ccac1696aa4683362804ab6cf1018eed3fedbfe27d2f15da156e5bd7bd",
   "moslib/core/docgen_man_run.py": "0411f057832340e8666821cf3092725419df3b91021bb4709edfc61918fd5383",
@@ -468,5 +469,5 @@
   "tests/test_tope_lineas.py": "5c3df1393447862e9b0ab9e84981b7aa11d0ff32f6465c7f8965f99fb134a353",
   "tests/test_user.py": "be39376b97186d53d8b195e3bab02ab12abdbbaf191e7be4712c05655c79ddf7",
   "tests/test_version_metadata.py": "4a6670e20a02de3b49aced87e329d907693227223412f9219d3f99278a98e0b8",
-  "write.sh": "5eff7502628eb6eac457e622dad8d062f861b2107547e4c808dc83d284ac48bc"
+  "write.sh": "1c9e1a6afab0a5ba72f87f356a303d2aabc181af3252980b045a756275c4fd2f"
 }

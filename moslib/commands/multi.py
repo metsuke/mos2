@@ -1,6 +1,7 @@
-"""Lote: pegar, :e ejecuta, :q cancela. ;e y ;q valen igual. write consume hasta el punto."""
+"""Lote: pegar, :e ejecuta, :q cancela. write consume hasta el punto."""
 
 import shlex
+import sys
 from pathlib import Path
 
 from moslib.core.cmd_loader import CommandManager
@@ -24,50 +25,51 @@ def _manager():
     )
 
 
-def _partir(bruto: str) -> list[str]:
-    out = []
-    for line in bruto.replace("\r\n", "\n").split("\n"):
-        line = line.strip()
-        if line:
-            out.append(line)
-    return out
-
-
 def _meta(line: str) -> str:
     s = line.strip()
-    if s.startswith(";"):
-        return ":" + s[1:]
-    return s
+    return ":" + s[1:] if s.startswith(";") else s
+
+
+def _eco(line: str) -> None:
+    s = line.strip()
+    if len(s) > 80 and not s.startswith(("write ", "w ", "docgen ", ":")):
+        print(f"[multi] + ({len(s)} chars)")
+        return
+    print(f"[multi] + {s}")
 
 
 def execute(args):
-    print("[multi] Pega comandos, uno por línea.")
-    print("[multi] :e  ejecuta el lote   |   :q  cancela   |   ;e ;q valen igual")
+    print("[multi] Pega comandos. :e ejecuta  |  :q cancela")
     lote = []
     while True:
         try:
-            bruto = input("multi> ")
+            bruto = sys.stdin.readline()
         except (EOFError, KeyboardInterrupt):
             print("[multi] Cancelado.")
             return
-        for line in _partir(bruto):
-            meta = _meta(line).lower()
-            if meta in (":q",):
-                print("[multi] Cancelado.")
-                return
-            if meta in (":e", ":w"):
-                _lanzar(lote)
-                return
-            lote.append(line)
-            print(f"[multi] + {line}")
+        if bruto == "":
+            print("[multi] Cancelado.")
+            return
+        line = bruto.replace("\r", "").rstrip("\n")
+        if not line.strip():
+            continue
+        meta = _meta(line).lower()
+        if meta == ":q":
+            print("[multi] Cancelado.")
+            return
+        if meta in (":e", ":w"):
+            _lanzar(lote)
+            return
+        lote.append(line)
+        _eco(line)
 
 
 def _lanzar(lote: list[str]) -> None:
     if not lote:
-        print("[multi] Lote vacío.")
+        print("[multi] Lote vacio.")
         return
     mgr = _manager()
-    print(f"[multi] Ejecutando lote ({len(lote)} línea(s)).")
+    print(f"[multi] Ejecutando lote ({len(lote)} linea(s)).")
     i = 0
     while i < len(lote):
         line = lote[i]
@@ -81,9 +83,8 @@ def _lanzar(lote: list[str]) -> None:
             i += 1
             continue
         nombre, args = parts[0], parts[1:]
-        print(f"mosh$ {line}")
+        print(f"mosh$ {nombre} {' '.join(args)}")
         if nombre in ("multi", "m"):
-            print("[multi] ignorado (no anidar).")
             i += 1
             continue
         if nombre in ("write", "w"):
@@ -113,7 +114,7 @@ def _lanzar(lote: list[str]) -> None:
 
 
 def help():
-    return "Uso: multi (o m) - Lote. :e o ;e ejecuta, :q o ;q cancela. write lee hasta ."
+    return "Uso: multi (o m) o ./write.sh. :e ejecuta, :q cancela."
 
 
 def sinopsis():
