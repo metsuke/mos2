@@ -2,15 +2,19 @@
   "schema": "metsuos-docgen-page-1",
   "id": "ia-write",
   "titulo": "Ritual write y multi para IA",
-  "preambulo": "Fichero entero. Hash SHA-256 del contenido en claro. Payload Base64 o gz:+Base64(gzip). generate en el mismo lote.",
+  "preambulo": "Fichero entero. SHA-256 del contenido en claro. Payload: plano b64 o prefijo gz:/xz:/b85:/gzb85:/xzb85:. generate en el mismo lote. La IA elige el payload mas corto que el receptor ya decodifique.",
   "secciones": [
     {
       "titulo": "Lote",
-      "cuerpo": "write ruta\nhash\n[gz:]base64\n.\ndocgen generate <id>\n:e\n\nEl hash es del fichero descomprimido. gz: solo si el receptor ya decodifica gzip (write_b64._decodificar). Si no acorta, Base64 plano."
+      "cuerpo": "write ruta\nhash\npayload\n.\ndocgen generate <id>\n:e"
+    },
+    {
+      "titulo": "Prefijos",
+      "cuerpo": "sin prefijo = Base64 del fichero.\ngz: gzip+b64\nxz: lzma+b64\nb85: ascii85 del fichero\ngzb85: gzip+ascii85\nxzb85: lzma+ascii85\nCRC/gzip roto = payload cortado; repetir en b64 plano."
     },
     {
       "titulo": "Donde",
-      "cuerpo": "Dentro: multi/m. Fuera: ./write.sh lanza multi real. Maximo tres writes. write registra integridad."
+      "cuerpo": "multi/m o write.sh que lanza multi. Maximo tres writes. write registra integridad. Varios codecs no sustituyen el hash."
     }
   ]
 }

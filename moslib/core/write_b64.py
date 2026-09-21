@@ -34,7 +34,7 @@ def _preview(datos: bytes) -> str:
 def _decodificar(bruto: str) -> bytes:
     s = bruto.strip()
     pref = next((p for p in PREFS if s.startswith(p)), "")
-    s = s[(len(pref)):] if pref else s
+    s = s[len(pref):] if pref else s
     if pref.endswith("b85:"):
         crudo = base64.a85decode(s)
     else:
@@ -82,5 +82,5 @@ def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
             dest.unlink()
         return False, f"escritura fallida, restaurado: {exc}"
     if bak is not None:
-        bak.unlink( missing_ok=True)
+        bak.unlink(missing_ok=True)
     return True, f"OK {real}\n{_preview(datos)}"
