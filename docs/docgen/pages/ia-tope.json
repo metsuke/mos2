@@ -1,0 +1,16 @@
+{
+  "schema": "metsuos-docgen-page-1",
+  "id": "ia-tope",
+  "titulo": "Tope de 120 lineas para IA y codigo",
+  "preambulo": "Ningun fichero de codigo del sistema (moslib, commands, tests de contrato, write.sh) debe superar 120 lineas. Si no cabe, se crean dos ficheros desde el primer lote, no se entrega un monolitico para trocear despues.",
+  "secciones": [
+    {
+      "titulo": "Norma",
+      "cuerpo": "Al escribir codigo nuevo o al ampliar uno existente, contar lineas antes de generate/write. Por encima de 120: extraer un modulo hermano (*_menu, *_map, *_io). Los tests de tope listan, no bloquean arranque. test 120 solo consulta."
+    },
+    {
+      "titulo": "Ritual write",
+      "cuerpo": "Cada modulo es un write completo (hash + base64 + punto). Maximo tres writes por lote. multi/:e. write.sh igual, registra integridad del fichero escrito."
+    }
+  ]
+}
