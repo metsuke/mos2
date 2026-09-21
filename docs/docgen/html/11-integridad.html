@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>11-integridad</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
+<h1>11-INTEGRIDAD Control de hashes del clone</h1>
+<p><strong>Version:</strong> 1.0 <strong>Estado:</strong> Normativo SEC <strong>Padre:</strong> 04-SEC <strong>Reqs:</strong> REQ-SEC-010 a REQ-SEC-015, REQ-CMD-021 a 024</p>
+<h2>Proposito</h2>
+<p>Define el control de integridad del arbol del clone. Complementa 04-SEC (imports/AST). No lo sustituye.</p>
+<h2>Que se protege</h2>
+<p>Todo path que viaja en git: py, sh, md, json, html generado, write.sh, install, manifiestos.</p>
+<h2>Que no promete</h2>
+<p>No es firma de autor. No resiste a quien controla clone, .mos y las herramientas de hash a la vez. Detecta error de pegado y malware no especializado.</p>
+<h2>Manifiesto dual y sello</h2>
+<p>Repo: integridad.json + integridad.json.sha256. Local: copia en .mos. Si falta la local al arrancar, se copia la del repo. Editar el JSON a mano rompe el sello: fallo grave.</p>
+<h2>Clases de fallo</h2>
+<p>Bloquean arranque: contenido, falta, sello roto, falta sello. Avisan: eol, sello-eol, desfase-local.</p>
+<h2>Quien puede registrar un hash</h2>
+<p>write en multi, write.sh fuera de MOS, registrar_destino tras docgen generate, integridad aceptar RUTA, update al traer el manifiesto del repo. No existe aceptar todo.</p>
+<h2>Write</h2>
+<p>Lote: write RUTA, sha256, base64, punto, :e. Hash distinto: no se toca el destino. Tras OK abre code. Maximo 3 write por lote.</p>
+<h2>Emergencia</h2>
+<p>MOS_INTEGRIDAD=recargar o integridad recargar. Solo si MOS no arranca por manifiesto local viejo.</p>
+<h2>Autoridad</h2>
+<p>Si choca con 04-SEC en imports/AST, prevalece 04-SEC. Si choca en hashes/write, prevalece este documento.</p>
+</body></html>
