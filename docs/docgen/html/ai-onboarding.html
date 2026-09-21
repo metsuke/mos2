@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>ai-onboarding</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
 <h1>Onboarding para agentes IA (MetsuOS)</h1>
-<p><strong>Versión del documento:</strong> 1.5 <strong>Estado:</strong> Normativo de proceso <strong>Documentos relacionados:</strong> AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md</p>
+<p><strong>Versión del documento:</strong> 1.6 <strong>Estado:</strong> Normativo de proceso <strong>Documentos relacionados:</strong> AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md</p>
+<p>Ver tambien docs/IA_TOPE.md y docs/IA_WRITE.md.</p>
 <h2>Propósito</h2>
 <p>Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.</p>
 <p>Punto de entrada corto: <code>AGENTS.md</code>. Dirección de trabajo: <code>docs/INCENTIVOS.md</code> (mandatorio para la IA).</p>
@@ -12,6 +13,8 @@
 <ul><li>SO simulado modular en Python; shell MOSh.</li><li>Núcleo moslib/; rootfs/ simulado.</li><li>Contrato: execute(args) y help() -&gt; str no vacío.</li><li>Imports de comandos: solo stdlib + moslib (AST).</li><li>Usuario anfitrión; comandos user_*.py; nunca pisan sistema.</li><li>Tests de arranque bloqueantes.</li><li>A11Y de interfaz mandatoria.</li><li>Poetry + mos2.sh / install.sh multi-entorno.</li><li>Git, no APIs de un forge.</li><li>Comandos de calidad actuales: test, update, synccheck, docgen.</li><li>Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma.</li></ul>
 <h2>Documentación y docgen</h2>
 <p>Fuente de verdad: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json). El markdown publicado se pinta con <code>docgen generate</code>. Flujo normal de la IA: un JSON por mensaje, fichero entero, luego <code>docgen generate &lt;id&gt;</code>. <code>docgen ingest</code> solo primera absorción o recuperación desde markdown/backup. <code>generate</code> no ingerir: si ingerir al generar, el JSON se pisa con un md viejo o corto. Prohibido reescribir specs/manual/man enteros en el chat como vía habitual.</p>
+<h2>Tope 120 y lote write+generate</h2>
+<p>Ningun .py de moslib/commands supera 120 lineas. Si no cabe, dos ficheros desde el primer lote. Consulta: test 120. No existe el comando tope. Lote: write ruta / hash / base64 / punto / docgen generate &lt;id&gt; / :e. write.sh ejecuta tambien las lineas que no son write. Sin fixer global de integridad. Detalle: docs/IA_TOPE.md y docs/IA_WRITE.md.</p>
 <h2>Contexto de sesión</h2>
 <pre><code>Contexto: &lt;sistema&gt; / &lt;entorno&gt; / &lt;rol&gt;</code></pre>
 <p>Si falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas home en el repo público.</p>

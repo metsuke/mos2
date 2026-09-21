@@ -1,8 +1,10 @@
 # Onboarding para agentes IA (MetsuOS)
 
-**Versión del documento:** 1.5
+**Versión del documento:** 1.6
 **Estado:** Normativo de proceso
 **Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md
+
+Ver tambien docs/IA_TOPE.md y docs/IA_WRITE.md.
 
 ## Propósito
 Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.
@@ -46,6 +48,13 @@ Flujo normal de la IA: un JSON por mensaje, fichero entero, luego `docgen genera
 `docgen ingest` solo primera absorción o recuperación desde markdown/backup.
 `generate` no ingerir: si ingerir al generar, el JSON se pisa con un md viejo o corto.
 Prohibido reescribir specs/manual/man enteros en el chat como vía habitual.
+
+## Tope 120 y lote write+generate
+Ningun .py de moslib/commands supera 120 lineas. Si no cabe, dos ficheros desde el primer lote.
+Consulta: test 120. No existe el comando tope.
+Lote: write ruta / hash / base64 / punto / docgen generate <id> / :e.
+write.sh ejecuta tambien las lineas que no son write. Sin fixer global de integridad.
+Detalle: docs/IA_TOPE.md y docs/IA_WRITE.md.
 
 ## Contexto de sesión
 ```text

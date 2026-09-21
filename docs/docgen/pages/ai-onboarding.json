@@ -2,29 +2,69 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "ai-onboarding",
   "titulo": "Onboarding para agentes IA (MetsuOS)",
-  "preambulo": "**Version del documento:** 1.6\n**Estado:** Normativo de proceso\n**Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md",
+  "preambulo": "**Versión del documento:** 1.5\n**Estado:** Normativo de proceso\n**Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md\n\nVer tambien docs/IA_TOPE.md y docs/IA_WRITE.md.",
   "cuerpo_completo": null,
   "origen": "edicion-json",
   "secciones": [
     {
-      "titulo": "Proposito",
-      "cuerpo": "Punto de entrada: AGENTS.md. Direccion: docs/INCENTIVOS.md."
+      "titulo": "Propósito",
+      "cuerpo": "Que cualquier modelo, al estudiar el repo desde cero, trabaje sin reinventar normas, sin romper lo existente y sin marear al humano.\n\nPunto de entrada corto: `AGENTS.md`.\nDirección de trabajo: `docs/INCENTIVOS.md` (mandatorio para la IA)."
     },
     {
-      "titulo": "Escritura segura",
-      "cuerpo": "IA no edita el disco. Lote en multi o ./write.sh: write RUTA, sha256, base64, punto, :e. write solo en multi. Hash distinto no toca destino. Tras OK abre code. Maximo 3 write por lote. Fichero entero. Prohibido raw.githubusercontent.com. :s siguiente paso."
+      "titulo": "Orden de lectura",
+      "cuerpo": "1. AGENTS.md\n2. Este archivo\n3. docs/INCENTIVOS.md\n4. docs/METHODOLOGY.md\n5. docs/INTERACTION_REVIEW.md\n6. docs/ENVIRONMENTS.md\n7. docs/VERSIONING.md\n8. docs/A11Y.md y docs/a11y/DECLARACION.md\n9. docs/STYLE_GUIDE.md\n10. docs/specs/00-OVERVIEW.md y el resto de specs según la tarea\n11. docs/plans/ si hay campaña\n12. Código solo cuando se sepa qué norma aplica\n\nNo inventar features que no estén en código o specs."
     },
     {
-      "titulo": "Tope 120 ramas integridad",
-      "cuerpo": "moslib py <= 120 lineas. test 120 no tumba arranque. Nunca avanzar main. update a secas = origin/main limpio. update dev lista ramas. dev publicar wip+push. dev consolidar ff-only. Sin copia local de integridad, arranque copia el repo."
+      "titulo": "Qué es MetsuOS (férreo)",
+      "cuerpo": "- SO simulado modular en Python; shell MOSh.\n- Núcleo moslib/; rootfs/ simulado.\n- Contrato: execute(args) y help() -> str no vacío.\n- Imports de comandos: solo stdlib + moslib (AST).\n- Usuario anfitrión; comandos user_*.py; nunca pisan sistema.\n- Tests de arranque bloqueantes.\n- A11Y de interfaz mandatoria.\n- Poetry + mos2.sh / install.sh multi-entorno.\n- Git, no APIs de un forge.\n- Comandos de calidad actuales: test, update, synccheck, docgen.\n- Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma."
     },
     {
-      "titulo": "Docgen",
-      "cuerpo": "Fuente JSON en docs/docgen/. generate pinta markdown. ingest solo primera vez."
+      "titulo": "Documentación y docgen",
+      "cuerpo": "Fuente de verdad: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).\nEl markdown publicado se pinta con `docgen generate`.\nFlujo normal de la IA: un JSON por mensaje, fichero entero, luego `docgen generate <id>`.\n`docgen ingest` solo primera absorción o recuperación desde markdown/backup.\n`generate` no ingerir: si ingerir al generar, el JSON se pisa con un md viejo o corto.\nProhibido reescribir specs/manual/man enteros en el chat como vía habitual."
+    },
+    {
+      "titulo": "Tope 120 y lote write+generate",
+      "cuerpo": "Ningun .py de moslib/commands supera 120 lineas. Si no cabe, dos ficheros desde el primer lote.\nConsulta: test 120. No existe el comando tope.\nLote: write ruta / hash / base64 / punto / docgen generate <id> / :e.\nwrite.sh ejecuta tambien las lineas que no son write. Sin fixer global de integridad.\nDetalle: docs/IA_TOPE.md y docs/IA_WRITE.md."
+    },
+    {
+      "titulo": "Contexto de sesión",
+      "cuerpo": "```text\nContexto: <sistema> / <entorno> / <rol>\n```\n\nSi falta y hace falta para paths o Poetry, preguntar. Sin hostnames ni rutas home en el repo público."
+    },
+    {
+      "titulo": "Cómo entregar trabajo al humano",
+      "cuerpo": "- Un paso / un fichero por mensaje, salvo pareja inseparable avisada.\n- Fichero **entero**. Prohibido “añade esta fila”: las tablas van montadas.\n- Prohibido “usa lo que te di antes”: volver a pegar el documento.\n- Cachos solo si no cabe: cacho 1 sustituye todo; no dejar un spec inválido a mitad.\n- Completo: primero mkdir / touch / code, luego el texto.\n- Parcial (avisando “no sustituyas el fichero”): primero el recorte, luego code.\n- Encabezados sin numeración.\n- Directorios en tablas (una columna por nivel).\n- Comandos: Tipo A–Z, comando A–Z dentro del tipo.\n- Si el nuevo texto es más corto que el del repo: avisar. No resumir sin consultar.\n- Breadcrumb: campaña, grupo, bloque x/y, paso, %, contexto.\n- Si se salta un número de paso: explicar por qué en el mismo mensaje.\n- No usar «corrida». CHANGELOG: no dejar «Sin publicar» al humano.\n- Psicología: acompañar; prohibido dañar, desestabilizar o engañar.\n- Asimov (docs/INCENTIVOS.md): cita + nota de aplicación; no autocommit; no apagar tests."
+    },
+    {
+      "titulo": "Estado real del repositorio",
+      "cuerpo": "1. Pedir `synccheck` cuando haya duda.\n2. Leer por SHA (`git show origin/main:archivo` o raw con SHA).\n3. No diagnosticar solo con `.../main/` en CDN.\n4. Si Poetry, README, CHANGELOG y comandos no cuadran: hotfix antes del siguiente bloque.\n\nProducto de referencia al escribir esto: **0.2.7 / árbol 0.2.8**. Comandos `a11y`, `docs`, `synccheck`, `docgen`."
+    },
+    {
+      "titulo": "Antes de tocar código",
+      "cuerpo": "1. Leer el repo real (SHA).\n2. Impacto SEC / SSS / ICD / SRS / A11Y / INCENTIVOS.\n3. STYLE_GUIDE e imports.\n4. Plan por fases; campaña en docs/plans/.\n5. No desactivar tests ni seguridad.\n6. VERSIONING (¿bump? ¿tag?).\n7. Comando nuevo: código + help + man + README + SSS + CHANGELOG.\n8. No abrir DepManager ni política geo real (solo dirección)."
+    },
+    {
+      "titulo": "Versionado",
+      "cuerpo": "| Cambio | Poetry | Tag |\n|--------|--------|-----|\n| Runtime / comandos / scripts | Bump X.Y.Z | vX.Y.Z |\n| Solo docs | No bump | vX.Y.Z-docs o vX.Y.Z-docs.N |"
+    },
+    {
+      "titulo": "Plataforma",
+      "cuerpo": "- Poetry: un candidato solo si `--version` se puede ejecutar.\n- windows/git-bash: `py -m poetry`.\n- windows/wsl: clone en FS Linux; rechazo bajo `/mnt/<letra>/`."
+    },
+    {
+      "titulo": "Accesibilidad",
+      "cuerpo": "docs/A11Y.md es mandatoria. Conflicto con SEC: procedimiento escrito."
+    },
+    {
+      "titulo": "Cierre de grupo",
+      "cuerpo": "docs/INTERACTION_REVIEW.md: interacción + deuda + campañas futuras + auditoría."
+    },
+    {
+      "titulo": "Checklist de cada mensaje de trabajo",
+      "cuerpo": "1. ¿Breadcrumb?\n2. ¿Un paso / un fichero?\n3. ¿Fichero entero (JSON si es docs)?\n4. ¿Tablas ya hechas?\n5. ¿He vuelto a pegar en vez de remitir?\n6. ¿SHA o synccheck si hablo del remoto?\n7. ¿A11Y / SEC / INCENTIVOS / contrato intactos?\n8. ¿He evitado ingest de rutinario?"
     },
     {
       "titulo": "Autoridad",
-      "cuerpo": "Si choca con SEC SSS A11Y o INCENTIVOS, prevalecen esas normas."
+      "cuerpo": "Este documento manda sobre el estilo de asistencia.\nSi choca con SEC, SSS, A11Y o INCENTIVOS, prevalecen esas normas y luego se actualiza este archivo."
     }
   ]
 }

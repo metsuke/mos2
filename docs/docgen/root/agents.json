@@ -1,42 +1,38 @@
 {
   "schema": "metsuos-docgen-doc-1",
   "id": "agents",
-  "titulo": "AGENTS.md Punto de entrada para IA (MetsuOS / MOS2)",
-  "preambulo": "Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y en docs/AI_ONBOARDING.md.",
+  "titulo": "AGENTS.md — Punto de entrada para IA (MetsuOS / MOS2)",
+  "preambulo": "Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y sigue `docs/AI_ONBOARDING.md`.",
   "cuerpo_completo": null,
   "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Lectura mínima",
-      "cuerpo": "1. Este archivo\n2. docs/AI_ONBOARDING.md\n3. docs/INCENTIVES.md\n4. docs/METHODOLOGY.md\n5. docs/INTERACTION_REVIEW.md\n6. docs/ENVIRONMENTS.md\n7. docs/VERSIONING.md\n8. docs/A11Y.md y docs/a11y/DECLARATION.md\n9. docs/STYLE_GUIDE.md\n10. docs/specs/00-OVERVIEW.md\n11. docs/plans/ si hay campaña\n12. Código y resto de specs según la tarea"
-    },
-    {
-      "titulo": "Escritura segura (obligatorio en chats nuevos)",
-      "cuerpo": "La IA no edita el disco. Entrega lotes para que el humano los pegue.\n\nDentro de MOS:\n1. Comando m (alias de multi).\n2. Línea: write <ruta-desde-la-raíz-del-clone>\n3. Siguiente línea: sha256 hex de los bytes UTF-8 del fichero entero (64 caracteres).\n4. Siguiente línea(s): Base64 de esos mismos bytes.\n5. Línea solo con un punto (.) cierra el payload.\n6. Se pueden encadenar hasta tres write si los ficheros son pequeños.\n7. :e ejecuta el lote. ;e y ;q se aceptan como :e y :q. El canónico es :e.\n8. write solo funciona dentro de multi. Si el hash no coincide, no se toca el destino (backup temporal y restauración).\n9. Tras un write OK, write abre code sobre el fichero.\n\nFuera de MOS (integridad rota, tests de arranque tirando el sistema):\n- ./write.sh en la raíz del clone (junto a install.sh).\n- Se pega el mismo lote write/hash/b64/. y se cierra con :e.\n- write.sh escribe si el hash coincide e intenta registrar integridad; si MOS/python no importan, avisa y se acepta al arrancar.\n\nProhibido:\n- Parches o fragmentos. Fichero entero siempre.\n- Inventar el hash. Se calcula sobre los bytes que van en el Base64.\n- Usar raw.githubusercontent.com para leer el repo (API o clone).\n- cd a la ruta del clone en las instrucciones; el humano ya está en la raíz o usa sus alias."
-    },
-    {
-      "titulo": "Tope de tamaño y ramas",
-      "cuerpo": "- Ningún .py de moslib (core o commands) puede superar 120 líneas. Si se pasa, se trocea en submódulos y un fachada delgada. Consulta: test 120 (no tumba el arranque; lista y total).\n- No se avanza sobre main. Rama paralela aunque el cambio sea pequeño.\n- git commit/push/merge/rebase sobre main desde MOS están bloqueados.\n- update (a secas): solo origin/main y árbol limpio. Si el árbol está sucio, se niega.\n- update dev: lista ramas remotas ≠ main, se elige por número, checkout+pull.\n- dev publicar: commit automático wip de prueba en otras máquinas + push de la rama actual. Prohibido en main.\n- dev consolidar: ff-only a main, push, borra la rama. Si no hay fast-forward, no borra.\n- Primera vez en una máquina antigua: update a main (el huevo y la gallina de update dev)."
-    },
-    {
-      "titulo": "Integridad",
-      "cuerpo": "- Manifiesto repo: docs/docgen/integridad.json + sello .sha256.\n- Copia de trabajo en el .mos del usuario.\n- Si al comprobar no hay copia local o falta el sello, el sistema copia solo el manifiesto del repo. El usuario no ejecuta recargar a mano en un arranque limpio.\n- Tras generar documentación, los destinos (md y html) se registran.\n- integridad aceptar <ruta> solo para un fichero que el humano acaba de generar o escribir con write."
-    },
-    {
-      "titulo": "Documentación y docgen",
-      "cuerpo": "- Fuente: JSON en docs/docgen/ (man/, specs/, pages/, root/, reqs/, plans/, areas.json).\n- El markdown publicado se obtiene con docgen generate. No se edita el .md a mano.\n- Requisitos: un JSON por REQ. Alta/cambio con docgen req add|set|rm o editando ese JSON.\n- Áreas y planes: CRUD sobre JSON, luego generate.\n- ingest solo primera vez o recuperación desde backup.\n- :s o ;s en el chat significan siguiente paso de la campaña.\n- Un lote, como mucho tres ficheros pequeños. Fichero entero. No parches."
+      "cuerpo": "1. Este archivo\n2. docs/AI_ONBOARDING.md\n3. docs/INCENTIVOS.md\n4. docs/METHODOLOGY.md\n5. docs/INTERACTION_REVIEW.md\n6. docs/ENVIRONMENTS.md\n7. docs/VERSIONING.md\n8. docs/A11Y.md y docs/a11y/DECLARACION.md\n9. docs/STYLE_GUIDE.md\n10. docs/specs/00-OVERVIEW.md\n11. docs/plans/ si hay campaña\n12. Código y resto de specs según la tarea\n13. docs/IA_TOPE.md y docs/IA_WRITE.md"
     },
     {
       "titulo": "Normas que no se improvisan",
-      "cuerpo": "- Comandos: execute(args) y help() -> str. sinopsis() lista opciones reales del código.\n- Imports en comandos: solo biblioteca estándar y moslib.\n- Tests de arranque bloqueantes salvo test 120.\n- Accesibilidad de interfaz mandatoria (docs/A11Y.md).\n- Sin rutas personales ni nombres de máquina en docs públicas.\n- Git del anfitrión sobre la raíz del clone; no funciones exclusivas de un forge.\n- No diagnosticar el repo solo con raw.githubusercontent.com."
+      "cuerpo": "- Comandos: execute(args) y help() -> str\n- Imports en comandos: solo biblioteca estándar y moslib\n- El usuario no sobrescribe comandos de sistema (prefijo user_)\n- Tests de arranque bloqueantes\n- Accesibilidad de interfaz mandatoria (docs/A11Y.md)\n- Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)\n- Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md\n- Sin rutas personales ni nombres de maquina en docs públicas\n- Encabezados de documentación sin numeración\n- Entregar archivos enteros; tablas ya montadas; un paso cada vez\n- No remitir a un pegado anterior: volver a pegar\n- Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso\n- Si el archivo nuevo es mas corto, avisarlo\n- Directorios en tablas (una columna por nivel)\n- Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo\n- Breadcrumb de campaña en cada paso; explicar saltos de nómero\n- Git, no funciones exclusivas de un forge\n- Crear ficheros: mkdir -p / touch / editor\n- Estado del repo: comando synccheck y lectura por SHA\n- Psicología: acompañar; no danar, desestabilizar ni engañar"
+    },
+    {
+      "titulo": "Documentación y docgen",
+      "cuerpo": "- Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).\n- El markdown publicado se obtiene con `docgen generate`.\n- La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.\n- Flujo normal: editar el JSON (átomo) y decir `docgen generate <id>`.\n- `docgen ingest` solo en la primera absorción o si hay que recuperar desde markdown/backup.\n- `generate` no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.\n- Un fichero por mensaje; fichero entero; no parches sueltos."
+    },
+    {
+      "titulo": "Tope 120 y ritual write",
+      "cuerpo": "Ningun .py de moslib/commands supera 120 lineas. Si no cabe, dos ficheros desde el primer lote (*_menu, *_map, *_io). Consulta: test 120 (no es un comando tope; no bloquea arranque).\nEdicion: multi/m + write ruta + sha256 + base64 + punto + :e (;e vale). Maximo tres writes por lote.\nFuera de MOS: ./write.sh misma semantica; registra integridad del rel escrito. Sin fixer global.\nVer docs/IA_TOPE.md y docs/IA_WRITE.md."
     },
     {
       "titulo": "Contexto de sesión",
-      "cuerpo": "Contexto: <sistema> / <entorno> / <rol>\nSi falta y hace falta paths o Poetry, preguntar."
+      "cuerpo": "```text\nContexto: <sistema> / <entorno> / <rol>\n```\n\nSi falta y hace falta para paths o Poetry, preguntar."
+    },
+    {
+      "titulo": "Versiones",
+      "cuerpo": "Cambio de runtime → bump en pyproject.toml + tag vX.Y.Z.\nSolo docs → sin bump; tag vX.Y.Z-docs o vX.Y.Z-docs.N.\nDetalle: docs/VERSIONING.md.\n\nProducto de referencia: 0.2.7 / árbol 0.2.8. Comandos a11y, docs, synccheck, docgen."
     },
     {
       "titulo": "Qué no hacer",
-      "cuerpo": "- No inventar features ausentes en código o specs.\n- No desactivar seguridad ni tests para pasar.\n- No excluir A11Y por comodidad.\n- No asumir Mac, Git Bash o WSL sin contexto declarado.\n- No usar ingest como rutina diaria.\n- No consolidar a main con árbol sucio o tests rojos."
+      "cuerpo": "- No inventar features ausentes en código o specs\n- No desactivar seguridad ni tests para hacer pasar un cambio\n- No excluir un perfil A11Y por comodidad\n- No asumir Mac, Git Bash o WSL sin contexto declarado\n- No diagnosticar el remoto solo con raw .../main/\n- No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)\n- No usar ingest como paso rutinario de edición"
     }
   ]
 }
