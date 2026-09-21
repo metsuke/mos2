@@ -369,7 +369,7 @@
   "moslib/core/docgen_hash.py": "ad9a9be109aa760d0664d03d5807a0dc268ede466dff84488c574a30ba884a52",
   "moslib/core/docgen_html.py": "472a0d360c46492e200e9f6b3119f062087c5a24dcc3e76bcac611accef5ebaf",
   "moslib/core/docgen_html_md.py": "6547b158092527c86ce439aa3e2aea031d1891cbb7847245aeccb188181f85c4",
-  "moslib/core/docgen_index.py": "d22db39b4f0ad17fb83e0ed0e69f3ff2c7603ee0b6e37350dcd43a6512596947",
+  "moslib/core/docgen_index.py": "ef379f20edf20f49e972cb36f26efd57c5aa2c05bd6226cdb741bbef20a1a6b2",
   "moslib/core/docgen_io.py": "1a9e5b6ad81c5d10e221fcc868f0e0ca6fdc6115b9b1d1d1f4dd84af44645205",
   "moslib/core/docgen_man.py": "7d5a18ccac1696aa4683362804ab6cf1018eed3fedbfe27d2f15da156e5bd7bd",
   "moslib/core/docgen_man_run.py": "0411f057832340e8666821cf3092725419df3b91021bb4709edfc61918fd5383",

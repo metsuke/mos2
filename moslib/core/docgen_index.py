@@ -38,6 +38,8 @@ DOCUMENTOS = (
     {"id": "incentivos", "rel": "docs/INCENTIVOS.md"},
     {"id": "interaction-review", "rel": "docs/INTERACTION_REVIEW.md"},
     {"id": "deuda", "rel": "docs/DEUDA_Y_CAMPANAS.md"},
+    {"id": "ia-tope", "rel": "docs/IA_TOPE.md"},
+    {"id": "ia-write", "rel": "docs/IA_WRITE.md"},
     {"id": "plans-readme", "rel": "docs/plans/README.md"},
     {"id": "00-overview", "rel": "docs/specs/00-OVERVIEW.md"},
     {"id": "01-sss", "rel": "docs/specs/01-SSS-System-Specification.md"},
