@@ -435,7 +435,7 @@
   "moslib/core/update_git.py": "8616204e4d6d968319c94beae4dace9c23e3181bdc9a6fbef3943c12a5a8590f",
   "moslib/core/user.py": "927b31bd8f95eceb18d62413a9265d61bbf9bf2cd2e0c6c46629bcfe83dc9d2c",
   "moslib/core/user_space.py": "559cd12fa285055c67f2aa5921992137b8dfcb6b505d9c53643442a70ef7aa11",
-  "moslib/core/write_b64.py": "7d55eb55b6592142cdd6a493d6aa25f1e1ee48024ccb31a50571af612f135c98",
+  "moslib/core/write_b64.py": "48add6afb382511a31ed0eb5e00f8791cb5df4c0cb55c765dc374ee1fe130ce4",
   "poetry.lock": "c0f7d6431b52f69e4ca9584fcfa68950e8203904bb37096ca4d97b47b50e1989",
   "pyproject.toml": "a59328046ff2ad34953abdfdcd98c53d0789d665d640f85bd31f3a7405734012",
   "rootfs/bin/mos.py": "98104a6ebb7d6a52f62a33d4c3c557cdfd452809e2950cfdfb55affb5ef91a4f",
