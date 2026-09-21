@@ -1,0 +1,9 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SEC-013",
+  "area": "SEC",
+  "titulo": "Cobertura total del clone",
+  "texto": "El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py.",
+  "prioridad": "Must",
+  "verificacion": "Test"
+}

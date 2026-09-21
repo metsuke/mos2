@@ -1,0 +1,9 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SEC-014",
+  "area": "SEC",
+  "titulo": "Clases de fallo de integridad",
+  "texto": "contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave.",
+  "prioridad": "Must",
+  "verificacion": "Test"
+}

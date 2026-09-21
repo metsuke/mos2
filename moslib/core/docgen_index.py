@@ -1,4 +1,4 @@
-"""Índice de documentos y rutas de docgen."""
+"""Indice de documentos y rutas de docgen."""
 
 from __future__ import annotations
 
@@ -50,31 +50,32 @@ DOCUMENTOS = (
     {"id": "08-apps", "rel": "docs/specs/08-APPS.md"},
     {"id": "09-tasks", "rel": "docs/specs/09-TASKS.md"},
     {"id": "10-ia-router", "rel": "docs/specs/10-IA-ROUTER.md"},
+    {"id": "11-integridad", "rel": "docs/specs/11-INTEGRIDAD.md"},
 )
 
 
-def man_documentos() -> list[dict]:
+def man_documentos() -> list:
     man_dir = get_project_root() / "docs" / "man"
     if not man_dir.is_dir():
         return []
     return [
-        {"id": f"man-{path.stem}", "rel": f"docs/man/{path.name}"}
+        {"id": "man-" + path.stem, "rel": "docs/man/" + path.name}
         for path in sorted(man_dir.glob("*.md"))
     ]
 
 
-def todos_documentos() -> list[dict]:
+def todos_documentos() -> list:
     vistos = {}
     for item in list(DOCUMENTOS) + man_documentos():
         vistos[item["id"]] = item
     return list(vistos.values())
 
 
-def list_document_ids() -> list[str]:
+def list_document_ids() -> list:
     return [d["id"] for d in todos_documentos()]
 
 
-def get_documento(doc_id: str) -> dict | None:
+def get_documento(doc_id: str):
     key = (doc_id or "").strip().lower()
     for item in todos_documentos():
         if item["id"] == key:
@@ -82,14 +83,17 @@ def get_documento(doc_id: str) -> dict | None:
     return None
 
 
-def resolve_path(doc_id: str) -> Path | None:
+def resolve_path(doc_id: str):
     item = get_documento(doc_id)
     if item is None:
         return None
     return get_project_root() / item["rel"]
 
 
-def ensure_docgen_dirs() -> None:
+resuelve_path = resolve_path
+
+
+def ensure_docgen_dirs():
     get_backup_dir().mkdir(parents=True, exist_ok=True)
     base = get_docgen_dir()
     for nombre in ("specs", "man", "pages", "root", "html", "reqs", "plans"):

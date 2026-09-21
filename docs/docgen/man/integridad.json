@@ -1,0 +1,31 @@
+{
+  "schema": "metsuos-docgen-man-1",
+  "id": "integridad",
+  "titulo": "integridad",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "edicion-json",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "integridad - manifiesto de hashes del clone y copia local"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
+    },
+    {
+      "titulo": "DESCRIPCION",
+      "cuerpo": "Comprueba SHA-256 de los paths tracked.\nSubcomandos: sembrar, aceptar RUTA, recargar.\naceptar solo una ruta.\nrecargar sustituye la copia .mos por la del repo.\nEl arranque copia solo si falta la local."
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "contenido y falta bloquean. avisos eol no bloquean.\nComando de sistema. Solo stdlib y moslib."
+    },
+    {
+      "titulo": "VEASE TAMBIEN",
+      "cuerpo": "write, hash, update, test"
+    }
+  ]
+}

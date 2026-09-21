@@ -1,0 +1,9 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-023",
+  "area": "CMD",
+  "titulo": "Comando integridad",
+  "texto": "Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas.",
+  "prioridad": "Must",
+  "verificacion": "Test"
+}

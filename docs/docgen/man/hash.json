@@ -1,0 +1,31 @@
+{
+  "schema": "metsuos-docgen-man-1",
+  "id": "hash",
+  "titulo": "hash",
+  "preambulo": "",
+  "cuerpo_completo": null,
+  "origen": "edicion-json",
+  "secciones": [
+    {
+      "titulo": "NOMBRE",
+      "cuerpo": "hash - SHA-256 de un fichero del clone"
+    },
+    {
+      "titulo": "SINOPSIS",
+      "cuerpo": "(generado desde sinopsis(); no editar)",
+      "fuente": "sinopsis()"
+    },
+    {
+      "titulo": "DESCRIPCION",
+      "cuerpo": "Imprime el SHA-256 hex de la ruta.\nLa ruta es relativa a la raiz del clone.\nSirve para contrastar la primera linea de un lote write."
+    },
+    {
+      "titulo": "SEGURIDAD",
+      "cuerpo": "No escribe. Rechaza rutas fuera del clone.\nComando de sistema. Solo stdlib y moslib."
+    },
+    {
+      "titulo": "VEASE TAMBIEN",
+      "cuerpo": "write, integridad, code"
+    }
+  ]
+}

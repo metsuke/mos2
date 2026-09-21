@@ -1,0 +1,9 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-024",
+  "area": "CMD",
+  "titulo": "Comando hash",
+  "texto": "Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write.",
+  "prioridad": "Must",
+  "verificacion": "Test"
+}

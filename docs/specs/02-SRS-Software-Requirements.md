@@ -1,6 +1,6 @@
 # 02 – SRS · Requisitos software
 
-**Versión del documento:** 1.3  
+**Versión del documento:** 1.4  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/A11Y.md, docs/a11y/DECLARACION.md, docs/ENVIRONMENTS.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/06-TEST-Verification-and-Validation.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md
@@ -105,6 +105,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -134,6 +136,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -276,6 +283,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -305,6 +314,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -447,6 +461,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -476,6 +492,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -618,6 +639,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -647,6 +670,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -789,6 +817,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -818,6 +848,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -960,6 +995,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -989,6 +1026,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -1131,6 +1173,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1160,6 +1204,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -1302,6 +1351,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1331,6 +1382,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -1473,6 +1529,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1502,6 +1560,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -1644,6 +1707,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1673,6 +1738,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -1815,6 +1885,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1844,6 +1916,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -1986,6 +2063,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2015,6 +2094,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -2157,6 +2241,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2186,6 +2272,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -2328,6 +2419,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2357,6 +2450,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -2499,6 +2597,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2528,6 +2628,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
@@ -2670,6 +2775,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-020 | La prioridad de resolución debe ser: sistema > app sistema > app usuario > user_ | Must | Test |
 | REQ-CMD-021 | El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños. | Must | Test |
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
+| REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
+| REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2699,6 +2806,11 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SEC-008 | Está prohibido usar eval/exec en core y comandos según la política de estilo/seguridad | Must | Test |
 | REQ-SEC-009 | Un comando de app solo puede importar minimoslib de esa app y solo con app_dir de esa app | Must | Test |
 | REQ-SEC-010 | Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar. | Must | Test |
+| REQ-SEC-011 | Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave. | Must | Test |
+| REQ-SEC-012 | Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino. | Must | Test |
+| REQ-SEC-013 | El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py. | Must | Test |
+| REQ-SEC-014 | contenido y falta bloquean el arranque. eol, sello-eol y desfase-local solo avisan. sello roto o falta de sello del manifiesto es fallo grave. | Must | Test |
+| REQ-SEC-015 | integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque. | Must | Test |
 
 ### Arranque
 
