@@ -27,5 +27,6 @@
       "titulo": "VEASE TAMBIEN",
       "cuerpo": "write, hash, update, test"
     }
-  ]
+  ],
+  "moslib/commands/docs.py": "a2735303387a53c38622ab244784f59ee2d7c001c97c7c0615a83995e5114e92"
 }

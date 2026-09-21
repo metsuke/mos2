@@ -1,6 +1,6 @@
 """Comando docs: menu y visualizacion."""
 
-from moslib.commands.docs_menu import abrir_directo, menu
+from moslib.core.docs_menu import abrir_directo, menu
 
 
 def execute(args):
