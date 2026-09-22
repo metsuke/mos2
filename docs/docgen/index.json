@@ -18,56 +18,8 @@
       "rel": "LICENSE"
     },
     {
-      "id": "user-manual",
-      "rel": "docs/USER_MANUAL.md"
-    },
-    {
-      "id": "methodology",
-      "rel": "docs/METHODOLOGY.md"
-    },
-    {
-      "id": "environments",
-      "rel": "docs/ENVIRONMENTS.md"
-    },
-    {
-      "id": "versioning",
-      "rel": "docs/VERSIONING.md"
-    },
-    {
-      "id": "style-guide",
-      "rel": "docs/STYLE_GUIDE.md"
-    },
-    {
-      "id": "a11y",
-      "rel": "docs/A11Y.md"
-    },
-    {
-      "id": "ai-onboarding",
-      "rel": "docs/AI_ONBOARDING.md"
-    },
-    {
-      "id": "human-onboarding",
-      "rel": "docs/HUMAN_ONBOARDING.md"
-    },
-    {
-      "id": "developer-guide",
-      "rel": "docs/DEVELOPER_GUIDE.md"
-    },
-    {
-      "id": "incentivos",
-      "rel": "docs/INCENTIVOS.md"
-    },
-    {
-      "id": "interaction-review",
-      "rel": "docs/INTERACTION_REVIEW.md"
-    },
-    {
-      "id": "deuda",
-      "rel": "docs/DEUDA_Y_CAMPANAS.md"
-    },
-    {
-      "id": "ia-tope",
-      "rel": "docs/IA_TOPE.md"
+      "id": "ia-onboarding",
+      "rel": "docs/IA_ONBOARDING.md"
     },
     {
       "id": "ia-write",
@@ -78,12 +30,12 @@
       "rel": "docs/IA_LOTE.md"
     },
     {
-      "id": "plans-readme",
-      "rel": "docs/plans/README.md"
+      "id": "ia-tope",
+      "rel": "docs/IA_TOPE.md"
     },
     {
-      "id": "00-overview",
-      "rel": "docs/specs/00-OVERVIEW.md"
+      "id": "methodology",
+      "rel": "docs/METHODOLOGY.md"
     },
     {
       "id": "01-sss",
@@ -102,18 +54,6 @@
       "rel": "docs/specs/04-SEC-Security-Policy.md"
     },
     {
-      "id": "05-sdd",
-      "rel": "docs/specs/05-SDD-Architecture-and-Design.md"
-    },
-    {
-      "id": "06-test",
-      "rel": "docs/specs/06-TEST-Verification-and-Validation.md"
-    },
-    {
-      "id": "07-sreld",
-      "rel": "docs/specs/07-SRelD-Release-Baseline.md"
-    },
-    {
       "id": "08-apps",
       "rel": "docs/specs/08-APPS.md"
     },
@@ -128,6 +68,10 @@
     {
       "id": "11-integridad",
       "rel": "docs/specs/11-INTEGRIDAD.md"
+    },
+    {
+      "id": "user-manual",
+      "rel": "docs/USER_MANUAL.md"
     }
   ]
 }

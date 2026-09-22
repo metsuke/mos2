@@ -3,8 +3,19 @@ set -euo pipefail
 cd "$(dirname "$0")"
 echo "ADVERTENCIA: reescribe hashes del manifiesto al contenido ACTUAL del clone."
 echo "No lo uses si no reconoces los cambios, hay un clone ajeno o sospechas de toqueteo."
-echo "Ctrl-C en 30s para abortar."
-sleep 30
+echo "Ctrl-C para abortar."
+SEGS=30
+for ((i=1; i<=SEGS; i++)); do
+  pct=$((i * 100 / SEGS))
+  filled=$((i * 28 / SEGS))
+  bar=""
+  for ((k=0; k<28; k++)); do
+    if ((k < filled)); then bar+="█"; else bar+="░"; fi
+  done
+  printf "\r[arreglar] %s %s/%s %s%% espera" "$bar" "$i" "$SEGS" "$pct"
+  sleep 1
+done
+printf "\n"
 python3 - <<'PY'
 import hashlib, json, sys
 from pathlib import Path

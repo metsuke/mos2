@@ -1,4 +1,4 @@
-"""Lote: pegar, :e ejecuta, :q cancela. write consume hasta el punto."""
+"""Lote: acumula con input(). Parseo solo al :e."""
 
 import shlex
 import sys
@@ -26,42 +26,32 @@ def _manager():
 
 
 def _meta(line: str) -> str:
-    s = line.strip()
-    return ":" + s[1:] if s.startswith(";") else s
-
-
-def _eco(line: str) -> None:
-    s = line.strip()
-    if len(s) > 80 and not s.startswith(("write ", "w ", "docgen ", ":")):
-        print(f"[multi] + ({len(s)} chars)")
-        return
-    print(f"[multi] + {s}")
+    s = line.strip().replace("\ufeff", "")
+    if s.startswith(";"):
+        return ":" + s[1:]
+    return s
 
 
 def execute(args):
-    print("[multi] Pega comandos. :e ejecuta  |  :q cancela")
+    print("[multi] Pega el bloque.")
+    print("[multi] Luego una linea solo con :e  (o :q).")
     lote = []
     while True:
         try:
-            bruto = sys.stdin.readline()
+            line = input()
         except (EOFError, KeyboardInterrupt):
             print("[multi] Cancelado.")
             return
-        if bruto == "":
-            print("[multi] Cancelado.")
-            return
-        line = bruto.replace("\r", "").rstrip("\n")
-        if not line.strip():
-            continue
-        meta = _meta(line).lower()
-        if meta == ":q":
-            print("[multi] Cancelado.")
-            return
-        if meta in (":e", ":w"):
-            _lanzar(lote)
-            return
-        lote.append(line)
-        _eco(line)
+        line = line.replace("\r", "")
+        for piece in line.split("\n"):
+            meta = _meta(piece).lower()
+            if meta == ":q":
+                print("[multi] Cancelado.")
+                return
+            if meta in (":e", ":w"):
+                _lanzar(lote)
+                return
+            lote.append(piece)
 
 
 def _lanzar(lote: list[str]) -> None:
@@ -73,6 +63,9 @@ def _lanzar(lote: list[str]) -> None:
     i = 0
     while i < len(lote):
         line = lote[i]
+        if not line.strip():
+            i += 1
+            continue
         try:
             parts = shlex.split(line, posix=True)
         except ValueError as exc:
@@ -114,7 +107,7 @@ def _lanzar(lote: list[str]) -> None:
 
 
 def help():
-    return "Uso: multi (o m) o ./write.sh. :e ejecuta, :q cancela."
+    return "Uso: multi o ./write.sh. :e ejecuta, :q cancela."
 
 
 def sinopsis():
