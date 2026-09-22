@@ -1,6 +1,28 @@
-# Lote write + docgen (anexo METHODOLOGY)
+# Lote write + generate
 
-Anexo corto a METHODOLOGY.md. El generate va en el mismo lote que el write.
+Anexo de metodologia IA. El hash es del fichero en claro.
 
-## Lote
-write ruta\nhash\nbase64\n.\ndocgen generate <id>\n:e\n\nEn write.sh las lineas que no son write se ejecutan. Maximo tres writes. test 120. Ver IA_TOPE e IA_WRITE.
+## Dentro de MOS
+Comando m o multi.
+Pegas el bloque.
+Linea sola :e ejecuta. :q cancela.
+Forma:
+write <ruta>
+<sha256>
+[prefijo]payload
+.
+docgen generate <id>
+
+## Fuera de MOS
+./write.sh lanza el mismo multi.
+Mismo bloque y mismo :e.
+No emular el lote en bash.
+
+## Prefijos
+sin prefijo = Base64
+gz: gzip+b64
+xz: lzma+b64
+b85: ascii85
+gzb85: gzip+ascii85
+xzb85: lzma+ascii85
+Elegir el mas corto que el decoder ya tenga.

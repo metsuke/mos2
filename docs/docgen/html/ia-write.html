@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>ia-write</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
-<h1>Ritual write y multi para IA</h1>
-<p>Fichero entero. SHA-256 del contenido en claro. Payload: plano b64 o prefijo gz:/xz:/b85:/gzb85:/xzb85:. generate en el mismo lote. La IA elige el payload mas corto que el receptor ya decodifique.</p>
+<h1>Ritual write, multi y write.sh</h1>
+<p>Norma de IA. Hash del fichero en claro. Probado: multi dentro de MOS y ./write.sh fuera.</p>
+<h2>Dentro</h2>
+<p>m o multi. Pegar bloque. Linea sola :e ejecuta. :q cancela. No parsear hasta :e.</p>
+<h2>Fuera</h2>
+<p>./write.sh lanza el mismo multi. Mismo bloque. chmod +x write.sh. Nunca emular el lote en bash.</p>
 <h2>Lote</h2>
-<p>write ruta hash payload . docgen generate &lt;id&gt; :e</p>
-<h2>Prefijos</h2>
-<p>sin prefijo = Base64 del fichero. gz: gzip+b64 xz: lzma+b64 b85: ascii85 del fichero gzb85: gzip+ascii85 xzb85: lzma+ascii85 CRC/gzip roto = payload cortado; repetir en b64 plano.</p>
-<h2>Donde</h2>
-<p>multi/m o write.sh que lanza multi. Maximo tres writes. write registra integridad. Varios codecs no sustituyen el hash.</p>
+<p>write &lt;ruta&gt; &lt;sha256&gt; [gz:|xz:|b85:|gzb85:|xzb85:]payload . docgen index add &lt;id&gt; &lt;rel&gt; docgen generate &lt;id&gt;</p>
+<h2>Integridad</h2>
+<p>Si MOS no arranca: ./arreglar_integridad.sh (30s, luego ./mos2.sh). No es uso diario.</p>
 </body></html>

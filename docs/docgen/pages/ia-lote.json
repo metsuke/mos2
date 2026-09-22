@@ -1,12 +1,20 @@
 {
   "schema": "metsuos-docgen-page-1",
   "id": "ia-lote",
-  "titulo": "Lote write + docgen (anexo METHODOLOGY)",
-  "preambulo": "Anexo corto a METHODOLOGY.md. El generate va en el mismo lote que el write.",
+  "titulo": "Lote write + generate",
+  "preambulo": "Anexo de metodologia IA. El hash es del fichero en claro.",
   "secciones": [
     {
-      "titulo": "Lote",
-      "cuerpo": "write ruta\\nhash\\nbase64\\n.\\ndocgen generate <id>\\n:e\\n\\nEn write.sh las lineas que no son write se ejecutan. Maximo tres writes. test 120. Ver IA_TOPE e IA_WRITE."
+      "titulo": "Dentro de MOS",
+      "cuerpo": "Comando m o multi.\nPegas el bloque.\nLinea sola :e ejecuta. :q cancela.\nForma:\nwrite <ruta>\n<sha256>\n[prefijo]payload\n.\ndocgen generate <id>"
+    },
+    {
+      "titulo": "Fuera de MOS",
+      "cuerpo": "./write.sh lanza el mismo multi.\nMismo bloque y mismo :e.\nNo emular el lote en bash."
+    },
+    {
+      "titulo": "Prefijos",
+      "cuerpo": "sin prefijo = Base64\ngz: gzip+b64\nxz: lzma+b64\nb85: ascii85\ngzb85: gzip+ascii85\nxzb85: lzma+ascii85\nElegir el mas corto que el decoder ya tenga."
     }
   ]
 }

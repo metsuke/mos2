@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>ia-lote</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
-<h1>Lote write + docgen (anexo METHODOLOGY)</h1>
-<p>Anexo corto a METHODOLOGY.md. El generate va en el mismo lote que el write.</p>
-<h2>Lote</h2>
-<p>write ruta\nhash\nbase64\n.\ndocgen generate &lt;id&gt;\n:e\n\nEn write.sh las lineas que no son write se ejecutan. Maximo tres writes. test 120. Ver IA_TOPE e IA_WRITE.</p>
+<h1>Lote write + generate</h1>
+<p>Anexo de metodologia IA. El hash es del fichero en claro.</p>
+<h2>Dentro de MOS</h2>
+<p>Comando m o multi. Pegas el bloque. Linea sola :e ejecuta. :q cancela. Forma: write &lt;ruta&gt; &lt;sha256&gt; [prefijo]payload . docgen generate &lt;id&gt;</p>
+<h2>Fuera de MOS</h2>
+<p>./write.sh lanza el mismo multi. Mismo bloque y mismo :e. No emular el lote en bash.</p>
+<h2>Prefijos</h2>
+<p>sin prefijo = Base64 gz: gzip+b64 xz: lzma+b64 b85: ascii85 gzb85: gzip+ascii85 xzb85: lzma+ascii85 Elegir el mas corto que el decoder ya tenga.</p>
 </body></html>

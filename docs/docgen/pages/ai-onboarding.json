@@ -2,7 +2,7 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "ai-onboarding",
   "titulo": "Onboarding para agentes IA (MetsuOS)",
-  "preambulo": "**Versión del documento:** 1.5\n**Estado:** Normativo de proceso\n**Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md\n\nVer tambien docs/IA_TOPE.md y docs/IA_WRITE.md.",
+  "preambulo": "**Versión del documento:** 1.6\n**Estado:** Normativo de proceso\n**Documentos relacionados:** AGENTS.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/INTERACTION_REVIEW.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, docs/STYLE_GUIDE.md, docs/specs/00-OVERVIEW.md, docs/IA_WRITE.md, docs/IA_LOTE.md",
   "cuerpo_completo": null,
   "origen": "edicion-json",
   "secciones": [
@@ -16,15 +16,19 @@
     },
     {
       "titulo": "Qué es MetsuOS (férreo)",
-      "cuerpo": "- SO simulado modular en Python; shell MOSh.\n- Núcleo moslib/; rootfs/ simulado.\n- Contrato: execute(args) y help() -> str no vacío.\n- Imports de comandos: solo stdlib + moslib (AST).\n- Usuario anfitrión; comandos user_*.py; nunca pisan sistema.\n- Tests de arranque bloqueantes.\n- A11Y de interfaz mandatoria.\n- Poetry + mos2.sh / install.sh multi-entorno.\n- Git, no APIs de un forge.\n- Comandos de calidad actuales: test, update, synccheck, docgen.\n- Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma."
+      "cuerpo": "- SO simulado modular en Python; shell MOSh.\n- Núcleo moslib/; rootfs/ simulado.\n- Contrato: execute(args) y help() -> str no vacío.\n- Imports de comandos: solo stdlib + moslib (AST).\n- Usuario anfitrión; comandos user_*.py; nunca pisan sistema.\n- Tests de arranque bloqueantes.\n- A11Y de interfaz mandatoria.\n- Poetry + mos2.sh / install.sh multi-entorno.\n- Git, no APIs de un forge.\n- Comandos de calidad actuales: test, update, synccheck, docgen.\n- Tope 120 líneas por fichero de código; `test 120` consulta sin tumbar el sistema.\n- Incentivos: vectores comunes; humanos se inclinan; IA está obligada. Sin karma."
     },
     {
       "titulo": "Documentación y docgen",
-      "cuerpo": "Fuente de verdad: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).\nEl markdown publicado se pinta con `docgen generate`.\nFlujo normal de la IA: un JSON por mensaje, fichero entero, luego `docgen generate <id>`.\n`docgen ingest` solo primera absorción o recuperación desde markdown/backup.\n`generate` no ingerir: si ingerir al generar, el JSON se pisa con un md viejo o corto.\nProhibido reescribir specs/manual/man enteros en el chat como vía habitual."
+      "cuerpo": "Fuente de verdad: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json, index.json).\nEl markdown publicado se pinta con `docgen generate`.\nFlujo normal de la IA: un JSON por mensaje, fichero entero, luego `docgen generate <id>` en el mismo lote.\nSi el id no está en el índice: `docgen index add <id> <rel>` en ese lote.\n`docgen ingest` solo primera absorción o recuperación desde markdown/backup.\n`generate` no ingerir: si ingerir al generar, el JSON se pisa con un md viejo o corto.\nProhibido reescribir specs/manual/man enteros en el chat como vía habitual."
     },
     {
-      "titulo": "Tope 120 y lote write+generate",
-      "cuerpo": "Ningun .py de moslib/commands supera 120 lineas. Si no cabe, dos ficheros desde el primer lote.\nConsulta: test 120. No existe el comando tope.\nLote: write ruta / hash / base64 / punto / docgen generate <id> / :e.\nwrite.sh ejecuta tambien las lineas que no son write. Sin fixer global de integridad.\nDetalle: docs/IA_TOPE.md y docs/IA_WRITE.md."
+      "titulo": "Edición: multi y write.sh",
+      "cuerpo": "Dentro de MOS: `m` o `multi`. Se pega el bloque entero. multi acumula; no parsea hasta una línea que sea solo `:e` (ejecuta) o `:q` (cancela). `;e` y `;q` valen igual.\nFuera de MOS: `./write.sh` lanza el mismo multi. No emular el lote en bash.\nForma del lote:\nwrite <ruta>\n<sha256 del fichero en claro>\n[prefijo]payload\n.\ndocgen index add <id> <rel>\ndocgen generate <id>\nLuego línea sola `:e`.\nMáximo tres writes por lote si son ficheros pequeños. write registra integridad si el hash coincide."
+    },
+    {
+      "titulo": "Codecs del payload",
+      "cuerpo": "El hash es siempre SHA-256 del contenido en claro, no del payload.\nsin prefijo = Base64 del fichero\n`gz:` gzip+Base64\n`xz:` lzma+Base64\n`b85:` ascii85\n`gzb85:` gzip+ascii85\n`xzb85:` lzma+ascii85\nLa IA elige el más corto que el decoder ya tenga. Si CRC o payload inválido: el pegado se cortó; repetir en Base64 plano o pegar el fichero con `code` y `./arreglar_integridad.sh`."
     },
     {
       "titulo": "Contexto de sesión",
@@ -32,7 +36,7 @@
     },
     {
       "titulo": "Cómo entregar trabajo al humano",
-      "cuerpo": "- Un paso / un fichero por mensaje, salvo pareja inseparable avisada.\n- Fichero **entero**. Prohibido “añade esta fila”: las tablas van montadas.\n- Prohibido “usa lo que te di antes”: volver a pegar el documento.\n- Cachos solo si no cabe: cacho 1 sustituye todo; no dejar un spec inválido a mitad.\n- Completo: primero mkdir / touch / code, luego el texto.\n- Parcial (avisando “no sustituyas el fichero”): primero el recorte, luego code.\n- Encabezados sin numeración.\n- Directorios en tablas (una columna por nivel).\n- Comandos: Tipo A–Z, comando A–Z dentro del tipo.\n- Si el nuevo texto es más corto que el del repo: avisar. No resumir sin consultar.\n- Breadcrumb: campaña, grupo, bloque x/y, paso, %, contexto.\n- Si se salta un número de paso: explicar por qué en el mismo mensaje.\n- No usar «corrida». CHANGELOG: no dejar «Sin publicar» al humano.\n- Psicología: acompañar; prohibido dañar, desestabilizar o engañar.\n- Asimov (docs/INCENTIVOS.md): cita + nota de aplicación; no autocommit; no apagar tests."
+      "cuerpo": "- Un paso / un fichero por mensaje, salvo pareja inseparable avisada (write + generate cuenta como un lote).\n- Fichero **entero**. Prohibido “añade esta fila”: las tablas van montadas.\n- Prohibido “usa lo que te di antes”: volver a pegar el documento.\n- Cachos solo si no cabe: cacho 1 sustituye todo; no dejar un spec inválido a mitad.\n- Completo habitual: lote write (hash + payload + punto) + generate, vía multi o ./write.sh.\n- Alternativa editor: mkdir / touch / code, luego el texto; después integridad.\n- Parcial (avisando “no sustituyas el fichero”): primero el recorte, luego code.\n- Encabezados sin numeración.\n- Directorios en tablas (una columna por nivel).\n- Comandos: Tipo A–Z, comando A–Z dentro del tipo.\n- Si el nuevo texto es más corto que el del repo: avisar. No resumir sin consultar.\n- Breadcrumb: campaña, grupo, bloque x/y, paso, %, contexto.\n- Si se salta un número de paso: explicar por qué en el mismo mensaje.\n- No usar «corrida». CHANGELOG: no dejar «Sin publicar» al humano.\n- Psicología: acompañar; prohibido dañar, desestabilizar o engañar.\n- Asimov (docs/INCENTIVOS.md): cita + nota de aplicación; no autocommit; no apagar tests."
     },
     {
       "titulo": "Estado real del repositorio",
@@ -40,7 +44,11 @@
     },
     {
       "titulo": "Antes de tocar código",
-      "cuerpo": "1. Leer el repo real (SHA).\n2. Impacto SEC / SSS / ICD / SRS / A11Y / INCENTIVOS.\n3. STYLE_GUIDE e imports.\n4. Plan por fases; campaña en docs/plans/.\n5. No desactivar tests ni seguridad.\n6. VERSIONING (¿bump? ¿tag?).\n7. Comando nuevo: código + help + man + README + SSS + CHANGELOG.\n8. No abrir DepManager ni política geo real (solo dirección)."
+      "cuerpo": "1. Leer el repo real (SHA).\n2. Impacto SEC / SSS / ICD / SRS / A11Y / INCENTIVOS.\n3. STYLE_GUIDE e imports.\n4. Plan por fases; campaña en docs/plans/.\n5. No desactivar tests ni seguridad.\n6. VERSIONING (¿bump? ¿tag?).\n7. Comando nuevo: código + help + man + README + SSS + CHANGELOG.\n8. No abrir DepManager ni política geo real (solo dirección).\n9. No crear un .py de más de 120 líneas: partir en submódulos."
+    },
+    {
+      "titulo": "Integridad de emergencia",
+      "cuerpo": "`./arreglar_integridad.sh` solo si MOS no arranca por hashes. Aviso 30 s con barra. Reescribe el manifiesto al contenido actual del clone y lanza `./mos2.sh` con `MOS_INTEGRIDAD=recargar`.\nEl alias `mos2` no existe dentro de un script no interactivo.\nNo es uso diario. No usarlo si no se reconocen los cambios."
     },
     {
       "titulo": "Versionado",
@@ -48,7 +56,7 @@
     },
     {
       "titulo": "Plataforma",
-      "cuerpo": "- Poetry: un candidato solo si `--version` se puede ejecutar.\n- windows/git-bash: `py -m poetry`.\n- windows/wsl: clone en FS Linux; rechazo bajo `/mnt/<letra>/`."
+      "cuerpo": "- Poetry: un candidato solo si `--version` se puede ejecutar.\n- windows/git-bash: `py -m poetry`.\n- windows/wsl: clone en FS Linux; rechazo bajo `/mnt/<letra>/`.\n- Lanzador portable: `./mos2.sh`, no el alias `mos2` desde scripts."
     },
     {
       "titulo": "Accesibilidad",
@@ -60,7 +68,7 @@
     },
     {
       "titulo": "Checklist de cada mensaje de trabajo",
-      "cuerpo": "1. ¿Breadcrumb?\n2. ¿Un paso / un fichero?\n3. ¿Fichero entero (JSON si es docs)?\n4. ¿Tablas ya hechas?\n5. ¿He vuelto a pegar en vez de remitir?\n6. ¿SHA o synccheck si hablo del remoto?\n7. ¿A11Y / SEC / INCENTIVOS / contrato intactos?\n8. ¿He evitado ingest de rutinario?"
+      "cuerpo": "1. ¿Breadcrumb?\n2. ¿Un paso / un fichero (o lote write+generate)?\n3. ¿Fichero entero (JSON si es docs)?\n4. ¿Tablas ya hechas?\n5. ¿He vuelto a pegar en vez de remitir?\n6. ¿SHA o synccheck si hablo del remoto?\n7. ¿A11Y / SEC / INCENTIVOS / contrato intactos?\n8. ¿He evitado ingest de rutinario?\n9. ¿El id está en docs/docgen/index.json?\n10. ¿Tope 120 si toco código?"
     },
     {
       "titulo": "Autoridad",

@@ -8,19 +8,19 @@
   "secciones": [
     {
       "titulo": "Lectura mínima",
-      "cuerpo": "1. Este archivo\n2. docs/AI_ONBOARDING.md\n3. docs/INCENTIVOS.md\n4. docs/METHODOLOGY.md\n5. docs/INTERACTION_REVIEW.md\n6. docs/ENVIRONMENTS.md\n7. docs/VERSIONING.md\n8. docs/A11Y.md y docs/a11y/DECLARACION.md\n9. docs/STYLE_GUIDE.md\n10. docs/specs/00-OVERVIEW.md\n11. docs/plans/ si hay campaña\n12. Código y resto de specs según la tarea\n13. docs/IA_TOPE.md y docs/IA_WRITE.md"
+      "cuerpo": "1. Este archivo\n2. docs/AI_ONBOARDING.md\n3. docs/INCENTIVOS.md\n4. docs/METHODOLOGY.md\n5. docs/INTERACTION_REVIEW.md\n6. docs/ENVIRONMENTS.md\n7. docs/VERSIONING.md\n8. docs/A11Y.md y docs/a11y/DECLARACION.md\n9. docs/STYLE_GUIDE.md\n10. docs/specs/00-OVERVIEW.md\n11. docs/plans/ si hay campaña\n12. Código y resto de specs según la tarea"
     },
     {
       "titulo": "Normas que no se improvisan",
-      "cuerpo": "- Comandos: execute(args) y help() -> str\n- Imports en comandos: solo biblioteca estándar y moslib\n- El usuario no sobrescribe comandos de sistema (prefijo user_)\n- Tests de arranque bloqueantes\n- Accesibilidad de interfaz mandatoria (docs/A11Y.md)\n- Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)\n- Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md\n- Sin rutas personales ni nombres de maquina en docs públicas\n- Encabezados de documentación sin numeración\n- Entregar archivos enteros; tablas ya montadas; un paso cada vez\n- No remitir a un pegado anterior: volver a pegar\n- Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso\n- Si el archivo nuevo es mas corto, avisarlo\n- Directorios en tablas (una columna por nivel)\n- Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo\n- Breadcrumb de campaña en cada paso; explicar saltos de nómero\n- Git, no funciones exclusivas de un forge\n- Crear ficheros: mkdir -p / touch / editor\n- Estado del repo: comando synccheck y lectura por SHA\n- Psicología: acompañar; no danar, desestabilizar ni engañar"
+      "cuerpo": "- Comandos: execute(args) y help() -> str\n- Imports en comandos: solo biblioteca estándar y moslib\n- El usuario no sobrescribe comandos de sistema (prefijo user_)\n- Tests de arranque bloqueantes\n- Accesibilidad de interfaz mandatoria (docs/A11Y.md)\n- Tope 120 líneas por fichero de código; consultar con `test 120`\n- Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)\n- Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md\n- Sin rutas personales ni nombres de máquina en docs públicas\n- Encabezados de documentación sin numeración\n- Entregar archivos enteros; tablas ya montadas; un paso cada vez\n- No remitir a un pegado anterior: volver a pegar\n- Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso\n- Si el archivo nuevo es más corto, avisarlo\n- Directorios en tablas (una columna por nivel)\n- Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo\n- Breadcrumb de campaña en cada paso; explicar saltos de número\n- Git, no funciones exclusivas de un forge\n- Edición habitual: multi (dentro) o ./write.sh (fuera); lote write + hash + payload + punto + docgen generate\n- Estado del repo: comando synccheck y lectura por SHA\n- Psicología: acompañar; no dañar, desestabilizar ni engañar"
     },
     {
       "titulo": "Documentación y docgen",
-      "cuerpo": "- Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).\n- El markdown publicado se obtiene con `docgen generate`.\n- La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.\n- Flujo normal: editar el JSON (átomo) y decir `docgen generate <id>`.\n- `docgen ingest` solo en la primera absorción o si hay que recuperar desde markdown/backup.\n- `generate` no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.\n- Un fichero por mensaje; fichero entero; no parches sueltos."
+      "cuerpo": "- Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json, index.json).\n- El markdown publicado se obtiene con `docgen generate`.\n- La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.\n- Flujo normal: editar el JSON (átomo) y `docgen generate <id>` en el mismo lote.\n- Si el id no está en el índice: `docgen index add <id> <rel>`.\n- `docgen ingest` solo en la primera absorción o si hay que recuperar desde markdown/backup.\n- `generate` no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.\n- Un fichero por mensaje; fichero entero; no parches sueltos.\n- Ids de pages: el fichero es docs/docgen/pages/<id>.json (ai-onboarding, no ia-onboarding)."
     },
     {
-      "titulo": "Tope 120 y ritual write",
-      "cuerpo": "Ningun .py de moslib/commands supera 120 lineas. Si no cabe, dos ficheros desde el primer lote (*_menu, *_map, *_io). Consulta: test 120 (no es un comando tope; no bloquea arranque).\nEdicion: multi/m + write ruta + sha256 + base64 + punto + :e (;e vale). Maximo tres writes por lote.\nFuera de MOS: ./write.sh misma semantica; registra integridad del rel escrito. Sin fixer global.\nVer docs/IA_TOPE.md y docs/IA_WRITE.md."
+      "titulo": "multi y write.sh",
+      "cuerpo": "Dentro de MOS: `m` / `multi`. Acumula el pegado. Parseo solo con una línea que sea `:e` o `:q` (también `;e` `;q`).\nFuera: `./write.sh` lanza el mismo multi. No emular en bash.\nLote:\nwrite <ruta>\n<sha256 del claro>\n[gz:|xz:|b85:|gzb85:|xzb85:]payload\n.\ndocgen generate <id>\nMáximo tres writes pequeños por lote."
     },
     {
       "titulo": "Contexto de sesión",
@@ -32,7 +32,7 @@
     },
     {
       "titulo": "Qué no hacer",
-      "cuerpo": "- No inventar features ausentes en código o specs\n- No desactivar seguridad ni tests para hacer pasar un cambio\n- No excluir un perfil A11Y por comodidad\n- No asumir Mac, Git Bash o WSL sin contexto declarado\n- No diagnosticar el remoto solo con raw .../main/\n- No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)\n- No usar ingest como paso rutinario de edición"
+      "cuerpo": "- No inventar features ausentes en código o specs\n- No desactivar seguridad ni tests para hacer pasar un cambio\n- No excluir un perfil A11Y por comodidad\n- No asumir Mac, Git Bash o WSL sin contexto declarado\n- No diagnosticar el remoto solo con raw .../main/\n- No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)\n- No usar ingest como paso rutinario de edición\n- No usar ./arreglar_integridad.sh como atajo diario\n- No crear .py de más de 120 líneas"
     }
   ]
 }

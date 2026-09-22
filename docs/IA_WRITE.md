@@ -1,23 +1,20 @@
-# Ritual write y multi para IA
+# Ritual write, multi y write.sh
 
-Fichero entero. SHA-256 del contenido en claro. Payload: plano b64 o prefijo gz:/xz:/b85:/gzb85:/xzb85:. generate en el mismo lote. La IA elige el payload mas corto que el receptor ya decodifique.
+Norma de IA. Hash del fichero en claro. Probado: multi dentro de MOS y ./write.sh fuera.
+
+## Dentro
+m o multi. Pegar bloque. Linea sola :e ejecuta. :q cancela. No parsear hasta :e.
+
+## Fuera
+./write.sh lanza el mismo multi. Mismo bloque. chmod +x write.sh. Nunca emular el lote en bash.
 
 ## Lote
-write ruta
-hash
-payload
+write <ruta>
+<sha256>
+[gz:|xz:|b85:|gzb85:|xzb85:]payload
 .
+docgen index add <id> <rel>
 docgen generate <id>
-:e
 
-## Prefijos
-sin prefijo = Base64 del fichero.
-gz: gzip+b64
-xz: lzma+b64
-b85: ascii85 del fichero
-gzb85: gzip+ascii85
-xzb85: lzma+ascii85
-CRC/gzip roto = payload cortado; repetir en b64 plano.
-
-## Donde
-multi/m o write.sh que lanza multi. Maximo tres writes. write registra integridad. Varios codecs no sustituyen el hash.
+## Integridad
+Si MOS no arranca: ./arreglar_integridad.sh (30s, luego ./mos2.sh). No es uso diario.

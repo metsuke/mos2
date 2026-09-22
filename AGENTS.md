@@ -15,7 +15,6 @@ Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y
 10. docs/specs/00-OVERVIEW.md
 11. docs/plans/ si hay campaña
 12. Código y resto de specs según la tarea
-13. docs/IA_TOPE.md y docs/IA_WRITE.md
 
 ## Normas que no se improvisan
 - Comandos: execute(args) y help() -> str
@@ -23,36 +22,44 @@ Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y
 - El usuario no sobrescribe comandos de sistema (prefijo user_)
 - Tests de arranque bloqueantes
 - Accesibilidad de interfaz mandatoria (docs/A11Y.md)
+- Tope 120 líneas por fichero de código; consultar con `test 120`
 - Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)
 - Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md
-- Sin rutas personales ni nombres de maquina en docs públicas
+- Sin rutas personales ni nombres de máquina en docs públicas
 - Encabezados de documentación sin numeración
 - Entregar archivos enteros; tablas ya montadas; un paso cada vez
 - No remitir a un pegado anterior: volver a pegar
 - Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso
-- Si el archivo nuevo es mas corto, avisarlo
+- Si el archivo nuevo es más corto, avisarlo
 - Directorios en tablas (una columna por nivel)
 - Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo
-- Breadcrumb de campaña en cada paso; explicar saltos de nómero
+- Breadcrumb de campaña en cada paso; explicar saltos de número
 - Git, no funciones exclusivas de un forge
-- Crear ficheros: mkdir -p / touch / editor
+- Edición habitual: multi (dentro) o ./write.sh (fuera); lote write + hash + payload + punto + docgen generate
 - Estado del repo: comando synccheck y lectura por SHA
-- Psicología: acompañar; no danar, desestabilizar ni engañar
+- Psicología: acompañar; no dañar, desestabilizar ni engañar
 
 ## Documentación y docgen
-- Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json).
+- Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json, index.json).
 - El markdown publicado se obtiene con `docgen generate`.
 - La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.
-- Flujo normal: editar el JSON (átomo) y decir `docgen generate <id>`.
+- Flujo normal: editar el JSON (átomo) y `docgen generate <id>` en el mismo lote.
+- Si el id no está en el índice: `docgen index add <id> <rel>`.
 - `docgen ingest` solo en la primera absorción o si hay que recuperar desde markdown/backup.
 - `generate` no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.
 - Un fichero por mensaje; fichero entero; no parches sueltos.
+- Ids de pages: el fichero es docs/docgen/pages/<id>.json (ai-onboarding, no ia-onboarding).
 
-## Tope 120 y ritual write
-Ningun .py de moslib/commands supera 120 lineas. Si no cabe, dos ficheros desde el primer lote (*_menu, *_map, *_io). Consulta: test 120 (no es un comando tope; no bloquea arranque).
-Edicion: multi/m + write ruta + sha256 + base64 + punto + :e (;e vale). Maximo tres writes por lote.
-Fuera de MOS: ./write.sh misma semantica; registra integridad del rel escrito. Sin fixer global.
-Ver docs/IA_TOPE.md y docs/IA_WRITE.md.
+## multi y write.sh
+Dentro de MOS: `m` / `multi`. Acumula el pegado. Parseo solo con una línea que sea `:e` o `:q` (también `;e` `;q`).
+Fuera: `./write.sh` lanza el mismo multi. No emular en bash.
+Lote:
+write <ruta>
+<sha256 del claro>
+[gz:|xz:|b85:|gzb85:|xzb85:]payload
+.
+docgen generate <id>
+Máximo tres writes pequeños por lote.
 
 ## Contexto de sesión
 ```text
@@ -76,3 +83,5 @@ Producto de referencia: 0.2.7 / árbol 0.2.8. Comandos a11y, docs, synccheck, do
 - No diagnosticar el remoto solo con raw .../main/
 - No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)
 - No usar ingest como paso rutinario de edición
+- No usar ./arreglar_integridad.sh como atajo diario
+- No crear .py de más de 120 líneas

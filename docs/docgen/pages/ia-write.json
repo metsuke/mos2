@@ -1,20 +1,24 @@
 {
   "schema": "metsuos-docgen-page-1",
   "id": "ia-write",
-  "titulo": "Ritual write y multi para IA",
-  "preambulo": "Fichero entero. SHA-256 del contenido en claro. Payload: plano b64 o prefijo gz:/xz:/b85:/gzb85:/xzb85:. generate en el mismo lote. La IA elige el payload mas corto que el receptor ya decodifique.",
+  "titulo": "Ritual write, multi y write.sh",
+  "preambulo": "Norma de IA. Hash del fichero en claro. Probado: multi dentro de MOS y ./write.sh fuera.",
   "secciones": [
     {
+      "titulo": "Dentro",
+      "cuerpo": "m o multi. Pegar bloque. Linea sola :e ejecuta. :q cancela. No parsear hasta :e."
+    },
+    {
+      "titulo": "Fuera",
+      "cuerpo": "./write.sh lanza el mismo multi. Mismo bloque. chmod +x write.sh. Nunca emular el lote en bash."
+    },
+    {
       "titulo": "Lote",
-      "cuerpo": "write ruta\nhash\npayload\n.\ndocgen generate <id>\n:e"
+      "cuerpo": "write <ruta>\n<sha256>\n[gz:|xz:|b85:|gzb85:|xzb85:]payload\n.\ndocgen index add <id> <rel>\ndocgen generate <id>"
     },
     {
-      "titulo": "Prefijos",
-      "cuerpo": "sin prefijo = Base64 del fichero.\ngz: gzip+b64\nxz: lzma+b64\nb85: ascii85 del fichero\ngzb85: gzip+ascii85\nxzb85: lzma+ascii85\nCRC/gzip roto = payload cortado; repetir en b64 plano."
-    },
-    {
-      "titulo": "Donde",
-      "cuerpo": "multi/m o write.sh que lanza multi. Maximo tres writes. write registra integridad. Varios codecs no sustituyen el hash."
+      "titulo": "Integridad",
+      "cuerpo": "Si MOS no arranca: ./arreglar_integridad.sh (30s, luego ./mos2.sh). No es uso diario."
     }
   ]
 }

@@ -1,0 +1,24 @@
+{
+  "schema": "metsuos-docgen-page-1",
+  "id": "ia-onboarding",
+  "titulo": "Onboarding IA MetsuOS",
+  "preambulo": "Leer antes de tocar codigo. Fuente JSON. generate no es ingest.",
+  "secciones": [
+    {
+      "titulo": "Edicion",
+      "cuerpo": "Dentro: multi/m. Fuera: ./write.sh (el mismo multi). Lote write + hash + payload + punto + docgen generate. Cerrar con :e. Tope 120 lineas. Maximo tres writes por lote."
+    },
+    {
+      "titulo": "Codecs",
+      "cuerpo": "Hash SHA-256 del claro. Payload: b64, gz:, xz:, b85:, gzb85:, xzb85:. Elegir el mas corto que el decoder tenga."
+    },
+    {
+      "titulo": "Indice",
+      "cuerpo": "docs/docgen/index.json. docgen index add|set|rm|list. Si generate no escribe, falta el id en el indice."
+    },
+    {
+      "titulo": "Integridad",
+      "cuerpo": "./arreglar_integridad.sh solo si MOS no arranca. 30s de aviso. Lanza ./mos2.sh con MOS_INTEGRIDAD=recargar. No uso diario."
+    }
+  ]
+}
