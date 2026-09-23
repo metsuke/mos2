@@ -2,9 +2,9 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "interaction-review",
   "titulo": "Revisión de interacción humano ↔ IA",
-  "preambulo": "**Versión del documento:** 1.0  \n**Estado:** Normativo de proceso  \n**Documentos relacionados:** docs/METHODOLOGY.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/HUMAN_ONBOARDING.md, docs/plans/README.md\n\n---",
+  "preambulo": "**Versión del documento:** 1.1  \n**Estado:** Normativo de proceso  \n**Documentos relacionados:** docs/METHODOLOGY.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/IA_WRITE.md, docs/HUMAN_ONBOARDING.md, docs/plans/README.md\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/interaction-review/20260916_033021.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Propósito",
@@ -12,7 +12,7 @@
     },
     {
       "titulo": "Cómo se usa",
-      "cuerpo": "1. La IA rellena las tablas con lo ocurrido en el grupo.\n2. El humano corrige o valida.\n3. Lo aceptado pasa a METHODOLOGY / AI_ONBOARDING / AGENTS en el mismo grupo o en el siguiente paso.\n4. La deuda no resuelta se copia al cierre de campaña o a docs de planes.\n\nSe pueden añadir secciones nuevas a esta plantilla; no se quitan las dos bases (interacción y deuda).\n\n---"
+      "cuerpo": "1. La IA rellena las tablas con lo ocurrido en el grupo.\n2. El humano corrige o valida.\n3. Lo aceptado pasa a METHODOLOGY / AI_ONBOARDING / AGENTS en el mismo grupo o en el siguiente paso (JSON + generate).\n4. La deuda no resuelta se copia al cierre de campaña o a docs de planes.\n\nSe pueden añadir secciones nuevas a esta plantilla; no se quitan las dos bases (interacción y deuda).\n\n---"
     },
     {
       "titulo": "Psicología y ética de acompañamiento",
@@ -20,11 +20,11 @@
     },
     {
       "titulo": "Auditoría de repositorio (obligatoria en cada cierre)",
-      "cuerpo": "1. Pedir `synccheck` en MOSh (o `git fetch` + comparar HEAD con `origin/main`).\n2. Leer ficheros por **SHA** (`git show origin/main:archivo` o raw con SHA).\n3. No basar un diagnóstico solo en `raw.githubusercontent.com/.../main/...`.\n4. Si Poetry, README, CHANGELOG o comandos no coinciden: hotfix antes del siguiente bloque.\n\n---"
+      "cuerpo": "1. Pedir `synccheck` en MOSh (o `git fetch` + comparar HEAD con `origin/main`).\n2. Leer ficheros por **SHA** (`git show origin/main:archivo` o raw con SHA).\n3. No basar un diagnóstico solo en `raw.githubusercontent.com/.../main/...`.\n4. Si Poetry, README, CHANGELOG o comandos no coinciden: hotfix antes del siguiente bloque.\n5. Arranque sin `MOS_INTEGRIDAD=recargar`. `test 120` sin pendientes o con plan.\n\n---"
     },
     {
       "titulo": "Entrega de documentos (resumen)",
-      "cuerpo": "- Fichero entero; tablas ya montadas; no “añade esta fila”.\n- No remitir a un pegado anterior: volver a pegar.\n- Cacho 1 = documento cerrado o aviso explícito; no cortar un spec a mitad sin decirlo.\n- Completo: primero `mkdir` / `touch` / `code`.\n- Breadcrumb de campaña en cada paso.\n- Explicar los saltos de número de paso.\n\n---"
+      "cuerpo": "- Fichero entero; tablas ya montadas; no “añade esta fila”.\n- No remitir a un pegado anterior: volver a pegar.\n- Cacho 1 = documento cerrado o aviso explícito; no cortar un spec a mitad sin decirlo.\n- Habitual: lote `write` + hash + payload + `.` + `docgen generate` vía `multi` o `./write.sh`. Cerrar con `:e`.\n- Alternativa: `mkdir` / `touch` / `code` y luego integridad.\n- Breadcrumb de campaña en cada paso. `:s` = siguiente paso.\n- Explicar los saltos de número de paso.\n- Si generate aborta por corto: el JSON local está pisado; no forzar.\n\n---"
     },
     {
       "titulo": "Plantilla",

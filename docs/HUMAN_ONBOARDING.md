@@ -1,6 +1,6 @@
 # Onboarding humano de MetsuOS
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.4  
 **Estado:** Guía de entrada  
 **Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md
 
@@ -25,7 +25,9 @@ Desde la raíz del clone:
 ./mos2.sh
 ```
 
-Dentro del shell: `help`, `man`, `docs`, `a11y`, `synccheck`, `exit`.
+Dentro del shell: `help`, `man`, `docs`, `a11y`, `synccheck`, `test`, `test 120`, `exit`.
+
+Lote de edición (cuando MOS no arranca): `./write.sh`.
 
 Detalle de uso cotidiano: docs/USER_MANUAL.md.
 
@@ -83,10 +85,13 @@ Para una IA que te ayude **sí es obligatorio**.
 | docs/INTERACTION_REVIEW.md | Cierre de grupo con la IA |
 | docs/plans/ | Planes de campaña |
 | docs/AI_ONBOARDING.md / AGENTS.md | Si colaboras con una IA |
+| docs/IA_WRITE.md | Ritual write / multi |
 | docs/specs/ | Requisitos y diseño (ECSS-light) |
 | docs/man/ | Manual extendido por comando |
 
-Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo es largo, cacho 1 reemplaza el fichero y lo demás se pega debajo.
+Comando `docs`: menú por categoría; número abre markdown; `Nh` abre HTML.
+
+Trabajo con IA: un paso cada vez; lote write+generate; si el archivo es largo, cacho 1 reemplaza el fichero y lo demás se pega debajo.
 
 ---
 
@@ -104,6 +109,7 @@ Trabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo e
 | Síntoma | Qué mirar |
 |---------|-----------|
 | Tests de arranque en rojo | Comando con import ilegal o pytest no instalado en ESE clone |
+| Integridad en rojo | Contenido distinto del manifiesto; write.sh o MOS_INTEGRIDAD=recargar solo si reconoces el cambio |
 | Permission denied con poetry | Git Bash: usar ./mos2.sh (py -m poetry), no Scripts/poetry |
 | install.sh /bin/bash^M | Finales de línea CRLF; convertir scripts a LF |
 | WSL + /mnt/ | Mover el trabajo a un clone en home Linux |

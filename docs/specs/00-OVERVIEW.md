@@ -1,6 +1,6 @@
 # 00 – Overview de especificaciones (ECSS-light)
 
-**Versión del documento:** 1.5  
+**Versión del documento:** 1.7  
 **Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  
 **Estado:** Normativo  
 **Documento relacionado:** docs/METHODOLOGY.md, docs/ENVIRONMENTS.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, AGENTS.md, docs/INCENTIVOS.md, docs/INTERACTION_REVIEW.md, docs/DEUDA_Y_CAMPANAS.md
@@ -35,6 +35,7 @@ No describe el diseño detallado ni los requisitos individuales: solo organiza e
 | docs/ | specs/ | 08-APPS.md | APPS | Apps locales, ámbitos y mini-moslib |
 | docs/ | specs/ | 09-TASKS.md | TASKS | Tareas e hilos locales, worker de sesión |
 | docs/ | specs/ | 10-IA-ROUTER.md | IA-ROUTER | Enrutador de modelos (off por defecto) |
+| docs/ | specs/ | 11-INTEGRIDAD.md | INTEGRIDAD | Manifiesto, sello y arranque |
 
 Documentos de soporte fuera de `specs/`:
 
@@ -55,6 +56,7 @@ Documentos de soporte fuera de `specs/`:
 | docs/ | ENVIRONMENTS.md | Perfiles de entorno, Poetry y contexto de sesión |
 | docs/ | STYLE_GUIDE.md | Normas de estilo de código |
 | docs/ | USER_MANUAL.md | Manual de usuario formal |
+| docs/ | IA_WRITE.md | Lotes write/multi para IA |
 | docs/ | man/ | Páginas man por comando |
 | docs/ | plans/ | Planes de campaña |
 
@@ -63,7 +65,7 @@ Documentos de soporte fuera de `specs/`:
 ## Precedencia normativa
 De mayor a menor autoridad técnica:
 
-1. A11Y de interfaz (perfiles soportados) junto con `04-SEC` y `01-SSS`
+1. A11Y de interfaz (perfiles soportados) junto con `04-SEC`, `01-SSS` y `11-INTEGRIDAD`
 2. `03-ICD` (contratos e interfaces)
 3. `02-SRS` (requisitos software)
 4. `05-SDD` (diseño) y specs de capacidad `08-APPS`, `09-TASKS`, `10-IA-ROUTER`
@@ -72,7 +74,7 @@ De mayor a menor autoridad técnica:
 
 Regla:
 
-- El código debe cumplir SEC, SSS, ICD, SRS y A11Y.
+- El código debe cumplir SEC, SSS, ICD, SRS, A11Y e integridad.
 - Si A11Y y SEC chocan, se aplica el procedimiento de SEC y A11Y.md. No hay excepción silenciosa.
 - Si un cambio de código exige alterar una norma, primero se actualiza la spec y después el código.
 - Tags y bump de Poetry: `docs/VERSIONING.md`.
@@ -93,7 +95,7 @@ Este conjunto es una adaptación ligera de ECSS-E-ST-40:
 | V&V / test planning | 06-TEST |
 | SRelD | 07-SRelD |
 
-La seguridad tiene documento propio (`04-SEC`). La accesibilidad tiene política y declaración propias (`docs/A11Y.md`, `docs/a11y/`).
+La seguridad tiene documento propio (`04-SEC`). La accesibilidad tiene política y declaración propias (`docs/A11Y.md`, `docs/a11y/`). La integridad tiene `11-INTEGRIDAD`.
 
 08, 09 y 10 no sustituyen a SSS/SRS/ICD: detallan capacidades ya reservadas o exigidas en el núcleo ECSS-light.
 
@@ -102,7 +104,7 @@ La seguridad tiene documento propio (`04-SEC`). La accesibilidad tiene política
 ## Cómo se usa este set en el desarrollo
 ### Para implementar una feature
 
-1. Comprobar impacto en SSS / SEC / ICD / SRS / A11Y (y ENVIRONMENTS si afecta a perfiles o Poetry).
+1. Comprobar impacto en SSS / SEC / ICD / SRS / A11Y / integridad (y ENVIRONMENTS si afecta a perfiles o Poetry).
 2. Si cambia arquitectura, actualizar SDD. Si toca apps, tareas o iarouter, actualizar 08, 09 o 10.
 3. Implementar en rama `feature/...`.
 4. Añadir o ajustar tests según 06-TEST y STYLE_GUIDE.
@@ -122,6 +124,7 @@ Preguntas mínimas:
 6. ¿Hay que tocar SRelD en la siguiente baseline?
 7. ¿Hay que bump de Poetry o es solo docs?
 8. ¿Hay que anotar CHANGELOG?
+9. ¿Hay que registrar integridad?
 
 ---
 
@@ -147,6 +150,7 @@ REQ-<AREA>-<NNN>
 | APP | Apps |
 | TASK | Tareas e hilos |
 | IA | Enrutador de IA |
+| INT | Integridad |
 
 Ejemplo: `REQ-SEC-001`
 
@@ -163,7 +167,7 @@ Producto de referencia actual: **v0.2.7**.
 `CHANGELOG.md` resume las evoluciones.  
 `docs/a11y/DECLARACION.md` e `informe.md` describen el cumplimiento A11Y adaptado a CLI.
 
-Esta versión 1.5 del Overview no borra el relato de 1.4: solo actualiza el mapa y la baseline de producto.
+Esta versión 1.6 del Overview no borra el relato de 1.5: actualiza el mapa (11-INTEGRIDAD) y mantiene la baseline de producto.
 
 ---
 

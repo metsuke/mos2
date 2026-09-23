@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>interaction-review</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
 <h1>Revisión de interacción humano ↔ IA</h1>
-<p><strong>Versión del documento:</strong> 1.0   <strong>Estado:</strong> Normativo de proceso   <strong>Documentos relacionados:</strong> docs/METHODOLOGY.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/HUMAN_ONBOARDING.md, docs/plans/README.md</p>
+<p><strong>Versión del documento:</strong> 1.2   <strong>Estado:</strong> Normativo de proceso   <strong>Documentos relacionados:</strong> docs/METHODOLOGY.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/IA_WRITE.md, docs/HUMAN_ONBOARDING.md, docs/plans/README.md</p>
 <hr>
 <h2>Propósito</h2>
 <p>Plantilla obligatoria al cerrar un grupo de bloques o una campaña.</p>
@@ -10,7 +10,7 @@
 <p>No sustituye a SEC, SSS ni A11Y.</p>
 <hr>
 <h2>Cómo se usa</h2>
-<p>1. La IA rellena las tablas con lo ocurrido en el grupo. 2. El humano corrige o valida. 3. Lo aceptado pasa a METHODOLOGY / AI_ONBOARDING / AGENTS en el mismo grupo o en el siguiente paso. 4. La deuda no resuelta se copia al cierre de campaña o a docs de planes.</p>
+<p>1. La IA rellena las tablas con lo ocurrido en el grupo. 2. El humano corrige o valida. 3. Lo aceptado pasa a METHODOLOGY / AI_ONBOARDING / AGENTS en el mismo grupo o en el siguiente paso (JSON + generate). 4. La deuda no resuelta se copia al cierre de campaña o a docs de planes.</p>
 <p>Se pueden añadir secciones nuevas a esta plantilla; no se quitan las dos bases (interacción y deuda).</p>
 <hr>
 <h2>Psicología y ética de acompañamiento</h2>
@@ -20,10 +20,10 @@
 <p>Los incentivos de producto se diseñan en una campaña futura, no se improvisan aquí.</p>
 <hr>
 <h2>Auditoría de repositorio (obligatoria en cada cierre)</h2>
-<p>1. Pedir <code>synccheck</code> en MOSh (o <code>git fetch</code> + comparar HEAD con <code>origin/main</code>). 2. Leer ficheros por <strong>SHA</strong> (<code>git show origin/main:archivo</code> o raw con SHA). 3. No basar un diagnóstico solo en <code>raw.githubusercontent.com/.../main/...</code>. 4. Si Poetry, README, CHANGELOG o comandos no coinciden: hotfix antes del siguiente bloque.</p>
+<p>1. Pedir <code>synccheck</code> en MOSh (o <code>git fetch</code> + comparar HEAD con <code>origin/main</code>). 2. Leer ficheros por <strong>SHA</strong> (<code>git show origin/main:archivo</code> o raw con SHA). 3. No basar un diagnóstico solo en <code>raw.githubusercontent.com/.../main/...</code>. 4. Si Poetry, README, CHANGELOG o comandos no coinciden: hotfix antes del siguiente bloque. 5. Arranque sin <code>MOS_INTEGRIDAD=recargar</code>. <code>test 120</code> sin pendientes o con plan.</p>
 <hr>
 <h2>Entrega de documentos (resumen)</h2>
-<ul><li>Fichero entero; tablas ya montadas; no “añade esta fila”.</li><li>No remitir a un pegado anterior: volver a pegar.</li><li>Cacho 1 = documento cerrado o aviso explícito; no cortar un spec a mitad sin decirlo.</li><li>Completo: primero <code>mkdir</code> / <code>touch</code> / <code>code</code>.</li><li>Breadcrumb de campaña en cada paso.</li><li>Explicar los saltos de número de paso.</li></ul>
+<ul><li>Fichero entero; tablas ya montadas; no “añade esta fila”.</li><li>No remitir a un pegado anterior: volver a pegar.</li><li>Cacho 1 = documento cerrado o aviso explícito; no cortar un spec a mitad sin decirlo.</li><li>Habitual: lote <code>write</code> + hash + payload + <code>.</code> + <code>docgen generate</code> vía <code>multi</code> o <code>./write.sh</code>. Cerrar con <code>:e</code>.</li><li>Alternativa: <code>mkdir</code> / <code>touch</code> / <code>code</code> y luego integridad.</li><li>Breadcrumb de campaña en cada paso. <code>:s</code> = siguiente paso.</li><li>Explicar los saltos de número de paso.</li><li>Si generate aborta por corto: el JSON local está pisado; no forzar.</li></ul>
 <hr>
 <h2>Plantilla</h2>
 <h3>Interacción</h3>

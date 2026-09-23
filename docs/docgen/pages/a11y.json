@@ -2,45 +2,45 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "a11y",
   "titulo": "Accesibilidad de MetsuOS (A11Y)",
-  "preambulo": "**Versión del documento:** 1.0  \n**Estado:** Normativo  \n**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/specs/04-SEC-Security-Policy.md, docs/specs/03-ICD-Interfaces-and-Command-Contract.md, docs/specs/06-TEST-Verification-and-Validation.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md\n\n---",
+  "preambulo": "**Versión del documento:** 1.1  \n**Estado:** Normativo  \n**Documentos relacionados:** docs/specs/01-SSS-System-Specification.md, docs/specs/02-SRS-Software-Requirements.md, docs/specs/04-SEC-Security-Policy.md, docs/USER_MANUAL.md, docs/a11y/DECLARACION.md\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/a11y/20260916_033021.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Propósito",
-      "cuerpo": "Definir la accesibilidad de MetsuOS como **obligatoria**.\n\nLa interfaz actual es MOSh (línea de comandos) más los scripts de lanzamiento e instalación. No hay GUI. Este documento adapta WCAG 2.2 y, donde encaja, EN 301 549 e ISO 9241-171 a ese contexto. No afirma conformidad de sitio web.\n\n---"
+      "cuerpo": "Definir la accesibilidad de MetsuOS como **obligatoria**.\n\nLa interfaz actual es MOSh más scripts de lanzamiento e instalación. No hay GUI. Adapta WCAG 2.2 y, donde encaja, EN 301 549 e ISO 9241-171. No afirma conformidad de sitio web.\n\n---"
     },
     {
       "titulo": "Precedencia",
-      "cuerpo": "1. No excluir los perfiles de discapacidad declarados en este documento.\n2. Seguridad (SEC) y normas de sistema (SSS).\n3. Resto de specs y código.\n\nSi A11Y y SEC chocan:\n\n- Prevalece A11Y para no dejar fuera un perfil soportado.\n- No se recorta SEC en silencio.\n- Se escribe el debate: riesgo, mitigación, dónde vive la excepción (SEC + este archivo + SRelD).\n\nMuchos supuestos conflictos no lo son. Rechazar `import requests` no impide usar un lector de terminal. Un conflicto real sería un mensaje incomprensible “por no filtrar datos” frente a un mensaje accionable.\n\n---"
+      "cuerpo": "1. No excluir los perfiles de discapacidad declarados aquí.\n2. Seguridad (SEC) y normas de sistema (SSS).\n3. Resto de specs y código.\n\nSi A11Y y SEC chocan: prevalece A11Y para no dejar fuera un perfil soportado; no se recorta SEC en silencio; se escribe el debate.\n\n---"
     },
     {
       "titulo": "Referencias (adaptación, no sello)",
-      "cuerpo": "| Fuente | Uso en MetsuOS |\n|--------|----------------|\n| WCAG 2.2 Perceptible | Texto plano; no basar el significado solo en color o en ANSI |\n| WCAG 2.2 Operable | Todo por teclado; help, man, exit predecibles |\n| WCAG 2.2 Comprensible | Español consistente; help() no vacío; errores con siguiente acción |\n| WCAG 2.2 Robusto | Prefijos estables; salida estructurada en líneas |\n| EN 301 549 / ISO 9241-171 | Software interactivo y CLI: mensajes, teclado, no solo-color |\n\nNivel de ambición: equivalencia **AA adaptada a CLI**.\n\n---"
+      "cuerpo": "| Fuente | Uso |\n|--------|-----|\n| WCAG 2.2 Perceptible | Texto plano; no solo color o ANSI |\n| WCAG 2.2 Operable | Todo por teclado; help, man, exit, docs, multi |\n| WCAG 2.2 Comprensible | Español; help() no vacío; errores con siguiente acción |\n| WCAG 2.2 Robusto | Prefijos estables; salida en líneas |\n| EN 301 549 / ISO 9241-171 | CLI: mensajes, teclado, no solo-color |\n\nAmbición: **AA adaptada a CLI**.\n\n---"
     },
     {
       "titulo": "Perfiles soportados",
-      "cuerpo": "| Perfil | Qué debe cumplir el sistema | Qué no aplica aún |\n|--------|-----------------------------|-------------------|\n| Solo teclado | MOSh y scripts se usan sin ratón | Atajos de GUI |\n| Lector de pantalla de terminal | Mensajes en texto; prefijos; sin información solo en color | APIs de lectores de escritorio |\n| Baja visión | No depender de contraste de color del terminal | Temas visuales propios |\n| Daltonismo | Color no es la única señal | Paletas de un TUI gráfico |\n| Carga cognitiva | help/man; un comando = un contrato; errores con pista | Tutoriales multimedia |\n| Sordera / sin audio | El producto no usa sonido | N/A explícito |\n\nUn perfil no listado aquí no está “cubierto” hasta que se añada con requisito y verificación.\n\n---"
+      "cuerpo": "| Perfil | Qué debe cumplir | Qué no aplica aún |\n|--------|------------------|-------------------|\n| Solo teclado | MOSh y scripts sin ratón | Atajos de GUI |\n| Lector de pantalla de terminal | Texto; prefijos; no solo color | APIs de escritorio |\n| Baja visión | No depender del contraste del terminal | Temas propios |\n| Daltonismo | Color no es la única señal | Paletas TUI |\n| Carga cognitiva | help/man/docs; un comando = un contrato | Tutoriales multimedia |\n| Sordera / sin audio | El producto no usa sonido | N/A |\n\nUn perfil no listado no está cubierto hasta requisito + verificación.\n\n---"
     },
     {
       "titulo": "Requisitos operativos (resumen)",
-      "cuerpo": "La numeración formal vive en el SRS (`REQ-A11Y-*`). Aquí la política:\n\n- Todo comando de sistema o usuario tiene `help()` que devuelve texto no vacío.\n- Los comandos de sistema tienen página en `docs/man/` cuando se añaden.\n- Los mensajes de error y de seguridad llevan un prefijo estable (por ejemplo `[SEGURIDAD]` o `Error:`).\n- El texto dice qué ha pasado y qué puede hacer la persona (comando, documento o ruta relativa).\n- Los scripts `mos2.sh` e `install.sh` fallan con texto guiado, no con un código mudo.\n- No se usa solo color ANSI para distinguir ok / error / aviso.\n- El arranque que bloquea por tests explica que no hay sesión y cómo lanzar pytest.\n\n---"
+      "cuerpo": "Numeración formal en SRS (`REQ-A11Y-*`). Política:\n\n- Todo comando tiene `help()` no vacío.\n- Comandos de sistema: página en `docs/man/`.\n- Errores y seguridad: prefijo estable (`[SEGURIDAD]`, `[integridad]`, `Error:`).\n- El texto dice qué pasó y qué hacer (comando, documento o ruta relativa).\n- `mos2.sh` e `install.sh` fallan con texto guiado.\n- No solo color ANSI para ok/error/aviso.\n- Arranque que bloquea explica que no hay sesión y cómo seguir (`test`, integridad).\n- `docs` es menú numerado usable con teclado; `Nh` abre HTML.\n- `test 120` informa tope de líneas; no sustituye a A11Y ni tumba el arranque.\n\n---"
     },
     {
       "titulo": "Cómo se registra un conflicto A11Y ↔ SEC",
-      "cuerpo": "1. Describir el perfil afectado y el control de seguridad.\n2. Alternativas (mensaje más claro, mismo rechazo; no desactivar el control).\n3. Decisión.\n4. Anotar en SEC, en este archivo (sección de excepciones) y en SRelD si cambia la baseline.\n\n### Excepciones vigentes\n\nNinguna. El rechazo de imports ilegales se mantiene; el mensaje debe ser comprensible.\n\n---"
+      "cuerpo": "1. Perfil afectado y control de seguridad.\n2. Alternativas (mensaje más claro; no desactivar el control).\n3. Decisión.\n4. Anotar en SEC, aquí y en SRelD si cambia la baseline.\n\n### Excepciones vigentes\n\nNinguna. El rechazo de imports ilegales se mantiene; el mensaje debe ser comprensible.\n\n---"
     },
     {
       "titulo": "Verificación",
-      "cuerpo": "- Tests automáticos donde sea posible (help no vacío, prefijos, pista en fallos de arranque).\n- Inspección de scripts y de help/man.\n- No se exige laboratorio de lectores de pantalla en esta baseline; sí se exige que la salida sea texto lineal.\n\nDetalle: docs/specs/06-TEST-Verification-and-Validation.md (se actualizará en el paso 1.5).\n\n---"
+      "cuerpo": "- Tests automáticos (help, prefijos, pista en fallos de arranque).\n- Comando `a11y` regenera `docs/a11y/informe.md` e `informe.json`.\n- Inspección de scripts y help/man.\n- No se exige laboratorio de lectores en esta baseline; sí texto lineal.\n\n---"
     },
     {
       "titulo": "Fuera de esta baseline",
-      "cuerpo": "- Interfaz gráfica\n- Localización a otros idiomas\n- Widgets, foco y contraste de una TUI rica\n- Certificado formal WCAG / EN 301 549\n\n---"
+      "cuerpo": "- Interfaz gráfica\n- Localización a otros idiomas (arranque hoy: es_ES)\n- TUI rica\n- Certificado formal WCAG / EN 301 549\n\n---"
     },
     {
       "titulo": "Autoridad",
-      "cuerpo": "Este documento es normativo para accesibilidad de MetsuOS.\n\nSSS y SRS concretan requisitos numerados. SEC no puede anular este archivo sin el procedimiento de conflicto."
+      "cuerpo": "Normativo para accesibilidad. SSS y SRS concretan IDs. SEC no anula este archivo sin el procedimiento de conflicto."
     }
   ]
 }

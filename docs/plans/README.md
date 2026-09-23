@@ -1,8 +1,10 @@
 # Planes de campaña de MetsuOS
 
-**Versión del documento:** 1.5
-**Estado:** Normativo de proceso
+**Versión del documento:** 1.6  
+**Estado:** Normativo de proceso  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md
+
+---
 
 ## Propósito
 Cada campaña de trabajo tiene un plan escrito **antes** de implementar (salvo las reconstruidas a posteriori).
@@ -10,6 +12,8 @@ Cada campaña de trabajo tiene un plan escrito **antes** de implementar (salvo l
 Sirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si ese día hubo más de una.
 
 La tabla del índice no se edita a mano. Sale de docs/docgen/plans/ (un JSON por plan) con `docgen plan` y `docgen generate plans-readme`.
+
+---
 
 ## Nombre de archivo
 ```text
@@ -19,10 +23,12 @@ YYYY-MM-DD-NN-slug.md
 | Pieza | Significado |
 |-------|-------------|
 | YYYY-MM-DD | Día en que se escribió o arrancó el plan |
-| NN | Orden dentro de ese día (01, 02, …). No es un id global |
-| slug | Título corto en humano |
+| NN | Orden dentro de ese día (01, 02, …) |
+| slug | Título corto |
 
-El número de campañas del proyecto se ve contando ficheros y este índice. No hay contador global en el nombre.
+No hay contador global en el nombre.
+
+---
 
 ## Índice
 | Fecha | NN del día | Archivo | Estado |
@@ -46,11 +52,13 @@ El número de campañas del proyecto se ve contando ficheros y este índice. No 
 
 ## Ciclo
 1. Diseñar la campaña en el chat.
-2. Crear el plan en esta carpeta **antes** del primer cambio de código.
-3. Registrar metadato: `docgen plan add YYYY-MM-DD-NN-slug.md`.
-4. Ejecutar por bloques/pasos.
-5. Cambiar estado: `docgen plan set <id> Cerrada` y `docgen generate plans-readme`.
-6. Si el plan cambia, actualizar el fichero del plan y regenerar el índice.
+2. Crear el plan **antes** del primer cambio de código.
+3. `docgen plan add YYYY-MM-DD-NN-slug.md` (o write del JSON del plan + generate).
+4. Ejecutar por bloques/pasos (`:s`).
+5. `docgen plan set <id> Cerrada` y `docgen generate plans-readme` en el mismo lote.
+6. Si el plan cambia, actualizar JSON y regenerar.
+
+---
 
 ## Contenido mínimo de un plan
 - Fecha y NN del día
@@ -61,6 +69,8 @@ El número de campañas del proyecto se ve contando ficheros y este índice. No 
 - Tags
 - Cierres de grupo (interacción + deuda) si aplica
 - Nota si es reconstrucción
+
+---
 
 ## Autoridad
 No se inicia una campaña amplia sin su plan en esta carpeta.

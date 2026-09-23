@@ -2,29 +2,29 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "plans-readme",
   "titulo": "Planes de campaña de MetsuOS",
-  "preambulo": "**Versión del documento:** 1.4\n**Estado:** Normativo de proceso\n**Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md",
+  "preambulo": "**Versión del documento:** 1.5  \n**Estado:** Normativo de proceso  \n**Documentos relacionados:** docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md\n\n---",
   "cuerpo_completo": null,
   "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Propósito",
-      "cuerpo": "Cada campaña de trabajo tiene un plan escrito **antes** de implementar (salvo las reconstruidas a posteriori).\n\nSirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si ese día hubo más de una.\n\nLa tabla del índice no se edita a mano. Sale de docs/docgen/plans/ (un JSON por plan) con `docgen plan` y `docgen generate plans-readme`."
+      "cuerpo": "Cada campaña de trabajo tiene un plan escrito **antes** de implementar (salvo las reconstruidas a posteriori).\n\nSirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si ese día hubo más de una.\n\nLa tabla del índice no se edita a mano. Sale de docs/docgen/plans/ (un JSON por plan) con `docgen plan` y `docgen generate plans-readme`.\n\n---"
     },
     {
       "titulo": "Nombre de archivo",
-      "cuerpo": "```text\nYYYY-MM-DD-NN-slug.md\n```\n\n| Pieza | Significado |\n|-------|-------------|\n| YYYY-MM-DD | Día en que se escribió o arrancó el plan |\n| NN | Orden dentro de ese día (01, 02, …). No es un id global |\n| slug | Título corto en humano |\n\nEl número de campañas del proyecto se ve contando ficheros y este índice. No hay contador global en el nombre."
+      "cuerpo": "```text\nYYYY-MM-DD-NN-slug.md\n```\n\n| Pieza | Significado |\n|-------|-------------|\n| YYYY-MM-DD | Día en que se escribió o arrancó el plan |\n| NN | Orden dentro de ese día (01, 02, …) |\n| slug | Título corto |\n\nNo hay contador global en el nombre.\n\n---"
     },
     {
       "titulo": "Índice",
-      "cuerpo": "(se pinta al generate desde docs/docgen/plans/)"
+      "cuerpo": "(se pinta al generate desde docs/docgen/plans/)\n\n---"
     },
     {
       "titulo": "Ciclo",
-      "cuerpo": "1. Diseñar la campaña en el chat.\n2. Crear el plan en esta carpeta **antes** del primer cambio de código.\n3. Registrar metadato: `docgen plan add YYYY-MM-DD-NN-slug.md`.\n4. Ejecutar por bloques/pasos.\n5. Cambiar estado: `docgen plan set <id> Cerrada` y `docgen generate plans-readme`.\n6. Si el plan cambia, actualizar el fichero del plan y regenerar el índice."
+      "cuerpo": "1. Diseñar la campaña en el chat.\n2. Crear el plan **antes** del primer cambio de código.\n3. `docgen plan add YYYY-MM-DD-NN-slug.md` (o write del JSON del plan + generate).\n4. Ejecutar por bloques/pasos (`:s`).\n5. `docgen plan set <id> Cerrada` y `docgen generate plans-readme` en el mismo lote.\n6. Si el plan cambia, actualizar JSON y regenerar.\n\n---"
     },
     {
       "titulo": "Contenido mínimo de un plan",
-      "cuerpo": "- Fecha y NN del día\n- Objetivo y fuera de alcance\n- Estado\n- Producto al inicio y al cierre\n- Bloques y pasos\n- Tags\n- Cierres de grupo (interacción + deuda) si aplica\n- Nota si es reconstrucción"
+      "cuerpo": "- Fecha y NN del día\n- Objetivo y fuera de alcance\n- Estado\n- Producto al inicio y al cierre\n- Bloques y pasos\n- Tags\n- Cierres de grupo (interacción + deuda) si aplica\n- Nota si es reconstrucción\n\n---"
     },
     {
       "titulo": "Autoridad",

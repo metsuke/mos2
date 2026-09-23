@@ -1,6 +1,6 @@
 # Entornos de ejecución de MetsuOS
 
-**Versión del documento:** 1.2  
+**Versión del documento:** 1.4  
 **Estado:** Normativo  
 **Documentos relacionados:** docs/METHODOLOGY.md, docs/USER_MANUAL.md, docs/specs/01-SSS-System-Specification.md, .gitattributes
 
@@ -37,40 +37,25 @@ Contexto: <sistema> / <entorno> / <rol>
 
 | Valor | Significado |
 |-------|-------------|
-| native | Shell nativo del sistema (bash/zsh/etc. del OS) |
+| native | Shell nativo del sistema |
 | git-bash | Git Bash / MSYS / MinGW sobre Windows |
-| wsl | Windows Subsystem for Linux (clone en filesystem Linux) |
+| wsl | WSL (clone en filesystem Linux) |
 
 ### Rol
 
 | Valor | Significado |
 |-------|-------------|
 | desarrollo | Editar código, commits, push |
-| prueba | Validar comportamiento; no asumir que se publica desde aquí |
+| prueba | Validar; no asumir publicación |
 | ambos | Desarrollo y prueba en el mismo perfil |
-
-### Ejemplos válidos
 
 ```text
 Contexto: macos / native / desarrollo
-Contexto: windows / git-bash / prueba
-Contexto: windows / wsl / desarrollo
-Contexto: linux / native / ambos
 ```
 
-### Cambio de contexto
+La asistencia por IA debe adaptar comandos al contexto y preguntar si falta.
 
-```text
-Cambio de contexto: windows / git-bash / prueba
-```
-
-La asistencia por IA debe adaptar comandos al contexto declarado y preguntar si falta.
-
-### Qué no va en el repositorio
-
-- Nombres de host o de equipos personales
-- Rutas home absolutas de un usuario concreto
-- Inventarios privados de hardware
+No van al repo: hostnames, rutas home absolutas, inventarios privados.
 
 ---
 
@@ -84,123 +69,94 @@ La asistencia por IA debe adaptar comandos al contexto declarado y preguntar si 
 
 ---
 
-## Resolución de Poetry (launcher e installer)
-mos2.sh e install.sh usan la misma función de resolución. Un candidato solo cuenta si responde a `--version`.
+## Resolución de Poetry
+mos2.sh e install.sh usan la misma función. Un candidato solo cuenta si responde a `--version`.
 
-### windows / git-bash (MINGW, MSYS, CYGWIN)
+Git Bash: py -m poetry, python -m poetry, python3 -m poetry, poetry.exe, poetry.
+Unix/WSL: poetry, python3 -m poetry, python -m poetry.
 
-Orden:
-
-1. py -m poetry
-2. python -m poetry
-3. python3 -m poetry
-4. poetry.exe (solo si poetry.exe --version funciona)
-5. poetry (solo si poetry --version funciona)
-
-### linux / macos / windows+wsl (Unix)
-
-Orden:
-
-1. poetry (solo si poetry --version funciona)
-2. python3 -m poetry
-3. python -m poetry
-
-### Principio de diseño
-
-- No hardcodear rutas de instalación de Poetry ni de Python del usuario.
-- Fallar con mensaje claro si no hay candidato viable.
-- Tras resolver, usar siempre el mismo comando para run / install / config.
+No hardcodear rutas. Fallar con mensaje claro. Tras resolver, el mismo comando para run/install/config.
 
 ---
 
 ## Fin de línea (Git)
-`.gitattributes` en la raíz marca `*.sh` y textos habituales con `eol=lf`.
+`.gitattributes` marca `*.sh` y textos con `eol=lf`. Es Git, no el forge. Evita `/bin/bash^M`.
 
-Es una función de **Git**, no de GitHub u otro forge. Evita el error `/bin/bash^M` en WSL y Linux cuando el clone pasó por Windows.
+El hash de integridad es canónico (EOL normalizado). Distinto contenido sigue fallando.
 
 ---
 
 ## Rutas del repositorio
 | Regla | Descripción |
 |-------|-------------|
-| Raíz del proyecto | Directorio que contiene pyproject.toml, moslib/, rootfs/ |
-| Scripts | Se ubican por dirname del propio script (SCRIPT_DIR) |
-| Python | Usa Path(__file__) / raíz de proyecto; no asume cwd global del usuario |
-| Documentación de ejemplos | Usar rutas relativas (./mos2.sh, rootfs/bin/mos.py) |
+| Raíz | Directorio con pyproject.toml, moslib/, rootfs/ |
+| Scripts | dirname del propio script |
+| Python | Path(__file__); no asume cwd |
+| Ejemplos | Rutas relativas (./mos2.sh, ./write.sh) |
 
-En windows/wsl el clone objetivo está en el filesystem Linux, no como único modelo el montaje /mnt/c/...
+Comandos `git`, `code`, `touch` y `write` resuelven desde la raíz del clone.
 
 ---
 
 ## windows/wsl y rutas /mnt/
-En WSL el clone debe vivir en el filesystem Linux (por ejemplo bajo $HOME), no bajo /mnt/c/... ni otros montajes del disco Windows.
+En WSL el clone vive en filesystem Linux (p. ej. $HOME), no bajo /mnt/c/...
 
-Motivos:
+mos2.sh e install.sh, si detectan WSL y raíz bajo /mnt/<letra>/, terminan con error guiado. No reubican solos.
 
-- venvs distintos o rotos entre clones
-- finales de línea CRLF en scripts .sh
-- confusión entre alias que apuntan a otra ruta
+---
 
-mos2.sh e install.sh, si detectan WSL y que la raíz del proyecto está bajo /mnt/<letra>/, terminan con error y un mensaje guiado. No reubican ni copian el repositorio automáticamente.
+## Locale de arranque
+El sistema no arranca si el locale de la máquina no es español de España (es_ES). El bloqueo explica el criterio (regímenes democráticos; reservas ante sharia o equivalentes) y enlaza la DUDH. Se puede pedir de forma razonada la apertura a otros locales.
 
-Flujo recomendado:
-
-```text
-git clone <url-del-repo> "$HOME/mos2"
-cd "$HOME/mos2"
-./install.sh
-./mos2.sh
-```
+Parámetro de prueba en mos2 para simular el bloqueo sin cambiar el locale real.
 
 ---
 
 ## Lanzamiento e instalación
-| Acción | Comando relativo al clone |
-|--------|---------------------------|
-| Instalar deps y aliases opcionales | ./install.sh |
-| Arrancar MOSh | ./mos2.sh |
-| Tests fuera del shell | pytest vía el Poetry resuelto del entorno, o el comando test dentro de MOSh |
+| Acción | Comando |
+|--------|---------|
+| Instalar | ./install.sh |
+| Arrancar | ./mos2.sh |
+| Lote fuera de MOS | ./write.sh |
+| Tests | comando test en MOSh |
 
-Dentro de MOSh, los tests de arranque y el comando test usan sys.executable -m pytest (intérprete del proceso actual, normalmente el del venv activado por poetry run).
-
----
-
-## Diferencias prácticas entre perfiles
-| Tema | git-bash | wsl / linux / macos native |
-|------|----------|----------------------------|
-| Ejecutable Poetry | py -m poetry; poetry.exe solo si --version ok | poetry en PATH si --version ok |
-| Fin de línea | .gitattributes fuerza LF en el repo | LF |
-| Aliases | bash_profile/bashrc; PowerShell opcional vía install | bashrc/zshrc |
-| Paths | Notación Git Bash si se inspecciona el FS de Windows | Paths Unix del clone Linux |
-| Clone en WSL | No aplica | No usar /mnt/<letra>/... como raíz del proyecto |
+Dentro de MOSh: sys.executable -m pytest.
 
 ---
 
-## Requisitos derivados (trazabilidad)
-| ID orientativo | Enunciado |
-|----------------|-----------|
-| REQ-PLAT-ENV-001 | El lanzador debe resolver Poetry de forma portable según el perfil |
-| REQ-PLAT-ENV-002 | El instalador debe usar la misma política de resolución que el lanzador |
-| REQ-PLAT-ENV-003 | La documentación no debe depender de rutas absolutas de un usuario concreto |
-| REQ-PLAT-ENV-004 | El trabajo multi-entorno se comunica con contexto de sesión genérico |
-| REQ-PLAT-ENV-005 | En WSL, lanzador e instalador deben rechazar clones bajo /mnt/<letra>/ |
-| REQ-PLAT-ENV-006 | Un candidato Poetry solo se usa si --version se puede ejecutar |
+## Diferencias prácticas
+| Tema | git-bash | wsl / linux / macos |
+|------|----------|---------------------|
+| Poetry | py -m poetry | poetry en PATH si --version ok |
+| EOL | .gitattributes LF | LF |
+| Clone WSL | No aplica | No /mnt/<letra>/ |
 
-La formalización numerada vive en el SRS; este documento es la política operativa.
+---
+
+## Requisitos derivados
+| ID | Enunciado |
+|----|-----------|
+| REQ-PLAT-ENV-001 | Poetry portable según perfil |
+| REQ-PLAT-ENV-002 | Instalador = misma política que lanzador |
+| REQ-PLAT-ENV-003 | Docs sin rutas absolutas de un usuario |
+| REQ-PLAT-ENV-004 | Contexto de sesión genérico |
+| REQ-PLAT-ENV-005 | WSL rechaza /mnt/<letra>/ |
+| REQ-PLAT-ENV-006 | Candidato Poetry solo si --version |
+| REQ-PLAT-ENV-007 | Arranque exige locale es_ES salvo simulación |
+
+Formalización en SRS.
 
 ---
 
 ## Verificación manual por perfil
-| Perfil | Comprobación mínima |
-|--------|---------------------|
-| macos/native | ./install.sh y ./mos2.sh resuelven Poetry y arrancan |
+| Perfil | Comprobación |
+|--------|--------------|
+| macos/native | install + mos2 arrancan |
 | linux/native | Igual |
-| windows/git-bash | No debe elegir poetry.exe si --version da Permission denied |
-| windows/wsl | Clone en FS Linux; rechazo si la raíz está bajo /mnt/ |
+| windows/git-bash | No poetry.exe si Permission denied |
+| windows/wsl | Clone Linux; rechazo /mnt/ |
 
 ---
 
 ## Autoridad
-Este documento es normativo para perfiles de entorno, resolución de Poetry en scripts de shell y protocolo de contexto de sesión genérico.
-
-Cualquier nuevo perfil soportado debe añadirse aquí y reflejarse en lanzador/instalador cuando aplique.
+Normativo para perfiles, Poetry en scripts y contexto de sesión. Nuevo perfil: aquí + lanzador/instalador.

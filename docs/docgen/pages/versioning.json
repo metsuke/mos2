@@ -2,9 +2,9 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "versioning",
   "titulo": "Política de versionado de MetsuOS",
-  "preambulo": "**Versión del documento:** 1.1  \n**Estado:** Normativo  \n**Documentos relacionados:** docs/METHODOLOGY.md, docs/specs/07-SRelD-Release-Baseline.md, CHANGELOG.md, pyproject.toml\n\n---",
+  "preambulo": "**Versión del documento:** 1.2  \n**Estado:** Normativo  \n**Documentos relacionados:** docs/METHODOLOGY.md, docs/specs/07-SRelD-Release-Baseline.md, CHANGELOG.md, pyproject.toml\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/versioning/20260916_033021.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Propósito",
@@ -12,43 +12,43 @@
     },
     {
       "titulo": "Fuente de verdad de la versión de producto",
-      "cuerpo": "| Elemento | Rol |\n|----------|-----|\n| pyproject.toml → version | Versión de producto (Poetry) |\n| Tag Git vX.Y.Z | Marca de release alineada con esa versión |\n| CHANGELOG.md | Relato humano de lo que cambió en cada release |\n| Comando version en MOSh | Muestra info basada en Git (tags/historial) |\n| docs/specs/07-SRelD | Describe baselines y evolución |\n\nLa versión en `pyproject.toml` debe coincidir con el tag de producto **funcional** correspondiente cuando se publica una release de código.\n\n---"
+      "cuerpo": "| Elemento | Rol |\n|----------|-----|\n| pyproject.toml → version | Versión de producto (Poetry) |\n| Tag Git vX.Y.Z | Marca de release alineada |\n| CHANGELOG.md | Relato de cada release |\n| Comando version en MOSh | Info Git |\n| docs/specs/07-SRelD | Baselines |\n\nLa versión en `pyproject.toml` debe coincidir con el tag de producto funcional al publicar código.\n\n---"
     },
     {
       "titulo": "SemVer adaptado (alpha)",
-      "cuerpo": "Formato: `MAJOR.MINOR.PATCH` (ejemplo actual: `0.2.2`).\n\n| Parte | Cuándo subirla |\n|-------|----------------|\n| MAJOR | Cambios incompatibles de contrato o seguridad que rompan uso previo de forma consciente |\n| MINOR | Nueva capacidad usable (comandos, espacio de usuario, guards de plataforma, etc.) |\n| PATCH | Correcciones, ajustes menores de scripts, hardening sin feature nueva |\n\nEn fase Alpha (`0.x.y`) la incompatibilidad ocasional es aceptable si queda documentada en SRelD, CHANGELOG y en el mensaje de release.\n\n---"
+      "cuerpo": "Formato `MAJOR.MINOR.PATCH`.\n\n| Parte | Cuándo |\n|-------|--------|\n| MAJOR | Contrato o seguridad incompatible consciente |\n| MINOR | Nueva capacidad usable |\n| PATCH | Corrección o hardening sin feature |\n\nEn Alpha (`0.x.y`) la incompatibilidad ocasional se documenta en SRelD y CHANGELOG.\n\n---"
     },
     {
       "titulo": "Tipos de tag",
-      "cuerpo": "| Tipo | Forma | ¿Bump Poetry? | Uso |\n|------|-------|---------------|-----|\n| Producto | vX.Y.Z | Sí | Código y/o comportamiento de runtime cambia |\n| Solo docs | vX.Y.Z-docs | No | Documentación, onboarding, specs sin cambio de runtime |\n\nEjemplos:\n\n- `v0.2.2` — Poetry portable, entornos, bump a 0.2.2\n- `v0.2.3-docs` — onboarding/VERSIONING sin tocar pyproject\n\nNo crear tags de producto si solo cambió markdown.\n\n---"
+      "cuerpo": "| Tipo | Forma | ¿Bump Poetry? | Uso |\n|------|-------|---------------|-----|\n| Producto | vX.Y.Z | Sí | Runtime cambia |\n| Solo docs | vX.Y.Z-docs | No | Docs sin cambio de runtime |\n\nNo crear tag de producto si solo cambió markdown.\n\n---"
     },
     {
       "titulo": "Cuándo actualizar pyproject.toml",
-      "cuerpo": "Obligatorio actualizar `version` en `pyproject.toml` cuando:\n\n1. Se mergea a `main` un cambio de **producto** (fix/feat de runtime, scripts de lanzamiento, comandos, seguridad, tests de arranque que cambien comportamiento).\n2. Se va a crear el tag `vX.Y.Z` de esa release.\n\nNo actualizar Poetry cuando:\n\n- Solo hay docs, onboarding, STYLE, METHODOLOGY, man pages sin comando nuevo.\n- Solo hay commits `docs:` o `chore:` de mantenimiento documental.\n\nLa IA y el desarrollador deben, al cerrar una fase de producto, **incluir el bump** en el plan de merge y verificar que README/SRelD/CHANGELOG no queden con una versión mentira.\n\n---"
+      "cuerpo": "Obligatorio al mergear a main un cambio de producto y al crear `vX.Y.Z`.\n\nNo actualizar Poetry en solo docs/onboarding/man sin comando nuevo.\n\nNunca avanzar producto directamente sobre `main`: rama feature + `dev`.\n\n---"
     },
     {
       "titulo": "Flujo de release de producto",
-      "cuerpo": "1. Trabajar en `feature/...`.\n2. Tests en verde; arranque de MOSh OK.\n3. Actualizar docs/specs afectadas **antes o en el mismo merge**.\n4. Añadir entrada en `CHANGELOG.md` (arriba, bajo la versión nueva; vaciar o dejar “Sin publicar” vacío).\n5. Bump en `pyproject.toml` al valor de la release.\n6. Merge a `main`.\n7. Tag anotado: `git tag -a vX.Y.Z -m \"...\"`.\n8. `git push origin main` y `git push origin vX.Y.Z`.\n9. Anotar la baseline en `07-SRelD` si el cambio lo merece.\n\n---"
+      "cuerpo": "1. Rama `feature/...` (`dev`).\n2. Tests y arranque OK.\n3. Docs (JSON + generate) en el mismo cierre.\n4. CHANGELOG.\n5. Bump pyproject.\n6. Consolidar a main.\n7. Tag anotado y push de tag.\n8. Baseline en 07-SRelD si aplica.\n\n---"
     },
     {
       "titulo": "Flujo de release solo documentación",
-      "cuerpo": "1. Rama `feature/...` solo docs.\n2. Entrada en `CHANGELOG.md` con el sufijo `-docs` si se etiqueta.\n3. Merge a `main` **sin** cambiar `pyproject.toml`.\n4. Tag opcional: `vX.Y.Z-docs`.\n5. No exigir bump de Poetry.\n\n---"
+      "cuerpo": "1. Rama solo docs.\n2. CHANGELOG con `-docs` si se etiqueta.\n3. Merge a main **sin** pyproject.\n4. Tag opcional `vX.Y.Z-docs`.\n\nEsta campaña de refundido es de este tipo mientras no cambie runtime.\n\n---"
     },
     {
       "titulo": "Sincronización con documentación",
-      "cuerpo": "Al asignar un tag de producto, revisar y actualizar si aplica:\n\n| Documento | Qué alinear |\n|-----------|-------------|\n| CHANGELOG.md | Entrada de la versión |\n| README.md | Línea de versión / estado |\n| docs/specs/07-SRelD | Capacidades y tags de la release |\n| docs/USER_MANUAL.md | Baseline de referencia del manual |\n| docs/ENVIRONMENTS.md | Solo si el comportamiento de entorno cambió |\n\nAl tag solo-docs, CHANGELOG + contenido nuevo; no hace falta subir Poetry.\n\n---"
+      "cuerpo": "| Documento | Qué alinear |\n|-----------|-------------|\n| CHANGELOG.md | Entrada |\n| README.md | Versión / estado |\n| 07-SRelD | Capacidades |\n| USER_MANUAL.md | Baseline |\n| ENVIRONMENTS.md | Si cambió entorno |\n\n---"
     },
     {
-      "titulo": "Responsabilidad de la IA en el plan por fases",
-      "cuerpo": "Cuando el plan cierre una capacidad de producto, la IA debe:\n\n1. Decir explícitamente si hay **bump Poetry** y a qué versión.\n2. Listar docs a tocar (SRelD, README, CHANGELOG, etc.).\n3. Proponer el texto del tag.\n4. No dejar `pyproject.toml` en una versión antigua tras mergear features de runtime.\n\nSi la fase es solo documentación, debe decir: **sin bump Poetry**, actualizar CHANGELOG y sugerir tag `-docs` si se etiqueta.\n\n---"
+      "titulo": "Responsabilidad de la IA",
+      "cuerpo": "Al cerrar capacidad de producto: decir si hay bump y a qué versión; listar docs; texto del tag; no dejar Poetry viejo.\n\nSi es solo docs: **sin bump Poetry**; CHANGELOG; tag `-docs` si se etiqueta.\n\n---"
     },
     {
       "titulo": "Estado actual de referencia",
-      "cuerpo": "| Campo | Valor orientativo al escribir este doc |\n|-------|----------------------------------------|\n| Versión Poetry | 0.2.2 |\n| Último tag de producto | v0.2.2 |\n| Último tag de docs | v0.2.3-docs |\n\nComprobar siempre el repo (`pyproject.toml`, `git tag`, `CHANGELOG.md`) antes de decidir el siguiente número.\n\n---"
+      "cuerpo": "No copiar números de memoria. Antes del siguiente tag leer `pyproject.toml`, `git tag` y `CHANGELOG.md`.\n\n---"
     },
     {
       "titulo": "Autoridad",
-      "cuerpo": "Este documento es normativo para versionado de producto y tags.\n\nAnte duda entre “¿es producto o solo docs?”, priorizar: **si cambia el comportamiento al ejecutar mos2.sh / MOSh / comandos, es producto y lleva bump.**"
+      "cuerpo": "Normativo para versionado. Duda producto vs docs: si cambia mos2.sh / MOSh / comandos, es producto y lleva bump."
     }
   ]
 }

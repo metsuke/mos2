@@ -2,13 +2,13 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "user-manual",
   "titulo": "Manual de usuario de MetsuOS (MOS2)",
-  "preambulo": "**Versión del documento:** 1.2  \n**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  \n**Estado:** Manual formal de usuario  \n**Documentos relacionados:** docs/man/, docs/ENVIRONMENTS.md, docs/METHODOLOGY.md, docs/specs/01-SSS-System-Specification.md, docs/specs/08-APPS.md, docs/specs/09-TASKS.md, docs/specs/10-IA-ROUTER.md\n\n---",
+  "preambulo": "**Versión del documento:** 1.3  \n**Baseline de referencia:** v0.2.7 (árbol hacia v0.2.8)  \n**Estado:** Manual formal de usuario  \n**Documentos relacionados:** docs/man/, docs/ENVIRONMENTS.md, docs/METHODOLOGY.md, docs/HUMAN_ONBOARDING.md, docs/IA_WRITE.md\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/user-manual/20260916_032045.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Introducción",
-      "cuerpo": "MetsuOS (también llamado MOS2) es un sistema operativo simulado y modular escrito en Python.\n\nSu interfaz principal es el shell **MOSh**, donde puedes ejecutar:\n\n- comandos oficiales del sistema\n- comandos de apps instaladas\n- comandos personales de usuario\n- utilidades de ayuda, tests, actualización y documentación\n\nEste manual explica cómo instalar, arrancar y usar MetsuOS en la práctica.\n\nPara ayuda extendida de un comando concreto:\n\n```text\nman <comando>\n```\n\nLa v1.1 se conserva. Esta v1.2 añade apps, tareas, iarouter, red y `update reiniciar`.\n\n---"
+      "cuerpo": "MetsuOS (también llamado MOS2) es un sistema operativo simulado y modular escrito en Python.\n\nSu interfaz principal es el shell **MOSh**, donde puedes ejecutar:\n\n- comandos oficiales del sistema\n- comandos de apps instaladas\n- comandos personales de usuario\n- utilidades de ayuda, tests, actualización y documentación\n\nEste manual explica cómo instalar, arrancar y usar MetsuOS en la práctica.\n\nPara ayuda extendida de un comando concreto:\n\n```text\nman <comando>\n```\n\nLa v1.2 se conserva. Esta v1.3 añade `multi`/`write`, menú `docs`, `test 120` e integridad.\n\n---"
     },
     {
       "titulo": "Qué necesitas",
@@ -16,71 +16,75 @@
     },
     {
       "titulo": "Instalación",
-      "cuerpo": "1. Clona el repositorio:\n\n```text\ngit clone https://github.com/metsuke/mos2.git\ncd mos2\n```\n\n2. Ejecuta el instalador:\n\n```text\nchmod +x install.sh\n./install.sh\n```\n\nEl instalador:\n\n- prepara el entorno virtual local\n- instala dependencias\n- puede configurar aliases útiles\n- resuelve Poetry según el perfil de entorno (ver sección Entornos de ejecución)\n\n### Aliases opcionales\n\n| Alias | Función |\n|-------|---------|\n| mos2 | Lanza MetsuOS |\n| mos2f | Va a la raíz del proyecto |\n| mos2u | Relanza el instalador |\n\n---"
+      "cuerpo": "1. Clona el repositorio:\n\n```text\ngit clone https://github.com/metsuke/mos2.git\ncd mos2\n```\n\n2. Ejecuta el instalador:\n\n```text\nchmod +x install.sh\n./install.sh\n```\n\n### Aliases opcionales\n\n| Alias | Función |\n|-------|---------|\n| mos2 | Lanza MetsuOS |\n| mos2f | Va a la raíz del proyecto |\n| mos2u | Relanza el instalador |\n\n---"
     },
     {
       "titulo": "Entornos de ejecución",
-      "cuerpo": "| Sistema | Entorno | Notas |\n|---------|----------|-------|\n| linux | native | Poetry habitual en PATH |\n| macos | native | Igual |\n| windows | git-bash | Lanzador prioriza poetry.exe / python -m poetry |\n| windows | wsl | Clone en filesystem Linux; comportamiento tipo Linux |\n\nUsa siempre `./install.sh` y `./mos2.sh` desde la **raíz del clone**.  \nNormativa: `docs/ENVIRONMENTS.md`.\n\nSi en Git Bash aparece *Permission denied* con el script `poetry` sin extensión, usa `./mos2.sh` (no invoques a mano `Scripts/poetry`).\n\n---"
+      "cuerpo": "| Sistema | Entorno | Notas |\n|---------|----------|-------|\n| linux | native | Poetry habitual en PATH |\n| macos | native | Igual |\n| windows | git-bash | Lanzador prioriza poetry.exe / python -m poetry |\n| windows | wsl | Clone en filesystem Linux |\n\nUsa siempre `./install.sh` y `./mos2.sh` desde la **raíz del clone**. Normativa: `docs/ENVIRONMENTS.md`.\n\n---"
     },
     {
       "titulo": "Arranque",
-      "cuerpo": "```text\n./mos2.sh\n```\n\no, si tienes el alias:\n\n```text\nmos2\n```\n\n### Qué ocurre al arrancar\n\n1. MetsuOS ejecuta la batería de tests.\n2. Si algún test falla, el sistema no entra en modo interactivo.\n3. Si todo pasa, verás algo similar a:\n\n```text\nIniciando MOSh para MetsuOS...\nUsuario: tu_usuario\nEspacio personal: .../rootfs/home/tu_usuario/.mos\nUsa 'exit' para salir, 'help' para ayuda\n\nmosh/tu_usuario@metsuos:~$\n```\n\n\n---"
+      "cuerpo": "```text\n./mos2.sh\n```\n\no alias `mos2`.\n\n1. Comprueba integridad de ficheros del repo.\n2. Ejecuta la batería de tests (barra de progreso, varios hilos).\n3. Si integridad o tests fallan, no entra en modo interactivo.\n4. Si todo pasa, MOSh muestra prompt, historial con flechas, y avisos de `multi`/`m`.\n\n---"
     },
     {
       "titulo": "Conceptos básicos",
-      "cuerpo": "### MOSh\n\nEs el shell de MetsuOS. Lees comandos, los ejecutas y ves el resultado.\n\n### Usuario\n\nMetsuOS usa el nombre de usuario real de tu sistema anfitrión.\n\n### Espacio personal\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Nivel 5 | Uso |\n|---------|---------|---------|---------|---------|-----|\n| rootfs/ | home/ | usuario/ | .mos/ | | Raíz personal |\n| | | | | commands/ | Tus comandos |\n| | | | | apps/ | Apps de ámbito usuario |\n| | | | | data/ | Tus datos |\n| | | | | config/ | Tu configuración |\n| | | | | packages/ | Reserva de paquetes personales |\n| | | | | repos/ | Reserva de repos personales |\n\nEste contenido no se sube al repositorio principal.\n\n### Comandos de sistema, de app y de usuario\n\n- **Sistema:** los trae MetsuOS, protegidos. Ganan siempre si el nombre coincide.\n- **App:** viven en una app instalada (usuario o sistema).\n- **Usuario:** los creas tú en `.mos/commands/` con prefijo `user_`.\n\nPrioridad: sistema > app de sistema > app de usuario > comando `user_`.\n\n---"
+      "cuerpo": "### MOSh\n\nShell de MetsuOS. Historial con flechas. Lotes con `multi` o `m`.\n\n### Usuario\n\nNombre del anfitrión.\n\n### Espacio personal\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Nivel 5 | Uso |\n|---------|---------|---------|---------|---------|-----|\n| rootfs/ | home/ | usuario/ | .mos/ | | Raíz personal |\n| | | | | commands/ | Tus comandos |\n| | | | | apps/ | Apps de ámbito usuario |\n| | | | | data/ | Tus datos |\n| | | | | config/ | Tu configuración |\n\nNo se sube al repositorio principal.\n\nPrioridad de comandos: sistema > app de sistema > app de usuario > `user_`.\n\n---"
     },
     {
       "titulo": "Comandos de sistema",
-      "cuerpo": "| Tipo | Comando | Descripción |\n|------|---------|-------------|\n| accesibilidad | a11y | Tests A11Y e informe |\n| apps | apps | Instalar, listar, ver y quitar apps |\n| ayuda | docs | Lista y muestra docs/ y ficheros públicos de la raíz |\n| ayuda | help | Lista de comandos o ayuda de uno concreto |\n| ayuda | man | Manual extendido (docs/man/ y man de app) |\n| calidad | synccheck | Compara HEAD local con origin/main |\n| calidad | test | Batería de tests |\n| calidad | update | Sincroniza con origin/main (backup si hay cambios) |\n| host | sysinfo | Información del anfitrión |\n| host | uptime | Tiempo activo del anfitrión |\n| host | version | Versión e historial Git |\n| ia | iarouter | Modelos locales/remotos; apagado hasta que lo actives |\n| red | red | Diagnóstico de red del anfitrión (no es P2P) |\n| sesion | exit | Sale del shell |\n| tareas | hilos | Vista de tareas por clase |\n| tareas | tareas | Tareas locales (GTD) |\n| utilidad | clear | Limpia la pantalla |\n| utilidad | echo | Imprime texto |\n\nNorma de tablas: tipos en orden alfabético; dentro de cada tipo, comandos en orden alfabético.\n\nEjemplos:\n\n```text\nhelp\nhelp version\nman update\ndocs\na11y\nsynccheck\napps list\ntareas\nhilos\niarouter\nred\nversion\nsysinfo\ntest\nupdate\nupdate reiniciar\n```\n\n---"
+      "cuerpo": "| Tipo | Comando | Descripción |\n|------|---------|-------------|\n| accesibilidad | a11y | Tests A11Y e informe |\n| apps | apps | Instalar, listar, ver y quitar apps |\n| ayuda | docs | Menú por categoría; número o Nh (HTML) |\n| ayuda | help | Lista de comandos o ayuda de uno |\n| ayuda | man | Manual extendido |\n| calidad | synccheck | Compara HEAD con origin/main |\n| calidad | test | Batería; `test 120` lista tope de líneas |\n| calidad | update | Sincroniza; `update dev` ramas no main |\n| desarrollo | dev | Publicar / consolidar rama de desarrollo |\n| desarrollo | multi / m | Pegar lote; `:e` ejecuta, `:q` cancela |\n| host | sysinfo | Información del anfitrión |\n| host | uptime | Tiempo activo |\n| host | version | Versión e historial Git |\n| ia | iarouter | Modelos; off hasta activarlo |\n| red | red | Diagnóstico del anfitrión |\n| sesion | exit | Sale |\n| tareas | hilos | Vista de tareas |\n| tareas | tareas | Tareas locales |\n| utilidad | clear | Limpia pantalla |\n| utilidad | echo | Imprime texto |\n| utilidad | git / code / touch | Wrappers desde la raíz del clone |\n\nFuera de MOS, si no arranca: `./write.sh` (mismo ritual que multi).\n\n---"
     },
     {
       "titulo": "Ayuda: help, man y docs",
-      "cuerpo": "### help\n\n- `help` lista comandos y ayuda corta\n- `help <comando>` muestra la ayuda específica\n\n### man\n\n- `man` lista páginas de manual disponibles\n- `man <comando>` muestra el manual extendido\n\nLos manuales de sistema viven en `docs/man/`. Una app puede aportar el suyo.\n\n### docs\n\n- `docs` lista documentos\n- `docs <ruta>` muestra un fichero bajo `docs/` o README, CHANGELOG, AGENTS, LICENSE\n\n\n---"
+      "cuerpo": "### help\n\n`help` lista; `help <comando>` detalle.\n\n### man\n\n`man` lista; `man <comando>` manual en docs/man/.\n\n### docs\n\n1. Lista categorías numeradas.\n2. Eliges categoría.\n3. Lista documentos. `N` abre markdown; `Nh` abre HTML con el visor del sistema.\n\n---"
     },
     {
       "titulo": "Crear tus propios comandos",
-      "cuerpo": "### Dónde crearlos\n\n```text\nrootfs/home/<tu_usuario>/.mos/commands/\n```\n\n### Nombre obligatorio\n\nEl archivo debe empezar por `user_` (ejemplo: `user_hola.py`).\n\n### Contenido mínimo\n\n```text\ndef execute(args):\n    print(\"Hola desde mi comando personal\")\n\ndef help():\n    return \"Uso: user_hola - Saluda desde el espacio de usuario\"\n```\n\n### Cómo invocarlo\n\n- Siempre: `user_hola`\n- También: `hola` si no existe un comando de sistema ni de app con más prioridad llamado `hola`\n\n### Regla importante\n\nTu comando **no puede** sustituir un comando oficial del sistema.\n\n---"
+      "cuerpo": "Archivo `rootfs/home/<usuario>/.mos/commands/user_<nombre>.py` con `execute` y `help`. No pisa sistema. Solo stdlib y moslib.\n\n---"
     },
     {
       "titulo": "Apps",
-      "cuerpo": "```text\napps list\napps show <id>\napps install <ruta-o-repo>\napps remove <id>\n```\n\nUna app no es un `user_*.py`. Lleva `app.json` y comandos propios. Sin A11Y mínima no se acepta. Detalle: `docs/specs/08-APPS.md` y `man apps`.\n\n---"
+      "cuerpo": "`apps list|show|install|remove`. Sin A11Y mínima no se acepta. Detalle: specs 08 y `man apps`.\n\n---"
     },
     {
       "titulo": "Tareas e hilos",
-      "cuerpo": "```text\ntareas\nhilos\n```\n\nSon locales a tu sesión y a tu espacio. No son la malla P2P. Detalle: `docs/specs/09-TASKS.md`.\n\n---"
+      "cuerpo": "`tareas` y `hilos`. Locales. Specs 09.\n\n---"
     },
     {
       "titulo": "iarouter",
-      "cuerpo": "```text\niarouter\n```\n\nVa apagado hasta que lo actives (`usar` / `preguntar`). No lista claves. Jan y GPT4All son locales; Grok y OpenRouter necesitan clave. El puente HTTP, si lo enciendes, no es P2P. Detalle: `docs/specs/10-IA-ROUTER.md`.\n\n---"
+      "cuerpo": "Apagado hasta `usar` / `preguntar`. Specs 10. `iarouter share` / `iarouter connect` para Jan en LAN.\n\n---"
     },
     {
       "titulo": "Seguridad de comandos",
-      "cuerpo": "Solo se permiten imports de:\n\n- biblioteca estándar de Python\n- moslib\n- en un comando de app: minimoslib de esa app\n\nUn import ilegal hace que el comando se rechace; si sigue presente, el arranque puede bloquearse.\n\n\n---"
+      "cuerpo": "Solo stdlib, moslib y minimoslib de la app. Import ilegal: rechazo y posible bloqueo de arranque.\n\n---"
     },
     {
       "titulo": "Tests",
-      "cuerpo": "### Desde fuera del shell\n\nCon Poetry operativo en el PATH:\n\n```text\npoetry run pytest\n```\n\nPreferible usar el flujo del proyecto (`./mos2.sh` y luego `test`), que respeta la resolución de Poetry del entorno.\n\n### Desde dentro del shell\n\n```text\ntest\n```\n\n### Al arrancar\n\nLos tests se ejecutan solos. Si fallan, MetsuOS no abre la sesión interactiva.\n\nTambién puedes lanzar solo A11Y:\n\n```text\na11y\n```\n\n---"
+      "cuerpo": "```text\ntest\ntest 120\na11y\n```\n\nArranque ejecuta la batería (no el tope 120 como fallo). Si fallan, no hay sesión.\n\n---"
     },
     {
       "titulo": "Actualizar MetsuOS",
-      "cuerpo": "Dentro del shell:\n\n```text\nupdate\n```\n\nQué hace:\n\n1. Si hay cambios locales, los guarda en una rama backup con fecha y hora\n2. Sincroniza main con origin/main de forma forzada\n3. Alinea tags locales con origin\n4. Limpia backups antiguos dejando un máximo controlado\n\nLos módulos ya cargados en esta sesión **no cambian solos**. Después de un update:\n\n```text\nupdate reiniciar\n```\n\no sal con `exit` y vuelve a lanzar `./mos2.sh`.\n\nComprobar sin actualizar:\n\n```text\nsynccheck\n```\n\nEmergencia desde fuera del shell: `mos2_forced_update.sh` (solo si sabes lo que implica).\n\n---"
+      "cuerpo": "`update` alinea con origin/main si el trabajo local es de main. `update dev` elige rama no-main. `dev publicar` sube la rama de prueba. Tras update: `update reiniciar` o `exit` + `./mos2.sh`.\n\n`synccheck` no cambia nada.\n\n---"
+    },
+    {
+      "titulo": "Lotes write / multi",
+      "cuerpo": "Dentro de MOS: `m` o `multi`. Pegas el bloque (write + hash + payload + `.` + otros comandos). Línea sola `:e` ejecuta; `:q` cancela. El punto suelto cierra el payload.\n\nFuera de MOS: `./write.sh` con el mismo bloque.\n\n---"
     },
     {
       "titulo": "Flujo de trabajo recomendado",
-      "cuerpo": "1. Arranca MetsuOS\n2. Consulta `help`, `man` o `docs`\n3. Trabaja con comandos de sistema\n4. Instala apps o crea comandos personales si lo necesitas\n5. Ejecuta `test` cuando hagas cambios relevantes\n6. Usa `update` y luego `update reiniciar` para alinear tu copia con el repositorio\n\n---"
+      "cuerpo": "1. Arranca MetsuOS\n2. `help`, `man` o `docs`\n3. Trabaja\n4. Apps o `user_*` si hace falta\n5. `test` / `test 120` si tocas código\n6. `update` + `update reiniciar` para alinear\n\n---"
     },
     {
       "titulo": "Problemas frecuentes",
-      "cuerpo": "### El sistema no arranca\n\nCausa habitual: tests en rojo o un comando de usuario con import ilegal.\n\n1. Revisar tests (`test` o `poetry run pytest` si aplica)\n2. Revisar `rootfs/home/<usuario>/.mos/commands/`\n3. Corregir o quitar el comando ilegal\n4. Volver a arrancar\n\n### Permission denied con Poetry en Git Bash\n\nUsa `./mos2.sh` o `./install.sh`. No ejecutes a mano el script `poetry` sin extensión del directorio Scripts de Python.\n\n### Mi comando de usuario no aparece\n\n1. Archivo en `commands/`\n2. Nombre `user_algo.py`\n3. Define `execute` y `help`\n4. Sin imports ilegales\n5. Que no lo tape un comando de sistema o de app\n\n### Quiero un nombre corto y no funciona\n\nSi existe un comando de sistema o de app con ese nombre, ese gana. Usa `user_...`.\n\n### Tras update no veo el código nuevo\n\nUsa `update reiniciar` o sal y vuelve a entrar.\n\n\n---"
+      "cuerpo": "| Síntoma | Qué mirar |\n|---------|-----------|\n| No arranca | Tests o integridad |\n| Integridad en rojo | Cambio no registrado; write.sh o recargar solo si es tuyo |\n| Permission denied Poetry | ./mos2.sh |\n| CRLF en scripts | Convertir a LF |\n| user_* no aparece | nombre, execute/help, imports |\n| Tras update no ves código | update reiniciar |\n\n---"
     },
     {
       "titulo": "Dónde encontrar más documentación",
-      "cuerpo": "| Documento | Contenido |\n|-----------|-----------|\n| docs/USER_MANUAL.md | Este manual |\n| docs/ENVIRONMENTS.md | Perfiles de entorno y Poetry |\n| docs/man/ | Manual extendido por comando |\n| docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |\n| docs/STYLE_GUIDE.md | Normas de código |\n| docs/specs/ | Especificaciones técnicas |\n| docs/A11Y.md | Política de accesibilidad |\n| README.md | Visión general del repositorio |\n| CHANGELOG.md | Historial de releases |\n\n---"
+      "cuerpo": "| Documento | Contenido |\n|-----------|-----------|\n| docs/USER_MANUAL.md | Este manual |\n| docs/HUMAN_ONBOARDING.md | Primer arranque |\n| docs/ENVIRONMENTS.md | Perfiles y Poetry |\n| docs/man/ | Manual por comando |\n| docs/IA_WRITE.md | Ritual write |\n| docs/specs/ | Especificaciones |\n| README.md | Visión |\n| CHANGELOG.md | Releases |\n\n---"
     },
     {
       "titulo": "Limitaciones de la fase Alpha",
-      "cuerpo": "MetsuOS todavía no es un sistema operativo completo.\n\n- no sustituye tu sistema anfitrión\n- no es un kernel real\n- no permite paquetes Python arbitrarios dentro de comandos\n- no es la malla P2P ni una tienda remota de apps\n- está en evolución activa\n\nAun así es usable como shell modular con seguridad, espacio personal, apps locales, tareas, iarouter (off por defecto), tests y actualización controlada.\n\n---"
+      "cuerpo": "No sustituye el anfitrión. No es kernel. No hay paquetes Python arbitrarios en comandos. No es malla P2P. Evolución activa.\n\n---"
     },
     {
       "titulo": "Salir",

@@ -1,42 +1,62 @@
 {
   "schema": "metsuos-docgen-doc-1",
   "id": "developer-guide",
-  "titulo": "Guia del desarrollador de MetsuOS",
-  "preambulo": "**Version:** 1.3\n**Estado:** Normativo de proceso",
+  "titulo": "Guía del desarrollador de MetsuOS",
+  "preambulo": "**Versión del documento:** 1.3  \n**Estado:** Normativo de proceso  \n**Documentos relacionados:** docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/IA_WRITE.md, docs/specs/00-OVERVIEW.md, docs/plans/README.md\n\n---",
   "cuerpo_completo": null,
   "origen": "edicion-json",
   "secciones": [
     {
-      "titulo": "Proposito",
-      "cuerpo": "Como contribuir codigo y docs sin romper normas. Metodo general: METHODOLOGY.md. Aqui el flujo diario."
+      "titulo": "Propósito",
+      "cuerpo": "Cómo contribuir código y documentación sin romper normas férreas ni desincronizar versiones.\n\nEl método general está en docs/METHODOLOGY.md. Aquí está el flujo práctico día a día.\n\n---"
     },
     {
-      "titulo": "Trabajo con IA (obligatorio)",
-      "cuerpo": "La IA no edita el disco. El humano pega lotes en multi (m) o en ./write.sh si MOS no arranca.\nLote: write RUTA, sha256 hex, Base64 del fichero entero, punto, :e.\n;e y ;q valen; canonico :e / :q.\nwrite solo en multi. Hash distinto = no se toca el destino. Tras OK se abre code.\nMaximo 3 write por lote. Fichero entero. Prohibido parche y raw.githubusercontent.com.\n:s = siguiente paso de campana."
+      "titulo": "Requisitos de trabajo",
+      "cuerpo": "- Python 3.10+\n- Poetry\n- Git\n- Clone único por entorno (no mezclar /mnt/c y ~/mos2 en WSL)\n\nInstalación:\n\n```text\n./install.sh\n./mos2.sh\n```\n\nEdición con IA: `multi` dentro de MOS o `./write.sh` fuera.\n\n---"
     },
     {
-      "titulo": "Ramas",
-      "cuerpo": "Nunca avanzar sobre main. checkout -b siempre.\nupdate a secas = origin/main con arbol limpio.\nupdate dev = ramas remotas, elegir numero.\ndev publicar = wip + push.\ndev consolidar = ff-only a main cuando la tarea este cerrada."
-    },
-    {
-      "titulo": "Tope e integridad",
-      "cuerpo": "moslib .py <= 120 lineas. test 120 lista y no tumba arranque.\nSin copia local de integridad.json, el arranque copia el del repo."
+      "titulo": "Contexto de sesión",
+      "cuerpo": "```text\nContexto: <sistema> / <entorno> / <rol>\n```\n\nDetalle: docs/ENVIRONMENTS.md.\n\n---"
     },
     {
       "titulo": "Flujo de una feature",
-      "cuerpo": "1. Rama desde main actualizado\n2. Plan por fases / docs/plans/\n3. JSON de docs o req, luego docgen generate\n4. Codigo por write\n5. test y test 120\n6. Commit en la rama\n7. dev publicar para otras maquinas\n8. dev consolidar al cerrar"
+      "cuerpo": "1. git checkout main && git pull origin main\n2. Rama feature (comando `dev` / nunca trabajar sobre main)\n3. Acordar plan por fases; si es campaña, docs/plans/\n4. Una fase cada vez\n5. Tests / arranque (`test`, `test 120`)\n6. Commit atómico\n7. Consolidar rama y volcar a main al cerrar el conjunto\n8. Aplicar docs/VERSIONING.md y actualizar CHANGELOG.md\n\n---"
+    },
+    {
+      "titulo": "Dónde tocar qué",
+      "cuerpo": "| Si necesitas... | Toca principalmente... | No olvides... |\n|-----------------|------------------------|---------------|\n| Prompt o REPL | moslib/core/shell.py y hermanos | tests de arranque, historial |\n| Resolución de comandos | moslib/core/cmd_loader.py | ICD + tests loader |\n| Política de imports | moslib/core/security.py | SEC + tests security |\n| Homes / migración | moslib/core/user.py | USER + tests user |\n| Integridad | moslib/core/integridad*.py | sello + tests integridad |\n| Docgen | moslib/core/docgen*.py + docs/docgen/ | index.json, generate |\n| Comando de sistema | moslib/commands/nombre.py | contrato, man, help, ≤120 líneas |\n| Comando de usuario | rootfs/home/usuario/.mos/commands/user_*.py | prefijo user_ y seguridad |\n| Poetry / WSL / Git Bash | mos2.sh, install.sh | ENVIRONMENTS |\n| Accesibilidad | docs/A11Y.md, docs/a11y/, tests a11y | declaración e informe |\n| Normas de producto | docs/specs/ vía JSON docgen | luego código |\n| Relato de una release | CHANGELOG.md | VERSIONING.md |\n| Plan de campaña | docs/plans/ | README de planes |\n\n---"
     },
     {
       "titulo": "Contrato de comando",
-      "cuerpo": "execute(args), help() -> str, sinopsis() desde codigo.\nSolo stdlib y moslib. Sistema = archivo sin .py. Usuario = user_*.py"
+      "cuerpo": "Todo comando de sistema o de usuario:\n\n- execute(args) callable\n- help() que devuelve str no vacío\n- solo imports de stdlib y moslib\n- nombre de sistema = archivo sin .py\n- usuario: archivo user_*.py\n- fichero ≤ 120 líneas; si no, fachada + submódulos en core\n\n---"
+    },
+    {
+      "titulo": "Tests",
+      "cuerpo": "Obligatorios en desarrollo y en producción (arranque de MOSh).\n\n```text\n./mos2.sh\ntest\ntest 120\n```\n\nSi Poetry está operativo:\n\n```text\npoetry run pytest\n```\n\nSi fallan los tests de arranque, el sistema no abre sesión. `test 120` lista tope; no tumba el sistema.\n\n---"
+    },
+    {
+      "titulo": "Estilo",
+      "cuerpo": "Normas en docs/STYLE_GUIDE.md. Tests de contrato y patrones prohibidos. Tope 120 líneas.\n\n---"
+    },
+    {
+      "titulo": "Versionado (resumen)",
+      "cuerpo": "| Cambio | pyproject.toml | Tag | CHANGELOG |\n|--------|----------------|-----|-----------|\n| Runtime / scripts / comandos / seguridad | Bump X.Y.Z | vX.Y.Z | Entrada de producto |\n| Solo docs / onboarding | No bump | vX.Y.Z-docs o vX.Y.Z-docs.N | Entrada -docs |\n\nDetalle: docs/VERSIONING.md.\n\n---"
+    },
+    {
+      "titulo": "Documentación al cambiar algo",
+      "cuerpo": "- Fuente: JSON en docs/docgen/. Pintar con `docgen generate <id>` en el mismo lote.\n- Encabezados sin numeración\n- Directorios en tablas\n- Página man para comando nuevo\n- Si el doc o el código nuevo es más corto, avisar\n- Lote write + hash + payload + punto + generate; `:e` cierra\n- Cacho 1 sustituye el fichero; siguientes debajo\n- Breadcrumb: tarea x/y + %; bloque; campaña; planeado\n\n---"
+    },
+    {
+      "titulo": "Trabajo con IA",
+      "cuerpo": "Seguir docs/AI_ONBOARDING.md, AGENTS.md y docs/IA_WRITE.md.\n\n- un JSON/código por lote write\n- un paso cada vez (`:s` = siguiente)\n- leer el repo por SHA antes de afirmar estado\n- no inventar features ni resumir sin consultar\n- Git, no el forge\n- no ingest rutinario ni arreglar_integridad diario\n\n---"
     },
     {
       "titulo": "Checklist pre-merge",
-      "cuerpo": "Tests OK. Arranque OK. SEC/SSS/ICD/A11Y. Docs generados. CHANGELOG si release. VERSIONING. Commit claro. No main sucio."
+      "cuerpo": "1. Tests en verde\n2. Arranque de MOSh OK (sin recargar integridad)\n3. SEC / SSS / ICD / A11Y respetados\n4. Docs (JSON + generate) si cambió comportamiento\n5. CHANGELOG si cierra release\n6. VERSIONING aplicado\n7. Commit claro\n8. test 120 sin pendientes o con plan\n\n---"
     },
     {
       "titulo": "Autoridad",
-      "cuerpo": "No sustituye SEC, SSS, A11Y ni STYLE_GUIDE."
+      "cuerpo": "Esta guía no sustituye a SEC, SSS, A11Y ni STYLE_GUIDE. Si hay conflicto, prevalecen las specs de seguridad, sistema y accesibilidad."
     }
   ]
 }

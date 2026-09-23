@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>plans-readme</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
 <h1>Planes de campaña de MetsuOS</h1>
-<p><strong>Versión del documento:</strong> 1.5 <strong>Estado:</strong> Normativo de proceso <strong>Documentos relacionados:</strong> docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md</p>
+<p><strong>Versión del documento:</strong> 1.6   <strong>Estado:</strong> Normativo de proceso   <strong>Documentos relacionados:</strong> docs/METHODOLOGY.md, docs/VERSIONING.md, docs/AI_ONBOARDING.md, CHANGELOG.md</p>
+<hr>
 <h2>Propósito</h2>
 <p>Cada campaña de trabajo tiene un plan escrito <strong>antes</strong> de implementar (salvo las reconstruidas a posteriori).</p>
 <p>Sirve para humanos y agentes IA: qué se acordó, cuándo, y en qué orden si ese día hubo más de una.</p>
 <p>La tabla del índice no se edita a mano. Sale de docs/docgen/plans/ (un JSON por plan) con <code>docgen plan</code> y <code>docgen generate plans-readme</code>.</p>
+<hr>
 <h2>Nombre de archivo</h2>
 <pre><code>YYYY-MM-DD-NN-slug.md</code></pre>
-<table><thead><tr><th>Pieza</th><th>Significado</th></tr></thead><tbody><tr><td>YYYY-MM-DD</td><td>Día en que se escribió o arrancó el plan</td></tr><tr><td>NN</td><td>Orden dentro de ese día (01, 02, …). No es un id global</td></tr><tr><td>slug</td><td>Título corto en humano</td></tr></tbody></table>
-<p>El número de campañas del proyecto se ve contando ficheros y este índice. No hay contador global en el nombre.</p>
+<table><thead><tr><th>Pieza</th><th>Significado</th></tr></thead><tbody><tr><td>YYYY-MM-DD</td><td>Día en que se escribió o arrancó el plan</td></tr><tr><td>NN</td><td>Orden dentro de ese día (01, 02, …)</td></tr><tr><td>slug</td><td>Título corto</td></tr></tbody></table>
+<p>No hay contador global en el nombre.</p>
+<hr>
 <h2>Índice</h2>
 <table><thead><tr><th>Fecha</th><th>NN del día</th><th>Archivo</th><th>Estado</th></tr></thead><tbody><tr><td>2026-08-12</td><td>01</td><td>2026-08-12-01-espacio-usuario.md</td><td>Cerrada</td></tr><tr><td>2026-08-16</td><td>01</td><td>2026-08-16-01-tests-seguridad-update.md</td><td>Cerrada</td></tr><tr><td>2026-08-20</td><td>01</td><td>2026-08-20-01-ecss-man-manual.md</td><td>Cerrada</td></tr><tr><td>2026-08-25</td><td>01</td><td>2026-08-25-01-entornos-onboarding-versionado.md</td><td>Cerrada</td></tr><tr><td>2026-08-28</td><td>01</td><td>2026-08-28-01-higiene-a11y-cierre.md</td><td>En curso (Grupo I y Cierre I hechos; Grupo II ampliado antes del Bloque 1.2)</td></tr><tr><td>2026-08-31</td><td>01</td><td>2026-08-31-01-incentivos-desarrollo-datos.md</td><td>Cerrada en alcance. Bloques 2 y 3 de la redacción inicial retirados.</td></tr><tr><td>2026-09-01</td><td>01</td><td>2026-09-01-01-macro-apps-tareas-suite-rgpd-malla.md</td><td>Índice de campañas 07–10</td></tr><tr><td>2026-09-01</td><td>02</td><td>2026-09-01-02-campana-07-soporte-apps-tareas-ia.md</td><td>A ejecutar</td></tr><tr><td>2026-09-03</td><td>01</td><td>2026-09-03-01-campana-08-app-desarrollo.md</td><td>Diseñada</td></tr><tr><td>2026-09-04</td><td>01</td><td>2026-09-04-01-07-fix-apps-reales.md</td><td>Obliga a pausar 8.2+ hasta cerrar esto</td></tr><tr><td>2026-09-04</td><td>02</td><td>2026-09-04-02-07-completa.md</td><td>La 08 (suite) congelada hasta cierre de este plan.</td></tr><tr><td>2026-09-07</td><td>01</td><td>2026-09-07-01-iarouter-modelos-lan.md</td><td>Diseñada</td></tr><tr><td>2026-09-13</td><td>01</td><td>2026-09-13-01-iarouter-check-scopes.md</td><td>En curso</td></tr><tr><td>2026-09-13</td><td>02</td><td>2026-09-13-02-sync-docs-028.md</td><td>Cerrada (docs aplicados en local; merge/tag a criterio humano)</td></tr><tr><td>2026-09-14</td><td>01</td><td>2026-09-14-01-docgen.md</td><td>Cerrada en alcance de motor (pendiente pruebas humanas y bump)</td></tr><tr><td>2026-09-18</td><td>01</td><td>2026-09-18-01-integridad-write.md</td><td>En curso</td></tr></tbody></table>
 <h2>Ciclo</h2>
-<p>1. Diseñar la campaña en el chat. 2. Crear el plan en esta carpeta <strong>antes</strong> del primer cambio de código. 3. Registrar metadato: <code>docgen plan add YYYY-MM-DD-NN-slug.md</code>. 4. Ejecutar por bloques/pasos. 5. Cambiar estado: <code>docgen plan set &lt;id&gt; Cerrada</code> y <code>docgen generate plans-readme</code>. 6. Si el plan cambia, actualizar el fichero del plan y regenerar el índice.</p>
+<p>1. Diseñar la campaña en el chat. 2. Crear el plan <strong>antes</strong> del primer cambio de código. 3. <code>docgen plan add YYYY-MM-DD-NN-slug.md</code> (o write del JSON del plan + generate). 4. Ejecutar por bloques/pasos (<code>:s</code>). 5. <code>docgen plan set &lt;id&gt; Cerrada</code> y <code>docgen generate plans-readme</code> en el mismo lote. 6. Si el plan cambia, actualizar JSON y regenerar.</p>
+<hr>
 <h2>Contenido mínimo de un plan</h2>
 <ul><li>Fecha y NN del día</li><li>Objetivo y fuera de alcance</li><li>Estado</li><li>Producto al inicio y al cierre</li><li>Bloques y pasos</li><li>Tags</li><li>Cierres de grupo (interacción + deuda) si aplica</li><li>Nota si es reconstrucción</li></ul>
+<hr>
 <h2>Autoridad</h2>
 <p>No se inicia una campaña amplia sin su plan en esta carpeta.</p>
 </body></html>

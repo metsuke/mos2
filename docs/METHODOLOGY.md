@@ -1,7 +1,7 @@
 # Metodología de MetsuOS (MOS2)
 
-**Versión del documento:** 1.3  
-**Baseline de referencia:** v0.2.4  
+**Versión del documento:** 1.5  
+**Baseline de referencia:** v0.2.7 / árbol 0.2.8  
 **Estado:** Normativo
 
 ---
@@ -35,6 +35,7 @@ Características estructurales no negociables:
 - Seguridad de imports obligatoria (solo biblioteca estándar + `moslib`).
 - Accesibilidad de interfaz mandatoria (`docs/A11Y.md`).
 - Agnóstico de plataforma (linux/native, macos/native, windows/git-bash, windows/wsl).
+- Tope de 120 líneas por fichero de código; consulta con `test 120`.
 
 MetsuOS **no** pretende ser un kernel real ni un sustituto completo de un sistema operativo nativo. Es un entorno controlado, extensible y auditable.
 
@@ -76,7 +77,9 @@ El resultado se denomina **ECSS-light** y vive en `docs/specs/`.
 | | ENVIRONMENTS.md | | Perfiles de entorno, Poetry y contexto de sesión |
 | | STYLE_GUIDE.md | | Normas de código |
 | | USER_MANUAL.md | | Manual de usuario formal |
+| | IA_WRITE.md | | Ritual write / multi / write.sh |
 | | plans/ | | Planes de campaña |
+| | docgen/ | | Fuente JSON, índice y backups |
 | | specs/ | | Especificaciones ECSS-light |
 | | | 00-OVERVIEW.md | Mapa y reglas de las specs |
 | | | 01-SSS-System-Specification.md | Especificación de sistema |
@@ -102,6 +105,8 @@ El código debe cumplir las especificaciones. Si una mejora exige cambiar una no
 Si A11Y y SEC chocan, se sigue el procedimiento de `docs/A11Y.md` y `04-SEC`.
 
 Versionado de producto y tags: `docs/VERSIONING.md`.
+
+Fuente de la documentación: JSON en `docs/docgen/`. El markdown se pinta con `docgen generate`. Índice: `docs/docgen/index.json`.
 
 ---
 
@@ -132,10 +137,32 @@ Normas:
 - La IA adapta comandos al contexto; si falta, pregunta.
 - Detalle: `docs/ENVIRONMENTS.md`.
 
+### Edición con multi y write.sh
+
+- Dentro de MOS: `m` o `multi`. Acumula el pegado. No parsea hasta una línea que sea solo `:e` (ejecuta) o `:q` (cancela). `;e` y `;q` valen igual.
+- Fuera de MOS: `./write.sh` lanza el mismo multi. No emular el lote en bash.
+- Forma del lote:
+
+write <ruta>
+<sha256 del fichero en claro>
+[gz:|xz:|b85:|gzb85:|xzb85:]payload
+.
+docgen index add <id> <rel>
+docgen generate <id>
+
+- Después, línea sola `:e`.
+- Máximo tres writes por lote si son ficheros pequeños.
+- El hash es del contenido en claro, no del payload.
+- Si CRC o payload inválido: el pegado se cortó; repetir en Base64 plano o `code` + `./arreglar_integridad.sh`.
+- `./arreglar_integridad.sh` solo si MOS no arranca. Aviso 30 s. Lanza `./mos2.sh` con `MOS_INTEGRIDAD=recargar`. No es uso diario.
+
 ### Entrega de documentación por la IA
 
-- Un archivo o sección completa en **un único bloque de texto** listo para copiar y pegar.
-- Explicar en pocas líneas **qué ha cambiado** para validar leyendo.
+- Fuente: JSON en `docs/docgen/` (pages/, specs/, man/, root/). Un JSON por mensaje, fichero entero.
+- En el mismo lote: `docgen generate <id>`. Si el id no está en el índice: `docgen index add <id> <rel>`.
+- `docgen ingest` solo primera absorción o recuperación. `generate` no ingerir.
+- Un archivo o sección completa listo para copiar.
+- Explicar en pocas líneas **qué ha cambiado**.
 - Evitar pedir al humano que reescriba tablas o párrafos largos a mano.
 - Si una fase toca varias piezas, entregar **un paso cada vez**.
 - **Encabezados sin numeración** (`## Título`, no `## 1. Título`).
@@ -144,28 +171,26 @@ Normas:
 - Si el documento no cabe en un mensaje, **cacho 1 sustituye todo el fichero**; los cachos siguientes se pegan **debajo**.
 - Tablas de comandos del sistema: columna **Tipo** en orden alfabético; dentro de cada tipo, comandos en orden alfabético.
 - Estructuras de directorios: tablas, una columna por nivel.
-- Crear carpetas/ficheros: dar secuencia bash (`mkdir -p`, `touch`, editor).
 - Cada paso de campaña lleva breadcrumb: campaña, grupo, bloque x/y, paso, progreso aproximado.
 - Git, no funciones exclusivas de un forge.
 - No usar la palabra «corrida»; decir «ejecución» o «pasada de tests».
 - CHANGELOG: no dejar «Sin publicar» a criterio del humano.
-
-Detalle operativo para agentes: `AGENTS.md` y `docs/AI_ONBOARDING.md`.
+- Detalle operativo: `AGENTS.md`, `docs/AI_ONBOARDING.md`, `docs/IA_WRITE.md`.
 
 ### Flujo estándar de una fase
 
 1. Partir de `main` limpio y actualizado.
-2. Crear rama `feature/<nombre-descriptivo>`.
+2. Crear rama `feature/<nombre-descriptivo>` (comando `dev` / nunca avanzar sobre main).
 3. Acordar un plan por fases (y escribirlo en `docs/plans/` si es campaña nueva).
 4. Implementar **solo** la fase actual.
 5. Ejecutar tests (`./mos2.sh` / `test`, o Poetry según entorno) y/o arranque de MOSh.
 6. Commit atómico.
 7. Pasar a la siguiente fase.
-8. Al terminar el conjunto: merge a `main` y aplicar `docs/VERSIONING.md`.
+8. Al terminar el conjunto: consolidar rama en el servidor y volcar a `main` según `docs/VERSIONING.md`.
 
 ### Ramas
 
-- `main` → estable, siempre usable.
+- `main` → estable, siempre usable. Nunca desarrollo directo sobre main.
 - `feature/...` → trabajo en curso.
 - `backup/YYYYMMDD_HHMMSS` → generadas por el comando `update`; locales, no producto.
 
@@ -185,8 +210,8 @@ Detalle operativo para agentes: `AGENTS.md` y `docs/AI_ONBOARDING.md`.
 La IA debe:
 
 - Analizar el estado real del repositorio antes de proponer cambios.
-- Entregar planes por fases con código/docs listos para pegar.
-- Respetar normas férreas (seguridad, contrato de comandos, mosLib, A11Y).
+- Entregar planes por fases con JSON/código listos para el lote write.
+- Respetar normas férreas (seguridad, contrato de comandos, mosLib, A11Y, tope 120).
 - Respetar `docs/ENVIRONMENTS.md`, `docs/VERSIONING.md` y el contexto de sesión.
 - Entregar documentos en un solo bloque copiable; resumir el diff.
 - No inventar features como si ya existieran.
@@ -197,7 +222,7 @@ La IA debe:
 
 El humano debe:
 
-- Ejecutar los pasos.
+- Ejecutar los pasos (multi o write.sh).
 - Verificar en el perfil de entorno que corresponda.
 - Rechazar o corregir lo que no encaje.
 - Hacer los commits y merges.
@@ -210,10 +235,12 @@ Antes de mergear a `main`:
 2. Arranque de MOSh sin bloqueo por tests.
 3. Smoke-test: `help`, `version`, `test`, y el comando nuevo si aplica.
 4. No desactivar seguridad ni tests de arranque para hacer pasar un cambio.
+5. `test 120` sin ficheros por encima del tope, o plan de partición.
 
 ### Actualización del repositorio local
 
 - Preferir el comando de sistema `update` (incluye alineación de tags con origin).
+- `update dev` para probar una rama que no es main en otra máquina.
 - `mos2_forced_update.sh` solo como emergencia.
 - Las ramas `backup/*` son red de seguridad local.
 - Solo Git; no APIs de un forge.
@@ -231,8 +258,10 @@ No se implementa una feature solo en código si rompe una norma documentada.
 - Validación de imports obligatoria en carga de comandos.
 - Batería de tests al arrancar MOSh; si falla, no inicia.
 - Comandos de usuario sujetos a seguridad y a revisión en arranque del usuario actual.
-- A11Y mandatoria; tests A11Y e informe cuando existan en 0.2.5.
+- A11Y mandatoria; tests A11Y e informe.
 - Conflicto A11Y/SEC: procedimiento escrito; no excepción silenciosa.
+- Integridad de ficheros del repo (manifiesto + sello). MOS no arranca si el contenido no coincide.
+- `./arreglar_integridad.sh` solo emergencia reconocida.
 
 ---
 
@@ -240,15 +269,16 @@ No se implementa una feature solo en código si rompe una norma documentada.
 - Manual: `docs/USER_MANUAL.md`
 - Humano: `docs/HUMAN_ONBOARDING.md`
 - Desarrollador: `docs/DEVELOPER_GUIDE.md`
-- IA: `AGENTS.md` y `docs/AI_ONBOARDING.md`
+- IA: `AGENTS.md`, `docs/AI_ONBOARDING.md`, `docs/IA_WRITE.md`
 - Entornos: `docs/ENVIRONMENTS.md`
 - Versionado: `docs/VERSIONING.md`
 - Accesibilidad: `docs/A11Y.md`, `docs/a11y/DECLARACION.md`, `docs/a11y/informe.md`
 - Planes: `docs/plans/`
 - Páginas man: `docs/man/<comando>.md`
 - Comando `man`: muestra esas páginas en el shell.
-- Comando `docs`: lista y muestra `docs/` (baseline 0.2.5).
-- Comando `a11y`: validación A11Y e informe (baseline 0.2.5).
+- Comando `docs`: menú por categoría; `Nh` abre HTML.
+- Comando `a11y`: validación A11Y e informe.
+- Comando `docgen`: generate / index / req / area / plan. ingest solo recuperación.
 
 Todo comando de sistema nuevo debería incorporar su página man en el mismo cambio (o en el inmediato de la misma fase).
 
@@ -258,6 +288,8 @@ Todo comando de sistema nuevo debería incorporar su página man en el mismo cam
 Las normas de escritura están en `docs/STYLE_GUIDE.md`.
 
 Este documento obliga a respetar la guía, mantener tests de contrato/normas críticas y no introducir excepciones ad hoc sin actualizar la guía.
+
+Ningún fichero de código del sistema debe superar 120 líneas; si lo hace, se parte en submódulos.
 
 ---
 
@@ -270,10 +302,9 @@ Está prohibido usar árboles ASCII como forma principal en documentos normativo
 
 ## Baseline y evolución
 - Baseline funcional de partida de este marco: v0.2.1.
-- Producto actual de referencia: v0.2.4.
-- Cierre A11Y de esta campaña: v0.2.5 previsto.
+- Producto actual de referencia: v0.2.7 / árbol hacia v0.2.8.
 - Cada release relevante actualiza `docs/specs/07-SRelD-Release-Baseline.md`.
-- Tags solo-docs: `vX.Y.Z-docs` o `vX.Y.Z-docs.N` con la Poetry vigente (detalle fino de VERSIONING: deuda de cierre).
+- Tags solo-docs: `vX.Y.Z-docs` o `vX.Y.Z-docs.N` con la Poetry vigente.
 
 ---
 
@@ -284,7 +315,7 @@ Al terminar un grupo de bloques de una campaña:
 - Deuda técnica (hecho / siguiente bloque / no aplica).
 - Secciones nuevas si hacen falta.
 
-Plantilla formal: Grupo III de la campaña 05 (`docs/INTERACTION_REVIEW.md`).
+Plantilla formal: `docs/INTERACTION_REVIEW.md`.
 
 ---
 
@@ -295,12 +326,14 @@ Plantilla formal: Grupo III de la campaña 05 (`docs/INTERACTION_REVIEW.md`).
 4. ¿El cambio respeta SEC + SSS + ICD + A11Y?
 5. ¿Hay tests?
 6. ¿El arranque sigue pasando?
-7. ¿Documenté lo necesario?
+7. ¿Documenté lo necesario (JSON + generate)?
 8. ¿VERSIONING aplicado (bump o explícitamente no)?
 9. ¿Commit claro y atómico?
 10. ¿Estructuras de directorios en tabla?
 11. ¿Encabezados de docs sin numeración?
 12. ¿Plan de campaña en docs/plans si aplica?
+13. ¿Código ≤ 120 líneas?
+14. ¿He evitado ingest rutinario?
 
 Si alguna respuesta es no y el cambio es relevante, no se mergea.
 

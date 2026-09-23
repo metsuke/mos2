@@ -1,9 +1,9 @@
 {
   "schema": "metsuos-docgen-doc-1",
   "id": "license",
-  "titulo": "license",
+  "titulo": "Licencia",
   "preambulo": "",
-  "cuerpo_completo": "GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n\nCopyright (C) 2026 Metsuke\n\nEveryone is permitted to copy and distribute verbatim copies\nof this license document, but changing it is not allowed.\n\nPreamble\nThe GNU General Public License is a free, copyleft license for\nsoftware and other kinds of works...\n",
-  "origen": "/Users/Metsuke/mos2/LICENSE",
+  "cuerpo_completo": "GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n\nCopyright (C) 2026 Metsuke\n\nEveryone is permitted to copy and distribute verbatim copies\nof this license document, but changing it is not allowed.\n\nPreamble\nThe GNU General Public License is a free, copyleft license for\nsoftware and other kinds of works.\n\nTexto completo normativo: https://www.gnu.org/licenses/gpl-3.0.html\nIdentificador SPDX: GPL-3.0-or-later\n",
+  "origen": "edicion-json",
   "secciones": []
 }

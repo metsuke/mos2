@@ -1,9 +1,9 @@
 # Incentivos y dirección de MetsuOS
 
-**Versión del documento:** 1.1  
+**Versión del documento:** 1.3  
 **Estado:** Normativo de dirección  
 **No implementa código.**  
-**Documentos relacionados:** docs/A11Y.md, docs/specs/04-SEC-Security-Policy.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/INTERACTION_REVIEW.md, docs/DEUDA_Y_CAMPANAS.md, docs/plans/2026-08-31-01-incentivos-desarrollo-datos.md, docs/plans/2026-09-01-01-macro-apps-tareas-suite-rgpd-malla.md
+**Documentos relacionados:** docs/A11Y.md, docs/specs/04-SEC-Security-Policy.md, docs/AI_ONBOARDING.md, AGENTS.md, docs/INTERACTION_REVIEW.md, docs/METHODOLOGY.md, docs/IA_WRITE.md, docs/DEUDA_Y_CAMPANAS.md
 
 ---
 
@@ -22,6 +22,8 @@ Esto **no** es incentivo. No se “inclina”. Si falta, el cambio **no se acept
 | Accesibilidad de interfaz | docs/A11Y.md, declaración, tests a11y |
 | Seguridad de imports y contrato de comando | SEC, cmd_loader |
 | Tests de arranque | núcleo |
+| Integridad de ficheros del repo | manifiesto + sello |
+| Tope 120 líneas en código | test 120, STYLE_GUIDE |
 | No pisar comandos de sistema | user.py / cmd_loader |
 | Resto de normas no negociables del SSS | docs/specs/01-SSS-… |
 
@@ -43,15 +45,15 @@ Vectores de dirección (inclusión amplia de producto, ciencia, comunicación, p
 | Inclusión / A11Y de producto | No dejar fuera un perfil declarado | Producto solo para quien “ve y pulsa bien” |
 | Ciencia | Spec, evidencia, tests | Parche mágico sin norma |
 | Comunicación bidireccional | Explicar; el humano valida | Imponer o no poder discrepar |
-| Productividad de método | Un paso, un fichero, SHA real | Chat que agota para el mismo commit |
+| Productividad de método | Un paso, un fichero, lote write+generate, SHA real | Chat que agota para el mismo commit |
 | Experiencia (juego / MOSh) | Texto lineal, help/man | CLI hostil |
 | Cadena de suministro | Licencia visible, SBOM cuando exista | Dependencia opaca, telemetría no consentida |
 | Geoestrategia de paquetes | Dirección: origen visible (moslib ↔ Poetry) | “Lo que pille PyPI” |
 | Soberanía | Datos y modelos bajo el usuario; `.mos` local | Silo de nube |
 | Capas legales | Declarar capa (este repo: GPL-3.0) | Mezclar capas en silencio |
 | Saber (⚫→⚪) | Etiquetar **textos** | Puntuar **personas** |
-| Automatizar lo repetitivo | Liberar para crear | Automatizar el juicio o el merge |
-| Andamiaje | Poetry debajo; moslib encima | Inventar el stack en cada paso |
+| Automatizar lo repetitivo | Liberar para crear; docgen sobre JSON | Automatizar el juicio o el merge |
+| Andamiaje | Poetry debajo; moslib encima; multi/write.sh | Inventar el stack en cada paso |
 
 **Geoestrategia:** rumbo, no código. Comandos de esta baseline: sin imports ajenos (SEC). DepManager = campaña propia.
 
@@ -68,13 +70,13 @@ Sigue obligado a A11Y/SEC si publica o ejecuta comandos: un `user_*` con import 
 
 ### Desarrollador
 
-Inclinar a: feature, tests, synccheck, README/SSS/man con comando nuevo, no acortar specs, Git no forge.
+Inclinar a: feature, tests, synccheck, README/SSS/man con comando nuevo, no acortar specs, Git no forge, ramas feature no main.
 
 Sigue obligado: sin A11Y no hay accept ni merge usable; sin SEC no hay arranque.
 
 ### IA
 
-Mandatorio: férreas + este archivo + onboarding de entrega.
+Mandatorio: férreas + este archivo + onboarding de entrega + METHODOLOGY + IA_WRITE.
 
 - No dañar, no engañar, no desestabilizar.
 - Psicología solo para acompañar.
@@ -82,6 +84,9 @@ Mandatorio: férreas + este archivo + onboarding de entrega.
 - No apagar tests ni A11Y para cerrar un paso.
 - No volcar `.mos` a un servicio remoto.
 - No proponer aceptar código que falle A11Y.
+- Editar docs en JSON y `docgen generate` en el mismo lote (multi o ./write.sh).
+- No usar ingest ni arreglar_integridad como atajo diario.
+- No entregar un JSON más corto que el vigente sin avisar.
 
 ---
 
@@ -92,7 +97,7 @@ Aplican a la **IA**. “Robot” = ese agente.
 2. Un robot debe obedecer las órdenes dadas por los seres humanos, excepto cuando esas órdenes entren en conflicto con la Primera Ley.
 3. Un robot debe proteger su propia existencia en la medida en que esa protección no entre en conflicto con la Primera o la Segunda Ley.
 
-Aplicación: daño incluye engaño, exclusión A11Y y corromper datos; obedecer = lo que el humano valida, no autocommit; existencia ≠ apagar tests. Lo bidireccional se itera después.
+Aplicación: daño incluye engaño, exclusión A11Y y corromper datos; obedecer = lo que el humano valida, no autocommit; existencia ≠ apagar tests ni saltarse integridad. Lo bidireccional se itera después.
 
 ---
 

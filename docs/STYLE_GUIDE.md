@@ -1,13 +1,13 @@
 # Guía de estilo de programación de MetsuOS (MOS2)
 
-**Versión del documento:** 1.0  
-**Baseline de referencia:** v0.2.1  
+**Versión del documento:** 1.2  
+**Baseline de referencia:** v0.2.7 / árbol 0.2.8  
 **Estado:** Normativo  
-**Documento relacionado:** docs/METHODOLOGY.md
+**Documento relacionado:** docs/METHODOLOGY.md, docs/AI_ONBOARDING.md
 
 ---
 
-## 1. Propósito
+## Propósito
 Esta guía unifica la forma de escribir código en MetsuOS.
 
 Objetivos:
@@ -21,7 +21,7 @@ Si el código contradice esta guía, se corrige el código o se actualiza esta g
 
 ---
 
-## 2. Alcance
+## Alcance
 Aplica a:
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Aplica |
@@ -36,17 +36,18 @@ Los comandos de usuario en `rootfs/home/<usuario>/.mos/commands/` también deben
 
 ---
 
-## 3. Principios generales
+## Principios generales
 1. Claridad antes que cleverness.
 2. Una responsabilidad por función/módulo.
 3. Fallar de forma explícita y con mensaje útil.
 4. No romper interfaces públicas sin actualizar specs y tests.
 5. Todo comando del sistema es un módulo simple con contrato fijo.
+6. Ningún fichero de código del sistema supera 120 líneas; si lo hace, se parte.
 
 ---
 
-## 4. Lenguaje y nombres
-### 4.1 Idioma
+## Lenguaje y nombres
+### Idioma
 
 - Identificadores de código (funciones, variables, módulos): **inglés**, `snake_case`.
 - Docstrings orientadas a desarrollador: preferible **español** claro y breve.
@@ -54,7 +55,7 @@ Los comandos de usuario en `rootfs/home/<usuario>/.mos/commands/` también deben
 - Nombres de comandos de sistema: **inglés** corto (`help`, `update`, `version`).
 - Comandos de usuario: archivo `user_<nombre>.py`.
 
-### 4.2 Naming
+### Naming
 
 | Elemento | Convención | Ejemplo |
 |----------|------------|---------|
@@ -69,8 +70,8 @@ Nombres descriptivos. Evitar abreviaturas oscuras.
 
 ---
 
-## 5. Imports
-### 5.1 Regla de seguridad (obligatoria en comandos)
+## Imports
+### Regla de seguridad (obligatoria en comandos)
 
 Solo se permiten:
 
@@ -79,24 +80,14 @@ Solo se permiten:
 
 Cualquier otro import está prohibido y debe ser rechazado por la validación AST.
 
-### 5.2 Orden de imports
+### Orden de imports
 
 1. `__future__` si aplica
 2. Stdlib
 3. `moslib...`
 4. Línea en blanco entre grupos si mejora legibilidad
 
-Ejemplo:
-
-from __future__ import annotations
-
-import os
-import sys
-from pathlib import Path
-
-from moslib.core.security import validate_command_file
-
-### 5.3 Prohibido
+### Prohibido
 
 - Imports de terceros en comandos y en código de ejecución de comandos
 - `from module import *`
@@ -104,67 +95,34 @@ from moslib.core.security import validate_command_file
 
 ---
 
-## 6. Tipado
+## Tipado
 - Anotar firmas de funciones públicas.
 - Usar `pathlib.Path` para rutas.
 - Preferir `str | Path` cuando se acepten ambos.
 - Se permite `from __future__ import annotations`.
 
-Ejemplo:
+---
 
-def validate_command_file(file_path: str | Path) -> tuple[bool, list[str]]:
-    ...
+## Docstrings
+Todo módulo de `moslib/core` y `moslib/commands` debe tener docstring de módulo.
+Toda función pública relevante: qué hace, parámetros no obvios, retorno.
+Todo comando implementa `help() -> str`.
 
 ---
 
-## 7. Docstrings
-### 7.1 Módulo
+## Contrato de comandos (obligatorio)
+Todo comando de sistema y de usuario debe exponer `execute(args)` y `help() -> str`.
 
-Todo módulo de `moslib/core` y `moslib/commands` debe tener docstring de módulo describiendo su propósito.
-
-### 7.2 Funciones públicas
-
-Toda función pública relevante debe tener docstring breve:
-
-- Qué hace
-- Parámetros importantes (si no son obvios)
-- Valor de retorno (si aplica)
-
-### 7.3 Comandos
-
-Además del docstring de módulo, todo comando debe implementar:
-
-def help() -> str:
-    ...
-
-que devuelve el texto de ayuda de usuario.
+- `execute` recibe argumentos ya partidos.
+- El cargador descubre archivos `.py`; no hay índice manual de comandos.
+- Usuario: `user_*.py`. Nunca pisa un comando de sistema.
+- Helpers de un comando no son comandos: no viven en `commands/` si no tienen execute/help.
 
 ---
 
-## 8. Contrato de comandos (obligatorio)
-Todo comando de sistema y de usuario debe exponer:
-
-def execute(args):
-    ...
-
-def help():
-    return "..."
-
-Reglas:
-
-- `execute` recibe una lista de argumentos ya partidos (`args`).
-- `help()` devuelve `str`.
-- No requiere registrar el comando en ningún índice manual: el cargador descubre archivos `.py`.
-- Los comandos de usuario viven en archivos `user_*.py`.
-- Un comando de usuario nunca puede sobrescribir un comando de sistema.
-
----
-
-## 9. Rutas y ficheros
-- Usar `pathlib.Path` en lugar de concatenar strings a mano.
-- Resolver la raíz del proyecto de forma relativa al archivo actual cuando sea necesario.
+## Rutas y ficheros
+- Usar `pathlib.Path`.
 - No asumir un cwd concreto salvo que el diseño lo documente.
-- El espacio de usuario está en:
 
 | Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción |
 |---------|---------|---------|---------|-------------|
@@ -172,123 +130,103 @@ Reglas:
 
 ---
 
-## 10. Errores y salida
-- Mensajes de error comprensibles en español.
-- Prefijos útiles cuando ayuden: `[SEGURIDAD]`, `[MetsuOS]`, `[update]`.
-- No silenciar excepciones genéricas sin dejar rastro.
-- En comandos, si una operación crítica falla, informar y salir con código distinto de cero cuando corresponda (`sys.exit`).
+## Errores y salida
+- Mensajes de error en español.
+- Prefijos útiles: `[SEGURIDAD]`, `[MetsuOS]`, `[update]`, `[integridad]`, `[multi]`, `[docgen]`.
+- No silenciar excepciones genéricas.
+- En comandos, fallo crítico: informar y `sys.exit` distinto de cero cuando corresponda.
 
 ---
 
-## 11. Seguridad de código
-Prohibido en comandos y en rutas de ejecución de comandos:
+## Seguridad de código
+Prohibido en comandos y rutas de ejecución:
 
-- `eval(...)`
-- `exec(...)`
+- `eval(...)` / `exec(...)`
 - Ejecutar código arbitrario recibido del usuario
 - Cargar módulos fuera de la política de imports
 - Bypass de la validación de seguridad
 
-La validación AST de imports es parte del sistema, no un adorno opcional.
+La validación AST de imports es parte del sistema.
 
 ---
 
-## 12. Estructura recomendada de un comando
-Orden típico de un archivo en `moslib/commands/`:
-
+## Estructura recomendada de un comando
 1. Docstring de módulo
 2. Imports
-3. Helpers privados (`_...`) si hacen falta
+3. Helpers privados (`_...`)
 4. `execute(args)`
 5. `help()`
+6. `sinopsis()` si el man se pinta desde código
 
-Ejemplo mínimo:
-
-def execute(args):
-    print("hola")
-
-def help():
-    return "Uso: hola - Saluda"
+Si el archivo supera 120 líneas, partir en submódulos core; el `.py` de `commands/` queda como fachada con execute/help.
 
 ---
 
-## 13. Estructura recomendada de un módulo core
+## Estructura recomendada de un módulo core
 1. Docstring de módulo
 2. Imports
 3. Constantes
 4. Funciones/clases públicas
 5. Helpers privados
 
-Las clases públicas (`CommandManager`, `MOSh`) mantienen métodos claros y responsabilidades limitadas.
+Evitar imports circulares. Fachada corta + mapa/helpers en ficheros hermanos.
 
 ---
 
-## 14. Tests
+## Tests
 - Todo cambio de comportamiento relevante lleva test.
-- Los tests viven en `tests/` con nombres `test_*.py`.
-- Se prueban al menos:
-  - seguridad de imports
-  - contrato de comandos
-  - loader
-  - usuario / espacio personal
-  - estilo crítico
-- El arranque de MOSh ejecuta la batería; si falla, no inicia el sistema.
-
-Estilo en tests:
-
-- Nombres de test descriptivos: `test_user_command_with_forbidden_import_is_rejected`
-- Asserts claros
-- Sin dependencias de red
+- Viven en `tests/` como `test_*.py`.
+- Arranque de MOSh ejecuta la batería; si falla, no inicia.
+- `test 120` lista ficheros por encima del tope; no tumba el sistema.
+- Sin dependencias de red. Nombres descriptivos.
 
 ---
 
-## 15. Comentarios
+## Comentarios
 - Comentar el porqué, no el qué obvio.
-- Evitar comentarios decorativos o ruido.
-- Si un bloque es complejo, explicar la intención en una o dos líneas.
+- Evitar ruido.
 
 ---
 
-## 16. Formato
+## Formato
 - Indentación: 4 espacios.
-- Evitar líneas extremadamente largas; priorizar legibilidad.
+- Evitar líneas extremadamente largas.
 - Una sentencia lógica por línea en general.
-- Mantener funciones razonablemente cortas.
+- **Tope: 120 líneas por fichero de código del sistema.**
 
-No se impone un formateador automático obligatorio en esta baseline, pero el estilo manual debe ser consistente con esta guía. La validación crítica se hace por tests.
+No se impone formateador automático obligatorio en esta baseline. La validación crítica es por tests.
 
 ---
 
-## 17. Validación automática de esta guía
-Deben existir tests que comprueben, como mínimo:
+## Validación automática de esta guía
+Tests mínimos:
 
 1. Todo comando de sistema tiene `execute` y `help` callables.
-2. `help()` de comandos de sistema devuelve `str`.
-3. Los módulos core principales tienen docstring de módulo.
-4. No aparecen patrones prohibidos graves (`eval`/`exec`) en comandos/core según la política definida.
-5. La seguridad de imports sigue activa.
+2. `help()` devuelve `str`.
+3. Módulos core principales con docstring.
+4. Sin `eval`/`exec` en comandos/core.
+5. Seguridad de imports activa.
+6. Visibilidad del tope 120 (`test 120`).
 
-Si estos tests fallan, el cambio no es aceptable para `main`.
-
----
-
-## 18. Excepciones
-Cualquier excepción a esta guía debe:
-
-1. Estar justificada.
-2. Documentarse.
-3. Actualizar esta guía o la spec correspondiente si deja de ser excepción puntual.
-
-No existen excepciones silenciosas.
+Si fallan, el cambio no es aceptable para `main`.
 
 ---
 
-## 19. Checklist rápido antes de commit
+## Excepciones
+Toda excepción: justificada, documentada, y si deja de ser puntual se actualiza esta guía o la spec. No hay excepciones silenciosas.
+
+---
+
+## Checklist rápido antes de commit
 1. ¿Imports legales?
 2. ¿Contrato execute/help si es comando?
 3. ¿Nombres y docstrings coherentes?
 4. ¿Mensajes de usuario en español?
 5. ¿Tests actualizados/pasan?
 6. ¿He tocado una norma férrea sin actualizar specs?
+7. ¿El .py tiene ≤ 120 líneas?
+8. ¿Integridad coherente si toqué ficheros del repo?
 
-Si algo falla, no se considera terminado.,0
+Si algo falla, no se considera terminado.
+
+---

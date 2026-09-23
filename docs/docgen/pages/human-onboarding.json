@@ -2,9 +2,9 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "human-onboarding",
   "titulo": "Onboarding humano de MetsuOS",
-  "preambulo": "**Versión del documento:** 1.2  \n**Estado:** Guía de entrada  \n**Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md\n\n---",
+  "preambulo": "**Versión del documento:** 1.3  \n**Estado:** Guía de entrada  \n**Documentos relacionados:** README.md, docs/USER_MANUAL.md, docs/ENVIRONMENTS.md, docs/A11Y.md, docs/INCENTIVOS.md, docs/METHODOLOGY.md, docs/DEVELOPER_GUIDE.md\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/human-onboarding/20260916_033021.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Para quién es este documento",
@@ -12,7 +12,7 @@
     },
     {
       "titulo": "Arranque rápido",
-      "cuerpo": "Desde la raíz del clone:\n\n```text\n./install.sh\n./mos2.sh\n```\n\nDentro del shell: `help`, `man`, `docs`, `a11y`, `synccheck`, `exit`.\n\nDetalle de uso cotidiano: docs/USER_MANUAL.md.\n\n---"
+      "cuerpo": "Desde la raíz del clone:\n\n```text\n./install.sh\n./mos2.sh\n```\n\nDentro del shell: `help`, `man`, `docs`, `a11y`, `synccheck`, `test`, `test 120`, `exit`.\n\nLote de edición (cuando MOS no arranca): `./write.sh`.\n\nDetalle de uso cotidiano: docs/USER_MANUAL.md.\n\n---"
     },
     {
       "titulo": "Elige un solo clone",
@@ -28,7 +28,7 @@
     },
     {
       "titulo": "Mapa corto de documentación",
-      "cuerpo": "| Documento | Para qué |\n|-----------|----------|\n| README.md | Visión del repo |\n| docs/USER_MANUAL.md | Uso de MOSh |\n| docs/A11Y.md | Política de accesibilidad |\n| docs/a11y/DECLARACION.md | Declaración de accesibilidad |\n| docs/a11y/informe.md | Última validación A11Y automática |\n| docs/INCENTIVOS.md | Vectores y roles (dirección) |\n| docs/ENVIRONMENTS.md | Plataformas y Poetry |\n| docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |\n| docs/STYLE_GUIDE.md | Cómo se escribe el código |\n| docs/VERSIONING.md | Versiones, tags y Poetry |\n| docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |\n| docs/INTERACTION_REVIEW.md | Cierre de grupo con la IA |\n| docs/plans/ | Planes de campaña |\n| docs/AI_ONBOARDING.md / AGENTS.md | Si colaboras con una IA |\n| docs/specs/ | Requisitos y diseño (ECSS-light) |\n| docs/man/ | Manual extendido por comando |\n\nTrabajo con IA: un paso cada vez; documentos enteros para pegar; si el archivo es largo, cacho 1 reemplaza el fichero y lo demás se pega debajo.\n\n---"
+      "cuerpo": "| Documento | Para qué |\n|-----------|----------|\n| README.md | Visión del repo |\n| docs/USER_MANUAL.md | Uso de MOSh |\n| docs/A11Y.md | Política de accesibilidad |\n| docs/a11y/DECLARACION.md | Declaración de accesibilidad |\n| docs/a11y/informe.md | Última validación A11Y automática |\n| docs/INCENTIVOS.md | Vectores y roles (dirección) |\n| docs/ENVIRONMENTS.md | Plataformas y Poetry |\n| docs/METHODOLOGY.md | Cómo se desarrolla el proyecto |\n| docs/STYLE_GUIDE.md | Cómo se escribe el código |\n| docs/VERSIONING.md | Versiones, tags y Poetry |\n| docs/DEVELOPER_GUIDE.md | Flujo de desarrollo |\n| docs/INTERACTION_REVIEW.md | Cierre de grupo con la IA |\n| docs/plans/ | Planes de campaña |\n| docs/AI_ONBOARDING.md / AGENTS.md | Si colaboras con una IA |\n| docs/IA_WRITE.md | Ritual write / multi |\n| docs/specs/ | Requisitos y diseño (ECSS-light) |\n| docs/man/ | Manual extendido por comando |\n\nComando `docs`: menú por categoría; número abre markdown; `Nh` abre HTML.\n\nTrabajo con IA: un paso cada vez; lote write+generate; si el archivo es largo, cacho 1 reemplaza el fichero y lo demás se pega debajo.\n\n---"
     },
     {
       "titulo": "Qué puedes hacer como usuario",
@@ -36,7 +36,7 @@
     },
     {
       "titulo": "Si algo falla",
-      "cuerpo": "| Síntoma | Qué mirar |\n|---------|-----------|\n| Tests de arranque en rojo | Comando con import ilegal o pytest no instalado en ESE clone |\n| Permission denied con poetry | Git Bash: usar ./mos2.sh (py -m poetry), no Scripts/poetry |\n| install.sh /bin/bash^M | Finales de línea CRLF; convertir scripts a LF |\n| WSL + /mnt/ | Mover el trabajo a un clone en home Linux |\n| Duda de si el remoto es el que cree la IA | Ejecutar synccheck y pegar la salida |\n\n---"
+      "cuerpo": "| Síntoma | Qué mirar |\n|---------|-----------|\n| Tests de arranque en rojo | Comando con import ilegal o pytest no instalado en ESE clone |\n| Integridad en rojo | Contenido distinto del manifiesto; write.sh o MOS_INTEGRIDAD=recargar solo si reconoces el cambio |\n| Permission denied con poetry | Git Bash: usar ./mos2.sh (py -m poetry), no Scripts/poetry |\n| install.sh /bin/bash^M | Finales de línea CRLF; convertir scripts a LF |\n| WSL + /mnt/ | Mover el trabajo a un clone en home Linux |\n| Duda de si el remoto es el que cree la IA | Ejecutar synccheck y pegar la salida |\n\n---"
     },
     {
       "titulo": "Siguiente lectura",

@@ -2,9 +2,9 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "deuda",
   "titulo": "Deuda técnica y campañas futuras previstas",
-  "preambulo": "**Versión del documento:** 1.8\n**Estado:** Inventario\n**Producto:** código LAN/puente/check usable en win, wsl y mac; cierre documental en curso\n**SHA de código de referencia:** f2c512d\n\n---",
+  "preambulo": "**Versión del documento:** 1.9  \n**Estado:** Inventario  \n**Producto:** LAN/puente/check usable; write/multi/integridad/tope 120 en código; cierre documental en curso\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/deuda/20260916_033021.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "Propósito",
@@ -12,35 +12,39 @@
     },
     {
       "titulo": "Lectura de dirección (metsuke.com, 2026-09-11)",
-      "cuerpo": "No es spec. Sirve para no perder el vector.\n\n- En la web pública el lenguaje contextual se llama MCL (MetsuOS Context Language). En esta conversación el humano lo nombra MPL (Metsu Programming Language). Unificar nombre en una sola campaña; hasta entonces: MPL/MCL.\n- MCL/MPL: el contexto es de primera clase (capa / layer). Un mismo comportamiento cambia según entorno, hardware, usuario, temperatura, carga, modo. No un bosque de if sueltos.\n- mosTaskManager + mosRTManager + mosAutomationManager en apps.html: colas, dependencias, tiempo real, automatización. Lo que hay en MOS2 (tareas/hilos) es el germen; no está listo como base de la app de desarrollo.\n- NPL (Napalm) es otra línea (ciencia probabilística). No mezclarla con MPL/MCL en la misma campaña.\n- Skills: cada microtarea es código normal con contrato (execute/help, moslib). La IA solo elige y llama. No genera la acción.\n\n---"
+      "cuerpo": "No es spec. Sirve para no perder el vector.\n\n- En la web pública el lenguaje contextual se llama MCL. En conversación a veces MPL. Unificar nombre en una campaña; hasta entonces: MPL/MCL.\n- El contexto es de primera clase (capa). Un mismo comportamiento cambia según entorno, hardware, usuario, carga, modo.\n- mosTaskManager + mosRTManager + mosAutomationManager: lo de MOS2 (tareas/hilos) es germen.\n- NPL (Napalm) es otra línea. No mezclarla con MPL/MCL en la misma campaña.\n- Skills: cada microtarea es código con contrato. La IA solo elige y llama.\n\n---"
+    },
+    {
+      "titulo": "Hecho en esta línea (no reabrir como deuda ciega)",
+      "cuerpo": "| Ítem | Nota |\n|------|------|\n| `update dev` + `dev publicar` / consolidar | Código; documentar en man update |\n| Integridad dual + write/multi + codecs | Código; ritual en IA_WRITE |\n| Tope 120 + `test 120` | Código |\n| Menú `docs` por categoría + Nh | Código |\n| Locale es_ES al arranque | Código |\n\n---"
     },
     {
       "titulo": "Deuda abierta",
-      "cuerpo": "| Ítem | Destino |\n|------|---------|\n| Rama habitual de pruebas (p. ej. devtest) y `update` con parámetro de rama/origen, no solo origin/main | Calidad / comando update |\n| `update` debe dejar el código nuevo cargado sin depender de que el humano recuerde salir y entrar de MOSh | Calidad / update |\n| Worker de tareas solo vive con la sesión MOSh | Campaña hilos/tareas |\n| Laboratorio de lectores de pantalla | Futura |\n| Conteo fino passed/failed en a11y.py | Calidad |\n| VERSIONING.md docs.N | Este cierre docs |\n| Geo / DepManager | Campaña propia |\n| Dual Python + C | Futura (encaja con backends MCL) |\n| MOS2 sin Python 3 | Futura |\n| Comillas en la línea de MOSh | Calidad |\n| Formatos de salida en pantalla (tablas + párrafos) | Campaña propia |\n| Alias de sistema `ia` para `iarouter` | Calidad / iarouter |\n| Alias de usuario (crear, listar, editar, borrar) | Campaña propia |\n| Documento de reglas éticas de enfrentamiento cibernético | Campaña de seguridad futura |\n| Inventario de red ofensivo / laboratorio defensivo | Tras ese documento |\n| WSL2 no usa la misma ruta que Mac hacia la IP LAN de Windows; documentar mirrored networking | ENVIRONMENTS + man iarouter |\n| La IA no debe leer raw `.../main/archivo` (CDN miente). Obligatorio SHA o `synccheck` | AI_ONBOARDING |\n| Política jan_url no debe guardar la IP LAN propia ni el puente local (bucle) | Hecho en código; falta test |\n| GPT4All no debe resolverse por el puerto 17337 | Hecho en código; falta test |\n| Specs ESA, USER_MANUAL y README desfasados respecto a check/puente/WSL | Este cierre documental |\n| App de desarrollo (08) no se abre hasta cerrar docs + campaña de uso de tareas/hilos + atomización/skills + arranque MPL/MCL | Orden férreo |\n\n---"
+      "cuerpo": "| Ítem | Destino |\n|------|---------|\n| `update` recarga módulos sin exit | Calidad / update |\n| Worker de tareas solo vive con la sesión MOSh | Campaña hilos |\n| Laboratorio de lectores de pantalla | Futura |\n| Conteo fino passed/failed en a11y.py | Calidad |\n| Geo / DepManager | Campaña propia |\n| Dual Python + C | Futura |\n| MOS2 sin Python 3 | Futura |\n| Comillas en la línea de MOSh | Calidad |\n| Formatos de salida (tablas + párrafos) | Campaña |\n| Alias sistema `ia` → iarouter | Calidad |\n| Alias de usuario CRUD | Campaña |\n| Reglas éticas de enfrentamiento cibernético | Seguridad futura |\n| Inventario ofensivo / lab defensivo | Tras ese documento |\n| WSL2 vs IP LAN Windows (mirrored networking) | ENVIRONMENTS + man |\n| Política jan_url no guardar IP propia | Código; falta test |\n| GPT4All no por 17337 | Código; falta test |\n| Specs ESA/README aún desfasados | Este cierre (specs + root) |\n| App 08 bloqueada hasta docs + tareas + skills + MCL | Orden férreo |\n| Chip UI `:s` en el producto Grok | Fuera de repo |\n\n---"
     },
     {
-      "titulo": "Orden de campañas a partir de ahora (férreo)",
-      "cuerpo": "| Orden | Id | Tema | Estado |\n|-------|----|------|--------|\n| 0 | — | Cierre documental (specs ESA, man, manual, README, CHANGELOG, onboarding) | En curso, 20 pasos |\n| 1 | — | Usar de verdad tareas e hilos ya existentes: pruebas, fallos, arreglo mínimo para que el worker no sea de usar y tirar | Prevista al cerrar docs |\n| 2 | — | Atomización máxima: cada microtarea es código con contrato; la IA solo despacha llamadas (skills). Sin esto no hay app de desarrollo | Prevista; previa a 08 |\n| 3 | — | MPL/MCL: lenguaje y runtime de contexto (capas). Incluye política automática de carga según temperatura y recursos en hilos RT | Prevista; previa a 08 |\n| 4 | 08 | App de desarrollo | Bloqueada hasta 0–3 |\n| 5 | 09 | RGPD con la suite | Tras 08 |\n| 6 | 10 | Malla de instancias | Tras 09 |\n| — | 05 | Higiene, A11Y | Cerrada |\n| — | 06 | INCENTIVOS | Cerrada en alcance |\n| — | 07 | Apps, tareas, iarouter base | Cerrada en 0.2.7 (germen) |\n| — | mini | iarouter modelos/claves/LAN/share/puente | Código usable; docs en paso 0 |\n\nNo se “empieza la app un poco”. Si 1–3 no están, 08 reproduce este chat dentro de MOS2.\n\n---"
+      "titulo": "Orden de campañas (férreo)",
+      "cuerpo": "| Orden | Tema | Estado |\n|-------|------|--------|\n| 0 | Cierre documental | En curso (pages casi; faltan root + specs + mans) |\n| 1 | Usar tareas e hilos de verdad | Prevista al cerrar docs |\n| 2 | Atomización / skills | Prevista; previa a 08 |\n| 3 | MPL/MCL | Prevista; previa a 08 |\n| 4 | App de desarrollo (08) | Bloqueada hasta 0–3 |\n| 5 | RGPD con la suite | Tras 08 |\n| 6 | Malla | Tras 09 |\n\nNo se empieza la app “un poco”.\n\n---"
     },
     {
-      "titulo": "Campaña prevista: tareas e hilos (post-docs)",
-      "cuerpo": "Objetivo: que `tareas` y `hilos` dejen de ser código de escaparate.\n\n- Ejecutar en win, wsl y mac listas manuales y automáticas reales.\n- Documentar qué se rompe (worker atado a la sesión MOSh, sin persistencia de pila, sin tele, sin root vs no-root usable).\n- Arreglo mínimo para poder vivir con ellas días, no un demo.\n- Hilos RT: leer temperatura y recursos del anfitrión (solo datos lícitos del SO) y **bajar o pausar** trabajo pesado si la máquina se calienta o se queda sin aire. Eso es COP aplicada: contexto `alta_temperatura` / `poca_cpu` activa otra capa de planificación. No hace falta el compilador MPL todavía; sí hace falta el sensor + la política en el planificador actual.\n- Criterio de salida: un humano puede encargar una tarea manual, ver un hilo automático y no perder el trabajo al salir de MOSh, o queda escrito por qué aún no y qué se parchea antes de skills."
+      "titulo": "Campaña prevista: tareas e hilos",
+      "cuerpo": "Objetivo: que dejen de ser escaparate. Worker persistente o documentar por qué no. Sensor térmico/recursos lícito del SO. Criterio: encargar tarea, ver hilo, no perder trabajo al salir, o escrito por qué.\n\n---"
     },
     {
-      "titulo": "Campaña prevista: atomización y skills (previa a 08)",
-      "cuerpo": "- Toda campaña futura se parte en microtareas que quepan en un comando o función moslib con `execute`/`help`.\n- Cada skill es código revisable, testeable, con A11Y y SEC. La IA no implementa la skill en el momento; solo la invoca.\n- Equivale a no dejar que la IA “escriba el commit a ciegas”: el humano autoriza; el código hace el gesto.\n- Sin catálogo de skills no se construye la app de desarrollo."
+      "titulo": "Campaña prevista: atomización y skills",
+      "cuerpo": "Microtareas = comando o función con execute/help. La IA no implementa la skill al vuelo; la invoca. Sin catálogo no hay app 08.\n\n---"
     },
     {
-      "titulo": "Campaña prevista: MPL/MCL (previa a 08)",
-      "cuerpo": "- Nombre a unificar con el humano (MPL vs MCL de metsuke.com).\n- Spec + plan propios. No meter un compilador entero en la misma tanda que el arreglo de hilos.\n- Dirección ya conocida: layers, activación por contexto, backends (Python primero; C después encaja con la deuda dual).\n- Primer contexto operativo a honrar en hilos: térmico y de recursos. Luego entorno (win/wsl/mac/nix), luego proyecto/prioridad.\n\n---"
+      "titulo": "Campaña prevista: MPL/MCL",
+      "cuerpo": "Unificar nombre. Spec + plan propios. Layers y activación por contexto. Primer contexto: térmico y recursos. Luego entorno y proyecto.\n\n---"
     },
     {
       "titulo": "Mini iarouter (estado)",
-      "cuerpo": "| Ítem | Estado |\n|------|--------|\n| M0–M7 código (modelos, claves, LAN, share, publicar, puente, check) | Hecho y probado win+wsl+mac |\n| M8 spec/man/USER_MANUAL/README/CHANGELOG/ESA | Este cierre (paso 0) |\n\nFlujo que debe quedar escrito:\n\n- Quien comparte (win con Jan): `iarouter puente on`, `iarouter publicar`, MOSh abierto, red Privada.\n- Quien consume (mac o wsl): `iarouter check`, guardar solo URL ajena, `iarouter usar jan`, `iarouter preguntar`.\n- Quien ya tiene Jan local: 127.0.0.1, nunca la IP LAN propia ni :17337 de sí mismo.\n\n---"
+      "cuerpo": "Código M0–M7 probado win+wsl+mac. Docs de spec/man siguen en el cierre.\n\nQuien comparte: puente on, publicar, MOSh abierto, red privada. Quien consume: check, URL ajena, usar jan, preguntar. Jan local: 127.0.0.1, nunca IP LAN propia.\n\n---"
     },
     {
       "titulo": "Cómo se actualiza",
-      "cuerpo": "Al cierre: hecho / se mantiene / se mueve a docs/plans/."
+      "cuerpo": "Al cierre: hecho / se mantiene / se mueve a docs/plans/. Fuente: este JSON + `docgen generate deuda`."
     }
   ]
 }

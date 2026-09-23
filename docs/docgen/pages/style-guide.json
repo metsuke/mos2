@@ -2,85 +2,85 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "style-guide",
   "titulo": "Guía de estilo de programación de MetsuOS (MOS2)",
-  "preambulo": "**Versión del documento:** 1.0  \n**Baseline de referencia:** v0.2.1  \n**Estado:** Normativo  \n**Documento relacionado:** docs/METHODOLOGY.md\n\n---",
+  "preambulo": "**Versión del documento:** 1.1  \n**Baseline de referencia:** v0.2.7 / árbol 0.2.8  \n**Estado:** Normativo  \n**Documento relacionado:** docs/METHODOLOGY.md, docs/AI_ONBOARDING.md\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/docs/docgen/backup/style-guide/20260916_033021.md",
+  "origen": "edicion-json",
   "secciones": [
     {
-      "titulo": "1. Propósito",
+      "titulo": "Propósito",
       "cuerpo": "Esta guía unifica la forma de escribir código en MetsuOS.\n\nObjetivos:\n\n- Código legible y predecible.\n- Mismo estilo en núcleo (`moslib/core`) y comandos (`moslib/commands`).\n- Compatibilidad con las normas férreas del sistema (seguridad, contrato de comandos, mosLib).\n- Validación automática mediante tests.\n\nSi el código contradice esta guía, se corrige el código o se actualiza esta guía de forma explícita.\n\n---"
     },
     {
-      "titulo": "2. Alcance",
+      "titulo": "Alcance",
       "cuerpo": "Aplica a:\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Aplica |\n|---------|---------|---------|--------|\n| moslib/ | core/ | *.py | Sí |\n| moslib/ | commands/ | *.py | Sí |\n| rootfs/ | bin/ | mos.py | Sí |\n| tests/ | | test_*.py | Sí, con matices de tests |\n| docs/ | | | No (es documentación) |\n\nLos comandos de usuario en `rootfs/home/<usuario>/.mos/commands/` también deben respetar el contrato de comando y la política de seguridad de imports. El resto de reglas de estilo se recomiendan, pero la seguridad y el contrato son obligatorios.\n\n---"
     },
     {
-      "titulo": "3. Principios generales",
-      "cuerpo": "1. Claridad antes que cleverness.\n2. Una responsabilidad por función/módulo.\n3. Fallar de forma explícita y con mensaje útil.\n4. No romper interfaces públicas sin actualizar specs y tests.\n5. Todo comando del sistema es un módulo simple con contrato fijo.\n\n---"
+      "titulo": "Principios generales",
+      "cuerpo": "1. Claridad antes que cleverness.\n2. Una responsabilidad por función/módulo.\n3. Fallar de forma explícita y con mensaje útil.\n4. No romper interfaces públicas sin actualizar specs y tests.\n5. Todo comando del sistema es un módulo simple con contrato fijo.\n6. Ningún fichero de código del sistema supera 120 líneas; si lo hace, se parte.\n\n---"
     },
     {
-      "titulo": "4. Lenguaje y nombres",
-      "cuerpo": "### 4.1 Idioma\n\n- Identificadores de código (funciones, variables, módulos): **inglés**, `snake_case`.\n- Docstrings orientadas a desarrollador: preferible **español** claro y breve.\n- Mensajes mostrados al usuario en el shell: **español**.\n- Nombres de comandos de sistema: **inglés** corto (`help`, `update`, `version`).\n- Comandos de usuario: archivo `user_<nombre>.py`.\n\n### 4.2 Naming\n\n| Elemento | Convención | Ejemplo |\n|----------|------------|---------|\n| Módulos / archivos | snake_case | cmd_loader.py |\n| Funciones y métodos | snake_case | get_username |\n| Funciones internas | _snake_case | _run_startup_tests |\n| Constantes | UPPER_SNAKE_CASE | STDLIB_MODULES |\n| Clases | PascalCase | CommandManager, MOSh |\n| Variables locales | snake_case | project_root |\n\nNombres descriptivos. Evitar abreviaturas oscuras.\n\n---"
+      "titulo": "Lenguaje y nombres",
+      "cuerpo": "### Idioma\n\n- Identificadores de código (funciones, variables, módulos): **inglés**, `snake_case`.\n- Docstrings orientadas a desarrollador: preferible **español** claro y breve.\n- Mensajes mostrados al usuario en el shell: **español**.\n- Nombres de comandos de sistema: **inglés** corto (`help`, `update`, `version`).\n- Comandos de usuario: archivo `user_<nombre>.py`.\n\n### Naming\n\n| Elemento | Convención | Ejemplo |\n|----------|------------|---------|\n| Módulos / archivos | snake_case | cmd_loader.py |\n| Funciones y métodos | snake_case | get_username |\n| Funciones internas | _snake_case | _run_startup_tests |\n| Constantes | UPPER_SNAKE_CASE | STDLIB_MODULES |\n| Clases | PascalCase | CommandManager, MOSh |\n| Variables locales | snake_case | project_root |\n\nNombres descriptivos. Evitar abreviaturas oscuras.\n\n---"
     },
     {
-      "titulo": "5. Imports",
-      "cuerpo": "### 5.1 Regla de seguridad (obligatoria en comandos)\n\nSolo se permiten:\n\n- Biblioteca estándar de Python\n- `moslib` y submódulos\n\nCualquier otro import está prohibido y debe ser rechazado por la validación AST.\n\n### 5.2 Orden de imports\n\n1. `__future__` si aplica\n2. Stdlib\n3. `moslib...`\n4. Línea en blanco entre grupos si mejora legibilidad\n\nEjemplo:\n\nfrom __future__ import annotations\n\nimport os\nimport sys\nfrom pathlib import Path\n\nfrom moslib.core.security import validate_command_file\n\n### 5.3 Prohibido\n\n- Imports de terceros en comandos y en código de ejecución de comandos\n- `from module import *`\n- Imports relativos en comandos de usuario (`from . import ...`)\n\n---"
+      "titulo": "Imports",
+      "cuerpo": "### Regla de seguridad (obligatoria en comandos)\n\nSolo se permiten:\n\n- Biblioteca estándar de Python\n- `moslib` y submódulos\n\nCualquier otro import está prohibido y debe ser rechazado por la validación AST.\n\n### Orden de imports\n\n1. `__future__` si aplica\n2. Stdlib\n3. `moslib...`\n4. Línea en blanco entre grupos si mejora legibilidad\n\n### Prohibido\n\n- Imports de terceros en comandos y en código de ejecución de comandos\n- `from module import *`\n- Imports relativos en comandos de usuario (`from . import ...`)\n\n---"
     },
     {
-      "titulo": "6. Tipado",
-      "cuerpo": "- Anotar firmas de funciones públicas.\n- Usar `pathlib.Path` para rutas.\n- Preferir `str | Path` cuando se acepten ambos.\n- Se permite `from __future__ import annotations`.\n\nEjemplo:\n\ndef validate_command_file(file_path: str | Path) -> tuple[bool, list[str]]:\n    ...\n\n---"
+      "titulo": "Tipado",
+      "cuerpo": "- Anotar firmas de funciones públicas.\n- Usar `pathlib.Path` para rutas.\n- Preferir `str | Path` cuando se acepten ambos.\n- Se permite `from __future__ import annotations`.\n\n---"
     },
     {
-      "titulo": "7. Docstrings",
-      "cuerpo": "### 7.1 Módulo\n\nTodo módulo de `moslib/core` y `moslib/commands` debe tener docstring de módulo describiendo su propósito.\n\n### 7.2 Funciones públicas\n\nToda función pública relevante debe tener docstring breve:\n\n- Qué hace\n- Parámetros importantes (si no son obvios)\n- Valor de retorno (si aplica)\n\n### 7.3 Comandos\n\nAdemás del docstring de módulo, todo comando debe implementar:\n\ndef help() -> str:\n    ...\n\nque devuelve el texto de ayuda de usuario.\n\n---"
+      "titulo": "Docstrings",
+      "cuerpo": "Todo módulo de `moslib/core` y `moslib/commands` debe tener docstring de módulo.\nToda función pública relevante: qué hace, parámetros no obvios, retorno.\nTodo comando implementa `help() -> str`.\n\n---"
     },
     {
-      "titulo": "8. Contrato de comandos (obligatorio)",
-      "cuerpo": "Todo comando de sistema y de usuario debe exponer:\n\ndef execute(args):\n    ...\n\ndef help():\n    return \"...\"\n\nReglas:\n\n- `execute` recibe una lista de argumentos ya partidos (`args`).\n- `help()` devuelve `str`.\n- No requiere registrar el comando en ningún índice manual: el cargador descubre archivos `.py`.\n- Los comandos de usuario viven en archivos `user_*.py`.\n- Un comando de usuario nunca puede sobrescribir un comando de sistema.\n\n---"
+      "titulo": "Contrato de comandos (obligatorio)",
+      "cuerpo": "Todo comando de sistema y de usuario debe exponer `execute(args)` y `help() -> str`.\n\n- `execute` recibe argumentos ya partidos.\n- El cargador descubre archivos `.py`; no hay índice manual de comandos.\n- Usuario: `user_*.py`. Nunca pisa un comando de sistema.\n- Helpers de un comando no son comandos: no viven en `commands/` si no tienen execute/help.\n\n---"
     },
     {
-      "titulo": "9. Rutas y ficheros",
-      "cuerpo": "- Usar `pathlib.Path` en lugar de concatenar strings a mano.\n- Resolver la raíz del proyecto de forma relativa al archivo actual cuando sea necesario.\n- No asumir un cwd concreto salvo que el diseño lo documente.\n- El espacio de usuario está en:\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción |\n|---------|---------|---------|---------|-------------|\n| rootfs/ | home/ | `<usuario>/` | .mos/ | Espacio personal |\n\n---"
+      "titulo": "Rutas y ficheros",
+      "cuerpo": "- Usar `pathlib.Path`.\n- No asumir un cwd concreto salvo que el diseño lo documente.\n\n| Nivel 1 | Nivel 2 | Nivel 3 | Nivel 4 | Descripción |\n|---------|---------|---------|---------|-------------|\n| rootfs/ | home/ | `<usuario>/` | .mos/ | Espacio personal |\n\n---"
     },
     {
-      "titulo": "10. Errores y salida",
-      "cuerpo": "- Mensajes de error comprensibles en español.\n- Prefijos útiles cuando ayuden: `[SEGURIDAD]`, `[MetsuOS]`, `[update]`.\n- No silenciar excepciones genéricas sin dejar rastro.\n- En comandos, si una operación crítica falla, informar y salir con código distinto de cero cuando corresponda (`sys.exit`).\n\n---"
+      "titulo": "Errores y salida",
+      "cuerpo": "- Mensajes de error en español.\n- Prefijos útiles: `[SEGURIDAD]`, `[MetsuOS]`, `[update]`, `[integridad]`, `[multi]`, `[docgen]`.\n- No silenciar excepciones genéricas.\n- En comandos, fallo crítico: informar y `sys.exit` distinto de cero cuando corresponda.\n\n---"
     },
     {
-      "titulo": "11. Seguridad de código",
-      "cuerpo": "Prohibido en comandos y en rutas de ejecución de comandos:\n\n- `eval(...)`\n- `exec(...)`\n- Ejecutar código arbitrario recibido del usuario\n- Cargar módulos fuera de la política de imports\n- Bypass de la validación de seguridad\n\nLa validación AST de imports es parte del sistema, no un adorno opcional.\n\n---"
+      "titulo": "Seguridad de código",
+      "cuerpo": "Prohibido en comandos y rutas de ejecución:\n\n- `eval(...)` / `exec(...)`\n- Ejecutar código arbitrario recibido del usuario\n- Cargar módulos fuera de la política de imports\n- Bypass de la validación de seguridad\n\nLa validación AST de imports es parte del sistema.\n\n---"
     },
     {
-      "titulo": "12. Estructura recomendada de un comando",
-      "cuerpo": "Orden típico de un archivo en `moslib/commands/`:\n\n1. Docstring de módulo\n2. Imports\n3. Helpers privados (`_...`) si hacen falta\n4. `execute(args)`\n5. `help()`\n\nEjemplo mínimo:\n\ndef execute(args):\n    print(\"hola\")\n\ndef help():\n    return \"Uso: hola - Saluda\"\n\n---"
+      "titulo": "Estructura recomendada de un comando",
+      "cuerpo": "1. Docstring de módulo\n2. Imports\n3. Helpers privados (`_...`)\n4. `execute(args)`\n5. `help()`\n6. `sinopsis()` si el man se pinta desde código\n\nSi el archivo supera 120 líneas, partir en submódulos core; el `.py` de `commands/` queda como fachada con execute/help.\n\n---"
     },
     {
-      "titulo": "13. Estructura recomendada de un módulo core",
-      "cuerpo": "1. Docstring de módulo\n2. Imports\n3. Constantes\n4. Funciones/clases públicas\n5. Helpers privados\n\nLas clases públicas (`CommandManager`, `MOSh`) mantienen métodos claros y responsabilidades limitadas.\n\n---"
+      "titulo": "Estructura recomendada de un módulo core",
+      "cuerpo": "1. Docstring de módulo\n2. Imports\n3. Constantes\n4. Funciones/clases públicas\n5. Helpers privados\n\nEvitar imports circulares. Fachada corta + mapa/helpers en ficheros hermanos.\n\n---"
     },
     {
-      "titulo": "14. Tests",
-      "cuerpo": "- Todo cambio de comportamiento relevante lleva test.\n- Los tests viven en `tests/` con nombres `test_*.py`.\n- Se prueban al menos:\n  - seguridad de imports\n  - contrato de comandos\n  - loader\n  - usuario / espacio personal\n  - estilo crítico\n- El arranque de MOSh ejecuta la batería; si falla, no inicia el sistema.\n\nEstilo en tests:\n\n- Nombres de test descriptivos: `test_user_command_with_forbidden_import_is_rejected`\n- Asserts claros\n- Sin dependencias de red\n\n---"
+      "titulo": "Tests",
+      "cuerpo": "- Todo cambio de comportamiento relevante lleva test.\n- Viven en `tests/` como `test_*.py`.\n- Arranque de MOSh ejecuta la batería; si falla, no inicia.\n- `test 120` lista ficheros por encima del tope; no tumba el sistema.\n- Sin dependencias de red. Nombres descriptivos.\n\n---"
     },
     {
-      "titulo": "15. Comentarios",
-      "cuerpo": "- Comentar el porqué, no el qué obvio.\n- Evitar comentarios decorativos o ruido.\n- Si un bloque es complejo, explicar la intención en una o dos líneas.\n\n---"
+      "titulo": "Comentarios",
+      "cuerpo": "- Comentar el porqué, no el qué obvio.\n- Evitar ruido.\n\n---"
     },
     {
-      "titulo": "16. Formato",
-      "cuerpo": "- Indentación: 4 espacios.\n- Evitar líneas extremadamente largas; priorizar legibilidad.\n- Una sentencia lógica por línea en general.\n- Mantener funciones razonablemente cortas.\n\nNo se impone un formateador automático obligatorio en esta baseline, pero el estilo manual debe ser consistente con esta guía. La validación crítica se hace por tests.\n\n---"
+      "titulo": "Formato",
+      "cuerpo": "- Indentación: 4 espacios.\n- Evitar líneas extremadamente largas.\n- Una sentencia lógica por línea en general.\n- **Tope: 120 líneas por fichero de código del sistema.**\n\nNo se impone formateador automático obligatorio en esta baseline. La validación crítica es por tests.\n\n---"
     },
     {
-      "titulo": "17. Validación automática de esta guía",
-      "cuerpo": "Deben existir tests que comprueben, como mínimo:\n\n1. Todo comando de sistema tiene `execute` y `help` callables.\n2. `help()` de comandos de sistema devuelve `str`.\n3. Los módulos core principales tienen docstring de módulo.\n4. No aparecen patrones prohibidos graves (`eval`/`exec`) en comandos/core según la política definida.\n5. La seguridad de imports sigue activa.\n\nSi estos tests fallan, el cambio no es aceptable para `main`.\n\n---"
+      "titulo": "Validación automática de esta guía",
+      "cuerpo": "Tests mínimos:\n\n1. Todo comando de sistema tiene `execute` y `help` callables.\n2. `help()` devuelve `str`.\n3. Módulos core principales con docstring.\n4. Sin `eval`/`exec` en comandos/core.\n5. Seguridad de imports activa.\n6. Visibilidad del tope 120 (`test 120`).\n\nSi fallan, el cambio no es aceptable para `main`.\n\n---"
     },
     {
-      "titulo": "18. Excepciones",
-      "cuerpo": "Cualquier excepción a esta guía debe:\n\n1. Estar justificada.\n2. Documentarse.\n3. Actualizar esta guía o la spec correspondiente si deja de ser excepción puntual.\n\nNo existen excepciones silenciosas.\n\n---"
+      "titulo": "Excepciones",
+      "cuerpo": "Toda excepción: justificada, documentada, y si deja de ser puntual se actualiza esta guía o la spec. No hay excepciones silenciosas.\n\n---"
     },
     {
-      "titulo": "19. Checklist rápido antes de commit",
-      "cuerpo": "1. ¿Imports legales?\n2. ¿Contrato execute/help si es comando?\n3. ¿Nombres y docstrings coherentes?\n4. ¿Mensajes de usuario en español?\n5. ¿Tests actualizados/pasan?\n6. ¿He tocado una norma férrea sin actualizar specs?\n\nSi algo falla, no se considera terminado.,0"
+      "titulo": "Checklist rápido antes de commit",
+      "cuerpo": "1. ¿Imports legales?\n2. ¿Contrato execute/help si es comando?\n3. ¿Nombres y docstrings coherentes?\n4. ¿Mensajes de usuario en español?\n5. ¿Tests actualizados/pasan?\n6. ¿He tocado una norma férrea sin actualizar specs?\n7. ¿El .py tiene ≤ 120 líneas?\n8. ¿Integridad coherente si toqué ficheros del repo?\n\nSi algo falla, no se considera terminado.\n\n---"
     }
   ]
 }

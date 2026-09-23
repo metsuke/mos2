@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>developer-guide</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
 <h1>Guía del desarrollador de MetsuOS</h1>
-<p><strong>Versión del documento:</strong> 1.2   <strong>Estado:</strong> Normativo de proceso   <strong>Documentos relacionados:</strong> docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/specs/00-OVERVIEW.md, docs/plans/README.md</p>
+<p><strong>Versión del documento:</strong> 1.4   <strong>Estado:</strong> Normativo de proceso   <strong>Documentos relacionados:</strong> docs/METHODOLOGY.md, docs/STYLE_GUIDE.md, docs/VERSIONING.md, docs/A11Y.md, CHANGELOG.md, docs/ENVIRONMENTS.md, docs/AI_ONBOARDING.md, docs/IA_WRITE.md, docs/specs/00-OVERVIEW.md, docs/plans/README.md</p>
 <hr>
 <h2>Propósito</h2>
 <p>Cómo contribuir código y documentación sin romper normas férreas ni desincronizar versiones.</p>
@@ -12,48 +12,47 @@
 <p>Instalación:</p>
 <pre><code>./install.sh
 ./mos2.sh</code></pre>
+<p>Edición con IA: <code>multi</code> dentro de MOS o <code>./write.sh</code> fuera.</p>
 <hr>
 <h2>Contexto de sesión</h2>
 <pre><code>Contexto: &lt;sistema&gt; / &lt;entorno&gt; / &lt;rol&gt;</code></pre>
 <p>Detalle: docs/ENVIRONMENTS.md.</p>
 <hr>
 <h2>Flujo de una feature</h2>
-<p>1. git checkout main &amp;&amp; git pull origin main 2. git checkout -b feature/nombre-descriptivo 3. Acordar plan por fases (humano + IA); si es campaña, docs/plans/ 4. Una fase cada vez 5. Tests / arranque 6. Commit atómico 7. Merge a main al cerrar el conjunto 8. Aplicar docs/VERSIONING.md y actualizar CHANGELOG.md</p>
+<p>1. git checkout main &amp;&amp; git pull origin main 2. Rama feature (comando <code>dev</code> / nunca trabajar sobre main) 3. Acordar plan por fases; si es campaña, docs/plans/ 4. Una fase cada vez 5. Tests / arranque (<code>test</code>, <code>test 120</code>) 6. Commit atómico 7. Consolidar rama y volcar a main al cerrar el conjunto 8. Aplicar docs/VERSIONING.md y actualizar CHANGELOG.md</p>
 <hr>
 <h2>Dónde tocar qué</h2>
-<table><thead><tr><th>Si necesitas...</th><th>Toca principalmente...</th><th>No olvides...</th></tr></thead><tbody><tr><td>Prompt o REPL</td><td>moslib/core/shell.py</td><td>tests de arranque</td></tr><tr><td>Resolución de comandos</td><td>moslib/core/cmd_loader.py</td><td>ICD + tests loader</td></tr><tr><td>Política de imports</td><td>moslib/core/security.py</td><td>SEC + tests security</td></tr><tr><td>Homes / migración</td><td>moslib/core/user.py</td><td>USER + tests user</td></tr><tr><td>Comando de sistema</td><td>moslib/commands/nombre.py</td><td>contrato, man, help, tests</td></tr><tr><td>Comando de usuario</td><td>rootfs/home/usuario/.mos/commands/user_*.py</td><td>prefijo user_ y seguridad</td></tr><tr><td>Poetry / WSL / Git Bash</td><td>mos2.sh, install.sh</td><td>ENVIRONMENTS</td></tr><tr><td>Accesibilidad</td><td>docs/A11Y.md, docs/a11y/, tests a11y</td><td>declaración e informe</td></tr><tr><td>Normas de producto</td><td>docs/specs/</td><td>luego código</td></tr><tr><td>Relato de una release</td><td>CHANGELOG.md</td><td>VERSIONING.md</td></tr><tr><td>Plan de campaña</td><td>docs/plans/</td><td>README de planes</td></tr></tbody></table>
+<table><thead><tr><th>Si necesitas...</th><th>Toca principalmente...</th><th>No olvides...</th></tr></thead><tbody><tr><td>Prompt o REPL</td><td>moslib/core/shell.py y hermanos</td><td>tests de arranque, historial</td></tr><tr><td>Resolución de comandos</td><td>moslib/core/cmd_loader.py</td><td>ICD + tests loader</td></tr><tr><td>Política de imports</td><td>moslib/core/security.py</td><td>SEC + tests security</td></tr><tr><td>Homes / migración</td><td>moslib/core/user.py</td><td>USER + tests user</td></tr><tr><td>Integridad</td><td>moslib/core/integridad*.py</td><td>sello + tests integridad</td></tr><tr><td>Docgen</td><td>moslib/core/docgen*.py + docs/docgen/</td><td>index.json, generate</td></tr><tr><td>Comando de sistema</td><td>moslib/commands/nombre.py</td><td>contrato, man, help, ≤120 líneas</td></tr><tr><td>Comando de usuario</td><td>rootfs/home/usuario/.mos/commands/user_*.py</td><td>prefijo user_ y seguridad</td></tr><tr><td>Poetry / WSL / Git Bash</td><td>mos2.sh, install.sh</td><td>ENVIRONMENTS</td></tr><tr><td>Accesibilidad</td><td>docs/A11Y.md, docs/a11y/, tests a11y</td><td>declaración e informe</td></tr><tr><td>Normas de producto</td><td>docs/specs/ vía JSON docgen</td><td>luego código</td></tr><tr><td>Relato de una release</td><td>CHANGELOG.md</td><td>VERSIONING.md</td></tr><tr><td>Plan de campaña</td><td>docs/plans/</td><td>README de planes</td></tr></tbody></table>
 <hr>
 <h2>Contrato de comando</h2>
 <p>Todo comando de sistema o de usuario:</p>
-<ul><li>execute(args) callable</li><li>help() que devuelve str no vacío</li><li>solo imports de stdlib y moslib</li><li>nombre de sistema = archivo sin .py</li><li>usuario: archivo user_*.py</li></ul>
+<ul><li>execute(args) callable</li><li>help() que devuelve str no vacío</li><li>solo imports de stdlib y moslib</li><li>nombre de sistema = archivo sin .py</li><li>usuario: archivo user_*.py</li><li>fichero ≤ 120 líneas; si no, fachada + submódulos en core</li></ul>
 <hr>
 <h2>Tests</h2>
 <p>Obligatorios en desarrollo y en producción (arranque de MOSh).</p>
-<pre><code>./mos2.sh</code></pre>
-<p>Dentro del shell:</p>
-<pre><code>test</code></pre>
-<p>Si Poetry está operativo en el PATH:</p>
+<pre><code>./mos2.sh
+test
+test 120</code></pre>
+<p>Si Poetry está operativo:</p>
 <pre><code>poetry run pytest</code></pre>
-<p>Si fallan los tests de arranque, el sistema no abre sesión.</p>
-<p>En 0.2.5: <code>a11y</code> solo corre tests de accesibilidad y regenera docs/a11y/informe.md.</p>
+<p>Si fallan los tests de arranque, el sistema no abre sesión. <code>test 120</code> lista tope; no tumba el sistema.</p>
 <hr>
 <h2>Estilo</h2>
-<p>Normas en docs/STYLE_GUIDE.md. Hay tests que comprueban contrato y patrones prohibidos (eval/exec, etc.).</p>
+<p>Normas en docs/STYLE_GUIDE.md. Tests de contrato y patrones prohibidos. Tope 120 líneas.</p>
 <hr>
 <h2>Versionado (resumen)</h2>
 <table><thead><tr><th>Cambio</th><th>pyproject.toml</th><th>Tag</th><th>CHANGELOG</th></tr></thead><tbody><tr><td>Runtime / scripts / comandos / seguridad</td><td>Bump X.Y.Z</td><td>vX.Y.Z</td><td>Entrada de producto</td></tr><tr><td>Solo docs / onboarding</td><td>No bump</td><td>vX.Y.Z-docs o vX.Y.Z-docs.N</td><td>Entrada -docs</td></tr></tbody></table>
-<p>Al cerrar producto: README, 07-SRelD y CHANGELOG si aplica.</p>
 <p>Detalle: docs/VERSIONING.md.</p>
 <hr>
 <h2>Documentación al cambiar algo</h2>
-<ul><li>Encabezados sin numeración</li><li>Directorios en tablas (una columna por nivel)</li><li>Comandos de sistema: columna Tipo A–Z y comandos A–Z dentro del tipo</li><li>Página man para comando de sistema nuevo</li><li>Si el doc o el código nuevo es más corto que el del repo, verificar que no se pierde contenido</li><li>Entregar archivos completos listos para pegar; un paso cada vez</li><li>Cacho 1 = sustituye todo el fichero; cachos siguientes = pegar debajo</li><li>Breadcrumb de campaña en cada paso de trabajo con IA</li></ul>
+<ul><li>Fuente: JSON en docs/docgen/. Pintar con <code>docgen generate &lt;id&gt;</code> en el mismo lote.</li><li>Encabezados sin numeración</li><li>Directorios en tablas</li><li>Página man para comando nuevo</li><li>Si el doc o el código nuevo es más corto, avisar</li><li>Lote write + hash + payload + punto + generate; <code>:e</code> cierra</li><li>Cacho 1 sustituye el fichero; siguientes debajo</li><li>Breadcrumb: tarea x/y + %; bloque; campaña; planeado</li></ul>
 <hr>
 <h2>Trabajo con IA</h2>
-<p>La IA debe seguir docs/AI_ONBOARDING.md y AGENTS.md:</p>
-<ul><li>un archivo por bloque copiable</li><li>un paso cada vez</li><li>leer el repo antes de afirmar el estado de un fichero</li><li>no inventar features</li><li>no resumir sin consultar</li><li>Git, no el forge</li></ul>
+<p>Seguir docs/AI_ONBOARDING.md, AGENTS.md y docs/IA_WRITE.md.</p>
+<ul><li>un JSON/código por lote write</li><li>un paso cada vez (<code>:s</code> = siguiente)</li><li>leer el repo por SHA antes de afirmar estado</li><li>no inventar features ni resumir sin consultar</li><li>Git, no el forge</li><li>no ingest rutinario ni arreglar_integridad diario</li></ul>
 <hr>
 <h2>Checklist pre-merge</h2>
-<p>1. Tests en verde 2. Arranque de MOSh OK 3. SEC / SSS / ICD / A11Y respetados 4. Docs tocadas si cambió comportamiento o proceso 5. CHANGELOG actualizado si la fase cierra una release 6. VERSIONING aplicado (bump o explícitamente no) 7. Commit claro</p>
+<p>1. Tests en verde 2. Arranque de MOSh OK (sin recargar integridad) 3. SEC / SSS / ICD / A11Y respetados 4. Docs (JSON + generate) si cambió comportamiento 5. CHANGELOG si cierra release 6. VERSIONING aplicado 7. Commit claro 8. test 120 sin pendientes o con plan</p>
 <hr>
 <h2>Autoridad</h2>
 <p>Esta guía no sustituye a SEC, SSS, A11Y ni STYLE_GUIDE. Si hay conflicto, prevalecen las specs de seguridad, sistema y accesibilidad.</p>

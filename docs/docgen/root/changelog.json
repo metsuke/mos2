@@ -2,61 +2,61 @@
   "schema": "metsuos-docgen-doc-1",
   "id": "changelog",
   "titulo": "Changelog de MetsuOS",
-  "preambulo": "Los cambios relevantes se listan aquí. El formato sigue la idea de Keep a Changelog y la política de `docs/VERSIONING.md`.",
+  "preambulo": "Los cambios relevantes se listan aquí. Keep a Changelog + docs/VERSIONING.md.\n\n---",
   "cuerpo_completo": null,
-  "origen": "/Users/Metsuke/mos2/CHANGELOG.md",
+  "origen": "edicion-json",
   "secciones": [
     {
       "titulo": "0.2.8 — pendiente de pruebas humanas",
-      "cuerpo": "### Añadido\n\n- iarouter modelos / modelo (id con espacios)\n- iarouter clave; almacén .mos con moslib.core.secreto\n- Ingestión de XAI_API_KEY y OPENROUTER_API_KEY al almacén\n- LAN Jan y GPT4All (localhost, cache, /24)\n- iarouter share y iarouter publicar\n- iarouter puente (HTTP :17337, no es P2P)\n- update reiniciar (módulos de la sesión no cambian solos)\n- Comando docgen (ingesta, backup, regeneración de man/specs/pages)\n\n### Documentación\n\n- Spec 10 v1.2\n- man iarouter y man update\n- Campaña 2026-09-13-02-sync-docs-028: Overview, SSS, SRS, ICD, SEC, SDD, TEST, SRelD y USER_MANUAL alineados con el árbol 0.2.7 / 0.2.8\n- Plan: docs/plans/2026-09-13-02-sync-docs-028.md\n- Sin bump de Poetry ni tag de producto en esta campaña\n- docs/docgen/ (áreas, json por documento, backup no versionado)\n- man docgen\n- Campaña 2026-09-14-01-docgen"
+      "cuerpo": "### Añadido\n\n- iarouter modelos / modelo (id con espacios)\n- iarouter clave; almacén .mos con moslib.core.secreto\n- Ingestión de XAI_API_KEY y OPENROUTER_API_KEY al almacén\n- LAN Jan y GPT4All (localhost, cache, /24)\n- iarouter share y iarouter publicar\n- iarouter puente (HTTP :17337, no es P2P)\n- update reiniciar\n- Comando docgen\n- Integridad de ficheros del repo (manifiesto + sello)\n- write / multi / write.sh (lote + codecs)\n- test 120 (tope 120 líneas, no bloquea arranque)\n- update dev / comando dev\n- docs con menú de categorías y sufijo h (HTML)\n- Historial de MOSh con tope\n- Locale es_ES al arranque (simulación de bloqueo)\n\n### Documentación\n\n- Spec 10 v1.2; man iarouter y man update\n- Campaña sync-docs-028\n- docs/docgen/ + man docgen\n- Refundido pages 2026-09 (JSON fuente + generate; sin bump Poetry)\n- IA_WRITE, integridad, tope 120 en onboarding/methodology/style\n\n---"
     },
     {
       "titulo": "0.2.7 — 2026-09-06",
-      "cuerpo": "### Añadido\n\n- Apps: mini-moslib, install desde clone o repo git, ámbito usuario o sistema\n- Invocación de comandos de app: nombre corto, `id_cmd` y `app_id_cmd`\n- Prioridad: sistema > app sistema > app usuario > user_\n- man y help de comandos de app\n- Worker de tareas en segundo plano durante la sesión MOSh\n- iarouter: detectar, usar, preguntar\n- Proveedores Jan, GPT4All, Grok y OpenRouter\n\n### Seguridad\n\n- SEC permite `minimoslib` solo con app_dir de esa app"
+      "cuerpo": "### Añadido\n\n- Apps: mini-moslib, install desde clone o repo git\n- Prioridad: sistema > app sistema > app usuario > user_\n- Worker de tareas en sesión MOSh\n- iarouter: detectar, usar, preguntar\n- Proveedores Jan, GPT4All, Grok y OpenRouter\n\n### Seguridad\n\n- SEC permite minimoslib solo con app_dir de esa app\n\n---"
     },
     {
       "titulo": "0.2.6 — 2026-09-03",
-      "cuerpo": "### Añadido\n\n- Specs 08-APPS, 09-TASKS, 10-IA-ROUTER y reserva en SSS 1.4\n- Comando apps (install/list/show/remove local, puerta SEC)\n- Comandos tareas y hilos (GTD local, tick clase sistema)\n- Comando iarouter y fachada moslib.core.ia_router (off por defecto)"
+      "cuerpo": "### Añadido\n\n- Specs 08-APPS, 09-TASKS, 10-IA-ROUTER\n- Comandos apps, tareas, hilos, iarouter (off por defecto)\n\n---"
     },
     {
       "titulo": "0.2.5-docs.2 — 2026-08-31",
-      "cuerpo": "### Documentación\n\n- Plan de campaña 06 (incentivos, desarrollo en MOS2, datos)\n- docs/INCENTIVOS.md (vectores, roles, Asimov + psicología; sin karma)\n- Enlaces en AGENTS, AI_ONBOARDING, HUMAN_ONBOARDING, README, DEUDA_Y_CAMPANAS"
+      "cuerpo": "### Documentación\n\n- Plan 06 incentivos\n- docs/INCENTIVOS.md\n\n---"
     },
     {
       "titulo": "0.2.5 — 2026-08-30",
-      "cuerpo": "### Añadido\n\n- Comando a11y (tests marcados a11y + informe en docs/a11y/)\n- Comando docs (docs/ y README, CHANGELOG, AGENTS, LICENSE)\n- Comando synccheck (HEAD local vs origin/main)\n- Política A11Y, declaración estilo UE/ES adaptada a CLI\n- test regenera el informe A11Y\n- docs/INTERACTION_REVIEW.md\n\n### Cambiado\n\n- Mensajes de arranque y de test en texto, sin emoji como única señal"
+      "cuerpo": "### Añadido\n\n- Comandos a11y, docs, synccheck\n- Política A11Y y declaración\n- INTERACTION_REVIEW\n\n### Cambiado\n\n- Mensajes de arranque y test en texto, sin emoji como única señal\n\n---"
     },
     {
       "titulo": "0.2.4 — 2026-08-28",
-      "cuerpo": "### Añadido\n\n- Comando update: sincroniza tags locales con origin (fetch --tags --prune --prune-tags)\n\n### Documentación\n\n- man de update\n- Campaña 05: esta pieza sale del Cierre I (renombre de tags -docs), no del bloque A11Y"
+      "cuerpo": "### Añadido\n\n- update sincroniza tags con origin\n\n---"
     },
     {
       "titulo": "Notas de etiquetas",
-      "cuerpo": "Los tags `v0.2.3-docs` y `v0.2.4-docs` se renombraron a `v0.2.2-docs.2` y `v0.2.2-docs.3` (docs sobre el producto 0.2.2)."
+      "cuerpo": "Los tags v0.2.3-docs y v0.2.4-docs se renombraron a v0.2.2-docs.2 y v0.2.2-docs.3.\n\n---"
     },
     {
       "titulo": "0.2.3 — 2026-08-28",
-      "cuerpo": "### Corregido\n\n- Poetry en Git Bash / Unix: un candidato solo se usa si `--version` se puede ejecutar\n- `.gitattributes`: LF en scripts y textos (función de Git, no de un forge)\n\n### Documentación\n\n- ENVIRONMENTS alineado con el orden real de resolución\n- Planes de campaña en docs/plans/"
+      "cuerpo": "### Corregido\n\n- Poetry: candidato solo si --version funciona\n- .gitattributes LF\n\n---"
     },
     {
       "titulo": "0.2.4-docs — 2026-08-28",
-      "cuerpo": "### Documentación\n\n- CHANGELOG.md como relato de releases\n- VERSIONING y DEVELOPER_GUIDE alineados con CHANGELOG\n- Test de formato SemVer de la versión Poetry"
+      "cuerpo": "CHANGELOG como relato; VERSIONING y DEVELOPER_GUIDE; test SemVer Poetry.\n\n---"
     },
     {
       "titulo": "0.2.3-docs — 2026-08-27",
-      "cuerpo": "### Documentación\n\n- Onboarding para IA (`AGENTS.md`, `docs/AI_ONBOARDING.md`)\n- Onboarding humano y guía de desarrollador\n- Política de versionado (`docs/VERSIONING.md`)\n- Enlaces en README, METHODOLOGY y OVERVIEW\n- Hotfix: `SCRIPT_DIR` antes del guard WSL `/mnt` (incluido en la rama de onboarding)"
+      "cuerpo": "Onboarding IA y humano; VERSIONING; hotfix SCRIPT_DIR / WSL.\n\n---"
     },
     {
       "titulo": "0.2.2 — 2026-08-25",
-      "cuerpo": "### Añadido\n\n- `docs/ENVIRONMENTS.md` (perfiles, Poetry, contexto de sesión)\n- Guard WSL: rechazo de clones bajo `/mnt/<letra>/`\n\n### Corregido\n\n- Resolución portable de Poetry en `mos2.sh` e `install.sh`\n- En Git Bash, prioridad de `py -m poetry` frente a `poetry.exe` (Permission denied)\n\n### Documentación\n\n- Manual, methodology y specs alineados con entornos multiplataforma"
+      "cuerpo": "ENVIRONMENTS; guard WSL /mnt; Poetry portable.\n\n---"
     },
     {
       "titulo": "0.2.1",
-      "cuerpo": "### Añadido\n\n- Tests unitarios y de seguridad; arranque bloqueante\n- Comando `update` con ramas backup locales\n- Comando `man` y páginas en `docs/man/`\n- Marco ECSS-light, STYLE_GUIDE y USER_MANUAL (evolución inmediata sobre la baseline)\n\n### Seguridad\n\n- Validación AST de imports en comandos de sistema y de usuario\n- Inventario de seguridad en arranque"
+      "cuerpo": "Tests de arranque; update backup; man; ECSS-light; AST de imports.\n\n---"
     },
     {
       "titulo": "0.2.0-alpha-user-space",
-      "cuerpo": "### Añadido\n\n- Espacio personal por usuario del sistema anfitrión\n- Comandos `user_*` e invocación corta sin conflicto\n- Protección de comandos de sistema"
+      "cuerpo": "Espacio personal; user_*; protección de comandos de sistema."
     }
   ]
 }
