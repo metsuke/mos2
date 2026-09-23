@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-TEST-020",
+  "area": "TEST",
+  "titulo": "test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque.",
+  "texto": "test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

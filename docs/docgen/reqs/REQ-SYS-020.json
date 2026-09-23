@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-SYS-020",
+  "area": "SYS",
+  "titulo": "Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help.",
+  "texto": "Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

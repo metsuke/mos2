@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-030",
+  "area": "CMD",
+  "titulo": "MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela.",
+  "texto": "MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

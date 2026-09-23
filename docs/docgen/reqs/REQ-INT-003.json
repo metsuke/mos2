@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-INT-003",
+  "area": "INT",
+  "titulo": "MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido.",
+  "texto": "MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

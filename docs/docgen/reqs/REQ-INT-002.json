@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-INT-002",
+  "area": "INT",
+  "titulo": "write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto.",
+  "texto": "write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

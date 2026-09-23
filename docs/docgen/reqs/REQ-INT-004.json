@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-INT-004",
+  "area": "INT",
+  "titulo": "El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación.",
+  "texto": "El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

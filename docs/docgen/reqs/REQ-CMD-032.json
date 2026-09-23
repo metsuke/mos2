@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-032",
+  "area": "CMD",
+  "titulo": "El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir.",
+  "texto": "El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

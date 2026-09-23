@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-PLAT-010",
+  "area": "PLAT",
+  "titulo": "El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas.",
+  "texto": "El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-UPD-011",
+  "area": "UPD",
+  "titulo": "El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas.",
+  "texto": "El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

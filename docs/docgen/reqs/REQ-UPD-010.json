@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-UPD-010",
+  "area": "UPD",
+  "titulo": "update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main.",
+  "texto": "update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

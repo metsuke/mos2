@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-INT-001",
+  "area": "INT",
+  "titulo": "El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión.",
+  "texto": "El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

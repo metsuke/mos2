@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-BOOT-005",
+  "area": "BOOT",
+  "titulo": "El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH.",
+  "texto": "El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}

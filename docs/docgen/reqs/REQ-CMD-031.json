@@ -1,0 +1,10 @@
+{
+  "schema": "metsuos-docgen-req-1",
+  "id": "REQ-CMD-031",
+  "area": "CMD",
+  "titulo": "write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide.",
+  "texto": "write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide.",
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "notas": ""
+}
