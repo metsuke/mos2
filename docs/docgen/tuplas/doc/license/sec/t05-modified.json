@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license/sec/t05-modified",
+  "tipo": "seccion",
+  "titulo": "5. Conveying Modified Source Versions.",
+  "cuerpo": "5. Conveying Modified Source Versions.\n\nYou may convey a work based on the Program, or the modifications to\nproduce it from the Program, in the form of source code under the\nterms of section 4, provided that you also meet all of these conditions:\n\n    a) The work must carry prominent notices stating that you modified\n    it, and giving a relevant date.\n\n    b) The work must carry prominent notices stating that it is\n    released under this License and any conditions added under section\n    7.  This requirement modifies the requirement in section 4 to\n    \"keep intact all notices\".\n\n    c) You must license the entire work, as a whole, under this\n    License to anyone who comes into possession of a copy.  This\n    License will therefore apply, along with any applicable section 7\n    additional terms, to the whole of the work, and all its parts,\n    regardless of how they are packaged.  This License gives no\n    permission to license the work in any other way, but it does not\n    invalidate such permission if you have separately received it.\n\n    d) If the work has interactive user interfaces, each must display\n    Appropriate Legal Notices; however, if the Program has interactive\n    interfaces that do not display Appropriate Legal Notices, your\n    work need not make them do so.\n\nA compilation of a covered work with other separate and independent\nworks, which are not by their nature extensions of the covered work,\nand which are not combined with it such as to form a larger program,\nin or on a volume of a storage or distribution medium, is called an\n\"aggregate\" if the compilation and its resulting copyright are not\nused to limit the access or legal rights of the compilation's users\nbeyond what the individual works permit.  Inclusion of a covered work\nin an aggregate does not cause this License to apply to the other\nparts of the aggregate.",
+  "cuerpo_desde": "",
+  "para_humano": "Texto GPLv3 verbatim FSF. No alterar.",
+  "para_ia": "Verbatim GPL-3.0. No resumir ni reescribir.",
+  "orden": 70,
+  "orden_por_que": "Orden del texto oficial gnu.org/licenses/gpl-3.0.txt",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T00:00:00Z",
+  "modificado": "2026-09-25T00:00:00Z",
+  "render": "parrafo",
+  "activo": true
+}

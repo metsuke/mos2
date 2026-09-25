@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-SEC-011",
+  "tipo": "req",
+  "titulo": "Manifiesto dual y sello",
+  "cuerpo": "Hay un manifiesto de hashes en el repo y una copia local en el espacio .mos. El propio manifiesto tiene sello SHA-256. Si se edita el JSON a mano el sello no cuadra y el arranque trata el sello como fallo grave.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:51Z",
+  "modificado": "2026-09-24T14:08:51Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "SEC",
+  "notas": ""
+}

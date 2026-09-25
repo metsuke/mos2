@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "meta/tupla-base",
+  "tipo": "doc",
+  "titulo": "Schema base metsuos-tupla-1",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T12:22:08Z",
+  "modificado": "2026-09-24T12:22:08Z",
+  "render": "parrafo",
+  "activo": true
+}

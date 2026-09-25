@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-SEC-013",
+  "tipo": "req",
+  "titulo": "Cobertura total del clone",
+  "cuerpo": "El manifiesto incluye todos los paths que viajan en git: codigo, scripts, docs, json, html generado y write.sh. No solo los .py.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:51Z",
+  "modificado": "2026-09-24T14:08:51Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "SEC",
+  "notas": ""
+}

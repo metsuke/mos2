@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/ia-write/sec/lote/el/pasos",
+  "tipo": "elemento",
+  "titulo": "Pasos",
+  "cuerpo": "write ruta, hash esperado, payload, punto, :e. write.sh fuera de MOS. Un solo bloque de texto.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 10,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T20:21:23Z",
+  "modificado": "2026-09-24T20:21:23Z",
+  "render": "parrafo",
+  "activo": true
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-TEST-009",
+  "tipo": "req",
+  "titulo": "Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI",
+  "cuerpo": "Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:53Z",
+  "modificado": "2026-09-24T14:08:53Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "area": "TEST",
+  "notas": ""
+}

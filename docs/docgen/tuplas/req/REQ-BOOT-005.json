@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-BOOT-005",
+  "tipo": "req",
+  "titulo": "El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH.",
+  "cuerpo": "El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:48Z",
+  "modificado": "2026-09-24T14:08:48Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "BOOT",
+  "notas": ""
+}

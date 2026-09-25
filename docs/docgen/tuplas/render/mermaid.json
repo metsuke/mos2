@@ -1,0 +1,19 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "render/mermaid",
+  "tipo": "render-modo",
+  "titulo": "mermaid",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "Modo de pintado mermaid",
+  "para_ia": "render=mermaid",
+  "orden": 110,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:30:41Z",
+  "modificado": "2026-09-24T14:30:41Z",
+  "render": "mermaid",
+  "activo": true,
+  "agrupa_consecutivos": false
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license/sec/t08-termination",
+  "tipo": "seccion",
+  "titulo": "8. Termination.",
+  "cuerpo": "8. Termination.\n\nYou may not propagate or modify a covered work except as expressly\nprovided under this License.  Any attempt otherwise to propagate or\nmodify it is void, and will automatically terminate your rights under\nthis License (including any patent licenses granted under the third\nparagraph of section 11).\n\nHowever, if you cease all violation of this License, then your\nlicense from a particular copyright holder is reinstated (a)\nprovisionally, unless and until the copyright holder explicitly and\nfinally terminates your license, and (b) permanently, if the copyright\nholder fails to notify you of the violation by some reasonable means\nprior to 60 days after the cessation.\n\nMoreover, your license from a particular copyright holder is\nreinstated permanently if the copyright holder notifies you of the\nviolation by some reasonable means, this is the first time you have\nreceived notice of violation of this License (for any work) from that\ncopyright holder, and you cure the violation prior to 30 days after\nyour receipt of the notice.\n\nTermination of your rights under this section does not terminate the\nlicenses of parties who have received copies or rights from you under\nthis License.  If your rights have been terminated and not permanently\nreinstated, you do not qualify to receive new licenses for the same\nmaterial under section 10.",
+  "cuerpo_desde": "",
+  "para_humano": "Texto GPLv3 verbatim FSF. No alterar.",
+  "para_ia": "Verbatim GPL-3.0. No resumir ni reescribir.",
+  "orden": 100,
+  "orden_por_que": "Orden del texto oficial gnu.org/licenses/gpl-3.0.txt",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T00:00:00Z",
+  "modificado": "2026-09-25T00:00:00Z",
+  "render": "parrafo",
+  "activo": true
+}

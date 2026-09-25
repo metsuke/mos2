@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/ia-write/sec/salida-ia",
+  "tipo": "seccion",
+  "titulo": "Salida IA bloques",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 40,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T19:32:57Z",
+  "modificado": "2026-09-25T19:32:57Z",
+  "render": "h2",
+  "activo": true
+}

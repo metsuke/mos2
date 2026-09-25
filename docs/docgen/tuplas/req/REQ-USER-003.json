@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-USER-003",
+  "tipo": "req",
+  "titulo": "ensure_user_space debe crear commands, data, config, packages y repos si no existen",
+  "cuerpo": "ensure_user_space debe crear commands, data, config, packages y repos si no existen",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:54Z",
+  "modificado": "2026-09-24T14:08:54Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "USER",
+  "notas": ""
+}

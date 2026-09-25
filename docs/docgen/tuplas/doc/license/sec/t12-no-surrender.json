@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license/sec/t12-no-surrender",
+  "tipo": "seccion",
+  "titulo": "12. No Surrender of Others' Freedom.",
+  "cuerpo": "12. No Surrender of Others' Freedom.\n\nIf conditions are imposed on you (whether by court order, agreement or\notherwise) that contradict the conditions of this License, they do not\nexcuse you from the conditions of this License.  If you cannot convey a\ncovered work so as to satisfy simultaneously your obligations under this\nLicense and any other pertinent obligations, then as a consequence you may\nnot convey it at all.  For example, if you agree to terms that obligate you\nto collect a royalty for further conveying from those to whom you convey\nthe Program, the only way you could satisfy both those terms and this\nLicense would be to refrain entirely from conveying the Program.",
+  "cuerpo_desde": "",
+  "para_humano": "Texto GPLv3 verbatim FSF. No alterar.",
+  "para_ia": "Verbatim GPL-3.0. No resumir ni reescribir.",
+  "orden": 140,
+  "orden_por_que": "Orden del texto oficial gnu.org/licenses/gpl-3.0.txt",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T00:00:00Z",
+  "modificado": "2026-09-25T00:00:00Z",
+  "render": "parrafo",
+  "activo": true
+}

@@ -2,7 +2,7 @@
 name = "metsuos"
 version = "0.2.7"
 description = "MetsuOS: Sistema Operativo simulado y modular"
-authors = ["Metsuke"]
+authors = ["Raul Carrillo Garrido aka metsuke <metsuke@gmail.com>"]
 homepage = "https://metsuke.com"
 readme = "README.md"
 packages = [

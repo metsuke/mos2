@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license/sec/t10-downstream",
+  "tipo": "seccion",
+  "titulo": "10. Automatic Licensing of Downstream Recipients.",
+  "cuerpo": "10. Automatic Licensing of Downstream Recipients.\n\nEach time you convey a covered work, the recipient automatically\nreceives a license from the original licensors, to run, modify and\npropagate that work, subject to this License.  You are not responsible\nfor enforcing compliance by third parties with this License.\n\nAn \"entity transaction\" is a transaction transferring control of an\norganization, or substantially all assets of one, or subdividing an\norganization, or merging organizations.  If propagation of a covered\nwork results from an entity transaction, each party to that\ntransaction who receives a copy of the work also receives whatever\nlicenses to the work the party's predecessor in interest had or could\ngive under the previous paragraph, plus a right to possession of the\nCorresponding Source of the work from the predecessor in interest, if\nthe predecessor has it or can get it with reasonable efforts.\n\nYou may not impose any further restrictions on the exercise of the\nrights granted or affirmed under this License.  For example, you may\nnot impose a license fee, royalty, or other charge for exercise of\nrights granted under this License, and you may not initiate litigation\n(including a cross-claim or counterclaim in a lawsuit) alleging that\nany patent claim is infringed by making, using, selling, offering for\nsale, or importing the Program or any portion of it.",
+  "cuerpo_desde": "",
+  "para_humano": "Texto GPLv3 verbatim FSF. No alterar.",
+  "para_ia": "Verbatim GPL-3.0. No resumir ni reescribir.",
+  "orden": 120,
+  "orden_por_que": "Orden del texto oficial gnu.org/licenses/gpl-3.0.txt",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T00:00:00Z",
+  "modificado": "2026-09-25T00:00:00Z",
+  "render": "parrafo",
+  "activo": true
+}

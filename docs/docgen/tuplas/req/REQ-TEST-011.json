@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-TEST-011",
+  "tipo": "req",
+  "titulo": "Debe existir cobertura de tareas e iarouter",
+  "cuerpo": "Debe existir cobertura de tareas e iarouter",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:53Z",
+  "modificado": "2026-09-24T14:08:53Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "TEST",
+  "notas": ""
+}

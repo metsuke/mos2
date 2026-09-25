@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-DOC-006",
+  "tipo": "req",
+  "titulo": "Las estructuras de directorios en documentación normativa deben representarse como tablas por niveles",
+  "cuerpo": "Las estructuras de directorios en documentación normativa deben representarse como tablas por niveles",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:49Z",
+  "modificado": "2026-09-24T14:08:49Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Inspection",
+  "area": "DOC",
+  "notas": ""
+}

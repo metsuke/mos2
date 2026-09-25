@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-TEST-006",
+  "tipo": "req",
+  "titulo": "Debe existir un comando de sistema test que lance la batería",
+  "cuerpo": "Debe existir un comando de sistema test que lance la batería",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:53Z",
+  "modificado": "2026-09-24T14:08:53Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Demo",
+  "area": "TEST",
+  "notas": ""
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-DOC-009",
+  "tipo": "req",
+  "titulo": "A11Y",
+  "cuerpo": "A11Y",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:50Z",
+  "modificado": "2026-09-24T14:08:50Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "",
+  "area": "DOC",
+  "notas": ""
+}

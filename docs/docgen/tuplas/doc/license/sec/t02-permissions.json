@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license/sec/t02-permissions",
+  "tipo": "seccion",
+  "titulo": "2. Basic Permissions.",
+  "cuerpo": "2. Basic Permissions.\n\nAll rights granted under this License are granted for the term of\ncopyright on the Program, and are irrevocable provided the stated\nconditions are met.  This License explicitly affirms your unlimited\npermission to run the unmodified Program.  The output from running a\ncovered work is covered by this License only if the output, given its\ncontent, constitutes a covered work.  This License acknowledges your\nrights of fair use or other equivalent, as provided by copyright law.\n\nYou may make, run and propagate covered works that you do not\nconvey, without conditions so long as your license otherwise remains\nin force.  You may convey covered works to others for the sole purpose\nof having them make modifications exclusively for you, or provide you\nwith facilities for running those works, provided that you comply with\nthe terms of this License in conveying all material for which you do\nnot control copyright.  Those thus making or running the covered works\nfor you must do so exclusively on your behalf, under your direction\nand control, on terms that prohibit them from making any copies of\nyour copyrighted material outside their relationship with you.\n\nConveying under any other circumstances is permitted solely under\nthe conditions stated below.  Sublicensing is not allowed; section 10\nmakes it unnecessary.",
+  "cuerpo_desde": "",
+  "para_humano": "Texto GPLv3 verbatim FSF. No alterar.",
+  "para_ia": "Verbatim GPL-3.0. No resumir ni reescribir.",
+  "orden": 40,
+  "orden_por_que": "Orden del texto oficial gnu.org/licenses/gpl-3.0.txt",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T00:00:00Z",
+  "modificado": "2026-09-25T00:00:00Z",
+  "render": "parrafo",
+  "activo": true
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-TEST-004",
+  "tipo": "req",
+  "titulo": "Debe existir cobertura del módulo de usuario",
+  "cuerpo": "Debe existir cobertura del módulo de usuario",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:52Z",
+  "modificado": "2026-09-24T14:08:52Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "TEST",
+  "notas": ""
+}

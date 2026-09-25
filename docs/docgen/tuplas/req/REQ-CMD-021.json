@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-CMD-021",
+  "tipo": "req",
+  "titulo": "Escritura de ficheros del clone solo con write dentro de multi",
+  "cuerpo": "El comando write (alias w) solo puede ejecutarse dentro de multi/m. El lote es: write <ruta relativa al clone>, una línea con el SHA-256 hex de los bytes del fichero completo, el Base64 de esos bytes, y una línea con un punto. Si el hash no coincide, el destino no se modifica. ;e y ;q equivalen a :e y :q; el canónico es :e. Tras un write correcto se abre code sobre el fichero. Se permiten como máximo tres write por lote si los ficheros son pequeños.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:49Z",
+  "modificado": "2026-09-24T14:08:49Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "CMD",
+  "notas": "Ritual de entrega IA-humano. Ver write.sh para el caso MOS caído."
+}

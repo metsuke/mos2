@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-UPD-011",
+  "tipo": "req",
+  "titulo": "El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas.",
+  "cuerpo": "El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:54Z",
+  "modificado": "2026-09-24T14:08:54Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "UPD",
+  "notas": ""
+}

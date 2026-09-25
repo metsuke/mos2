@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-USER-005",
+  "tipo": "req",
+  "titulo": "Los archivos de comando de usuario deben nombrarse user_*.py",
+  "cuerpo": "Los archivos de comando de usuario deben nombrarse user_*.py",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:54Z",
+  "modificado": "2026-09-24T14:08:54Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "",
+  "area": "USER",
+  "notas": ""
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "render/tabla",
+  "tipo": "render-modo",
+  "titulo": "tabla",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "Modo de pintado tabla",
+  "para_ia": "render=tabla",
+  "orden": 20,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:30:41Z",
+  "modificado": "2026-09-24T14:30:41Z",
+  "render": "tabla",
+  "activo": true,
+  "agrupa_consecutivos": true
+}

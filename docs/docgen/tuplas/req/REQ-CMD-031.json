@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-CMD-031",
+  "tipo": "req",
+  "titulo": "write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide.",
+  "cuerpo": "write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:49Z",
+  "modificado": "2026-09-24T14:08:49Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "CMD",
+  "notas": ""
+}

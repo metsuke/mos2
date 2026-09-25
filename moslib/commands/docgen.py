@@ -4,6 +4,7 @@ from moslib.core import docgen as motor
 from moslib.core import docgen_cli as cli
 from moslib.core import docgen_cmd_run as run
 from moslib.core.docgen_index_crud import index_add, index_list, index_rm, index_set
+from moslib.core.docgen_tupla_cli import tupla as tupla_cli
 
 
 def execute(args):
@@ -13,6 +14,9 @@ def execute(args):
         return
     cmd = args[0]
     objetivo = args[1] if len(args) > 1 else ""
+    if cmd == "tupla":
+        tupla_cli(args[1:])
+        return
     if cmd == "index":
         sub = args[1] if len(args) > 1 else "list"
         if sub == "list":
@@ -50,7 +54,8 @@ def execute(args):
             print("[docgen] Uso: docgen backup-list <id>")
             return
         hallados = motor.list_backups(objetivo)
-        print(f"[docgen] Backups de {objetivo}:" if hallados else f"[docgen] No hay backups para {objetivo}.")
+        msg = f"[docgen] Backups de {objetivo}:" if hallados else f"[docgen] No hay backups para {objetivo}."
+        print(msg)
         for path in hallados:
             print(f"  {path.name}")
         return
@@ -66,7 +71,8 @@ def execute(args):
 
 def help():
     return (
-        "Uso: docgen generate ... | docgen index list|add|set|rm | "
+        "Uso: docgen generate ... | docgen index ... | "
+        "docgen tupla list|add|set|link|rm | "
         "docgen req ... | docgen area ... | docgen plan ... | "
         "docgen ingest ... (solo recuperacion)."
     )
@@ -77,6 +83,7 @@ def sinopsis():
         "docgen list",
         "docgen generate man|specs|pages|all|<id>",
         "docgen index list|add|set|rm",
+        "docgen tupla list|add|set|link|rm",
         "docgen req list|add|set|rm",
         "docgen area list|add|set|rm",
         "docgen plan list|add|set|rm",

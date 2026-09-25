@@ -1,0 +1,19 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "render/h3",
+  "tipo": "render-modo",
+  "titulo": "h3",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "Modo de pintado h3",
+  "para_ia": "render=h3",
+  "orden": 60,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:30:41Z",
+  "modificado": "2026-09-24T14:30:41Z",
+  "render": "h3",
+  "activo": true,
+  "agrupa_consecutivos": false
+}

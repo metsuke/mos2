@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-SYS-010",
+  "tipo": "req",
+  "titulo": "Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE",
+  "cuerpo": "Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:52Z",
+  "modificado": "2026-09-24T14:08:52Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Should",
+  "verificacion": "Inspection",
+  "area": "SYS",
+  "notas": ""
+}

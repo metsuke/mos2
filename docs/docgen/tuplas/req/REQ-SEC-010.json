@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-SEC-010",
+  "tipo": "req",
+  "titulo": "Copia local del manifiesto de integridad al arrancar si falta",
+  "cuerpo": "Si no existe la copia local de docs/docgen/integridad.json (o su sello) en el .mos del usuario, el arranque y fallos() copian solos el manifiesto del repositorio. El usuario no tiene que ejecutar integridad recargar en un arranque limpio. integridad aceptar solo aplica a un fichero que el humano acaba de escribir o generar.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:51Z",
+  "modificado": "2026-09-24T14:08:51Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "SEC",
+  "notas": ""
+}

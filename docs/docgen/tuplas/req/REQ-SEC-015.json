@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-SEC-015",
+  "tipo": "req",
+  "titulo": "aceptar es por ruta",
+  "cuerpo": "integridad aceptar exige una ruta. No existe aceptar todo. recargar copia el manifiesto del repo a la copia local. MOS_INTEGRIDAD=recargar es solo emergencia de arranque.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:51Z",
+  "modificado": "2026-09-24T14:08:51Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "SEC",
+  "notas": ""
+}

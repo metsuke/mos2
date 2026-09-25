@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license",
+  "tipo": "doc",
+  "titulo": "GNU GENERAL PUBLIC LICENSE",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "Texto legal normativo. Fuente: tuplas, no el MD.",
+  "para_ia": "tipo=doc destino segun indice id=license. Generate: docgen tupla generate license",
+  "orden": 10,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T03:21:10Z",
+  "modificado": "2026-09-25T03:21:10Z",
+  "render": "h1",
+  "activo": true
+}

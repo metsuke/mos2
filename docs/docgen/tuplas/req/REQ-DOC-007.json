@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-DOC-007",
+  "tipo": "req",
+  "titulo": "Todo comando de sistema nuevo debe documentarse en man en el mismo cambio o en el inmediato de la misma fase",
+  "cuerpo": "Todo comando de sistema nuevo debe documentarse en man en el mismo cambio o en el inmediato de la misma fase",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:50Z",
+  "modificado": "2026-09-24T14:08:50Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Should",
+  "verificacion": "Inspection",
+  "area": "DOC",
+  "notas": ""
+}

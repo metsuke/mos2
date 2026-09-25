@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-CMD-022",
+  "tipo": "req",
+  "titulo": "write.sh replica el lote write fuera de MOS",
+  "cuerpo": "En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:49Z",
+  "modificado": "2026-09-24T14:08:49Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "CMD",
+  "notas": ""
+}

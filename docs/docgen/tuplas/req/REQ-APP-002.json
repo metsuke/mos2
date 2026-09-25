@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-APP-002",
+  "tipo": "req",
+  "titulo": "apps debe permitir list, show, install (ruta o repo git) y remove",
+  "cuerpo": "apps debe permitir list, show, install (ruta o repo git) y remove",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:48Z",
+  "modificado": "2026-09-24T14:08:48Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "",
+  "area": "APP",
+  "notas": ""
+}

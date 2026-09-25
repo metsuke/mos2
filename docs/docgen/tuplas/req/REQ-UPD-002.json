@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-UPD-002",
+  "tipo": "req",
+  "titulo": "Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS",
+  "cuerpo": "Si hay cambios locales pendientes, update debe preservarlos en una rama backup/YYYYMMDD_HHMMSS",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:53Z",
+  "modificado": "2026-09-24T14:08:53Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Demo",
+  "area": "UPD",
+  "notas": ""
+}

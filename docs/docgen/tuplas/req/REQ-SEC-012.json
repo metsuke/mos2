@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-SEC-012",
+  "tipo": "req",
+  "titulo": "Escritura solo con hash coincidente",
+  "cuerpo": "Un fichero tracked del clone solo se sustituye si el SHA-256 del contenido coincide con la linea de control. Canales: write dentro de multi, write.sh fuera de MOS, registrar_destino tras docgen generate. Si no coincide no se toca el destino.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:51Z",
+  "modificado": "2026-09-24T14:08:51Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "SEC",
+  "notas": ""
+}

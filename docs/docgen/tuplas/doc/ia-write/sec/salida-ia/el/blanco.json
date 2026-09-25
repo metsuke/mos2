@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/ia-write/sec/salida-ia/el/blanco",
+  "tipo": "elemento",
+  "titulo": "Linea en blanco",
+  "cuerpo": "Obligatorio: una linea en blanco inmediatamente ANTES y DESPUES de cualquier bloque de texto copiable. Nada pegado al fence.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T19:32:57Z",
+  "modificado": "2026-09-25T19:32:57Z",
+  "render": "parrafo",
+  "activo": true
+}

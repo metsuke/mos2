@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-CMD-032",
+  "tipo": "req",
+  "titulo": "El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir.",
+  "cuerpo": "El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:49Z",
+  "modificado": "2026-09-24T14:08:49Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Test",
+  "area": "CMD",
+  "notas": ""
+}

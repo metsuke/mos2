@@ -1,0 +1,19 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "render/h5",
+  "tipo": "render-modo",
+  "titulo": "h5",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "Modo de pintado h5",
+  "para_ia": "render=h5",
+  "orden": 80,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:30:41Z",
+  "modificado": "2026-09-24T14:30:41Z",
+  "render": "h5",
+  "activo": true,
+  "agrupa_consecutivos": false
+}

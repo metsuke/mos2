@@ -1,0 +1,22 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-UPD-003",
+  "tipo": "req",
+  "titulo": "update debe forzar la sincronización de main con origin/main",
+  "cuerpo": "update debe forzar la sincronización de main con origin/main",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-24T14:08:53Z",
+  "modificado": "2026-09-24T14:08:53Z",
+  "render": "tabla",
+  "activo": true,
+  "prioridad": "Must",
+  "verificacion": "Demo",
+  "area": "UPD",
+  "notas": ""
+}
