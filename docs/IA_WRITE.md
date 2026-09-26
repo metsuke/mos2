@@ -8,7 +8,7 @@
 
 ## Salida IA bloques
 
-Obligatorio: una linea en blanco inmediatamente ANTES y DESPUES de cualquier bloque de texto copiable. Nada pegado al fence.
+Obligatorio: una linea en blanco inmediatamente ANTES y DESPUES de cualquier bloque de texto copiable. Nada pegado al fence de apertura ni al de cierre.
 
 gzb85 gz xz b85 y combinaciones; se elige el payload mas corto.
 
