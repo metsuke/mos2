@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/autoria/sec/sinopsis/el/uso",
+  "tipo": "elemento",
+  "titulo": "uso",
+  "cuerpo": "autoria\nautoria show\nautoria set <campo> <valor>",
+  "cuerpo_desde": "",
+  "para_humano": "Sinopsis real del comando.",
+  "para_ia": "Tres formas. set usa CAMPOS de autoria.py.",
+  "orden": 1,
+  "orden_por_que": "sinopsis",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-26T00:00:00Z",
+  "modificado": "2026-09-26T00:00:00Z",
+  "render": "lista",
+  "activo": true
+}

@@ -7,7 +7,7 @@
 <h2>Fuera</h2>
 <p>./write.sh lanza el mismo multi. Mismo bloque. chmod +x write.sh. Nunca emular el lote en bash.</p>
 <h2>Lote</h2>
-<p>write &lt;ruta&gt; &lt;sha256&gt; [gz:|xz:|b85:|gzb85:|xzb85:]payload . docgen index add &lt;id&gt; &lt;rel&gt; docgen generate &lt;id&gt;</p>
+<p>write &lt;ruta&gt; &lt;sha256 64 hex&gt; gz:payload partido a 80 columnas . Prohibido emitir codec con ^C o ^Z (tipico de gzb85). Preferir gz: sobre xz: y b64 plano. multi no se cambia para tragar lineas enormes de contenido; solo rutas pueden ser largas. El chat pone el lote entero en un bloque markdown, con linea en blanco antes y despues.</p>
 <h2>Integridad</h2>
-<p>Si MOS no arranca: ./arreglar_integridad.sh (30s, luego ./mos2.sh). No es uso diario.</p>
+<p>Si MOS no arranca: ./arreglar_integridad.sh (30s, quita rutas fantasma, luego MOS_INTEGRIDAD=recargar mos2). No es uso diario.</p>
 </body></html>

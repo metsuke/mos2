@@ -14,11 +14,11 @@
     },
     {
       "titulo": "Lote",
-      "cuerpo": "write <ruta>\n<sha256>\n[gz:|xz:|b85:|gzb85:|xzb85:]payload\n.\ndocgen index add <id> <rel>\ndocgen generate <id>"
+      "cuerpo": "write <ruta>\n<sha256 64 hex>\ngz:payload partido a 80 columnas\n.\nProhibido emitir codec con ^C o ^Z (tipico de gzb85). Preferir gz: sobre xz: y b64 plano. multi no se cambia para tragar lineas enormes de contenido; solo rutas pueden ser largas. El chat pone el lote entero en un bloque markdown, con linea en blanco antes y despues."
     },
     {
       "titulo": "Integridad",
-      "cuerpo": "Si MOS no arranca: ./arreglar_integridad.sh (30s, luego ./mos2.sh). No es uso diario."
+      "cuerpo": "Si MOS no arranca: ./arreglar_integridad.sh (30s, quita rutas fantasma, luego MOS_INTEGRIDAD=recargar mos2). No es uso diario."
     }
   ]
 }

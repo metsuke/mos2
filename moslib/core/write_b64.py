@@ -1,4 +1,4 @@
-"""Escritura con hash: b64/b85 + gzip/lzma. Solo via multi."""
+"""Escritura con hash: b64 + gzip/lzma. Solo via multi."""
 
 from __future__ import annotations
 
@@ -15,6 +15,33 @@ from moslib.core.user import ensure_user_space, get_username, get_user_mos_dir
 PERMISO_MULTI = False
 BORDE = "─" * 52
 PREFS = ("xzb85:", "gzb85:", "b85:", "xz:", "gz:")
+PROHIBIDO = ("^C", "^Z")
+ANCHO = 80
+
+
+def empacar(datos: bytes) -> str:
+    cand = [
+        ("gz:", base64.b64encode(gzip.compress(datos, 9)).decode()),
+        ("xz:", base64.b64encode(lzma.compress(datos)).decode()),
+        ("", base64.b64encode(datos).decode()),
+        ("gzb85:", base64.a85encode(gzip.compress(datos, 9)).decode()),
+        ("xzb85:", base64.a85encode(lzma.compress(datos)).decode()),
+        ("b85:", base64.a85encode(datos).decode()),
+    ]
+    validos = []
+    for pref, cuerpo in cand:
+        texto = pref + cuerpo
+        if any(m in texto for m in PROHIBIDO):
+            continue
+        validos.append(texto)
+    if not validos:
+        raise ValueError("ningun codec seguro")
+    texto = min(validos, key=len)
+    lineas = [texto[:ANCHO]]
+    resto = texto[ANCHO:]
+    for i in range(0, len(resto), ANCHO):
+        lineas.append(resto[i:i + ANCHO])
+    return "\n".join(lineas)
 
 
 def _tmp_dir() -> Path:
@@ -32,7 +59,7 @@ def _preview(datos: bytes) -> str:
 
 
 def _decodificar(bruto: str) -> bytes:
-    s = bruto.strip()
+    s = "".join(bruto.split())
     pref = next((p for p in PREFS if s.startswith(p)), "")
     s = s[len(pref):] if pref else s
     if pref.endswith("b85:"):

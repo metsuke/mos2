@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license/sec/terminos",
+  "tipo": "seccion",
+  "titulo": "TERMS AND CONDITIONS (indice)",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "Contenedor. El texto legal esta en t00-t17.",
+  "para_ia": "No renderizar cuerpo. Hijos t00-t17.",
+  "orden": 9,
+  "orden_por_que": "Ancla de seccion",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T00:00:00Z",
+  "modificado": "2026-09-25T00:00:00Z",
+  "render": "h2",
+  "activo": false
+}

@@ -20,8 +20,12 @@ def execute(args=None, stdin_data=""):
                 lineas.append("anio=" + core.anio_rango(data))
             else:
                 lineas.append(f"{k}={data.get(k) or ''}")
-        return "\n".join(lineas)
+        texto = "\n".join(lineas)
+        print(texto)
+        return texto
     if args[0] == "set" and len(args) >= 3:
         core.set_campo(args[1], " ".join(args[2:]))
         return execute(["show"])
-    return help()
+    texto = help()
+    print(texto)
+    return texto

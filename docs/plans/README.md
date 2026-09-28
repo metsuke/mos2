@@ -50,7 +50,7 @@ No hay contador global en el nombre.
 | 2026-09-14 | 01 | 2026-09-14-01-docgen.md | Cerrada en alcance de motor (pendiente pruebas humanas y bump) |
 | 2026-09-18 | 01 | 2026-09-18-01-integridad-write.md | En curso |
 | 2026-09-23 | 01 | 2026-09-23-01-docs-crud-redisenio.md | en-curso |
-| 2026-09-24 | 01 | 2026-09-24-01-tuplas-docgen.md | estado en-curso |
+| 2026-09-24 | 01 | 2026-09-24-01-tuplas-docgen.md | nota LICENSE GPLv3 en tuplas; autoria; write gz 80 cols sin ^C; destino man-autoria; walker arbol; arreglar quita fantasmas y relanza MOS |
 
 ## Ciclo
 1. Diseñar la campaña en el chat.

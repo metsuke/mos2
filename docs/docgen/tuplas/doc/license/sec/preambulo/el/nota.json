@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/license/sec/preambulo/el/nota",
+  "tipo": "elemento",
+  "titulo": "nota",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "Sustituido por t-preambulo.",
+  "para_ia": "Inactivo.",
+  "orden": 1,
+  "orden_por_que": "legado",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-25T00:00:00Z",
+  "modificado": "2026-09-25T00:00:00Z",
+  "render": "parrafo",
+  "activo": false
+}
