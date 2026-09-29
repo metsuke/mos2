@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/ia-write/sec/sumario/el/txt",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Al cerrar el lote, multi imprime sumario ok=N y !!! fallos=M. Cada fallo lleva prefijo !!!. execute devuelve 0 o None si ok, 1 o False si fallo. Comando inexistente cuenta como fallo.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-29T19:10:35Z",
+  "modificado": "2026-09-29T19:10:35Z",
+  "render": "parrafo",
+  "activo": true
+}

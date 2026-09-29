@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "req/REQ-CMD-033",
+  "tipo": "req",
+  "titulo": "multi informa fallos de lote",
+  "cuerpo": "multi y write.sh recogen el valor de execute (0 o None = ok; False o distinto de 0 = fallo). Comando inexistente y excepcion son fallo. Al terminar: sumario ok=N y !!! fallos=M, con una linea !!! por error.",
+  "cuerpo_desde": "",
+  "para_humano": "Ver de un vistazo si un lote largo dejo pasos a medias, sin fiarse del color.",
+  "para_ia": "execute debe devolver 0 o 1. multi imprime !!! y sumario. write devuelve 1 si el payload no aplica.",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-29T06:09:50Z",
+  "modificado": "2026-09-29T14:06:10Z",
+  "render": "parrafo",
+  "activo": true
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/ia-tope",
+  "tipo": "documento",
+  "titulo": "IA_TOPE",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 1,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-29T05:46:21Z",
+  "modificado": "2026-09-29T05:46:21Z",
+  "render": "h1",
+  "activo": true
+}

@@ -78,6 +78,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -107,6 +108,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -150,6 +154,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -166,6 +171,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -182,6 +188,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -195,6 +202,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -207,6 +216,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -238,6 +248,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de comandos
 ### Sistema / shell
@@ -256,6 +275,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -285,6 +305,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -328,6 +351,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -344,6 +368,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -360,6 +385,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -373,6 +399,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -385,6 +413,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -416,6 +445,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de resolución de nombres
 ### Sistema / shell
@@ -434,6 +472,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -463,6 +502,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -506,6 +548,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -522,6 +565,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -538,6 +582,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -551,6 +596,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -563,6 +610,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -594,6 +642,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de espacio de usuario
 ### Sistema / shell
@@ -612,6 +669,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -641,6 +699,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -684,6 +745,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -700,6 +762,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -716,6 +779,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -729,6 +793,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -741,6 +807,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -772,6 +839,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de seguridad
 ### Sistema / shell
@@ -790,6 +866,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -819,6 +896,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -862,6 +942,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -878,6 +959,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -894,6 +976,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -907,6 +990,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -919,6 +1004,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -950,6 +1036,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de arranque
 ### Sistema / shell
@@ -968,6 +1063,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -997,6 +1093,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1040,6 +1139,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -1056,6 +1156,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -1072,6 +1173,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -1085,6 +1187,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1097,6 +1201,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -1128,6 +1233,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de pruebas
 ### Sistema / shell
@@ -1146,6 +1260,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -1175,6 +1290,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1218,6 +1336,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -1234,6 +1353,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -1250,6 +1370,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -1263,6 +1384,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1275,6 +1398,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -1306,6 +1430,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de actualización
 ### Sistema / shell
@@ -1324,6 +1457,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -1353,6 +1487,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1396,6 +1533,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -1412,6 +1550,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -1428,6 +1567,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -1441,6 +1581,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1453,6 +1595,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -1484,6 +1627,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de documentación
 ### Sistema / shell
@@ -1502,6 +1654,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -1531,6 +1684,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1574,6 +1730,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -1590,6 +1747,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -1606,6 +1764,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -1619,6 +1778,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1631,6 +1792,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -1662,6 +1824,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de plataforma
 ### Sistema / shell
@@ -1680,6 +1851,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -1709,6 +1881,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1752,6 +1927,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -1768,6 +1944,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -1784,6 +1961,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -1797,6 +1975,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1809,6 +1989,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -1840,6 +2021,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de estilo y mantenibilidad
 ### Sistema / shell
@@ -1858,6 +2048,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -1887,6 +2078,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -1930,6 +2124,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -1946,6 +2141,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -1962,6 +2158,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -1975,6 +2172,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -1987,6 +2186,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -2018,6 +2218,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de accesibilidad
 ### Sistema / shell
@@ -2036,6 +2245,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -2065,6 +2275,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2108,6 +2321,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -2124,6 +2338,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -2140,6 +2355,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -2153,6 +2369,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2165,6 +2383,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -2196,6 +2415,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de pruebas A11Y
 ### Sistema / shell
@@ -2214,6 +2442,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -2243,6 +2472,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2286,6 +2518,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -2302,6 +2535,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -2318,6 +2552,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -2331,6 +2566,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2343,6 +2580,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -2374,6 +2612,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de apps
 ### Sistema / shell
@@ -2392,6 +2639,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -2421,6 +2669,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2464,6 +2715,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -2480,6 +2732,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -2496,6 +2749,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -2509,6 +2763,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2521,6 +2777,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -2552,6 +2809,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de tareas
 ### Sistema / shell
@@ -2570,6 +2836,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -2599,6 +2866,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2642,6 +2912,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -2658,6 +2929,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -2674,6 +2946,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -2687,6 +2960,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2699,6 +2974,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -2730,6 +3006,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Requisitos de iarouter
 ### Sistema / shell
@@ -2748,6 +3033,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-SYS-010 | Los identificadores de código deben usar convenciones snake_case/PascalCase según STYLE_GUIDE | Should | Inspection |
 | REQ-SYS-011 | Los mensajes de usuario del shell y comandos deben estar en español | Must |  |
 | REQ-SYS-012 | Ningún fichero .py bajo moslib/core ni moslib/commands puede superar 120 líneas. Si se supera, se trocea en submódulos con una fachada delgada. El comando test 120 lista los que se pasan y el total; no es bloqueante de arranque. | Must | Test |
+| REQ-SYS-020 | Un fichero de codigo de sistema no supera 120 lineas; si lo hace se parte en submodulos sin perder contrato execute/help. | Must | Test |
 
 ### Comandos
 
@@ -2777,6 +3063,9 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-CMD-022 | En la raíz del clone, junto a install.sh, debe existir write.sh. Acepta el mismo lote que multi (write, hash, Base64, punto) y se cierra con :e o ;e. Escribe el fichero solo si el SHA-256 coincide. Intenta registrar integridad; si no puede, avisa. Sirve para reparar el árbol cuando MOS no arranca. | Must | Test |
 | REQ-CMD-023 | Existe el comando de sistema integridad con execute y help. Subcomandos sembrar, aceptar RUTA y recargar. No acepta un lote de rutas. | Must | Test |
 | REQ-CMD-024 | Existe el comando de sistema hash con execute y help. Calcula SHA-256 de una ruta relativa al clone para contrastar con write. | Must | Test |
+| REQ-CMD-030 | MOSh ofrece multi y el alias m para pegar un lote; solo una linea que sea :e ejecuta y una que sea :q cancela. | Must | Test |
+| REQ-CMD-031 | write solo opera dentro de multi o write.sh; compara hash esperado, escribe con backup temporal y abre code si el hash coincide. | Must | Test |
+| REQ-CMD-032 | El payload de write admite codecs b64 gz xz b85 y combinaciones; se elige el mas corto al emitir. | Must | Test |
 
 ### Espacio de usuario
 
@@ -2820,6 +3109,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-BOOT-002 | Si los tests de arranque fallan, el proceso debe terminar sin abrir el shell interactivo | Must | Demo |
 | REQ-BOOT-003 | El mensaje de fallo de arranque debe ser claro y orientar a revisión de tests/comandos ilegales | Must | Demo |
 | REQ-BOOT-004 | Si los tests pasan, el shell debe mostrar usuario y ruta del espacio personal | Must | Demo |
+| REQ-BOOT-005 | El arranque exige locale es_ES salvo simulacion documentada; el bloqueo explica motivo etico y DUDH. | Must | Test |
 
 ### Pruebas
 
@@ -2836,6 +3126,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-TEST-009 | Los tests A11Y forman parte del proceso habitual (desarrollo y producción), no son opcionales de solo CI | Must | Inspection |
 | REQ-TEST-010 | Debe existir cobertura de apps, prioridad de nombres y minimoslib | Must | Test |
 | REQ-TEST-011 | Debe existir cobertura de tareas e iarouter | Must | Test |
+| REQ-TEST-020 | test 120 lista los ficheros que superan 120 lineas y el total; no hace fallar el arranque. | Must | Test |
 
 ### Documentación
 
@@ -2852,6 +3143,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-DOC-009 | A11Y |  |  |
 | REQ-DOC-010 | Debe existir docs/a11y/DECLARACION.md | Must | Inspection |
 | REQ-DOC-011 | Debe existir docs/a11y/informe.md y docs/a11y/informe.json | Must | Inspection |
+| REQ-DOC-020 | docs muestra categorias y documentos numerados; Nh abre la version HTML con el visor del anfitrion; no lista .DS_Store. | Must | Test |
 
 ### Actualización
 
@@ -2865,6 +3157,8 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-UPD-006 | update debe alinear los tags locales con origin (alta y baja) | Must |  |
 | REQ-UPD-007 | Tras update, los módulos ya cargados en la sesión no deben cambiar solos; debe existir update reiniciar o equivalente de salir y relanzar | Must |  |
 | REQ-UPD-008 | No se avanza sobre main. git commit, push, merge y rebase sobre main desde MOS están bloqueados. update a secas solo trae origin/main y exige árbol limpio. update dev lista ramas remotas distintas de main, permite elegir por número y hace checkout+pull. dev publicar hace commit wip automático y push de la rama actual (prohibido en main). dev consolidar fusiona ff-only a main, hace push y borra la rama; si no hay fast-forward no borra. | Must | Test |
+| REQ-UPD-010 | update dev lista ramas que no son main y permite probar una; no avanza producto sobre main si hay trabajo local ajeno a main. | Must | Test |
+| REQ-UPD-011 | El comando dev publica o consolida la rama de desarrollo con mensaje automatico de prueba en otras maquinas. | Must | Test |
 
 ### Plataforma / entornos
 
@@ -2877,6 +3171,7 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-PLAT-005 | Entornos |  |  |
 | REQ-PLAT-006 | La documentación de entornos no debe depender de rutas absolutas de un usuario concreto | Must | Inspection |
 | REQ-PLAT-007 | Un candidato Poetry solo debe usarse si --version se puede ejecutar | Must |  |
+| REQ-PLAT-010 | El historial de MOSh tiene tope de lineas y tamano; al recortar se conservan las entradas mas nuevas. | Must | Test |
 
 ### Apps
 
@@ -2908,6 +3203,15 @@ Formato: `REQ-<AREA>-<NNN>`
 | REQ-IA-004 | Debe poder usar Grok y OpenRouter cuando hay clave | Should | Demo |
 | REQ-IA-005 | Las claves no deben listarse en status | Must |  |
 | REQ-IA-006 | El puente HTTP de iarouter, si existe, no es P2P | Must | Inspection |
+
+### Integridad del árbol versionado
+
+| Id | Texto | Prioridad | Verificación |
+|-----|-------|-----------|--------------|
+| REQ-INT-001 | El arranque comprueba manifiesto y sello de integridad; un fallo de contenido impide la sesión. | Must | Test |
+| REQ-INT-002 | write y write.sh registran el hash canónico del fichero escrito y el sello del manifiesto. | Must | Test |
+| REQ-INT-003 | MOS_INTEGRIDAD=recargar y arreglar_integridad.sh son conscientes: no silencian un fallo de contenido. | Must | Test |
+| REQ-INT-004 | El hash es canónico respecto a fin de línea; LF/CRLF/CR del mismo texto no se tratan como mutación. | Must | Test |
 
 ## Trazabilidad mínima
 | Spec de origen | Requisitos principales |

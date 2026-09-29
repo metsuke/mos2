@@ -1,4 +1,4 @@
-"""write: solo en multi. Payload = hash + Base64 + punto. Abre code al OK."""
+"""write: solo en multi. Payload = hash + codec + punto."""
 
 from moslib.core.write_b64 import aplicar
 
@@ -6,22 +6,23 @@ from moslib.core.write_b64 import aplicar
 def execute(args, payload=None):
     if payload is None:
         print("[write] Solo se usa dentro de multi.")
-        return
+        return 1
     if not args:
         print("[write] Uso: write <ruta>")
-        return
+        return 1
     ok, msg = aplicar(args[0], list(payload))
     print(msg)
     if not ok:
-        return
+        return 1
     from moslib.commands import code as cmd_code
     cmd_code.execute([args[0]])
+    return 0
 
 
 def help():
     return (
-        "Uso: write <ruta>  (solo multi). "
-        "Línea 1: sha256. Luego Base64. Cierra con . Al OK abre code."
+        "Uso: write <ruta> (solo multi). "
+        "Linea 1 sha256. Luego gz: a 80 cols. Cierra con ."
     )
 
 
