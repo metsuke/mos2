@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from moslib.core.docgen_html import escribir_html
 from moslib.core.docgen_index import documentos, get_documento, get_project_root
 from moslib.core.docgen_tupla_crud import list_tuplas
 from moslib.core.docgen_tupla_render import render_nodos
@@ -44,8 +45,7 @@ def _arbol(items: list) -> list:
 
     raices = [x for x in items if _padre(x.get("id") or "") not in por_id]
     raices.sort(key=lambda x: (int(x.get("orden") or 0), x.get("id") or ""))
-    visto = set()
-    ordenados = []
+    visto, ordenados = set(), []
     for raiz in raices:
         for n in [raiz] + walk(raiz.get("id") or ""):
             vid = n.get("id") or ""
@@ -83,8 +83,19 @@ def destino_md(doc_id: str):
     pref = _prefijo(doc_id)
     if "/man/" in pref + "/":
         return root / "docs" / "man" / (pref.split("/")[-1] + ".md")
-    nombre = pref.split("/")[-1].upper().replace("-", "_") + ".md"
-    return root / "docs" / nombre
+    return root / "docs" / (pref.split("/")[-1].upper().replace("-", "_") + ".md")
+
+
+def _con_vease(pref: str, texto: str) -> str:
+    if "/man/" not in pref + "/":
+        return texto
+    plano = texto.upper()
+    if "VEASE TAMBIEN" in plano or "SEE ALSO" in plano:
+        return texto
+    yo = pref.split("/")[-1]
+    refs = [x for x in ("help", "man") if x != yo] or ["docs"]
+    nl = chr(10)
+    return texto.rstrip() + nl + nl + "## VEASE TAMBIEN" + nl + ", ".join(refs) + nl
 
 
 def generate_tupla(doc_id: str):
@@ -93,7 +104,12 @@ def generate_tupla(doc_id: str):
         raise FileNotFoundError(doc_id)
     dest = destino_md(doc_id)
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(render_nodos(nodos), encoding="utf-8")
+    pref = _prefijo(doc_id)
+    texto = _con_vease(pref, render_nodos(nodos))
+    dest.write_text(texto, encoding="utf-8")
+    item = _busca_indice(doc_id)
+    hid = str((item or {}).get("id") or ("man-" + dest.stem))
+    escribir_html(hid, texto)
     try:
         from moslib.core.integridad import registrar
         rel = dest.resolve().relative_to(get_project_root().resolve()).as_posix()

@@ -11,3 +11,6 @@ dev - publica o consolida la rama de desarrollo
 ## DESCRIPCION
 
 publicar hace commit wip y push de la rama actual (prohibido en main). consolidar fusiona ff-only a main, push y borra la rama.
+
+## VEASE TAMBIEN
+help, man

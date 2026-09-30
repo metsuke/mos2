@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>man-multi</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
-<h1>multi</h1>
+<h1>MULTI</h1>
 <h2>NOMBRE</h2>
-<p>multi - pega un lote de comandos y luego los ejecuta</p>
+<p>multi - lote de comandos con :e / :q y sumario de fallos</p>
 <h2>SINOPSIS</h2>
-<ul><li>multi</li><li>m</li></ul>
+<ul><li>multi</li></ul>
 <h2>DESCRIPCION</h2>
-<p>Entra en prompt multi&gt;. Se pegan comandos, uno por linea. No se ejecutan al pegar. :e o :w lanza el lote en orden. ;e y ;q se aceptan; el canonico es :e y :q. :q cancela. Alias: m. write solo se admite dentro de este lote. Maximo tres write por lote si los ficheros son pequenos.</p>
-<h2>SEGURIDAD</h2>
-<p>Cada linea pasa por el mismo CommandManager que el prompt normal. Comando de sistema. Solo stdlib y moslib.</p>
+<p>Pega el bloque. Una linea solo con :e ejecuta; :q cancela. ;e y ;q equivalen. Al terminar: sumario ok=N y !!! fallos=M. write solo aqui o en write.sh.</p>
 <h2>VEASE TAMBIEN</h2>
-<p>m, write, w, code, git, touch</p>
+<p>help, man</p>
 </body></html>

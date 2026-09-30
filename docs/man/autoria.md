@@ -13,3 +13,6 @@ autoria - autoría legal de MetsuOS (nombre, correos, años)
 ## DESCRIPCION
 
 Fuente de programa, autor, email, email_alt, anio_desde, anio_hasta y contacto. Un solo año si coinciden; si no, desde-hasta. Segmento autoria.aviso_gpl para LICENSE.
+
+## VEASE TAMBIEN
+help, man
