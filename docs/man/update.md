@@ -1,33 +1,13 @@
-# update
+# UPDATE
 
 ## NOMBRE
-update — trae origin/main o una rama de desarrollo
+
+update - trae origin/main o una rama de prueba
 
 ## SINOPSIS
 
-- update
-- update dev
-- update reiniciar
+- update | update dev
 
-## DESCRIPCIÓN
-Sin argumentos alinea el clon con origin/main (fetch + checkout main + reset --hard). Se niega si el árbol está sucio: publica con dev publicar o limpia.
+## DESCRIPCION
 
-update dev lista ramas remotas que no son main, pide un número y hace checkout + pull de esa rama para probar en otra máquina.
-
-El código nuevo no entra en la sesión actual. Sal y entra, o update reiniciar.
-
-## OPCIONES
-dev — elige rama remota distinta de main.
-reiniciar — relanza MOSh sobre el árbol actual.
-
-## EJEMPLOS
-
-- update
-- update dev
-- update reiniciar
-
-## SEGURIDAD
-No avanza main. No hace force-push. Sincroniza integridad local desde el repo.
-
-## VÉASE TAMBIÉN
-dev, git, test, version
+A secas exige arbol limpio y alinea main con origin/main. El subcomando dev lista ramas que no son main y permite probar una. No se avanza producto sobre main desde MOS.

@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/help/sec/desc/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Sin argumento lista o resume. Con nombre llama a help() de ese comando. El man largo vive en docs/man/.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T05:15:43Z",
+  "modificado": "2026-09-30T05:15:43Z",
+  "render": "parrafo",
+  "activo": true
+}

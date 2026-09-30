@@ -1,31 +1,13 @@
-# help
+# HELP
 
 ## NOMBRE
-help – muestra ayuda corta de comandos
+
+help - texto corto de uso de un comando
 
 ## SINOPSIS
 
-- help
-- help [comando]
+- help | help <comando>
 
-## DESCRIPCIÓN
-Sin argumentos, lista comandos disponibles y una ayuda breve.
+## DESCRIPCION
 
-Con argumento, muestra la ayuda específica de ese comando.
-
-La ayuda corta se obtiene de la función help() de cada módulo de comando. Para documentación extendida, usar man.
-
-## OPCIONES
-Ninguna. El primer argumento se interpreta como nombre de comando.
-
-## EJEMPLOS
-
-- help
-- help version
-- help update
-
-## SEGURIDAD
-Comando de sistema.
-
-## VÉASE TAMBIÉN
-man, version, test
+Sin argumento lista o resume. Con nombre llama a help() de ese comando. El man largo vive en docs/man/.

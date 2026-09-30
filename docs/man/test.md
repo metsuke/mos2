@@ -1,32 +1,13 @@
-# test
+# TEST
 
 ## NOMBRE
-test – ejecuta la batería de tests de MetsuOS
+
+test - lanza la bateria o lista el tope de 120 lineas
 
 ## SINOPSIS
 
 - test
-- test [args...]
-- test 120
 
-## DESCRIPCIÓN
-Lanza pytest sobre el proyecto.
+## DESCRIPCION
 
-Sirve para verificar seguridad, contrato de comandos, loader, usuario y estilo crítico.
-
-Además, MetsuOS ya ejecuta tests al arrancar. Si fallan en el arranque, el shell no inicia.
-
-## OPCIONES
-Cualquier argumento adicional se reenvía a pytest cuando la implementación lo permite.
-
-## EJEMPLOS
-
-- test
-- test -q
-- test tests/test_security.py
-
-## SEGURIDAD
-Comando de sistema. No reduce la política de seguridad; la verifica.
-
-## VÉASE TAMBIÉN
-update, help, man
+Sin argumentos corre pytest. test 120 lista los .py de moslib que superan 120 lineas y el total; no bloquea el arranque.

@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/multi/sec/desc/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Pega el bloque. Una linea solo con :e ejecuta; :q cancela. ;e y ;q equivalen. Al terminar: sumario ok=N y !!! fallos=M. write solo aqui o en write.sh.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-29T20:56:59Z",
+  "modificado": "2026-09-29T20:56:59Z",
+  "render": "parrafo",
+  "activo": true
+}

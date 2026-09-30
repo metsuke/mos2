@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/test/sec/desc/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Sin argumentos corre pytest. test 120 lista los .py de moslib que superan 120 lineas y el total; no bloquea el arranque.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-29T21:59:49Z",
+  "modificado": "2026-09-29T21:59:49Z",
+  "render": "parrafo",
+  "activo": true
+}

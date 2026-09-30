@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/dev/sec/desc/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "publicar hace commit wip y push de la rama actual (prohibido en main). consolidar fusiona ff-only a main, push y borra la rama.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-29T22:18:27Z",
+  "modificado": "2026-09-29T22:18:27Z",
+  "render": "parrafo",
+  "activo": true
+}
