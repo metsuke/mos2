@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/agents/sec/ramas/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Trabajo en rama. publicar sube la rama. consolidar a main es humano y ff-only. En lotes no se escribe una linea que sea update ni dev.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:14:49Z",
+  "modificado": "2026-09-30T12:14:49Z",
+  "render": "parrafo",
+  "activo": true
+}

@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><title>agents</title><style>body{font-family:sans-serif;max-width:52rem;margin:1.5rem auto;padding:0 1rem;line-height:1.45}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}pre{background:#f4f4f4;padding:.75rem;overflow:auto}code{font-family:ui-monospace,monospace}</style></head><body>
-<h1>AGENTS.md — Punto de entrada para IA (MetsuOS / MOS2)</h1>
-<p>Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y sigue <code>docs/AI_ONBOARDING.md</code>.</p>
-<h2>Lectura mínima</h2>
-<p>1. Este archivo 2. docs/AI_ONBOARDING.md 3. docs/INCENTIVOS.md 4. docs/METHODOLOGY.md 5. docs/INTERACTION_REVIEW.md 6. docs/ENVIRONMENTS.md 7. docs/VERSIONING.md 8. docs/A11Y.md y docs/a11y/DECLARACION.md 9. docs/STYLE_GUIDE.md 10. docs/specs/00-OVERVIEW.md 11. docs/plans/ si hay campaña 12. Código y resto de specs según la tarea</p>
-<h2>Normas que no se improvisan</h2>
-<ul><li>Comandos: execute(args) y help() -&gt; str</li><li>Imports en comandos: solo biblioteca estándar y moslib</li><li>El usuario no sobrescribe comandos de sistema (prefijo user_)</li><li>Tests de arranque bloqueantes</li><li>Accesibilidad de interfaz mandatoria (docs/A11Y.md)</li><li>Tope 120 líneas por fichero de código; consultar con <code>test 120</code></li><li>Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)</li><li>Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md</li><li>Sin rutas personales ni nombres de máquina en docs públicas</li><li>Encabezados de documentación sin numeración</li><li>Entregar archivos enteros; tablas ya montadas; un paso cada vez</li><li>No remitir a un pegado anterior: volver a pegar</li><li>Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso</li><li>Si el archivo nuevo es más corto, avisarlo</li><li>Directorios en tablas (una columna por nivel)</li><li>Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo</li><li>Breadcrumb de campaña en cada paso; explicar saltos de número</li><li>Git, no funciones exclusivas de un forge</li><li>Edición habitual: multi (dentro) o ./write.sh (fuera); lote write + hash + payload + punto + docgen generate</li><li>Estado del repo: comando synccheck y lectura por SHA</li><li>Psicología: acompañar; no dañar, desestabilizar ni engañar</li></ul>
-<h2>Documentación y docgen</h2>
-<ul><li>Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json, index.json).</li><li>El markdown publicado se obtiene con <code>docgen generate</code>.</li><li>La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.</li><li>Flujo normal: editar el JSON (átomo) y <code>docgen generate &lt;id&gt;</code> en el mismo lote.</li><li>Si el id no está en el índice: <code>docgen index add &lt;id&gt; &lt;rel&gt;</code>.</li><li><code>docgen ingest</code> solo en la primera absorción o si hay que recuperar desde markdown/backup.</li><li><code>generate</code> no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.</li><li>Un fichero por mensaje; fichero entero; no parches sueltos.</li><li>Ids de pages: el fichero es docs/docgen/pages/&lt;id&gt;.json (ai-onboarding, no ia-onboarding).</li></ul>
-<h2>multi y write.sh</h2>
-<p>Dentro de MOS: <code>m</code> / <code>multi</code>. Acumula el pegado. Parseo solo con una línea que sea <code>:e</code> o <code>:q</code> (también <code>;e</code> <code>;q</code>). Fuera: <code>./write.sh</code> lanza el mismo multi. No emular en bash. Lote: write &lt;ruta&gt; &lt;sha256 del claro&gt; [gz:|xz:|b85:|gzb85:|xzb85:]payload . docgen generate &lt;id&gt; Máximo tres writes pequeños por lote.</p>
-<h2>Contexto de sesión</h2>
-<pre><code>Contexto: &lt;sistema&gt; / &lt;entorno&gt; / &lt;rol&gt;</code></pre>
-<p>Si falta y hace falta para paths o Poetry, preguntar.</p>
-<h2>Versiones</h2>
-<p>Cambio de runtime → bump en pyproject.toml + tag vX.Y.Z. Solo docs → sin bump; tag vX.Y.Z-docs o vX.Y.Z-docs.N. Detalle: docs/VERSIONING.md.</p>
-<p>Producto de referencia: 0.2.7 / árbol 0.2.8. Comandos a11y, docs, synccheck, docgen.</p>
-<h2>Qué no hacer</h2>
-<ul><li>No inventar features ausentes en código o specs</li><li>No desactivar seguridad ni tests para hacer pasar un cambio</li><li>No excluir un perfil A11Y por comodidad</li><li>No asumir Mac, Git Bash o WSL sin contexto declarado</li><li>No diagnosticar el remoto solo con raw .../main/</li><li>No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)</li><li>No usar ingest como paso rutinario de edición</li><li>No usar ./arreglar_integridad.sh como atajo diario</li><li>No crear .py de más de 120 líneas</li></ul>
+<h1>AGENTS</h1>
+<h2>Norma de trabajo</h2>
+<p>Fuente = tupla o json. MD y HTML se generan. write solo en multi o write.sh. Lote: ruta, sha256, payload gz a 80 columnas, punto, :e. Base64 plano solo tras CRC. multi imprime !!! y sumario. :s avanza un paso. ;s y ;e equivalen. Ningun lote lleva una linea que sea ella sola un comando de sistema (update, dev, exit). tope 120 lineas en moslib. No avanzar producto sobre main.</p>
+<h2>Ritual write</h2>
+<p>Un fichero por write. Hash canónico en la primera linea del payload. Si NO COINCIDE no se toca el destino. Tras OK, code abre el fichero. write.sh lanza el multi real.</p>
+<h2>Integridad</h2>
+<p>Manifiesto repo y copia local. Un fallo de contenido impide arrancar. arreglar_integridad.sh es emergencia consciente. write registra el hash al aplicar.</p>
+<h2>Ramas</h2>
+<p>Trabajo en rama. publicar sube la rama. consolidar a main es humano y ff-only. En lotes no se escribe una linea que sea update ni dev.</p>
+<h2>Avance</h2>
+<p>:s es el siguiente paso. ;s equivale. Un paso = un lote corto. Ficheros enteros. gz por defecto. Tras write o tupla generate, docgen va en el mismo lote si hace falta regenerar.</p>
+<h2>Tope de lineas</h2>
+<p>Ningun .py de moslib/core ni moslib/commands supera 120 lineas. test 120 lista y cuenta; no bloquea. Si se pasa, se trocea con fachada delgada.</p>
+<h2>Salida en el chat</h2>
+<p>Antes y despues de cada bloque de texto hay una linea en blanco. El lote va entero en un solo bloque. Payload a 80 columnas.</p>
 </body></html>

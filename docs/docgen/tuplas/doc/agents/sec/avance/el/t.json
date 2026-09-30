@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/agents/sec/avance/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": ":s es el siguiente paso. ;s equivale. Un paso = un lote corto. Ficheros enteros. gz por defecto. Tras write o tupla generate, docgen va en el mismo lote si hace falta regenerar.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:14:49Z",
+  "modificado": "2026-09-30T12:14:49Z",
+  "render": "parrafo",
+  "activo": true
+}

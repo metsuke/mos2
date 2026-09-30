@@ -120,6 +120,110 @@
     {
       "id": "man-autoria",
       "rel": "docs/man/autoria.md"
+    },
+    {
+      "id": "man-multi",
+      "rel": "docs/man/multi.md"
+    },
+    {
+      "id": "man-write",
+      "rel": "docs/man/write.md"
+    },
+    {
+      "id": "man-hash",
+      "rel": "docs/man/hash.md"
+    },
+    {
+      "id": "man-integridad",
+      "rel": "docs/man/integridad.md"
+    },
+    {
+      "id": "man-test",
+      "rel": "docs/man/test.md"
+    },
+    {
+      "id": "man-update",
+      "rel": "docs/man/update.md"
+    },
+    {
+      "id": "man-dev",
+      "rel": "docs/man/dev.md"
+    },
+    {
+      "id": "man-docs",
+      "rel": "docs/man/docs.md"
+    },
+    {
+      "id": "man-a11y-cmd",
+      "rel": "docs/man/a11y.md"
+    },
+    {
+      "id": "man-help",
+      "rel": "docs/man/help.md"
+    },
+    {
+      "id": "man-version",
+      "rel": "docs/man/version.md"
+    },
+    {
+      "id": "man-echo",
+      "rel": "docs/man/echo.md"
+    },
+    {
+      "id": "man-clear",
+      "rel": "docs/man/clear.md"
+    },
+    {
+      "id": "man-uptime",
+      "rel": "docs/man/uptime.md"
+    },
+    {
+      "id": "man-sysinfo",
+      "rel": "docs/man/sysinfo.md"
+    },
+    {
+      "id": "man-man",
+      "rel": "docs/man/man.md"
+    },
+    {
+      "id": "man-red",
+      "rel": "docs/man/red.md"
+    },
+    {
+      "id": "man-apps",
+      "rel": "docs/man/apps.md"
+    },
+    {
+      "id": "man-tareas",
+      "rel": "docs/man/tareas.md"
+    },
+    {
+      "id": "man-hilos",
+      "rel": "docs/man/hilos.md"
+    },
+    {
+      "id": "man-iarouter",
+      "rel": "docs/man/iarouter.md"
+    },
+    {
+      "id": "man-docgen",
+      "rel": "docs/man/docgen.md"
+    },
+    {
+      "id": "man-exit",
+      "rel": "docs/man/exit.md"
+    },
+    {
+      "id": "man-code",
+      "rel": "docs/man/code.md"
+    },
+    {
+      "id": "man-touch",
+      "rel": "docs/man/touch.md"
+    },
+    {
+      "id": "man-git",
+      "rel": "docs/man/git.md"
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/code/sec/desc/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Ruta relativa al clone. Tras un write correcto se llama solo. Sirve para comprobar el fichero fuera de MOS.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T11:59:35Z",
+  "modificado": "2026-09-30T11:59:35Z",
+  "render": "parrafo",
+  "activo": true
+}

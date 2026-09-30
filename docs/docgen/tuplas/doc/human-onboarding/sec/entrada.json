@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/human-onboarding/sec/entrada",
+  "tipo": "seccion",
+  "titulo": "Entrada",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 10,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:24:55Z",
+  "modificado": "2026-09-30T12:24:55Z",
+  "render": "h2",
+  "activo": true
+}

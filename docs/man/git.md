@@ -1,22 +1,16 @@
-# git
+# GIT
 
 ## NOMBRE
-git — git del anfitrión sobre la raíz del clone
+
+git - proxy al git del anfitrion desde la raiz del clone
 
 ## SINOPSIS
 
-- git status
-- git add <ruta>
-- git --no-pager diff
-- git --no-pager diff --cached --stat
-- git commit -m <mensaje>
+- git status | git log
 
-## DESCRIPCIÓN
-Reenvía los argumentos a git del PATH. El cwd es siempre la raíz del clone.
-En main están bloqueados commit, push, merge y rebase. Usa una rama y luego dev publicar o dev consolidar.
+## DESCRIPCION
 
-## SEGURIDAD
-Es el git del anfitrión. Puede escribir el repo. No escapa del clone como cwd.
+Ejecuta git del anfitrion con cwd en la raiz del clone. commit, push, merge y rebase sobre main siguen bloqueados por la politica de ramas.
 
-## VÉASE TAMBIÉN
-dev, update, touch, code
+## VEASE TAMBIEN
+help, man

@@ -1,21 +1,16 @@
-# touch
+# TOUCH
 
 ## NOMBRE
-touch – crea un fichero vacío en el clone
+
+touch - crea un fichero vacio relativo al clone
 
 ## SINOPSIS
 
-- touch <ruta>
+touch <ruta>
 
-## DESCRIPCIÓN
-Crea el fichero indicado si no existe. La ruta es relativa a la raíz del clone, no al directorio de trabajo del anfitrión.
-Si faltan directorios intermedios, los crea.
-No pisa el contenido de un fichero que ya existe; solo actualiza la marca de tiempo.
+## DESCRIPCION
 
-## SEGURIDAD
-Rechaza rutas que salgan del clone.
-No llama a la utilidad touch del anfitrión; usa pathlib.
-Comando de sistema. Solo stdlib y moslib.
+Crea el fichero si no existe. No sustituye write: el contenido del clone se escribe con hash.
 
-## VÉASE TAMBIÉN
-code, git, docs
+## VEASE TAMBIEN
+help, man

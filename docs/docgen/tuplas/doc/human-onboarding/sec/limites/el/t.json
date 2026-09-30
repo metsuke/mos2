@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/human-onboarding/sec/limites/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "No es un Unix completo. git, code y touch son puentes al anfitrion. write no se usa a pelo.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:25:14Z",
+  "modificado": "2026-09-30T12:25:14Z",
+  "render": "parrafo",
+  "activo": true
+}

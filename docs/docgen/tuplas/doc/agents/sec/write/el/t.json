@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/agents/sec/write/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Un fichero por write. Hash canónico en la primera linea del payload. Si NO COINCIDE no se toca el destino. Tras OK, code abre el fichero. write.sh lanza el multi real.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:13:59Z",
+  "modificado": "2026-09-30T12:13:59Z",
+  "render": "parrafo",
+  "activo": true
+}

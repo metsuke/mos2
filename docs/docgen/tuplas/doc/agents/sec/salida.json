@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/agents/sec/salida",
+  "tipo": "seccion",
+  "titulo": "Salida en el chat",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 70,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:15:34Z",
+  "modificado": "2026-09-30T12:15:34Z",
+  "render": "h2",
+  "activo": true
+}

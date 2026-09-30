@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/agents/sec/norma/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Fuente = tupla o json. MD y HTML se generan. write solo en multi o write.sh. Lote: ruta, sha256, payload gz a 80 columnas, punto, :e. Base64 plano solo tras CRC. multi imprime !!! y sumario. :s avanza un paso. ;s y ;e equivalen. Ningun lote lleva una linea que sea ella sola un comando de sistema (update, dev, exit). tope 120 lineas en moslib. No avanzar producto sobre main.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:13:16Z",
+  "modificado": "2026-09-30T12:13:16Z",
+  "render": "parrafo",
+  "activo": true
+}

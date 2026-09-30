@@ -1,27 +1,16 @@
-# apps
+# APPS
 
 ## NOMBRE
-apps – instala, lista y quita apps locales
+
+apps - instala, lista y retira aplicaciones
 
 ## SINOPSIS
 
-- apps
+- apps | apps list | apps show | apps install | apps remove
 
-## DESCRIPCIÓN
-Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala.
+## DESCRIPCION
 
-Uso: apps [list|show <id>|install <ruta|url> [ref]|remove <id>] - Instala apps desde el clone o un repo git. ambito usuario o sistema según app.json. Sin SEC/A11Y no se instala.
+Ambito usuario o sistema. Una app se identifica con app.json. Un comando de app no pisa un comando de sistema. Sin A11Y minima no se acepta ni se ejecuta.
 
-## OPCIONES
-Ver help del comando.
-
-## EJEMPLOS
-
-- apps list
-- apps install /ruta/a/mi-app
-
-## SEGURIDAD
-Comando de sistema. stdlib + moslib.
-
-## VÉASE TAMBIÉN
+## VEASE TAMBIEN
 help, man

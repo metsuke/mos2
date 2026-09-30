@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/human-onboarding/sec/entrada/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Instalar con el script del clone, locale es_ES, poetry, alias mos2. El arranque corre tests. Si integridad falla, no se abre MOSh.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:24:55Z",
+  "modificado": "2026-09-30T12:24:55Z",
+  "render": "parrafo",
+  "activo": true
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/user-manual/sec/uso/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Comandos de sistema: help, man, docs, a11y, test, version, echo, clear, uptime, sysinfo, red, apps, tareas, hilos, iarouter. El detalle esta en docs/man/.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:25:48Z",
+  "modificado": "2026-09-30T12:25:48Z",
+  "render": "parrafo",
+  "activo": true
+}

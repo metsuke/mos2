@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/methodology/sec/ciclo",
+  "tipo": "seccion",
+  "titulo": "Ciclo",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 10,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T12:22:02Z",
+  "modificado": "2026-09-30T12:23:22Z",
+  "render": "h2",
+  "activo": true
+}

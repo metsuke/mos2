@@ -1,28 +1,13 @@
-# Lote write + generate
+# IA_LOTE
 
-Anexo de metodologia IA. El hash es del fichero en claro.
+## Regla
 
-## Dentro de MOS
-Comando m o multi.
-Pegas el bloque.
-Linea sola :e ejecuta. :q cancela.
-Forma:
-write <ruta>
-<sha256>
-[prefijo]payload
-.
-docgen generate <id>
+Un lote es un bloque que multi o write.sh ejecuta al :e. Maximo tres ficheros write si son cortos; si no, uno. docgen del mismo destino va en el mismo lote. Ninguna linea del lote es un comando de sistema suelto.
 
-## Fuera de MOS
-./write.sh lanza el mismo multi.
-Mismo bloque y mismo :e.
-No emular el lote en bash.
+## Forma write
 
-## Prefijos
-sin prefijo = Base64
-gz: gzip+b64
-xz: lzma+b64
-b85: ascii85
-gzb85: gzip+ascii85
-xzb85: lzma+ascii85
-Elegir el mas corto que el decoder ya tenga.
+write ruta / sha256 / payload gz a 80 columnas / linea con un punto. gz por defecto. Base64 solo si ese fichero dio CRC.
+
+## Fallos
+
+Al cerrar: sumario ok=N y !!! fallos=M. Cada fallo lleva !!!. write devuelve 1 si el payload no aplica.

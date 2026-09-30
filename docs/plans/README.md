@@ -49,8 +49,8 @@ No hay contador global en el nombre.
 | 2026-09-13 | 02 | 2026-09-13-02-sync-docs-028.md | Cerrada (docs aplicados en local; merge/tag a criterio humano) |
 | 2026-09-14 | 01 | 2026-09-14-01-docgen.md | Cerrada en alcance de motor (pendiente pruebas humanas y bump) |
 | 2026-09-18 | 01 | 2026-09-18-01-integridad-write.md | En curso |
-| 2026-09-23 | 01 | 2026-09-23-01-docs-crud-redisenio.md | en-curso |
-| 2026-09-24 | 01 | 2026-09-24-01-tuplas-docgen.md | nota multi sumario !!! + REQ-CMD-033; write devuelve 0/1; payload ASCII/b64 si gz CRC falla |
+| 2026-09-23 | 01 | 2026-09-23-01-docs-crud-redisenio.md | nota 14 reqs hechos en alcance codigo. 15 es 2026-09-24 tuplas (en curso). 16 cierre no abierto. |
+| 2026-09-24 | 01 | 2026-09-24-01-tuplas-docgen.md | nota 2026-09-30 E parcial: LICENSE+autoria+mans sistema+agents/ia-write/ia-tope/ia-lote/methodology/human-onboarding/user-manual esqueleto. F no: umbral 50% sigue. Coexisten pages JSON y tuplas. Siguiente: completar paginas o F. No specs. |
 
 ## Ciclo
 1. Diseñar la campaña en el chat.

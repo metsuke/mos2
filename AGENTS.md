@@ -1,87 +1,29 @@
-# AGENTS.md — Punto de entrada para IA (MetsuOS / MOS2)
+# AGENTS
 
-Si eres un agente o modelo y te piden estudiar este repositorio, empieza aquí y sigue `docs/AI_ONBOARDING.md`.
+## Norma de trabajo
 
-## Lectura mínima
-1. Este archivo
-2. docs/AI_ONBOARDING.md
-3. docs/INCENTIVOS.md
-4. docs/METHODOLOGY.md
-5. docs/INTERACTION_REVIEW.md
-6. docs/ENVIRONMENTS.md
-7. docs/VERSIONING.md
-8. docs/A11Y.md y docs/a11y/DECLARACION.md
-9. docs/STYLE_GUIDE.md
-10. docs/specs/00-OVERVIEW.md
-11. docs/plans/ si hay campaña
-12. Código y resto de specs según la tarea
+Fuente = tupla o json. MD y HTML se generan. write solo en multi o write.sh. Lote: ruta, sha256, payload gz a 80 columnas, punto, :e. Base64 plano solo tras CRC. multi imprime !!! y sumario. :s avanza un paso. ;s y ;e equivalen. Ningun lote lleva una linea que sea ella sola un comando de sistema (update, dev, exit). tope 120 lineas en moslib. No avanzar producto sobre main.
 
-## Normas que no se improvisan
-- Comandos: execute(args) y help() -> str
-- Imports en comandos: solo biblioteca estándar y moslib
-- El usuario no sobrescribe comandos de sistema (prefijo user_)
-- Tests de arranque bloqueantes
-- Accesibilidad de interfaz mandatoria (docs/A11Y.md)
-- Tope 120 líneas por fichero de código; consultar con `test 120`
-- Dirección de trabajo: docs/INCENTIVOS.md (mandatorio para la IA; los humanos se inclinan, no se puntúan)
-- Asimov (cita + nota) y psicología de acompañamiento: capítulo IA de INCENTIVOS.md
-- Sin rutas personales ni nombres de máquina en docs públicas
-- Encabezados de documentación sin numeración
-- Entregar archivos enteros; tablas ya montadas; un paso cada vez
-- No remitir a un pegado anterior: volver a pegar
-- Cacho 1 sustituye el fichero; no cortar un spec a mitad sin aviso
-- Si el archivo nuevo es más corto, avisarlo
-- Directorios en tablas (una columna por nivel)
-- Comandos de sistema: Tipo A–Z, comandos A–Z dentro del tipo
-- Breadcrumb de campaña en cada paso; explicar saltos de número
-- Git, no funciones exclusivas de un forge
-- Edición habitual: multi (dentro) o ./write.sh (fuera); lote write + hash + payload + punto + docgen generate
-- Estado del repo: comando synccheck y lectura por SHA
-- Psicología: acompañar; no dañar, desestabilizar ni engañar
+## Ritual write
 
-## Documentación y docgen
-- Fuente de verdad de la docs: JSON en docs/docgen/ (man/, specs/, pages/, root/, areas.json, index.json).
-- El markdown publicado se obtiene con `docgen generate`.
-- La IA no reescribe specs, manual ni man enteros en el chat salvo que el humano lo pida.
-- Flujo normal: editar el JSON (átomo) y `docgen generate <id>` en el mismo lote.
-- Si el id no está en el índice: `docgen index add <id> <rel>`.
-- `docgen ingest` solo en la primera absorción o si hay que recuperar desde markdown/backup.
-- `generate` no debe volver a ingerir: ingerir al generar pisa el JSON con un md viejo o corto.
-- Un fichero por mensaje; fichero entero; no parches sueltos.
-- Ids de pages: el fichero es docs/docgen/pages/<id>.json (ai-onboarding, no ia-onboarding).
+Un fichero por write. Hash canónico en la primera linea del payload. Si NO COINCIDE no se toca el destino. Tras OK, code abre el fichero. write.sh lanza el multi real.
 
-## multi y write.sh
-Dentro de MOS: `m` / `multi`. Acumula el pegado. Parseo solo con una línea que sea `:e` o `:q` (también `;e` `;q`).
-Fuera: `./write.sh` lanza el mismo multi. No emular en bash.
-Lote:
-write <ruta>
-<sha256 del claro>
-[gz:|xz:|b85:|gzb85:|xzb85:]payload
-.
-docgen generate <id>
-Máximo tres writes pequeños por lote.
+## Integridad
 
-## Contexto de sesión
-```text
-Contexto: <sistema> / <entorno> / <rol>
-```
+Manifiesto repo y copia local. Un fallo de contenido impide arrancar. arreglar_integridad.sh es emergencia consciente. write registra el hash al aplicar.
 
-Si falta y hace falta para paths o Poetry, preguntar.
+## Ramas
 
-## Versiones
-Cambio de runtime → bump en pyproject.toml + tag vX.Y.Z.
-Solo docs → sin bump; tag vX.Y.Z-docs o vX.Y.Z-docs.N.
-Detalle: docs/VERSIONING.md.
+Trabajo en rama. publicar sube la rama. consolidar a main es humano y ff-only. En lotes no se escribe una linea que sea update ni dev.
 
-Producto de referencia: 0.2.7 / árbol 0.2.8. Comandos a11y, docs, synccheck, docgen.
+## Avance
 
-## Qué no hacer
-- No inventar features ausentes en código o specs
-- No desactivar seguridad ni tests para hacer pasar un cambio
-- No excluir un perfil A11Y por comodidad
-- No asumir Mac, Git Bash o WSL sin contexto declarado
-- No diagnosticar el remoto solo con raw .../main/
-- No abrir DepManager ni política geo de paquetes en esta baseline (solo dirección)
-- No usar ingest como paso rutinario de edición
-- No usar ./arreglar_integridad.sh como atajo diario
-- No crear .py de más de 120 líneas
+:s es el siguiente paso. ;s equivale. Un paso = un lote corto. Ficheros enteros. gz por defecto. Tras write o tupla generate, docgen va en el mismo lote si hace falta regenerar.
+
+## Tope de lineas
+
+Ningun .py de moslib/core ni moslib/commands supera 120 lineas. test 120 lista y cuenta; no bloquea. Si se pasa, se trocea con fachada delgada.
+
+## Salida en el chat
+
+Antes y despues de cada bloque de texto hay una linea en blanco. El lote va entero en un solo bloque. Payload a 80 columnas.
