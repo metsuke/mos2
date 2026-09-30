@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/iarouter/sec/desc/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Apagado por defecto. No envia a un modelo hasta usar o preguntar. Detecta Jan y GPT4All. Las claves no se listan en status. El puente HTTP, si existe, no es P2P.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T11:52:07Z",
+  "modificado": "2026-09-30T11:52:07Z",
+  "render": "parrafo",
+  "activo": true
+}
