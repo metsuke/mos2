@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/tareas/sec/desc/el/t",
+  "tipo": "elemento",
+  "titulo": "",
+  "cuerpo": "Tareas manuales y automaticas en almacén local. No es la malla P2P.",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T11:50:15Z",
+  "modificado": "2026-09-30T11:50:15Z",
+  "render": "parrafo",
+  "activo": true
+}

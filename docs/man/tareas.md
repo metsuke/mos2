@@ -1,29 +1,16 @@
-# tareas
+# TAREAS
 
 ## NOMBRE
-tareas – lista y gestiona tareas locales
+
+tareas - lista y gestiona el almacen local de tareas
 
 ## SINOPSIS
 
-- tareas
-- tareas [list|add <comando>|hecha <id>|tick]
-- tareas tick
-- tareas add
-- tareas hecha
-- tareas list
-- tareas ls
-- tareas [list|add <comando>|hecha <id>|tick] -
+tareas
 
-## DESCRIPCIÓN
-Manuales y automáticas en .mos/data/tareas.json.
-tick reencola automáticas de clase sistema que estén hechas.
-Una tarea en bloqueada_a11y_sec no se ejecuta.
+## DESCRIPCION
 
-## SEGURIDAD
-Comando de sistema. stdlib + moslib.
+Tareas manuales y automaticas en almacén local. No es la malla P2P.
 
-## HELP DEL COMANDO
-Uso: tareas [list|add <comando>|hecha <id>|tick] - Tareas locales. bloqueada_a11y_sec no se ejecuta.
-
-## HELP DEL COMANDO
-Uso: tareas [list|add <comando>|hecha <id>|tick] - Tareas locales. bloqueada_a11y_sec no se ejecuta.
+## VEASE TAMBIEN
+help, man

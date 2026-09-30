@@ -1,30 +1,16 @@
-# echo
+# ECHO
 
 ## NOMBRE
-echo – imprime texto en la salida estándar
+
+echo - imprime texto en la salida estandar
 
 ## SINOPSIS
 
-- echo
-- echo [texto]
+- echo | echo [texto]
 
-## DESCRIPCIÓN
-Escribe en pantalla los argumentos recibidos, separados por espacios.
+## DESCRIPCION
 
-Útil para mensajes simples, pruebas del shell y comprobaciones rápidas.
+Escribe los argumentos separados por espacios. No ejecuta el texto.
 
-Uso: echo [texto] - Imprime texto en la salida estándar.
-
-## OPCIONES
-Ninguna formal en esta baseline.
-
-## EJEMPLOS
-
-- echo hola
-- echo Hola desde MetsuOS
-
-## SEGURIDAD
-Comando de sistema. No ejecuta el texto como código.
-
-## VÉASE TAMBIÉN
+## VEASE TAMBIEN
 help, man

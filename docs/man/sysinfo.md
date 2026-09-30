@@ -1,26 +1,16 @@
-# sysinfo
+# SYSINFO
 
 ## NOMBRE
-sysinfo – información del sistema anfitrión
+
+sysinfo - datos del anfitrion y de la sesion
 
 ## SINOPSIS
 
-- sysinfo
+sysinfo
 
-## DESCRIPCIÓN
-Muestra información del entorno donde corre MetsuOS: datos de máquina, sistema operativo anfitrión y estado general accesible desde Python.
+## DESCRIPCION
 
-No describe el “kernel” de MetsuOS, sino el host real.
+Imprime sistema operativo, Python y rutas de sesion. No envia datos a red.
 
-## OPCIONES
-Ninguna en esta baseline.
-
-## EJEMPLOS
-
-- sysinfo
-
-## SEGURIDAD
-Comando de sistema. Solo consulta información; no modifica el host.
-
-## VÉASE TAMBIÉN
-uptime, version, help
+## VEASE TAMBIEN
+help, man

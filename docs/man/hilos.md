@@ -1,26 +1,16 @@
-# hilos
+# HILOS
 
 ## NOMBRE
-hilos – vista por clase de las tareas
+
+hilos - vista por clase de las tareas en texto lineal
 
 ## SINOPSIS
 
-- hilos
+hilos
 
-## DESCRIPCIÓN
-Uso: hilos - Lista tareas por clase (texto lineal, vista tele).
+## DESCRIPCION
 
-Uso: hilos - Lista tareas por clase (texto lineal, vista tele).
+Agrupa tareas por clase en texto lineal. No es P2P.
 
-## OPCIONES
-Ver help del comando.
-
-## EJEMPLOS
-
-- hilos
-
-## SEGURIDAD
-Comando de sistema. stdlib + moslib.
-
-## VÉASE TAMBIÉN
+## VEASE TAMBIEN
 help, man

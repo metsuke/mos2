@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "doc/man/apps",
+  "tipo": "documento",
+  "titulo": "APPS",
+  "cuerpo": "",
+  "cuerpo_desde": "",
+  "para_humano": "",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-09-30T11:49:24Z",
+  "modificado": "2026-09-30T11:49:24Z",
+  "render": "h1",
+  "activo": true
+}
