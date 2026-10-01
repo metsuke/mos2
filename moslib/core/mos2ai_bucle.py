@@ -13,6 +13,7 @@ from moslib.core.mos2ai_estado import (
     modelo_esta_bloqueado_hoy,
 )
 from moslib.core.mos2ai_historial import cargar_historial_chat, guardar_historial_chat
+from moslib.core.mos2ai_permiso import aplicar as aplicar_permiso
 from moslib.core.mos2ai_tools import DISPATCH, HERRAMIENTAS
 
 SYSTEM = (
@@ -77,14 +78,9 @@ def _herramientas(response, chat) -> None:
         return
     partes = []
     for fc in llamadas:
-        fn = DISPATCH.get(fc.name)
         args = dict(getattr(fc, "args", {}) or {})
         print(f"[tool] {fc.name} {args}")
-        permiso = input("  permitir? [S/n]: ").strip().lower()
-        if permiso in ("", "s", "si", "sí"):
-            res = fn(**args) if fn else "Funcion no reconocida."
-        else:
-            res = "Acceso denegado por el usuario."
+        res = aplicar_permiso(fc.name, args, DISPATCH.get(fc.name))
         print(res)
         partes.append({"function_response": {"name": fc.name, "response": {"result": res}}})
     _ritmo()
@@ -143,7 +139,7 @@ def main() -> None:
     print(f"[INFO] Modelo activo: {modelo}")
     historial = cargar_historial_chat()
     chat = _chat(genai, modelo, historial)
-    print("[INFO] Puente listo. salir termina. Crea ficheros y directorios con herramientas.")
+    print("[INFO] Permiso en lotes de 50. Vista antes/despues al escribir.")
     while True:
         prompt = input(f"\n[Tu - {modelo}]: ").strip()
         if prompt.lower() in ("salir", "exit", "quit"):
