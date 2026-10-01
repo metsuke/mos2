@@ -1,4 +1,4 @@
-"""Bucle del puente. Una llamada a herramienta no se lee como texto."""
+"""Bucle del puente. Tras una herramienta sigue hasta haber texto."""
 
 from __future__ import annotations
 
@@ -21,9 +21,10 @@ from moslib.core.mos2ai_tools import DISPATCH, HERRAMIENTAS
 SYSTEM = (
     "Eres el puente de ingesta de MetsuOS. "
     "Lista, lee, crea directorios y escribe o crea ficheros en el directorio de trabajo. "
-    "No salgas de ese sandbox."
+    "No salgas de ese sandbox. Tras cada herramienta, sigue la tarea o responde."
 )
 _ULTIMA = 0.0
+TOPE_PASOS = 8
 
 
 def _ritmo() -> None:
@@ -77,6 +78,15 @@ def _texto(response) -> str:
     return "\n".join(trozos)
 
 
+def _resumen(nombre: str, res: str) -> str:
+    if nombre != "listar_directorio":
+        return res
+    if res.startswith("Error") or res.startswith("(vac"):
+        return res
+    n = len([ln for ln in res.splitlines() if ln.strip()])
+    return f"{n} elementos listados"
+
+
 def _modelos(genai) -> list[str]:
     fuera = set(vetados())
     vivos = []
@@ -97,19 +107,21 @@ def _chat(genai, modelo, history):
     return modelo_api.start_chat(history=history, enable_automatic_function_calling=False)
 
 
-def _herramientas(response, chat):
-    llamadas = _llamadas(response)
-    if not llamadas:
-        return response
-    partes = []
-    for fc in llamadas:
-        args = dict(getattr(fc, "args", {}) or {})
-        print(f"[tool] {fc.name} {args}")
-        res = aplicar_permiso(fc.name, args, DISPATCH.get(fc.name))
-        print(res)
-        partes.append({"function_response": {"name": fc.name, "response": {"result": res}}})
-    _ritmo()
-    return chat.send_message(partes)
+def _ronda(response, chat):
+    paso = 0
+    while _llamadas(response) and paso < TOPE_PASOS:
+        paso += 1
+        partes = []
+        for fc in _llamadas(response):
+            args = dict(getattr(fc, "args", {}) or {})
+            print(f"[mos2ai] paso {paso}: el modelo pide {fc.name}, aun no hay respuesta final")
+            res = aplicar_permiso(fc.name, args, DISPATCH.get(fc.name))
+            print(f"[mos2ai] {_resumen(fc.name, res)}. Devuelvo el resultado al modelo y sigo.")
+            partes.append({"function_response": {"name": fc.name, "response": {"result": res}}})
+        _ritmo()
+        print("[mos2ai] esperando el siguiente paso del modelo")
+        response = chat.send_message(partes)
+    return response
 
 
 def _siguiente(cola, indice, genai, history):
@@ -157,11 +169,12 @@ def main() -> None:
         if not prompt:
             continue
         try:
+            print("[mos2ai] pidiendo respuesta al modelo")
             _ritmo()
-            response = _herramientas(chat.send_message(prompt), chat)
+            response = _ronda(chat.send_message(prompt), chat)
             guardar_historial_chat(chat)
             print("\n[MetsuAI]:")
-            print(_texto(response) or "(sin texto)")
+            print(_texto(response) or "[mos2ai] el modelo no ha escrito cierre")
         except Exception as exc:
             texto = str(exc)
             if _no_existe(texto):
