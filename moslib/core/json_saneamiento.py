@@ -49,48 +49,49 @@ def formatear_humano(datos: Any, limite_lineas: int = 20) -> str:
     return "\n".join(muestra)
 
 
+def _fusionar_dicts(bloques: list) -> dict | None:
+    if not bloques or not all(isinstance(b, dict) for b in bloques):
+        return None
+    out: dict = {}
+    for b in bloques:
+        out.update(b)
+    return out
+
+
 def extraer_parte_valida(contenido_bruto: str) -> Tuple[Any, List[str]]:
     """Intenta parsear el JSON completo; si falla, realiza un recorrido heurístico
     o incremental para extraer objetos/pares válidos no dañados."""
     errores = []
-    # 1. Intento directo
     try:
         parsed = json.loads(contenido_bruto)
         return parsed, ["JSON completo válido."]
     except Exception as e:
         errores.append(f"JSON directo inválido: {e}")
 
-    # 2. Si es un JSON de tipo objeto o lista con bloques corruptos al final o fragmentados,
-    # intentamos parseo tolerante o extracción de sub-bloques JSON válidos (ej. por líneas o llaves).
     valido_parcial: Any = {}
     if contenido_bruto.strip().startswith("["):
         valido_parcial = []
-    
-    # Intento de extracción línea por línea o bloque por bloque
+
     lineas = contenido_bruto.splitlines()
     total_lineas = len(lineas)
     bloques_validos = []
-    
+
     print(f"\n[Saneamiento] Analizando {total_lineas} líneas de contexto dañado...")
     for i, linea in enumerate(lineas):
         if i % 50 == 0 or i == total_lineas - 1:
             barra_progreso(i + 1, total_lineas, mensaje="Leyendo líneas")
-        
+
         linea_limpia = linea.strip()
         if not linea_limpia:
             continue
-        # Intentar parsear fragmentos individuales si parecen clave-valor o JSONs pequeños
         try:
-            # Si parece una línea JSON válida o par clave-valor
             if (linea_limpia.startswith("{") and linea_limpia.endswith("}")) or \
                (linea_limpia.startswith("[") and linea_limpia.endswith("]")) or \
                (":" in linea_limpia):
-                # Intentamos parsear envolviéndolo si es necesario
                 sub_parsed = None
                 try:
                     sub_parsed = json.loads(linea_limpia.rstrip(","))
                 except Exception:
-                    # Intentar corregir comillas simples o formato suelto
                     pass
                 if sub_parsed is not None:
                     bloques_validos.append(sub_parsed)
@@ -99,9 +100,11 @@ def extraer_parte_valida(contenido_bruto: str) -> Tuple[Any, List[str]]:
 
     if bloques_validos:
         errores.append(f"Se rescataron {len(bloques_validos)} fragmentos atómicos válidos.")
+        fusion = _fusionar_dicts(bloques_validos)
+        if fusion is not None:
+            return fusion, errores
         return bloques_validos, errores
 
-    # 3. Si todo falla, devolver estructura vacía con el error
     return ({} if isinstance(valido_parcial, dict) else []), errores
 
 
@@ -110,7 +113,7 @@ def sanitizar_y_atomizar(ruta_origen: str | Path, nombre_sesion: str = "default"
     y devuelve la estructura completa ensamblada."""
     ruta = Path(ruta_origen)
     ensure_user_space(get_username())
-    
+
     if not ruta.is_file():
         return False, f"Fichero no encontrado: {ruta}", None
 
@@ -122,10 +125,8 @@ def sanitizar_y_atomizar(ruta_origen: str | Path, nombre_sesion: str = "default"
     print(f"\n[Saneamiento] Leyendo contexto corrupto desde: {ruta}")
     parsed, logs = extraer_parte_valida(contenido)
 
-    # Crear subcarpeta para ítems atómicos
     dir_atomos = _atomic_dir(nombre_sesion)
-    
-    # Guardar en átomos según el tipo
+
     items_a_procesar = []
     if isinstance(parsed, dict):
         items_a_procesar = list(parsed.items())
@@ -136,19 +137,18 @@ def sanitizar_y_atomizar(ruta_origen: str | Path, nombre_sesion: str = "default"
 
     total_items = len(items_a_procesar)
     print(f"\n[Atomización] Guardando {total_items} ítems atómicos en {dir_atomos}...")
-    
+
     atomos_guardados = {}
     for idx, (k, v) in enumerate(items_a_procesar):
         if idx % max(1, total_items // 10) == 0 or idx == total_items - 1:
             barra_progreso(idx + 1, total_items, mensaje="Guardando átomos")
-        
+
         atomo_nombre = f"atomo_{idx}_{str(k)[:30]}.json"
         atomo_path = dir_atomos / atomo_nombre
         atomo_data = {"key": k, "value": v}
         atomo_path.write_text(json.dumps(atomo_data, indent=2, ensure_ascii=False), encoding="utf-8")
         atomos_guardados[str(k)] = v
 
-    # Ensamblar versión completa unida
     ensamblado: Any = {}
     if isinstance(parsed, list):
         ensamblado = list(atomos_guardados.values())
