@@ -17,39 +17,38 @@ for ((i=1; i<=SEGS; i++)); do
 done
 printf "\n"
 python3 - <<'ENDPY'
-import hashlib, json, sys
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path.cwd()))
+from moslib.core.integridad import local_path, repo_path, sha256_fichero
+from moslib.core.integridad_map import _escribir, _leer
+
 root = Path.cwd()
-mans = []
-for p in root.rglob("integridad.json"):
-    if ".venv" in p.parts or "docgen/man/integridad.json" in p.as_posix():
-        continue
-    mans.append(p)
-if not mans:
-    print("No hay integridad.json")
+repo = repo_path()
+if not repo.is_file():
+    print("No hay", repo)
     sys.exit(1)
-for man in mans:
-    data = json.loads(man.read_text(encoding="utf-8"))
-    dest = data.get("archivos") if isinstance(data.get("archivos"), dict) else data.get("files")
-    if not isinstance(dest, dict):
-        dest = data
-    quitados = []
-    for rel, _viejo in list(dest.items()):
-        if not isinstance(rel, str) or rel in ("schema", "sello"):
-            continue
-        path = root / rel
-        if not path.is_file():
-            dest.pop(rel, None)
-            quitados.append(rel)
-            continue
-        dest[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
-    if quitados:
-        print("QUITADOS", man, quitados[:20])
-    man.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    sello = man.with_name(man.name + ".sha256")
-    sello.write_text(hashlib.sha256(man.read_bytes()).hexdigest() + "\n", encoding="utf-8")
-    print("actualizado", man)
-print("OK")
+mapa = _leer(repo)
+cambiados = 0
+quitados = []
+for rel in list(mapa):
+    if rel in ("schema", "sello"):
+        continue
+    path = root / rel
+    if not path.is_file():
+        mapa.pop(rel, None)
+        quitados.append(rel)
+        continue
+    h = sha256_fichero(path)
+    if mapa.get(rel) != h:
+        mapa[rel] = h
+        cambiados += 1
+        print("act", rel)
+if quitados:
+    print("QUITADOS", quitados[:20])
+_escribir(repo, mapa)
+_escribir(local_path(), mapa)
+print("ok rutas", cambiados, "manifiesto", repo)
 ENDPY
 echo "Arrancando MOS con MOS_INTEGRIDAD=recargar"
 if [[ -x ./mos2.sh ]]; then
