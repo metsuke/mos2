@@ -1,11 +1,18 @@
-"""update: main limpio, o update dev para probar una rama."""
+"""update: si hay sucio, backup local y luego el remoto a la fuerza."""
 
 import os
 import sys
 from pathlib import Path
 
-from moslib.core.dev_git import checkout_rama, ramas_remotas, sucio
-from moslib.core.update_git import prune_old_backups, run, sync_tags_with_origin
+from moslib.core.dev_git import ramas_remotas, sucio
+from moslib.core.update_git import (
+    create_backup_branch,
+    prune_old_backups,
+    run,
+    sync_tags_with_origin,
+)
+
+BACKUPS = 10
 
 
 def _root() -> Path:
@@ -34,18 +41,28 @@ def _integridad():
         print(f"[update] integridad local: {exc}")
 
 
-def _a_main(cwd: Path):
-    if sucio(cwd):
-        print("[update] Hay cambios locales. Usa dev publicar o limpia el árbol.")
-        sys.exit(1)
-    print("[update] origin/main...")
+def _resguardar(cwd: Path) -> None:
+    if not sucio(cwd):
+        return
+    print("[update] Árbol sucio. Backup local obligatorio.")
+    create_backup_branch(cwd)
+    prune_old_backups(cwd, keep=BACKUPS)
+
+
+def _forzar(cwd: Path, rama: str) -> None:
     run(["git", "fetch", "origin"], cwd)
-    run(["git", "checkout", "main"], cwd, check=False)
+    run(["git", "checkout", "-B", rama, f"origin/{rama}"], cwd)
+    run(["git", "reset", "--hard", f"origin/{rama}"], cwd)
+    prune_old_backups(cwd, keep=BACKUPS)
+
+
+def _a_main(cwd: Path):
+    _resguardar(cwd)
+    print("[update] origin/main...")
     sync_tags_with_origin(cwd)
-    run(["git", "reset", "--hard", "origin/main"], cwd)
-    prune_old_backups(cwd, keep=10)
+    _forzar(cwd, "main")
     _integridad()
-    print("[update] Completado. Árbol = origin/main.")
+    print("[update] Completado. Árbol = origin/main. Backups locales: 10.")
     _avisar()
 
 
@@ -67,12 +84,10 @@ def _dev(cwd: Path):
         print("[update] Número no válido.")
         return
     rama = ramas[int(raw) - 1]
-    if sucio(cwd):
-        print("[update] Árbol sucio. Publica o limpia antes.")
-        return
-    checkout_rama(cwd, rama)
+    _resguardar(cwd)
+    _forzar(cwd, rama)
     _integridad()
-    print(f"[update] Estás en {rama}. Relanza MOSh.")
+    print(f"[update] Árbol = origin/{rama}. Relanza MOSh.")
     _avisar()
 
 
@@ -91,7 +106,11 @@ def execute(args):
 
 
 def help():
-    return "Uso: update | update dev | update reiniciar"
+    return (
+        "Uso: update | update dev | update reiniciar. "
+        "Si hay cambios locales, rama backup/ y luego reset al remoto. "
+        "Se guardan 10 backups."
+    )
 
 
 def sinopsis():
