@@ -14,6 +14,7 @@ CAMPOS = (
     "influye_de", "influye_a", "creado", "modificado",
     "render", "activo",
 )
+IGNORAR_CMP = frozenset({"modificado"})
 
 
 def ahora() -> str:
@@ -50,13 +51,24 @@ def load_tupla(ident: str) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _util(data: dict) -> dict:
+    return {k: data.get(k) for k in CAMPOS if k not in IGNORAR_CMP}
+
+
 def guardar_tupla(data: dict):
     ident = normalizar_id(data["id"])
     data["id"] = ident
     data["schema"] = SCHEMA
-    data["modificado"] = ahora()
     path = tupla_path(ident)
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.is_file():
+        try:
+            viejo = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            viejo = None
+        if isinstance(viejo, dict) and _util(viejo) == _util(data):
+            return path
+    data["modificado"] = ahora()
     path.write_text(
         json.dumps(data, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
