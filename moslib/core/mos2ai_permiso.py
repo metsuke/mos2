@@ -1,4 +1,4 @@
-"""Permiso en lotes de 50 y vista humana antes/despues."""
+"""Permiso por comando: s una vez, S en tramos de 50 hasta 500."""
 
 from __future__ import annotations
 
@@ -6,22 +6,31 @@ import os
 
 from moslib.core.mos2ai_tools import resolver_ruta
 
-LOTE = 50
-_restantes = 0
-ESCRITURA = frozenset({"escribir_fichero", "crear_fichero", "crear_directorio"})
+PASO = 50
+TOPE = 500
+_restantes: dict[str, int] = {}
+_tramo: dict[str, int] = {}
 
 
-def _pedir_lote(nombre: str) -> bool:
-    global _restantes
-    if _restantes > 0:
-        _restantes -= 1
-        print(f"[permiso] lote vigente, quedan {_restantes}")
+def _pedir(nombre: str) -> bool:
+    quedan = _restantes.get(nombre, 0)
+    if quedan > 0:
+        _restantes[nombre] = quedan - 1
+        print(f"[permiso] {nombre}: lote vigente, quedan {_restantes[nombre]}")
         return True
-    print(f"[permiso] {nombre}: conceder otro lote de {LOTE}? [S/n]")
-    resp = input().strip().lower()
-    if resp in ("", "s", "si", "sí"):
-        _restantes = LOTE - 1
-        print(f"[permiso] lote de {LOTE} concedido")
+    siguiente = min(_tramo.get(nombre, 0) + PASO, TOPE)
+    print(
+        f"[permiso] {nombre}: s = solo esta vez; "
+        f"S = lote de {siguiente} (tope {TOPE})"
+    )
+    resp = input().strip()
+    if resp == "S":
+        _tramo[nombre] = siguiente
+        _restantes[nombre] = siguiente - 1
+        print(f"[permiso] {nombre}: lote de {siguiente}")
+        return True
+    if resp == "s" or resp.lower() in ("si", "sí"):
+        print(f"[permiso] {nombre}: solo esta vez")
         return True
     print("[permiso] denegado")
     return False
@@ -47,7 +56,7 @@ def _vista(ruta: str, nuevo: str, append: bool) -> None:
 
 
 def aplicar(nombre: str, args: dict, fn) -> str:
-    if not _pedir_lote(nombre):
+    if not _pedir(nombre):
         return "Acceso denegado por el usuario."
     if nombre in ("escribir_fichero", "crear_fichero"):
         _vista(
