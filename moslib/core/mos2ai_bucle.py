@@ -1,4 +1,4 @@
-"""Bucle del puente. Un 404 saca el modelo de la rotacion."""
+"""Bucle del puente. Una llamada a herramienta no se lee como texto."""
 
 from __future__ import annotations
 
@@ -53,7 +53,28 @@ def _cuota(texto: str) -> bool:
 
 def _no_existe(texto: str) -> bool:
     baja = texto.lower()
-    return "404" in baja or "no longer available" in baja or "not found" in baja or "does not exist" in baja
+    return "404" in baja or "no longer available" in baja or "not found" in baja
+
+
+def _llamadas(response) -> list:
+    vistas = list(getattr(response, "function_calls", None) or [])
+    if vistas:
+        return vistas
+    out = []
+    for part in getattr(response, "parts", None) or []:
+        fc = getattr(part, "function_call", None)
+        if fc and getattr(fc, "name", None):
+            out.append(fc)
+    return out
+
+
+def _texto(response) -> str:
+    trozos = []
+    for part in getattr(response, "parts", None) or []:
+        texto = getattr(part, "text", None)
+        if texto:
+            trozos.append(texto)
+    return "\n".join(trozos)
 
 
 def _modelos(genai) -> list[str]:
@@ -76,10 +97,10 @@ def _chat(genai, modelo, history):
     return modelo_api.start_chat(history=history, enable_automatic_function_calling=False)
 
 
-def _herramientas(response, chat) -> None:
-    llamadas = list(getattr(response, "function_calls", None) or [])
+def _herramientas(response, chat):
+    llamadas = _llamadas(response)
     if not llamadas:
-        return
+        return response
     partes = []
     for fc in llamadas:
         args = dict(getattr(fc, "args", {}) or {})
@@ -88,7 +109,7 @@ def _herramientas(response, chat) -> None:
         print(res)
         partes.append({"function_response": {"name": fc.name, "response": {"result": res}}})
     _ritmo()
-    chat.send_message(partes)
+    return chat.send_message(partes)
 
 
 def _siguiente(cola, indice, genai, history):
@@ -137,11 +158,10 @@ def main() -> None:
             continue
         try:
             _ritmo()
-            response = chat.send_message(prompt)
-            _herramientas(response, chat)
+            response = _herramientas(chat.send_message(prompt), chat)
             guardar_historial_chat(chat)
             print("\n[MetsuAI]:")
-            print(getattr(response, "text", "") or "")
+            print(_texto(response) or "(sin texto)")
         except Exception as exc:
             texto = str(exc)
             if _no_existe(texto):
