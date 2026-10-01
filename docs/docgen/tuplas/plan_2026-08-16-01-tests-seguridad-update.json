@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "plan_2026-08-16-01-tests-seguridad-update",
+  "tipo": "plan",
+  "titulo": "Plan: 2026-08-16-01-tests-seguridad-update",
+  "cuerpo": "# Campaña: tests, seguridad de arranque y update\n\n**Fecha del plan:** 2026-08-16  \n**NN del día:** 01  \n**Estado:** Cerrada  \n**Origen:** Reconstrucción a posteriori\n\n---\n\n## Objetivo\n\nHacer obligatorios los tests unitarios y de seguridad en desarrollo y en producción, y poder actualizar el clone local desde `origin/main` sin perder trabajo local.\n\n## Fuera de alcance\n\n- CI externa\n- Permitir imports fuera de stdlib + moslib\n- Subir ramas `backup/*` a producción\n\n---\n\n## Qué se ejecutó (resumen)\n\n- Validación AST de imports en comandos de sistema y de usuario\n- Tests en `tests/` (seguridad, user, cmd_loader, contrato)\n- Arranque de MOSh: si fallan los tests, no inicia\n- El inventario de seguridad en arranque debe fallar si cualquier comando viola imports\n- Comando `update`: backup local con fecha, pull forzado de `main`, máximo 10 ramas `backup/*`\n- Tag de producto `v0.2.1`\n\n---\n\n## Producto\n\n| Momento | Valor |\n|---------|--------|\n| Inicio | Tras espacio de usuario (`v0.2.0-alpha-user-space`) |\n| Cierre | Poetry / tag `v0.2.1` |\n\n## Tags\n\n- `v0.2.1`\n\n---\n\n## Notas de reconstrucción\n\nEn el chat, `man`, specs y STYLE se solaparon justo después; esa documentación vive en la campaña `2026-08-20-01-ecss-man-manual.md`. Esta ficha cubre calidad, seguridad y `update`.",
+  "cuerpo_desde": "",
+  "para_humano": "Plan real importado desde docs/plans/2026-08-16-01-tests-seguridad-update.md",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

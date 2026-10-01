@@ -1,18 +1,3 @@
 {
-  "schema": "metsuos-tupla-1",
-  "id": "doc/agents/sec/integridad",
-  "tipo": "seccion",
-  "titulo": "Integridad",
-  "cuerpo": "",
-  "cuerpo_desde": "",
-  "para_humano": "",
-  "para_ia": "",
-  "orden": 30,
-  "orden_por_que": "",
-  "influye_de": [],
-  "influye_a": [],
-  "creado": "2026-09-30T12:13:59Z",
-  "modificado": "2026-09-30T12:13:59Z",
-  "render": "h2",
-  "activo": true
+  "schema": "metsuos-tupla-1"
 }

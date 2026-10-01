@@ -14,6 +14,8 @@ ENV_KEY = {
     "openrouter": "OPENROUTER_API_KEY",
     "jan": "JAN_API_KEY",
     "gpt4all": "GPT4ALL_API_KEY",
+    "google": "GEMINI_API_KEY",
+    "gemini": "GEMINI_API_KEY",
 }
 
 keys_path = _S.keys_path

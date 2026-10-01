@@ -58,6 +58,22 @@ def _preview(datos: bytes) -> str:
     )
 
 
+def _preview_humano(datos: bytes, rel: str) -> str:
+    texto = datos.decode("utf-8", errors="replace")
+    lineas = texto.splitlines()
+    preview_lineas = lineas[:15]
+    if len(lineas) > 15:
+        preview_lineas.append(f"... [{len(lineas) - 15} líneas más omitidas] ...")
+    contenido_fmt = "\n".join(preview_lineas)
+    return (
+        f"\n{BORDE}\n"
+        f"FICHERO A ESCRIBIR: {rel}\n"
+        f"{BORDE}\n"
+        f"{contenido_fmt}\n"
+        f"{BORDE}"
+    )
+
+
 def _decodificar(bruto: str) -> bytes:
     s = "".join(bruto.split())
     pref = next((p for p in PREFS if s.startswith(p)), "")
@@ -89,6 +105,10 @@ def aplicar(rel: str, lineas: list[str]) -> tuple[bool, str]:
     real = sha256_bytes(datos)
     if real != esperado:
         return False, f"NO COINCIDE esperado={esperado} real={real}"
+    
+    # 1. Mostrar preview formateado y repetir la intención y nombre del archivo justo antes de pedir permiso / aplicar
+    print(_preview_humano(datos, rel))
+    
     dest = resolver(rel)
     root = project_root()
     dest.relative_to(root)

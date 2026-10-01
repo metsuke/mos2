@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "plan_2026-08-25-01-entornos-onboarding-versionado",
+  "tipo": "plan",
+  "titulo": "Plan: 2026-08-25-01-entornos-onboarding-versionado",
+  "cuerpo": "# Campaña: entornos, onboarding y versionado\n\n**Fecha del plan:** 2026-08-25  \n**NN del día:** 01  \n**Estado:** Cerrada  \n**Origen:** Reconstrucción a posteriori\n\n---\n\n## Objetivo\n\nHacer el lanzador portable entre Mac, Git Bash y WSL; documentar perfiles anónimos; onboarding para IA y humanos; política de versiones y CHANGELOG.\n\n## Fuera de alcance\n\n- Rutas o nombres de máquina personales en el repo\n- Mover clones WSL en silencio\n- CI externa\n\n---\n\n## Qué se ejecutó (resumen)\n\n- `resolve_poetry` en `mos2.sh` e `install.sh`\n- Git Bash: priorizar `py -m poetry` (Permission denied en `poetry.exe`)\n- `docs/ENVIRONMENTS.md` y protocolo `Contexto: sistema / entorno / rol`\n- Guard WSL: no ejecutar desde `/mnt/<letra>/`; `SCRIPT_DIR` antes del check\n- `docs/VERSIONING.md`, `AGENTS.md`, onboarding IA/humano, `DEVELOPER_GUIDE.md`\n- README / METHODOLOGY / OVERVIEW enlazados\n- `CHANGELOG.md` y test SemVer de `pyproject.toml`\n\n---\n\n## Producto\n\n| Momento | Valor |\n|---------|--------|\n| Inicio | `v0.2.1` |\n| Cierre código | `v0.2.2` (Poetry portable + guard WSL) |\n| Cierre docs | `v0.2.3-docs`, `v0.2.4-docs` |\n\n## Tags\n\n- `v0.2.2`\n- `v0.2.2-docs`\n- `v0.2.3-docs`\n- `v0.2.4-docs`\n\n---\n\n## Notas de reconstrucción\n\nEn el chat esto fueron “bloques 0 / 0.1 / 1 / 2”. Aquí es una sola campaña porque el hilo era el mismo: poder trabajar en varios entornos y no perder el contexto entre chats.",
+  "cuerpo_desde": "",
+  "para_humano": "Plan real importado desde docs/plans/2026-08-25-01-entornos-onboarding-versionado.md",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "plan_2026-09-03-01-campana-08-app-desarrollo",
+  "tipo": "plan",
+  "titulo": "Plan: 2026-09-03-01-campana-08-app-desarrollo",
+  "cuerpo": "# Plan detallado — campaña 08 app de desarrollo\n\n**Pausa:** 8.2+ detenido hasta docs/plans/2026-09-04-01-07-fix-apps-reales.md (F.6).\n\n**Fecha:** 2026-09-03  \n**Orden del día:** 01  \n**Producto de partida:** 0.2.6  \n**Padre:** docs/plans/2026-09-01-01-macro-apps-tareas-suite-rgpd-malla.md\n\n---\n\n## Propósito\n\nMeter **este** método de trabajo dentro de MOS2: plantear un paso, el humano acepta, el cambio ocurre (escribir fichero y, si quiere, commit) **sin pegar a mano**, pudiendo seguir pegando si lo prefiere.\n\nLa suite es una **app** (repo propio), no comandos sueltos del núcleo. Usa apps, tareas e iarouter de la 07.\n\n---\n\n## Fuera de la 08\n\nRGPD de producto (09). Malla P2P (10). DepManager geo. Autocommit por IA salvo excepción explícita. Daemon pesado de tareas.\n\n---\n\n## Qué entrega la app\n\n| Comando (nombres ICD) | Función |\n|------------------------|---------|\n| campaña | Estado: id, bloque, paso, fichero |\n| paso | Muestra breadcrumb + texto a aplicar |\n| aceptar | Escribe el fichero (o el recorte) en el clone |\n| commit | Prepara o ejecuta git add/commit **si el humano lo pide** |\n| handoff | Texto con SHA + paso para otro chat |\n| cierre | Tablas de INTERACTION_REVIEW / deuda |\n\nIA: solo `moslib.core.ia_router.complete`, off por defecto; envío = acción explícita.\n\n---\n\n## Repo y carga\n\n- Repo aparte (p. ej. metsuke/mos-devapp). En 08 puede vivir un árbol `apps/dev/` **dentro de mos2** solo como cuna; el destino es repo propio.\n- `app.json` + `commands/` con execute/help.\n- Instalar: `apps install <ruta>`.\n- **Hueco 07:** cmd_loader aún no ejecuta comandos de `.mos/apps`. Bloque 8.0 = cargar esos comandos (sin pisar sistema; prefijo `app_dev_` o namespace). Sin esto la suite no se invoca.\n\n---\n\n## Flujo exacto (humano al volante)\n\n1. `synccheck` alineado.\n2. `campaña` / `paso`: qué fichero y qué contenido.\n3. Humano lee. Opciones: `aceptar` (escribe disco) o copiar.\n4. Opcional: `paso --preguntar` → iarouter (si enabled).\n5. `commit` solo con confirmación. La IA no hace push.\n6. `hecho` avanza estado (versionado en docs/plans o estado de la app).\n7. Salto de número: hay que escribir la causa.\n8. Sin A11Y/SEC: no accept, no ejecución.\n\n---\n\n## Bloques\n\n| Bloque | Qué |\n|--------|-----|\n| 8.0 | cmd_loader carga comandos de apps instaladas |\n| 8.1 | Esqueleto app (app.json, man, install local) |\n| 8.2 | Estado + paso + aceptar (escribir fichero) |\n| 8.3 | commit / handoff / cierre |\n| 8.4 | Enganche iarouter (pregunta explícita) |\n| 8.5 | Docs núcleo + tag si el loader cambia producto |\n\n---\n\n## Criterio de cierre\n\n- Un comando de la app se invoca en MOSh.\n- `aceptar` escribe un fichero de prueba y `commit` genera o ejecuta el git **solo** si se confirma.\n- iarouter sigue off salvo config.\n- 09 puede usar la suite sin rediseñar el modelo.\n\n---\n\n## Primer paso de ejecución\n\nRama `feature/campana-08-devapp`. Bloque **8.0**: extender `cmd_loader` + tests.",
+  "cuerpo_desde": "",
+  "para_humano": "Plan real importado desde docs/plans/2026-09-03-01-campana-08-app-desarrollo.md",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

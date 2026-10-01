@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "plan_2026-09-23-01-docs-crud-redisenio",
+  "tipo": "plan",
+  "titulo": "Plan: 2026-09-23-01-docs-crud-redisenio",
+  "cuerpo": "# Plan 2026-09-23-01 — Recorte de docs, CRUD reqs, rediseño docgen\n\n**Estado:** En curso  \n**Rama:** desarrollo actual (no main)  \n**Supersede:** refundido masivo de documentación de esta misma campaña\n\n---\n\n## Decisión (2026-09-23)\n\nSe cancela el refundido fichero-a-fichero de documentación (specs restantes, mans, generate forzado contra umbral 50 %). El método actual no escala (tokens, abortos, riesgo de pérdida).\n\nOrden nuevo, único vigente:\n\n1. Requisitos CRUD (huecos del código ya existente).\n2. Rediseño de raíz del sistema de documentación (incluye evaluar el método docgen actual).\n3. Cierre de campaña (tests, integridad, publicar/consolidar).\n\n---\n\n## Lista de trabajo\n\n| # | Ítem | Estado |\n|---|------|--------|\n| 1 | Tope 120 + test 120 | Hecho |\n| 2 | Integridad + sellos + write registra hash | Hecho |\n| 3 | multi / write.sh / codecs | Hecho |\n| 4 | dev / update dev | Hecho |\n| 5 | docs menú + sufijo h | Hecho |\n| 6 | docgen índice disco + CRUD índice | Hecho (se rediseña después) |\n| 7 | Historial MOSh con tope | Hecho |\n| 8 | Locale es_ES al arranque | Hecho |\n| 9 | arreglar_integridad.sh | Hecho |\n| 10 | Refundido pages + root (parcial) | Hecho / congelado |\n| 11 | Refundido specs (00–11) | **Cancelado** — rediseño |\n| 12 | Refundido mans | **Cancelado** — rediseño |\n| 13 | Generate masivo / umbral 50 % | **Cancelado** — rediseño |\n| 14 | Requisitos CRUD alineados al código nuevo | **Siguiente** |\n| 15 | Rediseño de raíz de documentación + evaluación del método docgen | **Después de 14** |\n| 16 | Cierre: tests, integridad, dev publicar / consolidar | **Después de 15** |\n\n---\n\n## Alcance del bloque 14 (CRUD reqs)\n\nAlta/edición/baja vía `docgen req` / `docgen area` (fuente JSON, no editar MD a mano). Cubrir al menos lo que el código ya hace y el SRS no tiene trazado:\n\n- Integridad (manifiesto, sello, arranque, recargar consciente)\n- write / multi / write.sh / codecs\n- Tope 120 / test 120\n- update dev / dev\n- Locale es_ES\n- docs menú + HTML\n- Historial con tope\n\nNo regenerar specs enteras en este bloque salvo que el CRUD lo exija para un generate puntual de 02-srs.\n\n---\n\n## Fuera de alcance hasta el rediseño\n\n- Volver a pintar 00-overview, 01-sss y resto de specs “a mano” desde el chat\n- Inventario man comando a comando\n- Relajar o pelear el umbral 50 % como parche permanente\n\n---\n\n## Criterio de cierre\n\nEl cierre no se abre hasta que 14 y 15 estén aceptados por el humano.\n",
+  "cuerpo_desde": "",
+  "para_humano": "Plan real importado desde docs/plans/2026-09-23-01-docs-crud-redisenio.md",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

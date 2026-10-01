@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "plan_2026-09-18-01-integridad-write",
+  "tipo": "plan",
+  "titulo": "Plan: 2026-09-18-01-integridad-write",
+  "cuerpo": "# Integridad SHA-256 + write en multi\n\n**Estado:** En curso (tope 120 cerrado; falta prueba share/connect y merge)\n**Rama:** campania/integridad-write\n\n## Objetivo\nTodo fichero tracked tiene hash. Arranque y tests contrastan.\nwrite/w solo en multi: hash en la 1ª línea, Base64, restore si no cuadra.\nwrite abre code al guardar OK. docgen y update mantienen manifiestos.\nTope 120 en moslib: `test 120` lista excesos y no tumba el arranque.\n\n## Hecho\n1. Rama, plan, integridad + sello de ambos JSON.\n2. write_b64 + write/w + multi (`:e` ejecuta; `;e` solo atajo).\n3. hash, integridad aceptar/recargar/estado.\n4. update copia integridad repo → local.\n5. Arranque bloquea si el hash no cuadra.\n6. docgen registra destino al escribir; backups podados (máx. 8).\n7. Ritual write usado en serie para trocear moslib ≤120.\n8. `test 120` (solo lista; no pytest ni a11y).\n9. Tope 120 en moslib cerrado (último: ia_check_share → hechos + fachada).\n10. `iarouter share`: diagnóstico original + puente on + publicar + diagnóstico.\n11. `iarouter connect`: check_share + ofrecer URL + usar jan (cliente sin Jan local).\n\n## Pendiente antes de main\n- Probar share (anfitrión) y connect (cliente) en LAN real.\n- Commit/push de lo local no subido.\n- Regenerar man/docs de iarouter, write, test, integridad.\n- Merge a main cuando el ritual y share/connect estén validados.\n\n## Fuera de alcance\nFirma, TPM, antimalware serio.\n",
+  "cuerpo_desde": "",
+  "para_humano": "Plan real importado desde docs/plans/2026-09-18-01-integridad-write.md",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

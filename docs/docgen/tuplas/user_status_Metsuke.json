@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "user_status_Metsuke",
+  "tipo": "status_usuario",
+  "titulo": "Status de usuario: Metsuke",
+  "cuerpo": "{\n  \"usuario\": \"Metsuke\",\n  \"estado\": \"activo\",\n  \"notas_usuario\": []\n}",
+  "cuerpo_desde": "",
+  "para_humano": "Estado actual recogido desde la carpeta del usuario Metsuke.",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

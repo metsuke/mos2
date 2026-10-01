@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "plan_2026-08-31-01-incentivos-desarrollo-datos",
+  "tipo": "plan",
+  "titulo": "Plan: 2026-08-31-01-incentivos-desarrollo-datos",
+  "cuerpo": "# Plan de campaña 06 — incentivos (cierre de rumbo)\n\n**Fecha del plan:** 2026-08-31  \n**Revisado:** 2026-09-01  \n**Orden del día:** 01  \n**Producto de partida:** 0.2.5  \n**Estado:** Cerrada en alcance. Bloques 2 y 3 de la redacción inicial retirados.\n\n---\n\n## Propósito (vigente)\n\nDocumentar la filosofía de trabajo: vectores, roles, Asimov + psicología para la IA, sin karma.\n\nCumplido: `docs/INCENTIVOS.md` 1.1 y enlaces.\n\n---\n\n## Qué cambió el 2026-09-01\n\nSuite dentro de este repo, API Grok en runtime y RGPD de producto **no se hacen en la 06**.\n\nHacen falta antes: modelo de app, colas de tareas, enrutador de IA mínimo.\n\nSustituto: `docs/plans/2026-09-01-01-macro-apps-tareas-suite-rgpd-malla.md` (campañas 07–10).\n\n---\n\n## Decisiones que siguen vigentes\n\n| Tema | Decisión |\n|------|----------|\n| Karma / ranking | No |\n| Humanos (solo incentivos) | El sistema inclina; no es examen |\n| Normas férreas (A11Y, SEC, SSS) | Mandatorias para humano e IA. Sin A11Y el cambio no se acepta ni el código se ejecuta |\n| IA | Férreas + INCENTIVOS |\n| Asimov | Cita + nota; solo para la IA |\n| Psicología | Acompañar; no dañar ni engañar |\n| Geo de paquetes | Dirección; campaña propia |\n| Código de suite / API en la 06 | No |\n\n---\n\n## Cierre\n\nTrabajo nuevo = plan detallado de la **07**. Este archivo no recibe más bloques de implementación.",
+  "cuerpo_desde": "",
+  "para_humano": "Plan real importado desde docs/plans/2026-08-31-01-incentivos-desarrollo-datos.md",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

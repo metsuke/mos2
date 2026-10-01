@@ -1,0 +1,18 @@
+{
+  "schema": "metsuos-tupla-1",
+  "id": "plan_2026-08-12-01-espacio-usuario",
+  "tipo": "plan",
+  "titulo": "Plan: 2026-08-12-01-espacio-usuario",
+  "cuerpo": "# Campaña: espacio de usuario y comandos personales\n\n**Fecha del plan:** 2026-08-12  \n**NN del día:** 01  \n**Estado:** Cerrada  \n**Origen:** Reconstrucción a posteriori (el plan vivió solo en el chat)\n\n---\n\n## Objetivo\n\nDar a cada usuario del sistema anfitrión un espacio personal que no se sube al repo, con comandos propios gestionables sin pisar el sistema.\n\n## Fuera de alcance\n\n- Instalar paquetes Python de terceros en comandos\n- Sobrescribir comandos oficiales\n- Gestor de paquetes Linux real\n\n---\n\n## Normas férreas que salieron de esta campaña\n\n- Todo comando pasa por moslib y el contrato `execute` / `help`\n- Solo imports de biblioteca estándar y moslib\n- Comandos de usuario: archivo `user_*.py`\n- Invocación `user_hola` siempre; `hola` solo si no existe comando de sistema\n- Home = usuario real del anfitrión, no hardcodeado\n- Migración si el home legacy existía en otra ruta\n\n---\n\n## Qué se ejecutó (resumen)\n\n- Módulo de usuario y rutas bajo `rootfs/home/<usuario>/.mos/`\n- Carga de comandos de sistema + usuario\n- `help` lista sistema primero y luego usuario; indica el origen\n- README y comportamiento de invocación corta\n\n---\n\n## Producto\n\n| Momento | Valor |\n|---------|--------|\n| Inicio | Anterior a espacio de usuario |\n| Cierre | Tag `v0.2.0-alpha-user-space` |\n\n## Tags\n\n- `v0.2.0-alpha-user-space`\n\n---\n\n## Notas de reconstrucción\n\nFechas y desglose fino de commits no se recuperan aquí con exactitud de diario. El resultado en `main` y el tag son la fuente de verdad.",
+  "cuerpo_desde": "",
+  "para_humano": "Plan real importado desde docs/plans/2026-08-12-01-espacio-usuario.md",
+  "para_ia": "",
+  "orden": 0,
+  "orden_por_que": "",
+  "influye_de": [],
+  "influye_a": [],
+  "creado": "2026-10-01T04:20:39Z",
+  "modificado": "2026-10-01T04:20:39Z",
+  "render": "parrafo",
+  "activo": true
+}

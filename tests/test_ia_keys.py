@@ -12,6 +12,18 @@ def test_save_and_resolve(tmp_path, monkeypatch):
     assert "secreto-de-prueba" not in texto
 
 
+def test_google_key(tmp_path, monkeypatch):
+    monkeypatch.setattr(K, "_dir", lambda: tmp_path)
+    ok, msg = K.save_key("google", "AIzaSyTestKey123")
+    assert ok, msg
+    assert K.has_stored_key("google") is True
+    assert K.resolve_key("google") == "AIzaSyTestKey123"
+
+    ok2, msg2 = K.save_key("gemini", "AIzaSyTestKey456")
+    assert ok2, msg2
+    assert K.resolve_key("gemini") == "AIzaSyTestKey456"
+
+
 def test_tamper_fails(tmp_path, monkeypatch):
     monkeypatch.setattr(K, "_dir", lambda: tmp_path)
     K.save_key("grok", "abc")
@@ -26,9 +38,13 @@ def test_tamper_fails(tmp_path, monkeypatch):
 def test_ingest_env(tmp_path, monkeypatch):
     monkeypatch.setattr(K, "_dir", lambda: tmp_path)
     monkeypatch.setenv("OPENROUTER_API_KEY", "env-or")
+    monkeypatch.setenv("GEMINI_API_KEY", "env-gemini")
     hechos = K.ingest_env()
     assert "openrouter" in hechos
+    assert "google" in hechos
+    assert "gemini" in hechos
     assert K.load_key("openrouter") == "env-or"
+    assert K.load_key("google") == "env-gemini"
 
 
 def test_secreto_roundtrip(tmp_path):
