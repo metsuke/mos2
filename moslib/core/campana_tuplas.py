@@ -19,19 +19,27 @@ def _leer_status_usuario() -> dict:
     return {"usuario": get_username(), "estado": "activo", "notas_usuario": []}
 
 
-def _reescribir(ident: str, tipo: str, titulo: str, cuerpo: str, para_humano: str) -> str:
-    """Pisa la tupla con la fuente. Un toque en disco no sobrevive a esta pasada."""
+def _alinear(ident: str, tipo: str, titulo: str, cuerpo: str, para_humano: str) -> str:
+    """Restaura la tupla si no coincide con la fuente. Si coincide, no toca disco."""
     try:
         actual = load_tupla(ident)
     except FileNotFoundError:
         actual = None
-    t = actual if isinstance(actual, dict) else plantilla(ident, tipo=tipo)
-    t["id"] = ident
-    t["tipo"] = tipo
-    t["titulo"] = titulo
-    t["cuerpo"] = cuerpo
-    t["para_humano"] = para_humano
-    guardar_tupla(t)
+    coincide = (
+        isinstance(actual, dict)
+        and actual.get("tipo") == tipo
+        and actual.get("titulo") == titulo
+        and actual.get("cuerpo") == cuerpo
+        and actual.get("para_humano") == para_humano
+    )
+    if not coincide:
+        t = actual if isinstance(actual, dict) else plantilla(ident, tipo=tipo)
+        t["id"] = ident
+        t["tipo"] = tipo
+        t["titulo"] = titulo
+        t["cuerpo"] = cuerpo
+        t["para_humano"] = para_humano
+        guardar_tupla(t)
     return ident
 
 
@@ -43,7 +51,7 @@ def convertir_docs_json_a_tuplas() -> list[str]:
     status_usr = _leer_status_usuario()
     status_id = f"user_status_{get_username()}"
     convertidos.append(
-        _reescribir(
+        _alinear(
             status_id,
             "status_usuario",
             f"Status de usuario: {get_username()}",
@@ -56,7 +64,7 @@ def convertir_docs_json_a_tuplas() -> list[str]:
     if planes_dir.is_dir():
         for p in sorted(planes_dir.glob("*.md")):
             convertidos.append(
-                _reescribir(
+                _alinear(
                     f"plan_{p.stem}",
                     "plan",
                     f"Plan: {p.stem}",
