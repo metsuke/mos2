@@ -1,24 +1,35 @@
-"""Bucle del puente mos2ai. Lo llaman mos2AI.py y el comando."""
+"""Bucle completo del puente. Raiz y comando llaman a main()."""
 
 from __future__ import annotations
 
 import os
+import time
+import random
 
 from moslib.core.mos2ai_estado import (
     bloquear_modelo_hoy,
     cargar_modelos_seleccionados,
     guardar_modelos_seleccionados,
     modelo_esta_bloqueado_hoy,
-    quitar_modelos_inexistentes,
 )
+from moslib.core.mos2ai_historial import cargar_historial_chat, guardar_historial_chat
 from moslib.core.mos2ai_tools import DISPATCH, HERRAMIENTAS
 
 SYSTEM = (
-    "Eres un asistente de IA dentro de MetsuOS. "
-    "Usa las herramientas para listar, leer, crear directorios y "
-    "escribir o crear ficheros dentro del directorio de trabajo. "
-    "No inventes rutas fuera de ese sandbox."
+    "Eres el puente de ingesta de MetsuOS. "
+    "Lista, lee, crea directorios y escribe o crea ficheros en el directorio de trabajo. "
+    "No salgas de ese sandbox."
 )
+_ULTIMA = 0.0
+
+
+def _ritmo() -> None:
+    global _ULTIMA
+    ahora = time.time()
+    ideal = 12.0 + random.uniform(1.0, 3.0)
+    if _ULTIMA and ahora - _ULTIMA < ideal:
+        time.sleep(ideal - (ahora - _ULTIMA))
+    _ULTIMA = time.time()
 
 
 def _clave() -> str:
@@ -28,9 +39,17 @@ def _clave() -> str:
     try:
         from moslib.core import ia_keys
         ia_keys.ingest_env()
-        return ia_keys.resolve_key("google") or ia_keys.resolve_key("gemini") or ""
+        key = ia_keys.resolve_key("google") or ia_keys.resolve_key("gemini") or ""
+        if key:
+            print("[INFO] Clave de Google desde iarouter.")
+        return key
     except Exception:
         return ""
+
+
+def _cuota(exc: Exception) -> bool:
+    texto = str(exc)
+    return "429" in texto or "Quota" in texto or "PerDay" in texto
 
 
 def _modelos(genai) -> list[str]:
@@ -47,34 +66,44 @@ def _modelos(genai) -> list[str]:
     return vivos
 
 
-def _elegir(vivos: list[str]) -> list[str]:
-    cola = quitar_modelos_inexistentes(cargar_modelos_seleccionados(), vivos)
-    if cola:
-        return cola
-    print("\n[INFO] Secuencia vacia. Elige el primer modelo:")
-    for i, modelo in enumerate(vivos):
-        print(f"  {i + 1}. {modelo}")
-    while True:
-        try:
-            sel = int(input("\nNumero: ")) - 1
-        except ValueError:
-            continue
-        if 0 <= sel < len(vivos):
-            cola = [vivos[sel]]
-            guardar_modelos_seleccionados(cola)
-            return cola
+def _chat(genai, modelo, history):
+    modelo_api = genai.GenerativeModel(modelo, tools=HERRAMIENTAS, system_instruction=SYSTEM)
+    return modelo_api.start_chat(history=history, enable_automatic_function_calling=False)
 
 
-def _aplicar(response) -> None:
-    llamadas = getattr(response, "function_calls", None) or []
+def _herramientas(response, chat) -> None:
+    llamadas = list(getattr(response, "function_calls", None) or [])
     if not llamadas:
         return
+    partes = []
     for fc in llamadas:
         fn = DISPATCH.get(fc.name)
         args = dict(getattr(fc, "args", {}) or {})
         print(f"[tool] {fc.name} {args}")
-        res = fn(**args) if fn else "Funcion no reconocida."
+        permiso = input("  permitir? [S/n]: ").strip().lower()
+        if permiso in ("", "s", "si", "sí"):
+            res = fn(**args) if fn else "Funcion no reconocida."
+        else:
+            res = "Acceso denegado por el usuario."
         print(res)
+        partes.append({"function_response": {"name": fc.name, "response": {"result": res}}})
+    _ritmo()
+    chat.send_message(partes)
+
+
+def _fallback(prompt: str) -> bool:
+    from moslib.core.ia_cascade import ORDEN, complete
+
+    print("[INFO] Google agotado. Cascada: grok, openai, openrouter, jan, gpt4all.")
+    ok, texto, prov = complete(prompt)
+    if ok and prov != "google":
+        print(f"[{prov}] {texto}")
+        return True
+    if ok:
+        return False
+    print(texto)
+    print("Orden:", ", ".join(ORDEN))
+    return False
 
 
 def main() -> None:
@@ -86,9 +115,7 @@ def main() -> None:
     except ImportError:
         print("Falta google-generativeai")
         return
-    key = _clave()
-    if not key:
-        key = input("GEMINI_API_KEY: ").strip()
+    key = _clave() or input("GEMINI_API_KEY: ").strip()
     if not key:
         print("Se requiere la clave.")
         return
@@ -96,41 +123,50 @@ def main() -> None:
     try:
         vivos = _modelos(genai)
     except Exception as exc:
-        print(f"[Error] No se pudo listar modelos: {exc}")
+        print(f"[Error] {exc}")
         return
-    if not vivos:
+    cola = [m for m in cargar_modelos_seleccionados() if m in vivos]
+    guardar_modelos_seleccionados(cola)
+    if not cola and vivos:
+        for i, modelo in enumerate(vivos):
+            print(f"  {i + 1}. {modelo}")
+        sel = int(input("Numero inicial: ")) - 1
+        cola = [vivos[sel]]
+        guardar_modelos_seleccionados(cola)
+    if not cola:
         print("[Error] No hay modelos Flash.")
         return
-    cola = _elegir(vivos)
     indice = 0
     while modelo_esta_bloqueado_hoy(cola[indice]) and indice < len(cola) - 1:
         indice += 1
     modelo = cola[indice]
-    print(f"\n[INFO] Modelo activo: {modelo}")
-    chat = genai.GenerativeModel(modelo, tools=HERRAMIENTAS, system_instruction=SYSTEM).start_chat()
-    print("[INFO] Puente establecido. 'salir' termina.")
+    print(f"[INFO] Modelo activo: {modelo}")
+    historial = cargar_historial_chat()
+    chat = _chat(genai, modelo, historial)
+    print("[INFO] Puente listo. salir termina. Crea ficheros y directorios con herramientas.")
     while True:
         prompt = input(f"\n[Tu - {modelo}]: ").strip()
         if prompt.lower() in ("salir", "exit", "quit"):
-            print("[INFO] Cerrando puente.")
+            guardar_historial_chat(chat)
             return
         if not prompt:
             continue
         try:
+            _ritmo()
             response = chat.send_message(prompt)
+            _herramientas(response, chat)
+            guardar_historial_chat(chat)
+            print("\n[MetsuAI]:")
+            print(getattr(response, "text", "") or "")
         except Exception as exc:
-            texto = str(exc)
-            if "429" in texto or "Quota" in texto:
-                bloquear_modelo_hoy(modelo)
-                indice = (indice + 1) % len(cola)
-                modelo = cola[indice]
-                print(f"[!] Cuota. Siguiente: {modelo}")
-                chat = genai.GenerativeModel(
-                    modelo, tools=HERRAMIENTAS, system_instruction=SYSTEM
-                ).start_chat(history=chat.history)
+            if not _cuota(exc):
+                print(f"[Error] {exc}")
                 continue
-            print(f"[Error] {exc}")
-            continue
-        _aplicar(response)
-        print("\n[MetsuAI]:")
-        print(getattr(response, "text", "") or "")
+            bloquear_modelo_hoy(modelo)
+            print(f"[!] Cuota de {modelo}.")
+            if all(modelo_esta_bloqueado_hoy(m) for m in cola):
+                _fallback(prompt)
+                continue
+            indice = (indice + 1) % len(cola)
+            modelo = cola[indice]
+            chat = _chat(genai, modelo, chat.history)
