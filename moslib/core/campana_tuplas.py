@@ -19,19 +19,12 @@ def _leer_status_usuario() -> dict:
     return {"usuario": get_username(), "estado": "activo", "notas_usuario": []}
 
 
-def _upsert(ident: str, tipo: str, titulo: str, cuerpo: str, para_humano: str) -> bool:
+def _reescribir(ident: str, tipo: str, titulo: str, cuerpo: str, para_humano: str) -> str:
+    """Pisa la tupla con la fuente. Un toque en disco no sobrevive a esta pasada."""
     try:
         actual = load_tupla(ident)
     except FileNotFoundError:
         actual = None
-    if (
-        isinstance(actual, dict)
-        and actual.get("titulo") == titulo
-        and actual.get("cuerpo") == cuerpo
-        and actual.get("para_humano") == para_humano
-        and actual.get("tipo") == tipo
-    ):
-        return False
     t = actual if isinstance(actual, dict) else plantilla(ident, tipo=tipo)
     t["id"] = ident
     t["tipo"] = tipo
@@ -39,7 +32,7 @@ def _upsert(ident: str, tipo: str, titulo: str, cuerpo: str, para_humano: str) -
     t["cuerpo"] = cuerpo
     t["para_humano"] = para_humano
     guardar_tupla(t)
-    return True
+    return ident
 
 
 def convertir_docs_json_a_tuplas() -> list[str]:
@@ -49,27 +42,26 @@ def convertir_docs_json_a_tuplas() -> list[str]:
 
     status_usr = _leer_status_usuario()
     status_id = f"user_status_{get_username()}"
-    cuerpo = json.dumps(status_usr, ensure_ascii=False, indent=2)
-    if _upsert(
-        status_id,
-        "status_usuario",
-        f"Status de usuario: {get_username()}",
-        cuerpo,
-        f"Estado actual recogido desde la carpeta del usuario {get_username()}.",
-    ):
-        convertidos.append(status_id)
+    convertidos.append(
+        _reescribir(
+            status_id,
+            "status_usuario",
+            f"Status de usuario: {get_username()}",
+            json.dumps(status_usr, ensure_ascii=False, indent=2),
+            f"Estado actual recogido desde la carpeta del usuario {get_username()}.",
+        )
+    )
 
     planes_dir = docs_dir / "plans"
     if planes_dir.is_dir():
-        for p in planes_dir.glob("*.md"):
-            contenido = p.read_text(encoding="utf-8", errors="replace")
-            ident = f"plan_{p.stem}"
-            if _upsert(
-                ident,
-                "plan",
-                f"Plan: {p.stem}",
-                contenido,
-                f"Plan real importado desde {p.relative_to(root)}",
-            ):
-                convertidos.append(ident)
+        for p in sorted(planes_dir.glob("*.md")):
+            convertidos.append(
+                _reescribir(
+                    f"plan_{p.stem}",
+                    "plan",
+                    f"Plan: {p.stem}",
+                    p.read_text(encoding="utf-8", errors="replace"),
+                    f"Plan real importado desde {p.relative_to(root)}",
+                )
+            )
     return convertidos
