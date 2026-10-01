@@ -1,4 +1,4 @@
-"""Estado de mos2ai: cuotas, cola e historial."""
+"""Estado de mos2ai: cuotas, cola y modelos que ya no existen."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from datetime import datetime
 RUTA_BASE = os.path.join(os.getcwd(), "rootfs", "home", "Metsuke")
 ARCHIVO_CUOTAS = os.path.join(RUTA_BASE, ".quota_state.json")
 ARCHIVO_SELECCIONADOS = os.path.join(RUTA_BASE, ".selected_models.json")
+ARCHIVO_VETADOS = os.path.join(RUTA_BASE, ".vetados_models.json")
 ARCHIVO_HISTORIAL = os.path.join(RUTA_BASE, ".chat_history.json")
 
 
@@ -58,8 +59,23 @@ def guardar_modelos_seleccionados(lista) -> None:
     guardar_json(ARCHIVO_SELECCIONADOS, lista)
 
 
+def vetados() -> list[str]:
+    data = cargar_json(ARCHIVO_VETADOS, [])
+    return data if isinstance(data, list) else []
+
+
+def vetar_modelo(modelo: str) -> None:
+    fuera = vetados()
+    if modelo not in fuera:
+        fuera.append(modelo)
+        guardar_json(ARCHIVO_VETADOS, fuera)
+    cola = [m for m in cargar_modelos_seleccionados() if m != modelo]
+    guardar_modelos_seleccionados(cola)
+
+
 def quitar_modelos_inexistentes(cola: list, vivos: list) -> list:
-    limpia = [m for m in cola if m in vivos]
+    fuera = set(vetados())
+    limpia = [m for m in cola if m in vivos and m not in fuera]
     if limpia != cola:
         guardar_modelos_seleccionados(limpia)
     return limpia
