@@ -1,26 +1,20 @@
 # mos2ai
 
-Comando de sistema. No es un comando de usuario ni una app.
+Comando de sistema. La misma funcion que `mos2AI.py` en la raiz: `moslib.core.mos2ai_bucle.main`.
 
 ## Uso
 
-    mos2ai <texto>
-    mos2ai vetados
+    mos2ai
+    python mos2AI.py
 
-## Cascada
+## Que hace
 
-1. Google (Gemini), si hay cuota.
-2. Grok y sus modelos, si Google agota cuota o rate limit.
-3. OpenAI y sus modelos.
-4. OpenRouter y sus modelos.
-5. Jan en la red local, y sus modelos. Prioridad sobre GPT4All, sea o no local.
-6. GPT4All y sus modelos. Ultimo: va sin GPU.
+Puente de ingesta. Lista modelos Flash, quita de la cola los que ya no existen y no deja elegirlos. Rota si la cuota de Google se agota. Guarda historial en `rootfs/home/Metsuke/`.
 
-## Modelo inexistente
+Herramientas, con permiso en cada llamada: listar directorio, leer fichero, escribir fichero, crear fichero, crear directorio. Sandbox: directorio de trabajo.
 
-Si el proveedor responde que el modelo no existe, mos2ai lo quita de la lista de esa sesion y no lo vuelve a seleccionar. `mos2ai vetados` muestra esos ids.
+Si todos los modelos Google estan bloqueados hoy: Grok, OpenAI, OpenRouter, Jan en la red local, GPT4All al final (sin GPU).
 
 ## Claves
 
-GEMINI_API_KEY, XAI_API_KEY, OPENAI_API_KEY, OPENROUTER_API_KEY.
-Jan y GPT4All no usan clave; se buscan en localhost y en la LAN.
+GEMINI_API_KEY, XAI_API_KEY, OPENAI_API_KEY, OPENROUTER_API_KEY, o el almacen de iarouter.
