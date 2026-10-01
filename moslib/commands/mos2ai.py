@@ -1,35 +1,25 @@
-"""mos2ai: comando de sistema. Cascada de cuota, no preferencia de usuario."""
+"""mos2ai dentro de MOS. Misma puerta que el py de la raiz."""
 
-from moslib.core.ia_cascade import ORDEN, complete, vetados
+from moslib.core.mos2ai_bucle import main
 
 
 def execute(args):
-    if not args or args[0] in ("-h", "--help", "help"):
+    if args and args[0] in ("-h", "--help", "help"):
         print(help())
         return 0
-    if args[0] == "vetados":
-        for pid in ORDEN:
-            fuera = sorted(vetados(pid))
-            print(f"{pid}: {', '.join(fuera) if fuera else '(ninguno)'}")
-        return 0
-    ok, texto, prov = complete(" ".join(args))
-    if ok:
-        print(f"[{prov}] {texto}")
-        return 0
-    print(texto)
-    return 1
+    main()
+    return 0
 
 
 def help():
     return (
-        "Uso: mos2ai <texto> | mos2ai vetados\n"
-        "Comando de sistema. No es una app de usuario.\n"
-        "Cascada al agotar cuota de Google: Grok, OpenAI, OpenRouter, "
-        "Jan en la red local, GPT4All al final (sin GPU).\n"
-        "Si el modelo indicado no existe, se quita de la lista y no se selecciona.\n"
-        "Claves: GEMINI_API_KEY, XAI_API_KEY, OPENAI_API_KEY, OPENROUTER_API_KEY."
+        "Uso: mos2ai\n"
+        "Comando de sistema. Arranca el puente de ingesta de moslib.core.\n"
+        "Lista modelos, quita los que ya no existen y rota si hay cuota.\n"
+        "Puede listar, leer, crear ficheros y crear directorios en el cwd.\n"
+        "El py de la raiz, mos2AI.py, llama a la misma funcion."
     )
 
 
 def sinopsis():
-    return ["mos2ai <texto>", "mos2ai vetados"]
+    return ["mos2ai"]
